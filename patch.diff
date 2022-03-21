@@ -1,12 +1,13 @@
 diff --git a/app/src/main/res/values/cc_strings.xml b/app/src/main/res/values/cc_strings.xml
-index 622b81fab..9ce5e1a93 100644
+index 622b81fab..434d8ff41 100644
 --- a/app/src/main/res/values/cc_strings.xml
 +++ b/app/src/main/res/values/cc_strings.xml
-@@ -1240,6 +1240,6 @@ Our official Website: http://heymods.com"</string>
-     <string name="cc_livepic_share_with_closefriends">Only share with close friends</string>
+@@ -1237,7 +1237,7 @@ Our official Website: http://heymods.com"</string>
+     <string name="cc_livepic_widget_intro_step2">Tap the widgets button in the middle</string>
+     <string name="cc_livepic_widget_intro_step3">Search for %1$s Widget and add the widget</string>
+     <string name="cc_livepic_widget_intro_step4">Receive status from close friends with widget</string>
+-    <string name="cc_livepic_share_with_closefriends">Only share with close friends</string>
++    <string name="cc_livepic_share_with_closefriends">Only share with new friends</string>
      <string name="cc_livepic_my_statuses_setting_hint">Add \"only share with close friends\" list to share status on their home screen!</string>
      <string name="cc_livepic_share_with_closefriends_link">I would like to invite you to be my close friends and show my live pics on your home screen widget!\nTap to continue: %1$s</string>
--    <string name="cc_livepic_privacy_settings_desc">Changes to your privacy settings won\'t affect status updates that you\'ve sent already. Only pictures can be shown on your close friends\' widget. Texts and videos are not supported.</string>
-+    <string name="cc_livepic_privacy_settings_desc">haha this is test</string>
-     <string name="cc_livepic_privacy_list_desc">Once you save this list, you will send a message to the contacts inviting them to become your close friends. Each contact will only receive the message once.</string>
- </resources>
+     <string name="cc_livepic_privacy_settings_desc">Changes to your privacy settings won\'t affect status updates that you\'ve sent already. Only pictures can be shown on your close friends\' widget. Texts and videos are not supported.</string>
