@@ -1,5 +1,5 @@
 diff --git a/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt b/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
-index 3b10377bd..b7f3d6c96 100644
+index 3b10377bd..459d9fc51 100644
 --- a/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
 +++ b/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
 @@ -3,13 +3,19 @@ package com.coocoo.activity
@@ -51,7 +51,7 @@ index 3b10377bd..b7f3d6c96 100644
 +
 +    private fun shareMessage() {
 +        val intent = Intent(this, ContactPicker::class.java).apply {
-+            putExtra(Intent.EXTRA_TEXT, AdBlockShareUnlockManager.TAG)
++            putExtra(Intent.EXTRA_TEXT, AdBlockShareUnlockManager.KEY)
 +        }
 +        startActivityForResult(intent, REQUEST_CODE)
 +    }
@@ -91,7 +91,7 @@ index 9a2fc3c3b..0b1d20e1f 100644
      }
  
 diff --git a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
-index 17f4db9db..1f0cddd8f 100644
+index 17f4db9db..e11271741 100644
 --- a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
 +++ b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
 @@ -1,4 +1,28 @@
@@ -103,7 +103,7 @@ index 17f4db9db..1f0cddd8f 100644
 +
 +object AdBlockShareUnlockManager : AbsUnlockManager() {
 +
-+    val TAG: String = AdBlockShareUnlockManager::class.java.simpleName
++    const val KEY: String = "AdBlockShareUnlockManager"
 +
 +    override fun handleSendMessage(shareData: Any?, jids: ArrayList<String>, sourceText: String?) {
 +        val targetUser = jids.map { jid ->
@@ -115,7 +115,7 @@ index 17f4db9db..1f0cddd8f 100644
 +        showSharedSuccessfulToast()
 +    }
 +
-+    override fun getUnlockTag(): String = TAG
++    override fun getUnlockTag(): String = KEY
 +
 +    override fun updateUnlockState(
 +        shareData: Any?,
