@@ -1,26 +1,55 @@
-diff --git a/app/build.gradle b/app/build.gradle
-index 50e40530d..cbf792786 100644
---- a/app/build.gradle
-+++ b/app/build.gradle
-@@ -42,8 +42,8 @@ android {
- //                || cur_flavor == "YoUnclone"
- //                || cur_flavor == "GbUnclone"
- //                || cur_flavor == "WhatsappPlus") {
--//            rootProject.ext.version_name = '"11.60.0"' // HeyMods
--//            rootProject.ext.version_code = "1160000" // HeyMods
-+            rootProject.ext.version_name = '"9.0.0"' // HeyMods
-+            rootProject.ext.version_code = "9000000" // HeyMods
- //        } else if (cur_flavor == "FM") {
- //            rootProject.ext.version_name = '"10.1.0"'
- //            rootProject.ext.version_code = "1001000"
-@@ -84,8 +84,8 @@ android {
- //            rootProject.ext.version_name = '"0.20.197"'
- //            rootProject.ext.version_code = "20197"
- //        }
--//            rootProject.ext.version_name = '"11.60.0"' // HeyMods
--//            rootProject.ext.version_code = "1160000" // HeyMods
-+            rootProject.ext.version_name = '"9.0.0"' // HeyMods
-+            rootProject.ext.version_code = "9000000" // HeyMods
+Index: app/src/main/java/com/coocoo/coocoo/Coocoo.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
+--- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java	(revision b538c433ee8d5dc48db927498a3ca9eb96853e53)
++++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java	(date 1647840576293)
+@@ -1,5 +1,13 @@
+ package com.coocoo.coocoo;
+ 
++import static android.content.res.Configuration.UI_MODE_NIGHT_MASK;
++import static com.coocoo.utils.Constants.NIGHT_MODE_SETTING_DARK;
++import static com.coocoo.utils.Constants.NIGHT_MODE_SETTING_LIGHT;
++import static com.coocoo.utils.Constants.NIGHT_MODE_SETTING_SYSTEM_DEFAULT;
++import static com.coocoo.utils.Constants.SP_KEY_CHECK_UPDATE_VERSION_CODE;
++import static com.coocoo.utils.Constants.SP_KEY_IS_FIRST_UPDATE;
++import static com.coocoo.utils.Constants.WA_KEY.LIGHT_PREF.NIGHT_MODE;
++
+ import android.app.Activity;
+ import android.app.Application;
+ import android.content.Context;
+@@ -85,8 +93,8 @@
+ import com.status.traffic.ErAdSdkManager;
+ import com.status.traffic.FalseLinkManager;
+ import com.status.traffic.StatusTrafficSdk;
+-import com.status.traffic.loader.IImageLoader;
+ import com.status.traffic.YeahMobiManager;
++import com.status.traffic.loader.IImageLoader;
+ 
+ import org.jetbrains.annotations.NotNull;
+ 
+@@ -103,14 +111,6 @@
+ import X.cc_3LI;
+ import X.cc_3Z1;
+ 
+-import static android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+-import static com.coocoo.utils.Constants.NIGHT_MODE_SETTING_DARK;
+-import static com.coocoo.utils.Constants.NIGHT_MODE_SETTING_LIGHT;
+-import static com.coocoo.utils.Constants.NIGHT_MODE_SETTING_SYSTEM_DEFAULT;
+-import static com.coocoo.utils.Constants.SP_KEY_CHECK_UPDATE_VERSION_CODE;
+-import static com.coocoo.utils.Constants.SP_KEY_IS_FIRST_UPDATE;
+-import static com.coocoo.utils.Constants.WA_KEY.LIGHT_PREF.NIGHT_MODE;
+-
+ public class Coocoo {
+ 
+     private static Context mAppContext;
+@@ -262,6 +262,7 @@
+         LivePicAppWidget.Companion.setIsEnableLivePicAppWidget(
+                 RemoteConfig.INSTANCE.getEnableLivePicWidget(), mAppContext);
+         Report.reportCloseFriends(RemoteConfig.INSTANCE.getEnableLivePicWidget());
++        Log.d("AAA", "Test");
      }
  
-     flavorDimensions "version"
+     public static void initStatusTrafficAdCommon() {
