@@ -1,55 +1,17 @@
-Index: app/src/main/java/com/coocoo/coocoo/Coocoo.java
+Index: app/src/main/res/values/whatsapp_strings.xml
 IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
-diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
---- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java	(revision b538c433ee8d5dc48db927498a3ca9eb96853e53)
-+++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java	(date 1647840576293)
-@@ -1,5 +1,13 @@
- package com.coocoo.coocoo;
- 
-+import static android.content.res.Configuration.UI_MODE_NIGHT_MASK;
-+import static com.coocoo.utils.Constants.NIGHT_MODE_SETTING_DARK;
-+import static com.coocoo.utils.Constants.NIGHT_MODE_SETTING_LIGHT;
-+import static com.coocoo.utils.Constants.NIGHT_MODE_SETTING_SYSTEM_DEFAULT;
-+import static com.coocoo.utils.Constants.SP_KEY_CHECK_UPDATE_VERSION_CODE;
-+import static com.coocoo.utils.Constants.SP_KEY_IS_FIRST_UPDATE;
-+import static com.coocoo.utils.Constants.WA_KEY.LIGHT_PREF.NIGHT_MODE;
-+
- import android.app.Activity;
- import android.app.Application;
- import android.content.Context;
-@@ -85,8 +93,8 @@
- import com.status.traffic.ErAdSdkManager;
- import com.status.traffic.FalseLinkManager;
- import com.status.traffic.StatusTrafficSdk;
--import com.status.traffic.loader.IImageLoader;
- import com.status.traffic.YeahMobiManager;
-+import com.status.traffic.loader.IImageLoader;
- 
- import org.jetbrains.annotations.NotNull;
- 
-@@ -103,14 +111,6 @@
- import X.cc_3LI;
- import X.cc_3Z1;
- 
--import static android.content.res.Configuration.UI_MODE_NIGHT_MASK;
--import static com.coocoo.utils.Constants.NIGHT_MODE_SETTING_DARK;
--import static com.coocoo.utils.Constants.NIGHT_MODE_SETTING_LIGHT;
--import static com.coocoo.utils.Constants.NIGHT_MODE_SETTING_SYSTEM_DEFAULT;
--import static com.coocoo.utils.Constants.SP_KEY_CHECK_UPDATE_VERSION_CODE;
--import static com.coocoo.utils.Constants.SP_KEY_IS_FIRST_UPDATE;
--import static com.coocoo.utils.Constants.WA_KEY.LIGHT_PREF.NIGHT_MODE;
--
- public class Coocoo {
- 
-     private static Context mAppContext;
-@@ -262,6 +262,7 @@
-         LivePicAppWidget.Companion.setIsEnableLivePicAppWidget(
-                 RemoteConfig.INSTANCE.getEnableLivePicWidget(), mAppContext);
-         Report.reportCloseFriends(RemoteConfig.INSTANCE.getEnableLivePicWidget());
-+        Log.d("AAA", "Test");
-     }
- 
-     public static void initStatusTrafficAdCommon() {
+diff --git a/app/src/main/res/values/whatsapp_strings.xml b/app/src/main/res/values/whatsapp_strings.xml
+--- a/app/src/main/res/values/whatsapp_strings.xml	(revision b538c433ee8d5dc48db927498a3ca9eb96853e53)
++++ b/app/src/main/res/values/whatsapp_strings.xml	(date 1647843974367)
+@@ -2609,7 +2609,7 @@
+     <string name="select_phone_number_subtitle" formatted="false">SIM %d, %s</string>
+     <string name="select_status_recipients">Who can see your status updates</string>
+     <string name="select_status_recipients_black_list">My contacts except…</string>
+-    <string name="select_status_recipients_explanation">"Changes to your privacy settings won't affect status updates that you've sent already"</string>
++    <string name="select_status_recipients_explanation">"Haha this is a test"</string>
+     <string name="select_status_recipients_my_contacts">My contacts</string>
+     <string name="select_status_recipients_title">Who can see my status updates</string>
+     <string name="select_status_recipients_white_list">Only share with…</string>
