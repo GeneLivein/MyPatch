@@ -1,8 +1,12 @@
+Index: app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
 diff --git a/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt b/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
-index 3b10377bd..516bc6212 100644
---- a/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
-+++ b/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
-@@ -3,13 +3,19 @@ package com.coocoo.activity
+--- a/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt	(revision 7451218f77c62bdae9d77c87b715328c7680ba4a)
++++ b/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt	(date 1647865348673)
+@@ -3,13 +3,19 @@
  import android.app.Activity
  import android.content.Intent
  import android.os.Bundle
@@ -22,7 +26,7 @@ index 3b10377bd..516bc6212 100644
          fun startActivity(activity: Activity) {
              val intent = Intent(activity, AdBlockShareActivity::class.java)
              activity.startActivity(intent)
-@@ -18,19 +24,39 @@ class AdBlockShareActivity : Activity() {
+@@ -18,19 +24,39 @@
  
      private lateinit var btnClose: ImageView
  
@@ -48,14 +52,14 @@ index 3b10377bd..516bc6212 100644
 +            shareMessage()
 +        }
 +    }
-+
+ 
 +    private fun shareMessage() {
 +        val intent = Intent(this, ContactPicker::class.java).apply {
 +            putExtra(Intent.EXTRA_TEXT, AdBlockShareUnlockManager.KEY)
 +        }
 +        startActivityForResult(intent, REQUEST_CODE)
 +    }
- 
++
 +    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 +        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
 +            Log.d("AAA", "AdBlockShareActivity onActivityResult")
@@ -64,86 +68,14 @@ index 3b10377bd..516bc6212 100644
      }
  }
 \ No newline at end of file
-diff --git a/app/src/main/java/com/coocoo/message/MessageInterceptor.kt b/app/src/main/java/com/coocoo/message/MessageInterceptor.kt
-index 9a2fc3c3b..94986c3e0 100644
---- a/app/src/main/java/com/coocoo/message/MessageInterceptor.kt
-+++ b/app/src/main/java/com/coocoo/message/MessageInterceptor.kt
-@@ -5,6 +5,7 @@ import android.os.Bundle
- import com.coocoo.annotation.SmaliInject
- import com.coocoo.irl.IrlEventShareManager
- import com.coocoo.share.SettingsShareManager
-+import com.coocoo.share.unlock.AdBlockShareUnlockManager
- import com.coocoo.share.unlock.ColorPhoneUnlockManager
- import com.coocoo.share.unlock.ThemeUnlockManager
- import com.coocoo.utils.LogUtil
-@@ -42,6 +43,13 @@ object MessageInterceptor {
-             return handledByShareIrl
-         }
- 
-+        // Check share IRL message
-+        val handledByShareAdBlock = AdBlockShareUnlockManager.checkToAutoSendSingle(intent)
-+        LogUtil.d(TAG, "checkToAutoSendSingle, handledByShareAdBlock: $handledByShareAdBlock")
-+        if (handledByShareAdBlock) {
-+            return handledByShareAdBlock
-+        }
-+
-         return false
-     }
- 
-@@ -75,6 +83,13 @@ object MessageInterceptor {
-             return handledByShareIrl
-         }
- 
-+        // Check share IRL message
-+        val handledByShareAdBlock = AdBlockShareUnlockManager.checkToAutoSendMulti(bundle)
-+        LogUtil.d(TAG, "checkToAutoSendSingle, handledByShareAdBlock: $handledByShareAdBlock")
-+        if (handledByShareAdBlock) {
-+            return handledByShareAdBlock
-+        }
-+
-         return false
-     }
- }
-\ No newline at end of file
-diff --git a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
-index 17f4db9db..e11271741 100644
---- a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
-+++ b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
-@@ -1,4 +1,28 @@
- package com.coocoo.share.unlock
- 
--object AdBlockShareUnlockManager {
-+import X.c1_00E
-+import com.coocoo.utils.ResMgr
-+
-+object AdBlockShareUnlockManager : AbsUnlockManager() {
-+
-+    const val KEY: String = "AdBlockShareUnlockManager"
-+
-+    override fun handleSendMessage(shareData: Any?, jids: ArrayList<String>, sourceText: String?) {
-+        val targetUser = jids.map { jid ->
-+            c1_00E.A01(jid)
-+        }
-+
-+        handleSendTextMessage(targetUser, ResMgr.getString("cc_ad_block_share_message"))
-+
-+        showSharedSuccessfulToast()
-+    }
-+
-+    override fun getUnlockTag(): String = KEY
-+
-+    override fun updateUnlockState(
-+        shareData: Any?,
-+        sharedUserIdSet: Set<String>,
-+        sharedGroupIdSet: Set<String>
-+    ) {
-+    }
- }
-\ No newline at end of file
+Index: app/src/main/res/layout/cc_activity_ad_block_share.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
 diff --git a/app/src/main/res/layout/cc_activity_ad_block_share.xml b/app/src/main/res/layout/cc_activity_ad_block_share.xml
-index 546aa409b..3df753e52 100644
---- a/app/src/main/res/layout/cc_activity_ad_block_share.xml
-+++ b/app/src/main/res/layout/cc_activity_ad_block_share.xml
+--- a/app/src/main/res/layout/cc_activity_ad_block_share.xml	(revision 7451218f77c62bdae9d77c87b715328c7680ba4a)
++++ b/app/src/main/res/layout/cc_activity_ad_block_share.xml	(date 1647866392252)
 @@ -30,6 +30,7 @@
          android:layout_height="wrap_content"
          android:textColor="#ffffff"
@@ -200,11 +132,99 @@ index 546aa409b..3df753e52 100644
              tools:text="SHARE"/>
      </LinearLayout>
  
+Index: app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
+new file mode 100644
+--- /dev/null	(date 1647864353590)
++++ b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt	(date 1647864353590)
+@@ -0,0 +1,28 @@
++package com.coocoo.share.unlock
++
++import X.c1_00E
++import com.coocoo.utils.ResMgr
++
++object AdBlockShareUnlockManager : AbsUnlockManager() {
++
++    const val KEY: String = "AdBlockShareUnlockManager"
++
++    override fun handleSendMessage(shareData: Any?, jids: ArrayList<String>, sourceText: String?) {
++        val targetUser = jids.map { jid ->
++            c1_00E.A01(jid)
++        }
++
++        handleSendTextMessage(targetUser, ResMgr.getString("cc_ad_block_share_message"))
++
++        showSharedSuccessfulToast()
++    }
++
++    override fun getUnlockTag(): String = KEY
++
++    override fun updateUnlockState(
++        shareData: Any?,
++        sharedUserIdSet: Set<String>,
++        sharedGroupIdSet: Set<String>
++    ) {
++    }
++}
+\ No newline at end of file
+Index: app/src/main/java/com/coocoo/message/MessageInterceptor.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/coocoo/message/MessageInterceptor.kt b/app/src/main/java/com/coocoo/message/MessageInterceptor.kt
+--- a/app/src/main/java/com/coocoo/message/MessageInterceptor.kt	(revision 7451218f77c62bdae9d77c87b715328c7680ba4a)
++++ b/app/src/main/java/com/coocoo/message/MessageInterceptor.kt	(date 1647865348696)
+@@ -5,6 +5,7 @@
+ import com.coocoo.annotation.SmaliInject
+ import com.coocoo.irl.IrlEventShareManager
+ import com.coocoo.share.SettingsShareManager
++import com.coocoo.share.unlock.AdBlockShareUnlockManager
+ import com.coocoo.share.unlock.ColorPhoneUnlockManager
+ import com.coocoo.share.unlock.ThemeUnlockManager
+ import com.coocoo.utils.LogUtil
+@@ -42,6 +43,13 @@
+             return handledByShareIrl
+         }
+ 
++        // Check share IRL message
++        val handledByShareAdBlock = AdBlockShareUnlockManager.checkToAutoSendSingle(intent)
++        LogUtil.d(TAG, "checkToAutoSendSingle, handledByShareAdBlock: $handledByShareAdBlock")
++        if (handledByShareAdBlock) {
++            return handledByShareAdBlock
++        }
++
+         return false
+     }
+ 
+@@ -75,6 +83,13 @@
+             return handledByShareIrl
+         }
+ 
++        // Check share IRL message
++        val handledByShareAdBlock = AdBlockShareUnlockManager.checkToAutoSendMulti(bundle)
++        LogUtil.d(TAG, "checkToAutoSendSingle, handledByShareAdBlock: $handledByShareAdBlock")
++        if (handledByShareAdBlock) {
++            return handledByShareAdBlock
++        }
++
+         return false
+     }
+ }
+\ No newline at end of file
+Index: app/src/main/res/values/cc_strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
 diff --git a/app/src/main/res/values/cc_strings.xml b/app/src/main/res/values/cc_strings.xml
-index aac1c54a6..c85f91275 100644
---- a/app/src/main/res/values/cc_strings.xml
-+++ b/app/src/main/res/values/cc_strings.xml
-@@ -1259,4 +1259,14 @@ Our official Website: http://heymods.com"</string>
+--- a/app/src/main/res/values/cc_strings.xml	(revision 7451218f77c62bdae9d77c87b715328c7680ba4a)
++++ b/app/src/main/res/values/cc_strings.xml	(date 1647866323723)
+@@ -1259,4 +1259,14 @@
      <string name="cc_livepic_share_with_closefriends_link">I would like to invite you to be my close friends and show my live pics on your home screen widget!\nTap to continue: %1$s</string>
      <string name="cc_livepic_privacy_settings_desc">Changes to your privacy settings won\'t affect status updates that you\'ve sent already. Only pictures can be shown on your close friends\' widget. Texts and videos are not supported.</string>
      <string name="cc_livepic_privacy_list_desc">Once you save this list, you will send a message to the contacts inviting them to become your close friends. Each contact will only receive the message once.</string>
