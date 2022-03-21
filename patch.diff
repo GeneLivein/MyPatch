@@ -1,0 +1,26 @@
+diff --git a/app/build.gradle b/app/build.gradle
+index 50e40530d..cbf792786 100644
+--- a/app/build.gradle
++++ b/app/build.gradle
+@@ -42,8 +42,8 @@ android {
+ //                || cur_flavor == "YoUnclone"
+ //                || cur_flavor == "GbUnclone"
+ //                || cur_flavor == "WhatsappPlus") {
+-//            rootProject.ext.version_name = '"11.60.0"' // HeyMods
+-//            rootProject.ext.version_code = "1160000" // HeyMods
++            rootProject.ext.version_name = '"9.0.0"' // HeyMods
++            rootProject.ext.version_code = "9000000" // HeyMods
+ //        } else if (cur_flavor == "FM") {
+ //            rootProject.ext.version_name = '"10.1.0"'
+ //            rootProject.ext.version_code = "1001000"
+@@ -84,8 +84,8 @@ android {
+ //            rootProject.ext.version_name = '"0.20.197"'
+ //            rootProject.ext.version_code = "20197"
+ //        }
+-//            rootProject.ext.version_name = '"11.60.0"' // HeyMods
+-//            rootProject.ext.version_code = "1160000" // HeyMods
++            rootProject.ext.version_name = '"9.0.0"' // HeyMods
++            rootProject.ext.version_code = "9000000" // HeyMods
+     }
+ 
+     flavorDimensions "version"
