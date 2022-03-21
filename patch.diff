@@ -1,13 +1,65 @@
-diff --git a/app/src/main/res/values/cc_strings.xml b/app/src/main/res/values/cc_strings.xml
-index 622b81fab..434d8ff41 100644
---- a/app/src/main/res/values/cc_strings.xml
-+++ b/app/src/main/res/values/cc_strings.xml
-@@ -1237,7 +1237,7 @@ Our official Website: http://heymods.com"</string>
-     <string name="cc_livepic_widget_intro_step2">Tap the widgets button in the middle</string>
-     <string name="cc_livepic_widget_intro_step3">Search for %1$s Widget and add the widget</string>
-     <string name="cc_livepic_widget_intro_step4">Receive status from close friends with widget</string>
--    <string name="cc_livepic_share_with_closefriends">Only share with close friends</string>
-+    <string name="cc_livepic_share_with_closefriends">Only share with new friends</string>
-     <string name="cc_livepic_my_statuses_setting_hint">Add \"only share with close friends\" list to share status on their home screen!</string>
-     <string name="cc_livepic_share_with_closefriends_link">I would like to invite you to be my close friends and show my live pics on your home screen widget!\nTap to continue: %1$s</string>
-     <string name="cc_livepic_privacy_settings_desc">Changes to your privacy settings won\'t affect status updates that you\'ve sent already. Only pictures can be shown on your close friends\' widget. Texts and videos are not supported.</string>
+diff --git a/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt b/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
+index 3b10377bd..a4db926ff 100644
+--- a/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
++++ b/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
+@@ -3,13 +3,18 @@ package com.coocoo.activity
+ import android.app.Activity
+ import android.content.Intent
+ import android.os.Bundle
++import android.view.View
+ import android.widget.ImageView
++import com.coocoo.exoplayer2.util.Log
+ import com.coocoo.utils.ResMgr
++import com.coocoowhatsapp.ContactPicker
+ 
+ class AdBlockShareActivity : Activity() {
+ 
+     companion object {
+ 
++        private const val REQUEST_CODE = 10
++
+         fun startActivity(activity: Activity) {
+             val intent = Intent(activity, AdBlockShareActivity::class.java)
+             activity.startActivity(intent)
+@@ -18,19 +23,39 @@ class AdBlockShareActivity : Activity() {
+ 
+     private lateinit var btnClose: ImageView
+ 
++    private lateinit var btnShare: View
++
+     override fun onCreate(savedInstanceState: Bundle?) {
+         super.onCreate(savedInstanceState)
+         setContentView(ResMgr.getLayoutId("cc_activity_ad_block_share"))
+ 
+         btnClose = findViewById(ResMgr.getId("cc_close"))
+-
++        btnShare = findViewById(ResMgr.getId("cc_btn_share"))
+ 
+         initView()
+     }
+ 
+     private fun initView() {
+         btnClose.setOnClickListener {
++            finish()
++        }
++
++        btnShare.setOnClickListener {
++            shareMessage()
++        }
++    }
++
++    private fun shareMessage() {
++        val intent = Intent(this, ContactPicker::class.java).apply {
++            putExtra(Intent.EXTRA_TEXT, "Message Test")
++        }
++        startActivityForResult(intent, REQUEST_CODE)
++    }
+ 
++    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
++        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
++            Log.d("AAA", "AdBlockShareActivity onActivityResult")
++            finish()
+         }
+     }
+ }
+\ No newline at end of file
