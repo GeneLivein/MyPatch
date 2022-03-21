@@ -5,7 +5,6 @@ import subprocess
 
 
 def cmd():
-    subprocess.check_call(['cd', 'MyPatch'])
     subprocess.check_call(['git', 'pull'])
     subprocess.check_call(['cd', '../coocoowa'])
     subprocess.check_call(['git', 'restore', '.'])
