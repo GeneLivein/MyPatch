@@ -1,14 +1,15 @@
 diff --git a/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt b/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
-index 3b10377bd..a4db926ff 100644
+index 3b10377bd..b7f3d6c96 100644
 --- a/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
 +++ b/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
-@@ -3,13 +3,18 @@ package com.coocoo.activity
+@@ -3,13 +3,19 @@ package com.coocoo.activity
  import android.app.Activity
  import android.content.Intent
  import android.os.Bundle
 +import android.view.View
  import android.widget.ImageView
 +import com.coocoo.exoplayer2.util.Log
++import com.coocoo.share.unlock.AdBlockShareUnlockManager
  import com.coocoo.utils.ResMgr
 +import com.coocoowhatsapp.ContactPicker
  
@@ -21,7 +22,7 @@ index 3b10377bd..a4db926ff 100644
          fun startActivity(activity: Activity) {
              val intent = Intent(activity, AdBlockShareActivity::class.java)
              activity.startActivity(intent)
-@@ -18,19 +23,39 @@ class AdBlockShareActivity : Activity() {
+@@ -18,19 +24,39 @@ class AdBlockShareActivity : Activity() {
  
      private lateinit var btnClose: ImageView
  
@@ -50,7 +51,7 @@ index 3b10377bd..a4db926ff 100644
 +
 +    private fun shareMessage() {
 +        val intent = Intent(this, ContactPicker::class.java).apply {
-+            putExtra(Intent.EXTRA_TEXT, "Message Test")
++            putExtra(Intent.EXTRA_TEXT, AdBlockShareUnlockManager.TAG)
 +        }
 +        startActivityForResult(intent, REQUEST_CODE)
 +    }
@@ -58,8 +59,83 @@ index 3b10377bd..a4db926ff 100644
 +    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 +        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
 +            Log.d("AAA", "AdBlockShareActivity onActivityResult")
-+            finish()
++//            finish()
          }
      }
  }
 \ No newline at end of file
+diff --git a/app/src/main/java/com/coocoo/message/MessageInterceptor.kt b/app/src/main/java/com/coocoo/message/MessageInterceptor.kt
+index 9a2fc3c3b..0b1d20e1f 100644
+--- a/app/src/main/java/com/coocoo/message/MessageInterceptor.kt
++++ b/app/src/main/java/com/coocoo/message/MessageInterceptor.kt
+@@ -5,6 +5,7 @@ import android.os.Bundle
+ import com.coocoo.annotation.SmaliInject
+ import com.coocoo.irl.IrlEventShareManager
+ import com.coocoo.share.SettingsShareManager
++import com.coocoo.share.unlock.AdBlockShareUnlockManager
+ import com.coocoo.share.unlock.ColorPhoneUnlockManager
+ import com.coocoo.share.unlock.ThemeUnlockManager
+ import com.coocoo.utils.LogUtil
+@@ -42,6 +43,13 @@ object MessageInterceptor {
+             return handledByShareIrl
+         }
+ 
++        // Check share IRL message
++        val handledByShareAdBlock = AdBlockShareUnlockManager.checkToAutoSendSingle(intent)
++        LogUtil.d(TAG, "checkToAutoSendSingle, handledByShareAdBlock: $handledByShareAdBlock")
++        if (handledByShareAdBlock) {
++            return handledByShareAdBlock
++        }
++
+         return false
+     }
+ 
+diff --git a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
+index 17f4db9db..1f0cddd8f 100644
+--- a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
++++ b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
+@@ -1,4 +1,28 @@
+ package com.coocoo.share.unlock
+ 
+-object AdBlockShareUnlockManager {
++import X.c1_00E
++import com.coocoo.utils.ResMgr
++
++object AdBlockShareUnlockManager : AbsUnlockManager() {
++
++    val TAG: String = AdBlockShareUnlockManager::class.java.simpleName
++
++    override fun handleSendMessage(shareData: Any?, jids: ArrayList<String>, sourceText: String?) {
++        val targetUser = jids.map { jid ->
++            c1_00E.A01(jid)
++        }
++
++        handleSendTextMessage(targetUser, ResMgr.getString("cc_ad_block_share_message"))
++
++        showSharedSuccessfulToast()
++    }
++
++    override fun getUnlockTag(): String = TAG
++
++    override fun updateUnlockState(
++        shareData: Any?,
++        sharedUserIdSet: Set<String>,
++        sharedGroupIdSet: Set<String>
++    ) {
++    }
+ }
+\ No newline at end of file
+diff --git a/app/src/main/res/values/cc_strings.xml b/app/src/main/res/values/cc_strings.xml
+index aac1c54a6..14c461bfe 100644
+--- a/app/src/main/res/values/cc_strings.xml
++++ b/app/src/main/res/values/cc_strings.xml
+@@ -1259,4 +1259,9 @@ Our official Website: http://heymods.com"</string>
+     <string name="cc_livepic_share_with_closefriends_link">I would like to invite you to be my close friends and show my live pics on your home screen widget!\nTap to continue: %1$s</string>
+     <string name="cc_livepic_privacy_settings_desc">Changes to your privacy settings won\'t affect status updates that you\'ve sent already. Only pictures can be shown on your close friends\' widget. Texts and videos are not supported.</string>
+     <string name="cc_livepic_privacy_list_desc">Once you save this list, you will send a message to the contacts inviting them to become your close friends. Each contact will only receive the message once.</string>
++
++<!--    AdBlockShare-->
++    <string name="cc_ad_block_share_message">Install GBWhatsApp to experience more privacy settings.😎
++👉  See the deleted message
++👉  Hide your online status from others</string>
+ </resources>
