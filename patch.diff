@@ -106,13 +106,13 @@ index 9a2fc3c3b..94986c3e0 100644
  }
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
-new file mode 100644
-index 000000000..e11271741
---- /dev/null
+index 17f4db9db..e11271741 100644
+--- a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
 +++ b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
-@@ -0,0 +1,28 @@
-+package com.coocoo.share.unlock
-+
+@@ -1,4 +1,28 @@
+ package com.coocoo.share.unlock
+ 
+-object AdBlockShareUnlockManager {
 +import X.c1_00E
 +import com.coocoo.utils.ResMgr
 +
@@ -138,7 +138,7 @@ index 000000000..e11271741
 +        sharedGroupIdSet: Set<String>
 +    ) {
 +    }
-+}
+ }
 \ No newline at end of file
 diff --git a/app/src/main/res/layout/cc_activity_ad_block_share.xml b/app/src/main/res/layout/cc_activity_ad_block_share.xml
 index 546aa409b..3df753e52 100644
