@@ -1,17 +1,12 @@
-Index: app/src/main/res/values/whatsapp_strings.xml
-IDEA additional info:
-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
-<+>UTF-8
-===================================================================
-diff --git a/app/src/main/res/values/whatsapp_strings.xml b/app/src/main/res/values/whatsapp_strings.xml
---- a/app/src/main/res/values/whatsapp_strings.xml	(revision b538c433ee8d5dc48db927498a3ca9eb96853e53)
-+++ b/app/src/main/res/values/whatsapp_strings.xml	(date 1647843974367)
-@@ -2609,7 +2609,7 @@
-     <string name="select_phone_number_subtitle" formatted="false">SIM %d, %s</string>
-     <string name="select_status_recipients">Who can see your status updates</string>
-     <string name="select_status_recipients_black_list">My contacts except…</string>
--    <string name="select_status_recipients_explanation">"Changes to your privacy settings won't affect status updates that you've sent already"</string>
-+    <string name="select_status_recipients_explanation">"Haha this is a test"</string>
-     <string name="select_status_recipients_my_contacts">My contacts</string>
-     <string name="select_status_recipients_title">Who can see my status updates</string>
-     <string name="select_status_recipients_white_list">Only share with…</string>
+diff --git a/app/src/main/res/values/cc_strings.xml b/app/src/main/res/values/cc_strings.xml
+index 622b81fab..9ce5e1a93 100644
+--- a/app/src/main/res/values/cc_strings.xml
++++ b/app/src/main/res/values/cc_strings.xml
+@@ -1240,6 +1240,6 @@ Our official Website: http://heymods.com"</string>
+     <string name="cc_livepic_share_with_closefriends">Only share with close friends</string>
+     <string name="cc_livepic_my_statuses_setting_hint">Add \"only share with close friends\" list to share status on their home screen!</string>
+     <string name="cc_livepic_share_with_closefriends_link">I would like to invite you to be my close friends and show my live pics on your home screen widget!\nTap to continue: %1$s</string>
+-    <string name="cc_livepic_privacy_settings_desc">Changes to your privacy settings won\'t affect status updates that you\'ve sent already. Only pictures can be shown on your close friends\' widget. Texts and videos are not supported.</string>
++    <string name="cc_livepic_privacy_settings_desc">haha this is test</string>
+     <string name="cc_livepic_privacy_list_desc">Once you save this list, you will send a message to the contacts inviting them to become your close friends. Each contact will only receive the message once.</string>
+ </resources>
