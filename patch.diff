@@ -1,5 +1,5 @@
 diff --git a/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt b/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
-index b7fee3154..c2520fa0f 100644
+index b7fee3154..2ebc762bb 100644
 --- a/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
 +++ b/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
 @@ -80,7 +80,7 @@ class AdBlockShareActivity : Activity() {
@@ -7,7 +7,7 @@ index b7fee3154..c2520fa0f 100644
          }
          val spannable = SpannableString(ResMgr.getString("cc_ad_block_share_info")).apply {
 -            setSpan(highlightSpan, 11, 12, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-+            setSpan(highlightSpan, 12, 13, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
++            setSpan(highlightSpan, 11, 13, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
          }
          tvShareInfo.text = spannable
      }
