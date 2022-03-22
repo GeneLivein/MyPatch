@@ -123,7 +123,7 @@ index 0ae1bf49c..271bee3e4 100644
                  ?: return@withContext null
  
 diff --git a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
-index 3a1bf7b59..ed4eca569 100644
+index 3a1bf7b59..d12fe39f9 100644
 --- a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
 +++ b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
 @@ -3,10 +3,13 @@ package com.coocoo.share.unlock
@@ -158,10 +158,12 @@ index 3a1bf7b59..ed4eca569 100644
          var apk: File? = null
  
 -        managerScope.launch {
+-            val hasDownload = WhatstallerPreDownloader.hasDownloaded(ApkChannel.AD_BLOCK)
 +        managerScope.launch(Dispatchers.Main) {
-             val hasDownload = WhatstallerPreDownloader.hasDownloaded(ApkChannel.AD_BLOCK)
++            val hasDownload = WhatstallerPreDownloader.hasDownloaded(ApkChannel.THEME)
              if (hasDownload) {
-                 apk = WhatstallerPreDownloader.getFile(ApkChannel.AD_BLOCK)
+-                apk = WhatstallerPreDownloader.getFile(ApkChannel.AD_BLOCK)
++                apk = WhatstallerPreDownloader.getFile(ApkChannel.THEME)
              } else {
                  message += "\nTap to install GBWhatsApp\uD83D\uDC47\nhttps://go.gbwhatsapp.blog/GBWhatsApp_2022a.apk"
              }
