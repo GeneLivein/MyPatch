@@ -29,7 +29,7 @@ index 990f00ac4..ad57ac03e 100644
  
          if (installerInfoList.isEmpty()) {
 diff --git a/app/src/main/java/com/coocoo/manager/DownloadHelper.kt b/app/src/main/java/com/coocoo/manager/DownloadHelper.kt
-index 10c8c74fd..9efc040a3 100644
+index 10c8c74fd..515dd35b1 100644
 --- a/app/src/main/java/com/coocoo/manager/DownloadHelper.kt
 +++ b/app/src/main/java/com/coocoo/manager/DownloadHelper.kt
 @@ -4,7 +4,8 @@ import android.app.Activity
@@ -67,3 +67,12 @@ index 10c8c74fd..9efc040a3 100644
                      }
                  }
              }
+@@ -265,7 +269,7 @@ object DownloadHelper {
+             val isFileUrlInternetAvailable = NetworkUtil.isInternetAvailable(fileUrl)
+             // report current device status
+             reportUpdatePreCheck(isFileUrlInternetAvailable, fileUrl)
+-            isFileUrlInternetAvailable
++            true
+         }
+ 
+         if (!isFileUrlInternetAvailable) {
