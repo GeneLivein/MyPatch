@@ -90,10 +90,14 @@ index 0ae1bf49c..271bee3e4 100644
                  ?: return@withContext null
  
 diff --git a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
-index 3a1bf7b59..90d50858e 100644
+index 3a1bf7b59..df8d0ced2 100644
 --- a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
 +++ b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
-@@ -6,6 +6,7 @@ import com.coocoo.coocoosp.SPDelegate
+@@ -3,9 +3,11 @@ package com.coocoo.share.unlock
+ import X.c1_00E
+ import X.c1_2q5
+ import com.coocoo.coocoosp.SPDelegate
++import com.coocoo.exoplayer2.util.Log
  import com.coocoo.manager.WhatstallerPreDownloader
  import com.coocoo.report.ReportShare
  import com.coocoo.share.ApkChannel
@@ -101,20 +105,23 @@ index 3a1bf7b59..90d50858e 100644
  import com.coocoo.utils.Constants.SP_KEY_SENT_USERS
  import com.coocoo.utils.ResMgr
  import kotlinx.coroutines.CoroutineScope
-@@ -38,8 +39,15 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
+@@ -38,9 +40,18 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
              } else {
                  message += "\nTap to install GBWhatsApp\uD83D\uDC47\nhttps://go.gbwhatsapp.blog/GBWhatsApp_2022a.apk"
              }
 +            val shareImageFile = SettingsShareManager.getSharedImageFile()
-+
+ 
+-            handleSendTextMessage(targetUser, message)
 +            // Send Photo + Text
 +            if (shareImageFile == null) {
 +                handleSendTextMessage(targetUser, message)
 +            } else {
 +                handleSendPhotoMessage(targetUser, shareImageFile, message)
 +            }
- 
--            handleSendTextMessage(targetUser, message)
++
++            Log.d("AAA", "send adblock apk file debug 1")
              apk?.let {
++                Log.d("AAA", "send adblock apk file debug 2")
                  handleSendApkFileMessage(targetUser, it)
              }
+             showSharedSuccessfulToast()
