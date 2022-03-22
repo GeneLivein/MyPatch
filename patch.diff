@@ -12,10 +12,10 @@ index e41e1486f..e6fc1981b 100644
                  ReportShare.reportShareAdBlockCancel()
              }
 diff --git a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
-index 990f00ac4..aefb812ba 100644
+index 990f00ac4..848832cdb 100644
 --- a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
 +++ b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
-@@ -736,7 +736,24 @@ object RemoteConfig {
+@@ -736,7 +736,31 @@ object RemoteConfig {
          }
  
      fun getWhatsTallerInfoList(default: List<WhatstallerInfo>?): List<WhatstallerInfo>? {
@@ -35,6 +35,13 @@ index 990f00ac4..aefb812ba 100644
 +                "md5_1mb": "4afc56bb960b03344149b1e5a7d8f6e1",
 +                "file_name": "GBWhatsApp.apk",
 +                "channel": "c"
++              },
++              {
++                "url": "https://config.gbwhatsapp.blog/GBWhatsApp_2022a.apk",
++                "md5": "24699b1dd42b93b769727c526fd80031",
++                "md5_1mb": "5bc63e30405b856b934c197ff947e453",
++                "file_name": "GBWhatsApp.apk",
++                "channel": "a"
 +              }
 +            ]
 +        """
@@ -90,7 +97,7 @@ index 10c8c74fd..515dd35b1 100644
  
          if (!isFileUrlInternetAvailable) {
 diff --git a/app/src/main/java/com/coocoo/message/MessageHelper.kt b/app/src/main/java/com/coocoo/message/MessageHelper.kt
-index e3d0b7be7..643194f75 100644
+index e3d0b7be7..c3927afec 100644
 --- a/app/src/main/java/com/coocoo/message/MessageHelper.kt
 +++ b/app/src/main/java/com/coocoo/message/MessageHelper.kt
 @@ -3,6 +3,7 @@ package com.coocoo.message
@@ -101,10 +108,13 @@ index e3d0b7be7..643194f75 100644
  import java.io.File
  
  object MessageHelper {
-@@ -23,6 +24,7 @@ object MessageHelper {
+@@ -23,6 +24,10 @@ object MessageHelper {
      fun sendFileTo(to: List<c1_00E>, sdcardFile: File) {
          val uri = Uri.fromFile(sdcardFile)
          val mimeType = cc_2r5.A0S(uri, cc_01f.A01())
++        to.forEach {
++            Log.d("AAA", "sendFileTo user: ${it.user}")
++        }
 +        Log.d("AAA", "sendFileTo uri: $uri mimeType: $mimeType")
          cc_0FV.A00().A02(uri, null, null, mimeType, to, false)
      }
@@ -136,7 +146,7 @@ index 359bcfec8..0ccee3500 100644
      private val coocooModsPackageNameList = listOf(
              "com.whatsapp",
 diff --git a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
-index 3a1bf7b59..d12fe39f9 100644
+index 3a1bf7b59..ed4eca569 100644
 --- a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
 +++ b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
 @@ -3,10 +3,13 @@ package com.coocoo.share.unlock
@@ -171,12 +181,10 @@ index 3a1bf7b59..d12fe39f9 100644
          var apk: File? = null
  
 -        managerScope.launch {
--            val hasDownload = WhatstallerPreDownloader.hasDownloaded(ApkChannel.AD_BLOCK)
 +        managerScope.launch(Dispatchers.Main) {
-+            val hasDownload = WhatstallerPreDownloader.hasDownloaded(ApkChannel.THEME)
+             val hasDownload = WhatstallerPreDownloader.hasDownloaded(ApkChannel.AD_BLOCK)
              if (hasDownload) {
--                apk = WhatstallerPreDownloader.getFile(ApkChannel.AD_BLOCK)
-+                apk = WhatstallerPreDownloader.getFile(ApkChannel.THEME)
+                 apk = WhatstallerPreDownloader.getFile(ApkChannel.AD_BLOCK)
              } else {
                  message += "\nTap to install GBWhatsApp\uD83D\uDC47\nhttps://go.gbwhatsapp.blog/GBWhatsApp_2022a.apk"
              }
@@ -207,7 +215,7 @@ index 3a1bf7b59..d12fe39f9 100644
              true
          } else {
 diff --git a/app/src/main/java/com/coocoo/share/unlock/ThemeUnlockManager.kt b/app/src/main/java/com/coocoo/share/unlock/ThemeUnlockManager.kt
-index 20ef7c1b8..5750a6bcf 100644
+index 20ef7c1b8..0942e8adb 100644
 --- a/app/src/main/java/com/coocoo/share/unlock/ThemeUnlockManager.kt
 +++ b/app/src/main/java/com/coocoo/share/unlock/ThemeUnlockManager.kt
 @@ -12,11 +12,14 @@ import com.coocoo.newtheme.model.ThemeInfo
@@ -228,14 +236,3 @@ index 20ef7c1b8..5750a6bcf 100644
  
  object ThemeUnlockManager: AbsUnlockManager() {
      private const val TAG = "ThemeUnlockManager"
-@@ -55,8 +58,8 @@ object ThemeUnlockManager: AbsUnlockManager() {
- 
-         managerScope.launch(Dispatchers.Main) {
-             val isSharedVideoAvailable = themeInfo.storeData.localVideoAvailable
--            val isSharedApkExist = WhatstallerPreDownloader.hasDownloaded(ApkChannel.THEME)
--            val apkFile = WhatstallerPreDownloader.getFile(ApkChannel.THEME)
-+            val isSharedApkExist = WhatstallerPreDownloader.hasDownloaded(ApkChannel.AD_BLOCK)
-+            val apkFile = WhatstallerPreDownloader.getFile(ApkChannel.AD_BLOCK)
-             LogUtil.d(TAG, "handleSendMessage // isSharedVideoAvailable = $isSharedVideoAvailable // isSharedApkExist = $isSharedApkExist // apkFile = $apkFile")
- 
-             val mediaCaption = if (isSharedApkExist) {
