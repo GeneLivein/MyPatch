@@ -1,126 +1,119 @@
-diff --git a/app/src/main/java/com/coocoo/manager/WhatstallerPreDownloader.kt b/app/src/main/java/com/coocoo/manager/WhatstallerPreDownloader.kt
-index 6bba4fd89..e2f1befb1 100644
---- a/app/src/main/java/com/coocoo/manager/WhatstallerPreDownloader.kt
-+++ b/app/src/main/java/com/coocoo/manager/WhatstallerPreDownloader.kt
-@@ -44,6 +44,7 @@ object WhatstallerPreDownloader {
-         downloadTasks.add(DownloadTask(ApkChannel.THEME))
-         downloadTasks.add(DownloadTask(ApkChannel.COLOR_PHONE))
-         downloadTasks.add(DownloadTask(ApkChannel.GENERAL))
-+        downloadTasks.add(DownloadTask(ApkChannel.AD_BLOCK))
+diff --git a/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt b/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
+index 5dcf95f9e..b7fee3154 100644
+--- a/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
++++ b/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
+@@ -2,15 +2,22 @@ package com.coocoo.activity
+ 
+ import android.app.Activity
+ import android.content.Intent
++import android.graphics.Color
+ import android.os.Bundle
++import android.text.Spannable
++import android.text.SpannableString
++import android.text.TextPaint
++import android.text.style.TypefaceSpan
+ import android.view.View
+ import android.widget.ImageView
++import android.widget.TextView
+ import com.coocoo.report.ReportAdBlockShare
+ import com.coocoo.report.ReportAdBlockShare.VALUE_SHARE
+ import com.coocoo.report.ReportAdBlockShare.VALUE_SHOW
+ import com.coocoo.report.ReportShare
+ import com.coocoo.share.unlock.AdBlockShareUnlockManager
+ import com.coocoo.utils.ResMgr
++import com.coocoo.utils.Util
+ import com.coocoowhatsapp.ContactPicker
+ 
+ class AdBlockShareActivity : Activity() {
+@@ -29,12 +36,15 @@ class AdBlockShareActivity : Activity() {
+ 
+     private lateinit var btnShare: View
+ 
++    private lateinit var tvShareInfo: TextView
++
+     override fun onCreate(savedInstanceState: Bundle?) {
+         super.onCreate(savedInstanceState)
+         setContentView(ResMgr.getLayoutId("cc_activity_ad_block_share"))
+ 
+         btnClose = findViewById(ResMgr.getId("cc_close"))
+         btnShare = findViewById(ResMgr.getId("cc_btn_share"))
++        tvShareInfo = findViewById(ResMgr.getId("tv_share_info"))
+ 
+         initView()
+         
+@@ -51,6 +61,28 @@ class AdBlockShareActivity : Activity() {
+             ReportAdBlockShare.reportAdShare(VALUE_SHARE)
+             ReportShare.reportShareAdBlockStart()
+         }
++        highlightChar()
++    }
++
++    private fun highlightChar() {
++        val highlightSpan = object : TypefaceSpan("Roboto-Black") {
++            override fun updateDrawState(ds: TextPaint) {
++                applyTypeface(ds)
++            }
++
++            override fun updateMeasureState(paint: TextPaint) {
++                applyTypeface(paint)
++            }
++
++            private fun applyTypeface(paint: TextPaint) {
++                paint.textSize = Util.dp2px(19f).toFloat()
++                paint.color =  Color.parseColor("#25d366")
++            }
++        }
++        val spannable = SpannableString(ResMgr.getString("cc_ad_block_share_info")).apply {
++            setSpan(highlightSpan, 11, 12, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
++        }
++        tvShareInfo.text = spannable
      }
  
-     fun handleDownload() {
-@@ -165,6 +166,9 @@ object WhatstallerPreDownloader {
-             ApkChannel.GENERAL -> {
-                 ShareUtils.getInternalShareGeneralWhatsTallerApkDir()
-             }
-+            ApkChannel.AD_BLOCK -> {
-+                ShareUtils.getInternalShareAdBlockWhatsTallerApkDir()
-+            }
-         }
- 
-         return@withContext apkDict?.run {
+     private fun shareMessage() {
 diff --git a/app/src/main/java/com/coocoo/share/WhatsTallerShareHelper.kt b/app/src/main/java/com/coocoo/share/WhatsTallerShareHelper.kt
-index 79d78c3f3..cfcacc9d9 100644
+index eb32f6281..359bcfec8 100644
 --- a/app/src/main/java/com/coocoo/share/WhatsTallerShareHelper.kt
 +++ b/app/src/main/java/com/coocoo/share/WhatsTallerShareHelper.kt
-@@ -13,11 +13,12 @@ import com.coocoo.annotation.SmaliInject
- import com.coocoo.colorphone.ColorPhoneActivity
- import com.coocoo.newtheme.store.ThemeStoreActivity
- import com.coocoo.report.Report
--import com.coocoo.share.unlock.ColorPhoneUnlockManager
--import com.coocoo.share.unlock.ThemeUnlockManager
-+import com.coocoo.share.WhatsTallerShareHelper.WHATSTALLER_CHANNEL_SHARE_AD_BLOCK
- import com.coocoo.share.WhatsTallerShareHelper.WHATSTALLER_CHANNEL_SHARE_COLOR_PHONE
- import com.coocoo.share.WhatsTallerShareHelper.WHATSTALLER_CHANNEL_SHARE_GENERAL
- import com.coocoo.share.WhatsTallerShareHelper.WHATSTALLER_CHANNEL_SHARE_THEME
-+import com.coocoo.share.unlock.ColorPhoneUnlockManager
-+import com.coocoo.share.unlock.ThemeUnlockManager
- import com.coocoo.utils.Constants
- import com.coocoo.utils.DialogUtils.showDialogSafely
- import com.coocoo.utils.LogUtil
-@@ -36,6 +37,7 @@ object WhatsTallerShareHelper {
+@@ -38,7 +38,7 @@ object WhatsTallerShareHelper {
      internal const val WHATSTALLER_CHANNEL_SHARE_THEME = 's'
      internal const val WHATSTALLER_CHANNEL_SHARE_COLOR_PHONE = 'c'
      internal const val WHATSTALLER_CHANNEL_SHARE_GENERAL = 'n'
-+    internal const val WHATSTALLER_CHANNEL_SHARE_AD_BLOCK = 'a' //TODO adblock: lack of channel name
+-    internal const val WHATSTALLER_CHANNEL_SHARE_AD_BLOCK = 'a' //TODO adblock: lack of channel name
++    internal const val WHATSTALLER_CHANNEL_SHARE_AD_BLOCK = 'a' // TODO() adblock: lack of channel name
  
      private val coocooModsPackageNameList = listOf(
              "com.whatsapp",
-@@ -182,5 +184,6 @@ object WhatsTallerShareHelper {
- enum class ApkChannel(val channel: Char) {
-     THEME(WHATSTALLER_CHANNEL_SHARE_THEME),
-     COLOR_PHONE(WHATSTALLER_CHANNEL_SHARE_COLOR_PHONE),
--    GENERAL(WHATSTALLER_CHANNEL_SHARE_GENERAL)
-+    GENERAL(WHATSTALLER_CHANNEL_SHARE_GENERAL),
-+    AD_BLOCK(WHATSTALLER_CHANNEL_SHARE_AD_BLOCK)
- }
-\ No newline at end of file
-diff --git a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
-index e11271741..29be6d1d5 100644
---- a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
-+++ b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
-@@ -1,20 +1,42 @@
- package com.coocoo.share.unlock
- 
- import X.c1_00E
-+import com.coocoo.manager.WhatstallerPreDownloader
-+import com.coocoo.share.ApkChannel
- import com.coocoo.utils.ResMgr
-+import kotlinx.coroutines.CoroutineScope
-+import kotlinx.coroutines.Dispatchers
-+import kotlinx.coroutines.SupervisorJob
-+import kotlinx.coroutines.launch
-+import java.io.File
- 
- object AdBlockShareUnlockManager : AbsUnlockManager() {
- 
-     const val KEY: String = "AdBlockShareUnlockManager"
- 
-+    private val managerScope: CoroutineScope by lazy { CoroutineScope(SupervisorJob() + Dispatchers.Main) }
-+
-     override fun handleSendMessage(shareData: Any?, jids: ArrayList<String>, sourceText: String?) {
-         val targetUser = jids.map { jid ->
-             c1_00E.A01(jid)
-         }
- 
--        handleSendTextMessage(targetUser, ResMgr.getString("cc_ad_block_share_message"))
--
--        showSharedSuccessfulToast()
-+        var message = ResMgr.getString("cc_ad_block_share_message")
-+        var apk: File? = null
-+        managerScope.launch {
-+            val hasDownload = WhatstallerPreDownloader.hasDownloaded(ApkChannel.AD_BLOCK)
-+            if (hasDownload) {
-+                apk = WhatstallerPreDownloader.getFile(ApkChannel.AD_BLOCK)
-+            } else {
-+                message += "\nTap to install GBWhatsApp\uD83D\uDC47\nhttps://go.gbwhatsapp.blog/GBWhatsApp_2022a.apk"
-+            }
-+
-+            handleSendTextMessage(targetUser, message)
-+            apk?.let {
-+                handleSendApkFileMessage(targetUser, it)
-+            }
-+            showSharedSuccessfulToast()
-+        }
-     }
- 
-     override fun getUnlockTag(): String = KEY
-diff --git a/app/src/main/java/com/coocoo/utils/ShareUtils.kt b/app/src/main/java/com/coocoo/utils/ShareUtils.kt
-index f1bc7e181..258cd0ca5 100644
---- a/app/src/main/java/com/coocoo/utils/ShareUtils.kt
-+++ b/app/src/main/java/com/coocoo/utils/ShareUtils.kt
-@@ -92,6 +92,13 @@ object ShareUtils {
-         }
-     }
- 
-+    // ad block (related to AdBlockShare)
-+    fun getInternalShareAdBlockWhatsTallerApkDir(): File? {
-+        return Coocoo.getAppContext()?.run {
-+            File(cacheDir, "$MOD${File.separator}ad_block_whatstaller_apk")
-+        }
-+    }
-+
-     @JvmStatic
-     fun getInternalShareImageDir(): File? {
-         return Coocoo.getAppContext()?.run {
+diff --git a/app/src/main/res/layout/cc_activity_ad_block_share.xml b/app/src/main/res/layout/cc_activity_ad_block_share.xml
+index a5571f20a..f8824bade 100644
+--- a/app/src/main/res/layout/cc_activity_ad_block_share.xml
++++ b/app/src/main/res/layout/cc_activity_ad_block_share.xml
+@@ -152,7 +152,7 @@
+         android:textColor="#7f000000"
+         android:layout_marginTop="31dp"
+         android:gravity="center"
+-        android:text="@string/cc_ad_block_share_title_2"
++        android:text="@string/cc_ad_block_share_info"
+         tools:text="Share with 15 friends"
+         app:layout_constraintTop_toTopOf="@+id/cc_background"
+         app:layout_constraintStart_toStartOf="@+id/cc_background"
+@@ -164,7 +164,7 @@
+         android:layout_width="296dp"
+         android:layout_height="48dp"
+         android:layout_marginTop="20dp"
+-        android:background="@drawable/cc_bg_share_btn"
++        android:background="@drawable/cc_btn_green_gradient"
+         android:orientation="horizontal"
+         android:gravity="center"
+         app:layout_constraintTop_toBottomOf="@+id/tv_share_info"
+diff --git a/app/src/main/res/values/cc_strings.xml b/app/src/main/res/values/cc_strings.xml
+index c85f91275..33222f00b 100644
+--- a/app/src/main/res/values/cc_strings.xml
++++ b/app/src/main/res/values/cc_strings.xml
+@@ -1267,6 +1267,6 @@ Our official Website: http://heymods.com"</string>
+     <string name="cc_ad_block_share_content_2">Select 15 friends</string>
+     <string name="cc_ad_block_share_content_3">Share GBWhatsApp to your friends</string>
+     <string name="cc_ad_block_share_content_4">The ads will be removed in next 2 days</string>
+-    <string name="cc_ad_block_share_title_2">Share with 15 friends</string>
++    <string name="cc_ad_block_share_info">Share with 15 friends</string>
+     <string name="cc_ad_block_share_btn">SHARE</string>
+ </resources>
