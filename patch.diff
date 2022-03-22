@@ -90,23 +90,18 @@ index 0ae1bf49c..271bee3e4 100644
                  ?: return@withContext null
  
 diff --git a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
-index 3a1bf7b59..6b2e53dd6 100644
+index 3a1bf7b59..90d50858e 100644
 --- a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
 +++ b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
-@@ -4,9 +4,12 @@ import X.c1_00E
- import X.c1_2q5
- import com.coocoo.coocoosp.SPDelegate
+@@ -6,6 +6,7 @@ import com.coocoo.coocoosp.SPDelegate
  import com.coocoo.manager.WhatstallerPreDownloader
-+import com.coocoo.message.MessageHelper
  import com.coocoo.report.ReportShare
  import com.coocoo.share.ApkChannel
 +import com.coocoo.share.SettingsShareManager
  import com.coocoo.utils.Constants.SP_KEY_SENT_USERS
-+import com.coocoo.utils.LogUtil
  import com.coocoo.utils.ResMgr
  import kotlinx.coroutines.CoroutineScope
- import kotlinx.coroutines.Dispatchers
-@@ -38,9 +41,18 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
+@@ -38,8 +39,15 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
              } else {
                  message += "\nTap to install GBWhatsApp\uD83D\uDC47\nhttps://go.gbwhatsapp.blog/GBWhatsApp_2022a.apk"
              }
@@ -114,14 +109,12 @@ index 3a1bf7b59..6b2e53dd6 100644
 +
 +            // Send Photo + Text
 +            if (shareImageFile == null) {
-+                MessageHelper.sendMessageTo(targetUser, message)
++                handleSendTextMessage(targetUser, message)
 +            } else {
-+                MessageHelper.sendPhotoTo(targetUser, shareImageFile, message)
++                handleSendPhotoMessage(targetUser, shareImageFile, message)
 +            }
  
-             handleSendTextMessage(targetUser, message)
+-            handleSendTextMessage(targetUser, message)
              apk?.let {
-+                LogUtil.d("AAA", "Apk path: ${apk?.absolutePath}")
                  handleSendApkFileMessage(targetUser, it)
              }
-             showSharedSuccessfulToast()
