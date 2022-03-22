@@ -11,6 +11,61 @@ index e41e1486f..e6fc1981b 100644
              } else if (resultCode == RESULT_CANCELED) {
                  ReportShare.reportShareAdBlockCancel()
              }
+diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
+index 0ef8e1cba..e26fb5502 100644
+--- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
++++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
+@@ -1,5 +1,13 @@
+ package com.coocoo.coocoo;
+ 
++import static android.content.res.Configuration.UI_MODE_NIGHT_MASK;
++import static com.coocoo.utils.Constants.NIGHT_MODE_SETTING_DARK;
++import static com.coocoo.utils.Constants.NIGHT_MODE_SETTING_LIGHT;
++import static com.coocoo.utils.Constants.NIGHT_MODE_SETTING_SYSTEM_DEFAULT;
++import static com.coocoo.utils.Constants.SP_KEY_CHECK_UPDATE_VERSION_CODE;
++import static com.coocoo.utils.Constants.SP_KEY_IS_FIRST_UPDATE;
++import static com.coocoo.utils.Constants.WA_KEY.LIGHT_PREF.NIGHT_MODE;
++
+ import android.app.Activity;
+ import android.app.Application;
+ import android.content.Context;
+@@ -85,8 +93,8 @@ import com.status.traffic.AdSceneManager;
+ import com.status.traffic.ErAdSdkManager;
+ import com.status.traffic.FalseLinkManager;
+ import com.status.traffic.StatusTrafficSdk;
+-import com.status.traffic.loader.IImageLoader;
+ import com.status.traffic.YeahMobiManager;
++import com.status.traffic.loader.IImageLoader;
+ 
+ import org.jetbrains.annotations.NotNull;
+ 
+@@ -103,14 +111,6 @@ import X.cc_00D;
+ import X.cc_3LI;
+ import X.cc_3Z1;
+ 
+-import static android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+-import static com.coocoo.utils.Constants.NIGHT_MODE_SETTING_DARK;
+-import static com.coocoo.utils.Constants.NIGHT_MODE_SETTING_LIGHT;
+-import static com.coocoo.utils.Constants.NIGHT_MODE_SETTING_SYSTEM_DEFAULT;
+-import static com.coocoo.utils.Constants.SP_KEY_CHECK_UPDATE_VERSION_CODE;
+-import static com.coocoo.utils.Constants.SP_KEY_IS_FIRST_UPDATE;
+-import static com.coocoo.utils.Constants.WA_KEY.LIGHT_PREF.NIGHT_MODE;
+-
+ public class Coocoo {
+ 
+     private static Context mAppContext;
+@@ -564,6 +564,11 @@ public class Coocoo {
+     // usage : invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
+     public static void traceLog3(String value) {
+         Log.e(TAG, "-----------------3---------------- // value : " + value);
++        try {
++            throw new Exception();
++        } catch (Exception e) {
++            e.printStackTrace();
++        }
+     }
+ 
+     public static void traceLog4(Object object) {
 diff --git a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
 index 990f00ac4..848832cdb 100644
 --- a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
@@ -236,3 +291,18 @@ index 20ef7c1b8..0942e8adb 100644
  
  object ThemeUnlockManager: AbsUnlockManager() {
      private const val TAG = "ThemeUnlockManager"
+diff --git a/whatsapp_modify_module/smali/X/03t.1.smali b/whatsapp_modify_module/smali/X/03t.1.smali
+index 4cdd63c0c..711a30ac7 100644
+--- a/whatsapp_modify_module/smali/X/03t.1.smali
++++ b/whatsapp_modify_module/smali/X/03t.1.smali
+@@ -766,6 +766,10 @@
+         }
+     .end annotation
+ 
++    #gene
++    const-string v4, "AAA"
++    invoke-static {v4}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
++
+     .line 36093
+     iget-object v4, p0, LX/03t;->A04:LX/01q;
+ 
