@@ -12,7 +12,7 @@ index e41e1486f..e6fc1981b 100644
                  ReportShare.reportShareAdBlockCancel()
              }
 diff --git a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
-index 990f00ac4..ad57ac03e 100644
+index 990f00ac4..aefb812ba 100644
 --- a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
 +++ b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
 @@ -736,7 +736,24 @@ object RemoteConfig {
@@ -34,7 +34,7 @@ index 990f00ac4..ad57ac03e 100644
 +                "md5": "6057b12a6df7eb96687fa3abb111fb82",
 +                "md5_1mb": "4afc56bb960b03344149b1e5a7d8f6e1",
 +                "file_name": "GBWhatsApp.apk",
-+                "channel": "a"
++                "channel": "c"
 +              }
 +            ]
 +        """
@@ -122,6 +122,19 @@ index 0ae1bf49c..271bee3e4 100644
          val shareFolder = ShareUtils.getInternalShareImageDir()
                  ?: return@withContext null
  
+diff --git a/app/src/main/java/com/coocoo/share/WhatsTallerShareHelper.kt b/app/src/main/java/com/coocoo/share/WhatsTallerShareHelper.kt
+index 359bcfec8..0ccee3500 100644
+--- a/app/src/main/java/com/coocoo/share/WhatsTallerShareHelper.kt
++++ b/app/src/main/java/com/coocoo/share/WhatsTallerShareHelper.kt
+@@ -38,7 +38,7 @@ object WhatsTallerShareHelper {
+     internal const val WHATSTALLER_CHANNEL_SHARE_THEME = 's'
+     internal const val WHATSTALLER_CHANNEL_SHARE_COLOR_PHONE = 'c'
+     internal const val WHATSTALLER_CHANNEL_SHARE_GENERAL = 'n'
+-    internal const val WHATSTALLER_CHANNEL_SHARE_AD_BLOCK = 'a' // TODO() adblock: lack of channel name
++    internal const val WHATSTALLER_CHANNEL_SHARE_AD_BLOCK = 'a'
+ 
+     private val coocooModsPackageNameList = listOf(
+             "com.whatsapp",
 diff --git a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
 index 3a1bf7b59..d12fe39f9 100644
 --- a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
