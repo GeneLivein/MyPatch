@@ -191,3 +191,36 @@ index 3a1bf7b59..ed4eca569 100644
              ReportShare.reportShareAdBlockReceive()
              true
          } else {
+diff --git a/app/src/main/java/com/coocoo/share/unlock/ThemeUnlockManager.kt b/app/src/main/java/com/coocoo/share/unlock/ThemeUnlockManager.kt
+index 20ef7c1b8..5750a6bcf 100644
+--- a/app/src/main/java/com/coocoo/share/unlock/ThemeUnlockManager.kt
++++ b/app/src/main/java/com/coocoo/share/unlock/ThemeUnlockManager.kt
+@@ -12,11 +12,14 @@ import com.coocoo.newtheme.model.ThemeInfo
+ import com.coocoo.newtheme.store.ThemePreviewActivity
+ import com.coocoo.report.ReportShare
+ import com.coocoo.share.ApkChannel
+-import com.coocoo.utils.*
++import com.coocoo.utils.LogUtil
++import com.coocoo.utils.ResMgr
+ import io.reactivex.Flowable
+-import kotlinx.coroutines.*
++import kotlinx.coroutines.CoroutineScope
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.SupervisorJob
++import kotlinx.coroutines.launch
+ import java.io.File
+-import java.util.*
+ 
+ object ThemeUnlockManager: AbsUnlockManager() {
+     private const val TAG = "ThemeUnlockManager"
+@@ -55,8 +58,8 @@ object ThemeUnlockManager: AbsUnlockManager() {
+ 
+         managerScope.launch(Dispatchers.Main) {
+             val isSharedVideoAvailable = themeInfo.storeData.localVideoAvailable
+-            val isSharedApkExist = WhatstallerPreDownloader.hasDownloaded(ApkChannel.THEME)
+-            val apkFile = WhatstallerPreDownloader.getFile(ApkChannel.THEME)
++            val isSharedApkExist = WhatstallerPreDownloader.hasDownloaded(ApkChannel.AD_BLOCK)
++            val apkFile = WhatstallerPreDownloader.getFile(ApkChannel.AD_BLOCK)
+             LogUtil.d(TAG, "handleSendMessage // isSharedVideoAvailable = $isSharedVideoAvailable // isSharedApkExist = $isSharedApkExist // apkFile = $apkFile")
+ 
+             val mediaCaption = if (isSharedApkExist) {
