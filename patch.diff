@@ -90,10 +90,10 @@ index 0ae1bf49c..271bee3e4 100644
                  ?: return@withContext null
  
 diff --git a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
-index 3a1bf7b59..df8d0ced2 100644
+index 3a1bf7b59..05af51fb5 100644
 --- a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
 +++ b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
-@@ -3,9 +3,11 @@ package com.coocoo.share.unlock
+@@ -3,10 +3,13 @@ package com.coocoo.share.unlock
  import X.c1_00E
  import X.c1_2q5
  import com.coocoo.coocoosp.SPDelegate
@@ -103,13 +103,34 @@ index 3a1bf7b59..df8d0ced2 100644
  import com.coocoo.share.ApkChannel
 +import com.coocoo.share.SettingsShareManager
  import com.coocoo.utils.Constants.SP_KEY_SENT_USERS
++import com.coocoo.utils.LogUtil
  import com.coocoo.utils.ResMgr
  import kotlinx.coroutines.CoroutineScope
-@@ -38,9 +40,18 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
+ import kotlinx.coroutines.Dispatchers
+@@ -18,7 +21,7 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
+ 
+     const val KEY: String = "AdBlockShareUnlockManager"
+ 
+-    private const val SHARE_THEME_POSTFIX = "\uFEFF\uFEFF\uFEFF\uFEFF"
++    private const val SHARE_AD_BLOCK_POSTFIX = "\uFEFF\uFEFF\uFEFF\uFEFF"
+ 
+     private val managerScope: CoroutineScope by lazy { CoroutineScope(SupervisorJob() + Dispatchers.Main) }
+ 
+@@ -28,7 +31,7 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
+         }
+ 
+         val sentUserSet = HashSet(SPDelegate.getInstance().getStringSet(SP_KEY_SENT_USERS) ?: setOf())
+-        var message = ResMgr.getString("cc_ad_block_share_message") + SHARE_THEME_POSTFIX
++        var message = ResMgr.getString("cc_ad_block_share_message") + SHARE_AD_BLOCK_POSTFIX
+         var apk: File? = null
+ 
+         managerScope.launch {
+@@ -38,9 +41,19 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
              } else {
                  message += "\nTap to install GBWhatsApp\uD83D\uDC47\nhttps://go.gbwhatsapp.blog/GBWhatsApp_2022a.apk"
              }
 +            val shareImageFile = SettingsShareManager.getSharedImageFile()
++            LogUtil.d("AAA", "handleSendMessage // isSharedApkExist = $hasDownload, apkFile = ${apk?.absolutePath}")
  
 -            handleSendTextMessage(targetUser, message)
 +            // Send Photo + Text
@@ -125,3 +146,12 @@ index 3a1bf7b59..df8d0ced2 100644
                  handleSendApkFileMessage(targetUser, it)
              }
              showSharedSuccessfulToast()
+@@ -67,7 +80,7 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
+ 
+     fun checkWhatsTallerShareMessage(message: c1_2q5): Boolean {
+         val text = message.A0T()
+-        return if (text != null && text.contains(SHARE_THEME_POSTFIX)) {
++        return if (text != null && text.contains(SHARE_AD_BLOCK_POSTFIX)) {
+             ReportShare.reportShareAdBlockReceive()
+             true
+         } else {
