@@ -89,6 +89,26 @@ index 10c8c74fd..515dd35b1 100644
          }
  
          if (!isFileUrlInternetAvailable) {
+diff --git a/app/src/main/java/com/coocoo/message/MessageHelper.kt b/app/src/main/java/com/coocoo/message/MessageHelper.kt
+index e3d0b7be7..643194f75 100644
+--- a/app/src/main/java/com/coocoo/message/MessageHelper.kt
++++ b/app/src/main/java/com/coocoo/message/MessageHelper.kt
+@@ -3,6 +3,7 @@ package com.coocoo.message
+ import X.*
+ import android.net.Uri
+ import com.coocoo.annotation.SmaliInject
++import com.coocoo.exoplayer2.util.Log
+ import java.io.File
+ 
+ object MessageHelper {
+@@ -23,6 +24,7 @@ object MessageHelper {
+     fun sendFileTo(to: List<c1_00E>, sdcardFile: File) {
+         val uri = Uri.fromFile(sdcardFile)
+         val mimeType = cc_2r5.A0S(uri, cc_01f.A01())
++        Log.d("AAA", "sendFileTo uri: $uri mimeType: $mimeType")
+         cc_0FV.A00().A02(uri, null, null, mimeType, to, false)
+     }
+ 
 diff --git a/app/src/main/java/com/coocoo/share/SettingsShareManager.kt b/app/src/main/java/com/coocoo/share/SettingsShareManager.kt
 index 0ae1bf49c..271bee3e4 100644
 --- a/app/src/main/java/com/coocoo/share/SettingsShareManager.kt
@@ -103,7 +123,7 @@ index 0ae1bf49c..271bee3e4 100644
                  ?: return@withContext null
  
 diff --git a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
-index 3a1bf7b59..05af51fb5 100644
+index 3a1bf7b59..ed4eca569 100644
 --- a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
 +++ b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
 @@ -3,10 +3,13 @@ package com.coocoo.share.unlock
@@ -129,7 +149,7 @@ index 3a1bf7b59..05af51fb5 100644
  
      private val managerScope: CoroutineScope by lazy { CoroutineScope(SupervisorJob() + Dispatchers.Main) }
  
-@@ -28,7 +31,7 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
+@@ -28,19 +31,29 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
          }
  
          val sentUserSet = HashSet(SPDelegate.getInstance().getStringSet(SP_KEY_SENT_USERS) ?: setOf())
@@ -137,8 +157,11 @@ index 3a1bf7b59..05af51fb5 100644
 +        var message = ResMgr.getString("cc_ad_block_share_message") + SHARE_AD_BLOCK_POSTFIX
          var apk: File? = null
  
-         managerScope.launch {
-@@ -38,9 +41,19 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
+-        managerScope.launch {
++        managerScope.launch(Dispatchers.Main) {
+             val hasDownload = WhatstallerPreDownloader.hasDownloaded(ApkChannel.AD_BLOCK)
+             if (hasDownload) {
+                 apk = WhatstallerPreDownloader.getFile(ApkChannel.AD_BLOCK)
              } else {
                  message += "\nTap to install GBWhatsApp\uD83D\uDC47\nhttps://go.gbwhatsapp.blog/GBWhatsApp_2022a.apk"
              }
