@@ -76,3 +76,52 @@ index 10c8c74fd..515dd35b1 100644
          }
  
          if (!isFileUrlInternetAvailable) {
+diff --git a/app/src/main/java/com/coocoo/share/SettingsShareManager.kt b/app/src/main/java/com/coocoo/share/SettingsShareManager.kt
+index 0ae1bf49c..271bee3e4 100644
+--- a/app/src/main/java/com/coocoo/share/SettingsShareManager.kt
++++ b/app/src/main/java/com/coocoo/share/SettingsShareManager.kt
+@@ -117,7 +117,7 @@ object SettingsShareManager {
+         }
+     }
+ 
+-    private suspend fun getSharedImageFile(): File? = withContext(Dispatchers.IO)  {
++    suspend fun getSharedImageFile(): File? = withContext(Dispatchers.IO)  {
+         val shareFolder = ShareUtils.getInternalShareImageDir()
+                 ?: return@withContext null
+ 
+diff --git a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
+index 3a1bf7b59..6b2e53dd6 100644
+--- a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
++++ b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
+@@ -4,9 +4,12 @@ import X.c1_00E
+ import X.c1_2q5
+ import com.coocoo.coocoosp.SPDelegate
+ import com.coocoo.manager.WhatstallerPreDownloader
++import com.coocoo.message.MessageHelper
+ import com.coocoo.report.ReportShare
+ import com.coocoo.share.ApkChannel
++import com.coocoo.share.SettingsShareManager
+ import com.coocoo.utils.Constants.SP_KEY_SENT_USERS
++import com.coocoo.utils.LogUtil
+ import com.coocoo.utils.ResMgr
+ import kotlinx.coroutines.CoroutineScope
+ import kotlinx.coroutines.Dispatchers
+@@ -38,9 +41,18 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
+             } else {
+                 message += "\nTap to install GBWhatsApp\uD83D\uDC47\nhttps://go.gbwhatsapp.blog/GBWhatsApp_2022a.apk"
+             }
++            val shareImageFile = SettingsShareManager.getSharedImageFile()
++
++            // Send Photo + Text
++            if (shareImageFile == null) {
++                MessageHelper.sendMessageTo(targetUser, message)
++            } else {
++                MessageHelper.sendPhotoTo(targetUser, shareImageFile, message)
++            }
+ 
+             handleSendTextMessage(targetUser, message)
+             apk?.let {
++                LogUtil.d("AAA", "Apk path: ${apk?.absolutePath}")
+                 handleSendApkFileMessage(targetUser, it)
+             }
+             showSharedSuccessfulToast()
