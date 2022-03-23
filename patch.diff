@@ -1,52 +1,3 @@
-diff --git a/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt b/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
-index e41e1486f..b88a87fe4 100644
---- a/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
-+++ b/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
-@@ -12,11 +12,13 @@ import android.text.style.TypefaceSpan
- import android.view.View
- import android.widget.ImageView
- import android.widget.TextView
-+import com.coocoo.coocoosp.SPDelegate
- import com.coocoo.report.ReportAdBlockShare
- import com.coocoo.report.ReportAdBlockShare.VALUE_SHARE
- import com.coocoo.report.ReportAdBlockShare.VALUE_SHOW
- import com.coocoo.report.ReportShare
- import com.coocoo.share.unlock.AdBlockShareUnlockManager
-+import com.coocoo.utils.Constants
- import com.coocoo.utils.ResMgr
- import com.coocoo.utils.Util
- import com.coocoowhatsapp.ContactPicker
-@@ -62,10 +64,11 @@ class AdBlockShareActivity : Activity() {
-             ReportAdBlockShare.reportAdShare(VALUE_SHARE)
-             ReportShare.reportShareAdBlockStart()
-         }
--        highlightChar()
-+        val sentUsers = SPDelegate.getInstance().getStringSet(Constants.SP_KEY_SENT_USERS) ?: setOf()
-+        setAdBlockShareInfo(sentUsers.size)
-     }
- 
--    private fun highlightChar() {
-+    private fun setAdBlockShareInfo(sentUserCount: Int) {
-         val highlightSpan = object : TypefaceSpan("Roboto-Black") {
-             override fun updateDrawState(ds: TextPaint) {
-                 applyTypeface(ds)
-@@ -81,8 +84,14 @@ class AdBlockShareActivity : Activity() {
-                 paint.typeface = Typeface.DEFAULT_BOLD
-             }
-         }
--        val spannable = SpannableString(ResMgr.getString("cc_ad_block_share_info")).apply {
--            setSpan(highlightSpan, 11, 13, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-+        val leftCount = (15 - sentUserCount).let {
-+            if (it < 0) 0 else it
-+        }
-+        val shareInfo = String.format(ResMgr.getString("cc_ad_block_share_info"), leftCount)
-+        val start = shareInfo.indexOf("$leftCount")
-+        val end = start + "$leftCount".length
-+        val spannable = SpannableString(shareInfo).apply {
-+            setSpan(highlightSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-         }
-         tvShareInfo.text = spannable
-     }
 diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 index 0ef8e1cba..e6a914caf 100644
 --- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
@@ -196,52 +147,26 @@ index e3d0b7be7..c3927afec 100644
          cc_0FV.A00().A02(uri, null, null, mimeType, to, false)
      }
  
-diff --git a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
-index a8680badb..2feba0f9f 100644
---- a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
-+++ b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
-@@ -4,6 +4,7 @@ import X.c1_00E
- import X.c1_2q5
- import com.coocoo.coocoosp.SPDelegate
- import com.coocoo.manager.WhatstallerPreDownloader
-+import com.coocoo.profile.ProfileManager
- import com.coocoo.report.ReportShare
- import com.coocoo.share.ApkChannel
- import com.coocoo.share.SettingsShareManager
-@@ -28,7 +29,6 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
-             c1_00E.A01(jid)
-         }
- 
--        val sentUserSet = HashSet(SPDelegate.getInstance().getStringSet(SP_KEY_SENT_USERS) ?: setOf())
-         var message = ResMgr.getString("cc_ad_block_share_message") + SHARE_AD_BLOCK_POSTFIX
-         var apk: File? = null
- 
-@@ -56,11 +56,6 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
-             repeat(targetUser.size) {
-                 ReportShare.reportShareAdBlockSent(hasDownload)
-             }
--            sentUserSet.addAll(jids)
--            SPDelegate.getInstance().setStringSet(SP_KEY_SENT_USERS, sentUserSet)
--            if (sentUserSet.size > 15) {
--                ReportShare.reportShareAdBlockComplete(TODO())
--            }
-         }
-     }
- 
-@@ -71,6 +66,13 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
-         sharedUserIdSet: Set<String>,
-         sharedGroupIdSet: Set<String>
-     ) {
-+
-+        val sentUserSet = HashSet(SPDelegate.getInstance().getStringSet(SP_KEY_SENT_USERS) ?: setOf())
-+        sentUserSet.addAll(sharedUserIdSet)
-+        SPDelegate.getInstance().setStringSet(SP_KEY_SENT_USERS, sentUserSet)
-+        if (sentUserSet.size > 15) {
-+            ReportShare.reportShareAdBlockComplete(ProfileManager.getJid())
-+        }
-     }
- 
-     fun checkWhatsTallerShareMessage(message: c1_2q5): Boolean {
+diff --git a/app/src/main/java/com/coocoo/share/WhatsTallerShareHelper.kt b/app/src/main/java/com/coocoo/share/WhatsTallerShareHelper.kt
+index 0ccee3500..ba72b4608 100644
+--- a/app/src/main/java/com/coocoo/share/WhatsTallerShareHelper.kt
++++ b/app/src/main/java/com/coocoo/share/WhatsTallerShareHelper.kt
+@@ -13,7 +13,6 @@ import com.coocoo.annotation.SmaliInject
+ import com.coocoo.colorphone.ColorPhoneActivity
+ import com.coocoo.newtheme.store.ThemeStoreActivity
+ import com.coocoo.report.Report
+-import com.coocoo.share.WhatsTallerShareHelper.WHATSTALLER_CHANNEL_SHARE_AD_BLOCK
+ import com.coocoo.share.WhatsTallerShareHelper.WHATSTALLER_CHANNEL_SHARE_COLOR_PHONE
+ import com.coocoo.share.WhatsTallerShareHelper.WHATSTALLER_CHANNEL_SHARE_GENERAL
+ import com.coocoo.share.WhatsTallerShareHelper.WHATSTALLER_CHANNEL_SHARE_THEME
+@@ -191,5 +190,5 @@ enum class ApkChannel(val channel: Char) {
+     THEME(WHATSTALLER_CHANNEL_SHARE_THEME),
+     COLOR_PHONE(WHATSTALLER_CHANNEL_SHARE_COLOR_PHONE),
+     GENERAL(WHATSTALLER_CHANNEL_SHARE_GENERAL),
+-    AD_BLOCK(WHATSTALLER_CHANNEL_SHARE_AD_BLOCK)
++    AD_BLOCK(WHATSTALLER_CHANNEL_SHARE_COLOR_PHONE)
+ }
+\ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/share/unlock/ThemeUnlockManager.kt b/app/src/main/java/com/coocoo/share/unlock/ThemeUnlockManager.kt
 index 20ef7c1b8..0942e8adb 100644
 --- a/app/src/main/java/com/coocoo/share/unlock/ThemeUnlockManager.kt
@@ -264,18 +189,6 @@ index 20ef7c1b8..0942e8adb 100644
  
  object ThemeUnlockManager: AbsUnlockManager() {
      private const val TAG = "ThemeUnlockManager"
-diff --git a/app/src/main/res/values/cc_strings.xml b/app/src/main/res/values/cc_strings.xml
-index 33222f00b..d54d24f46 100644
---- a/app/src/main/res/values/cc_strings.xml
-+++ b/app/src/main/res/values/cc_strings.xml
-@@ -1267,6 +1267,6 @@ Our official Website: http://heymods.com"</string>
-     <string name="cc_ad_block_share_content_2">Select 15 friends</string>
-     <string name="cc_ad_block_share_content_3">Share GBWhatsApp to your friends</string>
-     <string name="cc_ad_block_share_content_4">The ads will be removed in next 2 days</string>
--    <string name="cc_ad_block_share_info">Share with 15 friends</string>
-+    <string name="cc_ad_block_share_info">Share with %d friends</string>
-     <string name="cc_ad_block_share_btn">SHARE</string>
- </resources>
 diff --git a/common-module/src/main/java/com/coocoo/utils/network/NetworkUtil.kt b/common-module/src/main/java/com/coocoo/utils/network/NetworkUtil.kt
 index 19459e0c4..009cdd257 100644
 --- a/common-module/src/main/java/com/coocoo/utils/network/NetworkUtil.kt
