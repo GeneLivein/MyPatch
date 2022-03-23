@@ -1160,9 +1160,9 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 ===================================================================
 diff --git a/whatsapp_modify_module/smali/X/0FV.smali b/whatsapp_modify_module/smali/X/0FV.smali
 new file mode 100644
---- /dev/null	(date 1648015423533)
-+++ b/whatsapp_modify_module/smali/X/0FV.smali	(date 1648015423533)
-@@ -0,0 +1,1944 @@
+--- /dev/null	(date 1648016769716)
++++ b/whatsapp_modify_module/smali/X/0FV.smali	(date 1648016769716)
+@@ -0,0 +1,1945 @@
 +.class public LX/0FV;
 +.super Ljava/lang/Object;
 +.source ""
@@ -2809,8 +2809,9 @@ new file mode 100644
 +            "hasNumberFromUrl"
 +        }
 +    .end annotation
-+
-+    invoke-static {p3}, Lcom/coocoo/coocoo/Coocoo;->traceLogFile(Ljava/io/File;)V
++#gene
++    move-object/from16 v2, p3
++    invoke-static {v2}, Lcom/coocoo/coocoo/Coocoo;->traceLogFile(Ljava/io/File;)V
 +
 +    const/4 v2, 0x0
 +
