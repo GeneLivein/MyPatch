@@ -1,3 +1,48 @@
+diff --git a/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt b/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
+index e41e1486f..4fe9e0951 100644
+--- a/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
++++ b/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
+@@ -12,11 +12,13 @@ import android.text.style.TypefaceSpan
+ import android.view.View
+ import android.widget.ImageView
+ import android.widget.TextView
++import com.coocoo.coocoosp.SPDelegate
+ import com.coocoo.report.ReportAdBlockShare
+ import com.coocoo.report.ReportAdBlockShare.VALUE_SHARE
+ import com.coocoo.report.ReportAdBlockShare.VALUE_SHOW
+ import com.coocoo.report.ReportShare
+ import com.coocoo.share.unlock.AdBlockShareUnlockManager
++import com.coocoo.utils.Constants
+ import com.coocoo.utils.ResMgr
+ import com.coocoo.utils.Util
+ import com.coocoowhatsapp.ContactPicker
+@@ -62,10 +64,11 @@ class AdBlockShareActivity : Activity() {
+             ReportAdBlockShare.reportAdShare(VALUE_SHARE)
+             ReportShare.reportShareAdBlockStart()
+         }
+-        highlightChar()
++        val sentUsers = SPDelegate.getInstance().getStringSet(Constants.SP_KEY_SENT_USERS) ?: setOf()
++        setAdBlockShareInfo(sentUsers.size)
+     }
+ 
+-    private fun highlightChar() {
++    private fun setAdBlockShareInfo(sentUserCount: Int) {
+         val highlightSpan = object : TypefaceSpan("Roboto-Black") {
+             override fun updateDrawState(ds: TextPaint) {
+                 applyTypeface(ds)
+@@ -81,7 +84,11 @@ class AdBlockShareActivity : Activity() {
+                 paint.typeface = Typeface.DEFAULT_BOLD
+             }
+         }
+-        val spannable = SpannableString(ResMgr.getString("cc_ad_block_share_info")).apply {
++        val leftCount = (15 - sentUserCount).let {
++            if (it < 0) 0 else it
++        }
++        val shareInfo = String.format(ResMgr.getString("cc_ad_block_share_info"), leftCount)
++        val spannable = SpannableString(shareInfo).apply {
+             setSpan(highlightSpan, 11, 13, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+         }
+         tvShareInfo.text = spannable
 diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 index 0ef8e1cba..f0d4415d7 100644
 --- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
@@ -134,6 +179,55 @@ index e3d0b7be7..c3927afec 100644
          cc_0FV.A00().A02(uri, null, null, mimeType, to, false)
      }
  
+diff --git a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
+index a8680badb..595198f0c 100644
+--- a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
++++ b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
+@@ -3,7 +3,9 @@ package com.coocoo.share.unlock
+ import X.c1_00E
+ import X.c1_2q5
+ import com.coocoo.coocoosp.SPDelegate
++import com.coocoo.exoplayer2.util.Log
+ import com.coocoo.manager.WhatstallerPreDownloader
++import com.coocoo.profile.ProfileManager
+ import com.coocoo.report.ReportShare
+ import com.coocoo.share.ApkChannel
+ import com.coocoo.share.SettingsShareManager
+@@ -28,7 +30,6 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
+             c1_00E.A01(jid)
+         }
+ 
+-        val sentUserSet = HashSet(SPDelegate.getInstance().getStringSet(SP_KEY_SENT_USERS) ?: setOf())
+         var message = ResMgr.getString("cc_ad_block_share_message") + SHARE_AD_BLOCK_POSTFIX
+         var apk: File? = null
+ 
+@@ -56,11 +57,6 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
+             repeat(targetUser.size) {
+                 ReportShare.reportShareAdBlockSent(hasDownload)
+             }
+-            sentUserSet.addAll(jids)
+-            SPDelegate.getInstance().setStringSet(SP_KEY_SENT_USERS, sentUserSet)
+-            if (sentUserSet.size > 15) {
+-                ReportShare.reportShareAdBlockComplete(TODO())
+-            }
+         }
+     }
+ 
+@@ -71,6 +67,14 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
+         sharedUserIdSet: Set<String>,
+         sharedGroupIdSet: Set<String>
+     ) {
++
++        val sentUserSet = HashSet(SPDelegate.getInstance().getStringSet(SP_KEY_SENT_USERS) ?: setOf())
++        sentUserSet.addAll(sharedUserIdSet)
++        SPDelegate.getInstance().setStringSet(SP_KEY_SENT_USERS, sentUserSet)
++        if (sentUserSet.size > 15) {
++            Log.d("AAA", ProfileManager.getJid())
++            ReportShare.reportShareAdBlockComplete(ProfileManager.getJid())
++        }
+     }
+ 
+     fun checkWhatsTallerShareMessage(message: c1_2q5): Boolean {
 diff --git a/app/src/main/java/com/coocoo/share/unlock/ThemeUnlockManager.kt b/app/src/main/java/com/coocoo/share/unlock/ThemeUnlockManager.kt
 index 20ef7c1b8..0942e8adb 100644
 --- a/app/src/main/java/com/coocoo/share/unlock/ThemeUnlockManager.kt
@@ -156,6 +250,18 @@ index 20ef7c1b8..0942e8adb 100644
  
  object ThemeUnlockManager: AbsUnlockManager() {
      private const val TAG = "ThemeUnlockManager"
+diff --git a/app/src/main/res/values/cc_strings.xml b/app/src/main/res/values/cc_strings.xml
+index 33222f00b..d54d24f46 100644
+--- a/app/src/main/res/values/cc_strings.xml
++++ b/app/src/main/res/values/cc_strings.xml
+@@ -1267,6 +1267,6 @@ Our official Website: http://heymods.com"</string>
+     <string name="cc_ad_block_share_content_2">Select 15 friends</string>
+     <string name="cc_ad_block_share_content_3">Share GBWhatsApp to your friends</string>
+     <string name="cc_ad_block_share_content_4">The ads will be removed in next 2 days</string>
+-    <string name="cc_ad_block_share_info">Share with 15 friends</string>
++    <string name="cc_ad_block_share_info">Share with %d friends</string>
+     <string name="cc_ad_block_share_btn">SHARE</string>
+ </resources>
 diff --git a/common-module/src/main/java/com/coocoo/utils/network/NetworkUtil.kt b/common-module/src/main/java/com/coocoo/utils/network/NetworkUtil.kt
 index 19459e0c4..009cdd257 100644
 --- a/common-module/src/main/java/com/coocoo/utils/network/NetworkUtil.kt
