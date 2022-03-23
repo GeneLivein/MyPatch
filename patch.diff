@@ -1,5 +1,5 @@
 diff --git a/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt b/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
-index e41e1486f..4fe9e0951 100644
+index e41e1486f..b88a87fe4 100644
 --- a/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
 +++ b/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
 @@ -12,11 +12,13 @@ import android.text.style.TypefaceSpan
@@ -30,19 +30,23 @@ index e41e1486f..4fe9e0951 100644
          val highlightSpan = object : TypefaceSpan("Roboto-Black") {
              override fun updateDrawState(ds: TextPaint) {
                  applyTypeface(ds)
-@@ -81,7 +84,11 @@ class AdBlockShareActivity : Activity() {
+@@ -81,8 +84,14 @@ class AdBlockShareActivity : Activity() {
                  paint.typeface = Typeface.DEFAULT_BOLD
              }
          }
 -        val spannable = SpannableString(ResMgr.getString("cc_ad_block_share_info")).apply {
+-            setSpan(highlightSpan, 11, 13, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 +        val leftCount = (15 - sentUserCount).let {
 +            if (it < 0) 0 else it
 +        }
 +        val shareInfo = String.format(ResMgr.getString("cc_ad_block_share_info"), leftCount)
++        val start = shareInfo.indexOf("$leftCount")
++        val end = start + "$leftCount".length
 +        val spannable = SpannableString(shareInfo).apply {
-             setSpan(highlightSpan, 11, 13, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
++            setSpan(highlightSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
          }
          tvShareInfo.text = spannable
+     }
 diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 index 0ef8e1cba..f0d4415d7 100644
 --- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
