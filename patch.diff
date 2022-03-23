@@ -3108,6 +3108,33 @@ new file mode 100644
 +
 +    goto :goto_1
 +.end method
+Index: app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
+--- a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt	(revision 821b5601c9d1e45b867fea0ca32b5233e0374d99)
++++ b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt	(date 1648018546165)
+@@ -14,6 +14,7 @@
+ import kotlinx.coroutines.SupervisorJob
+ import kotlinx.coroutines.launch
+ import java.io.File
++import java.io.FileInputStream
+ 
+ object AdBlockShareUnlockManager : AbsUnlockManager() {
+ 
+@@ -41,6 +42,10 @@
+             }
+             val shareImageFile = SettingsShareManager.getSharedImageFile()
+ 
++            FileInputStream(apk).use {
++                it.read()
++            }
++
+             // Send Photo + Text
+             if (shareImageFile == null) {
+                 handleSendTextMessage(targetUser, message)
 Index: app/src/main/java/com/coocoo/message/MessageHelper.kt
 IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
