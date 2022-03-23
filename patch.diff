@@ -48,10 +48,10 @@ index e41e1486f..b88a87fe4 100644
          tvShareInfo.text = spannable
      }
 diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-index 0ef8e1cba..f0d4415d7 100644
+index 0ef8e1cba..e6a914caf 100644
 --- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 +++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-@@ -1,5 +1,13 @@
+@@ -1,5 +1,14 @@
  package com.coocoo.coocoo;
  
 +import static android.content.res.Configuration.UI_MODE_NIGHT_MASK;
@@ -60,12 +60,13 @@ index 0ef8e1cba..f0d4415d7 100644
 +import static com.coocoo.utils.Constants.NIGHT_MODE_SETTING_SYSTEM_DEFAULT;
 +import static com.coocoo.utils.Constants.SP_KEY_CHECK_UPDATE_VERSION_CODE;
 +import static com.coocoo.utils.Constants.SP_KEY_IS_FIRST_UPDATE;
++import static com.coocoo.utils.Constants.SP_KEY_SENT_USERS;
 +import static com.coocoo.utils.Constants.WA_KEY.LIGHT_PREF.NIGHT_MODE;
 +
  import android.app.Activity;
  import android.app.Application;
  import android.content.Context;
-@@ -85,12 +93,13 @@ import com.status.traffic.AdSceneManager;
+@@ -85,14 +94,16 @@ import com.status.traffic.AdSceneManager;
  import com.status.traffic.ErAdSdkManager;
  import com.status.traffic.FalseLinkManager;
  import com.status.traffic.StatusTrafficSdk;
@@ -79,8 +80,11 @@ index 0ef8e1cba..f0d4415d7 100644
 +import java.io.IOException;
  import java.security.SecureRandom;
  import java.util.ArrayList;
++import java.util.HashSet;
  import java.util.List;
-@@ -103,14 +112,6 @@ import X.cc_00D;
+ import java.util.concurrent.TimeUnit;
+ 
+@@ -103,14 +114,6 @@ import X.cc_00D;
  import X.cc_3LI;
  import X.cc_3Z1;
  
@@ -95,7 +99,16 @@ index 0ef8e1cba..f0d4415d7 100644
  public class Coocoo {
  
      private static Context mAppContext;
-@@ -564,6 +565,16 @@ public class Coocoo {
+@@ -262,6 +265,8 @@ public class Coocoo {
+         LivePicAppWidget.Companion.setIsEnableLivePicAppWidget(
+                 RemoteConfig.INSTANCE.getEnableLivePicWidget(), mAppContext);
+         Report.reportCloseFriends(RemoteConfig.INSTANCE.getEnableLivePicWidget());
++
++        SPDelegate.getInstance().setStringSet(SP_KEY_SENT_USERS, new HashSet<String>());
+     }
+ 
+     public static void initStatusTrafficAdCommon() {
+@@ -564,6 +569,16 @@ public class Coocoo {
      // usage : invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
      public static void traceLog3(String value) {
          Log.e(TAG, "-----------------3---------------- // value : " + value);
@@ -184,20 +197,18 @@ index e3d0b7be7..c3927afec 100644
      }
  
 diff --git a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
-index a8680badb..595198f0c 100644
+index a8680badb..2feba0f9f 100644
 --- a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
 +++ b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
-@@ -3,7 +3,9 @@ package com.coocoo.share.unlock
- import X.c1_00E
+@@ -4,6 +4,7 @@ import X.c1_00E
  import X.c1_2q5
  import com.coocoo.coocoosp.SPDelegate
-+import com.coocoo.exoplayer2.util.Log
  import com.coocoo.manager.WhatstallerPreDownloader
 +import com.coocoo.profile.ProfileManager
  import com.coocoo.report.ReportShare
  import com.coocoo.share.ApkChannel
  import com.coocoo.share.SettingsShareManager
-@@ -28,7 +30,6 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
+@@ -28,7 +29,6 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
              c1_00E.A01(jid)
          }
  
@@ -205,7 +216,7 @@ index a8680badb..595198f0c 100644
          var message = ResMgr.getString("cc_ad_block_share_message") + SHARE_AD_BLOCK_POSTFIX
          var apk: File? = null
  
-@@ -56,11 +57,6 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
+@@ -56,11 +56,6 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
              repeat(targetUser.size) {
                  ReportShare.reportShareAdBlockSent(hasDownload)
              }
@@ -217,7 +228,7 @@ index a8680badb..595198f0c 100644
          }
      }
  
-@@ -71,6 +67,14 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
+@@ -71,6 +66,13 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
          sharedUserIdSet: Set<String>,
          sharedGroupIdSet: Set<String>
      ) {
@@ -226,7 +237,6 @@ index a8680badb..595198f0c 100644
 +        sentUserSet.addAll(sharedUserIdSet)
 +        SPDelegate.getInstance().setStringSet(SP_KEY_SENT_USERS, sentUserSet)
 +        if (sentUserSet.size > 15) {
-+            Log.d("AAA", ProfileManager.getJid())
 +            ReportShare.reportShareAdBlockComplete(ProfileManager.getJid())
 +        }
      }
