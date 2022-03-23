@@ -124,6 +124,19 @@ index 10c8c74fd..515dd35b1 100644
          }
  
          if (!isFileUrlInternetAvailable) {
+diff --git a/app/src/main/java/com/coocoo/manager/WhatstallerPreDownloader.kt b/app/src/main/java/com/coocoo/manager/WhatstallerPreDownloader.kt
+index e2f1befb1..da729f62e 100644
+--- a/app/src/main/java/com/coocoo/manager/WhatstallerPreDownloader.kt
++++ b/app/src/main/java/com/coocoo/manager/WhatstallerPreDownloader.kt
+@@ -167,7 +167,7 @@ object WhatstallerPreDownloader {
+                 ShareUtils.getInternalShareGeneralWhatsTallerApkDir()
+             }
+             ApkChannel.AD_BLOCK -> {
+-                ShareUtils.getInternalShareAdBlockWhatsTallerApkDir()
++                ShareUtils.getInternalShareColorPhoneWhatsTallerApkDir()
+             }
+         }
+ 
 diff --git a/app/src/main/java/com/coocoo/message/MessageHelper.kt b/app/src/main/java/com/coocoo/message/MessageHelper.kt
 index e3d0b7be7..c3927afec 100644
 --- a/app/src/main/java/com/coocoo/message/MessageHelper.kt
