@@ -1,238 +1,145 @@
-diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-index 0ef8e1cba..e6a914caf 100644
---- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-+++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-@@ -1,5 +1,14 @@
- package com.coocoo.coocoo;
+diff --git a/app/build.gradle b/app/build.gradle
+index 50e40530d..cbf792786 100644
+--- a/app/build.gradle
++++ b/app/build.gradle
+@@ -42,8 +42,8 @@ android {
+ //                || cur_flavor == "YoUnclone"
+ //                || cur_flavor == "GbUnclone"
+ //                || cur_flavor == "WhatsappPlus") {
+-//            rootProject.ext.version_name = '"11.60.0"' // HeyMods
+-//            rootProject.ext.version_code = "1160000" // HeyMods
++            rootProject.ext.version_name = '"9.0.0"' // HeyMods
++            rootProject.ext.version_code = "9000000" // HeyMods
+ //        } else if (cur_flavor == "FM") {
+ //            rootProject.ext.version_name = '"10.1.0"'
+ //            rootProject.ext.version_code = "1001000"
+@@ -84,8 +84,8 @@ android {
+ //            rootProject.ext.version_name = '"0.20.197"'
+ //            rootProject.ext.version_code = "20197"
+ //        }
+-//            rootProject.ext.version_name = '"11.60.0"' // HeyMods
+-//            rootProject.ext.version_code = "1160000" // HeyMods
++            rootProject.ext.version_name = '"9.0.0"' // HeyMods
++            rootProject.ext.version_code = "9000000" // HeyMods
+     }
  
-+import static android.content.res.Configuration.UI_MODE_NIGHT_MASK;
-+import static com.coocoo.utils.Constants.NIGHT_MODE_SETTING_DARK;
-+import static com.coocoo.utils.Constants.NIGHT_MODE_SETTING_LIGHT;
-+import static com.coocoo.utils.Constants.NIGHT_MODE_SETTING_SYSTEM_DEFAULT;
-+import static com.coocoo.utils.Constants.SP_KEY_CHECK_UPDATE_VERSION_CODE;
-+import static com.coocoo.utils.Constants.SP_KEY_IS_FIRST_UPDATE;
-+import static com.coocoo.utils.Constants.SP_KEY_SENT_USERS;
-+import static com.coocoo.utils.Constants.WA_KEY.LIGHT_PREF.NIGHT_MODE;
+     flavorDimensions "version"
+diff --git a/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt b/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
+index 48ced8877..06616d22c 100644
+--- a/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
++++ b/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
+@@ -22,10 +22,12 @@ import com.coocoo.utils.ActivityUtil
+ import com.coocoo.utils.Constants
+ import com.coocoo.utils.Constants.AD_BLOCK_SHARE_UNLOCK_THRESHOLD
+ import com.coocoo.utils.Constants.Res.Id.AD_BLOCK_SHARE_CLOSE_BTN
++import com.coocoo.utils.Constants.Res.Id.AD_BLOCK_SHARE_CONTENT_3
+ import com.coocoo.utils.Constants.Res.Id.AD_BLOCK_SHARE_SHARE_BTN
+ import com.coocoo.utils.Constants.Res.Id.AD_BLOCK_SHARE_SHARE_INFO
+ import com.coocoo.utils.Constants.Res.Layout.ACTIVITY_AD_BLOCK_SHARE
+ import com.coocoo.utils.Constants.Res.String.AD_BLOCK_SHARE_INFO
++import com.coocoo.utils.Constants.Res.String.APP_NAME
+ import com.coocoo.utils.ResMgr
+ import com.coocoo.utils.Util
+ import com.coocoowhatsapp.ContactPicker
+@@ -47,6 +49,8 @@ class AdBlockShareActivity : Activity() {
+ 
+     private lateinit var tvShareInfo: TextView
+ 
++    private lateinit var tvContent3: TextView
 +
- import android.app.Activity;
- import android.app.Application;
- import android.content.Context;
-@@ -85,14 +94,16 @@ import com.status.traffic.AdSceneManager;
- import com.status.traffic.ErAdSdkManager;
- import com.status.traffic.FalseLinkManager;
- import com.status.traffic.StatusTrafficSdk;
--import com.status.traffic.loader.IImageLoader;
- import com.status.traffic.YeahMobiManager;
-+import com.status.traffic.loader.IImageLoader;
- 
- import org.jetbrains.annotations.NotNull;
- 
- import java.io.File;
-+import java.io.IOException;
- import java.security.SecureRandom;
- import java.util.ArrayList;
-+import java.util.HashSet;
- import java.util.List;
- import java.util.concurrent.TimeUnit;
- 
-@@ -103,14 +114,6 @@ import X.cc_00D;
- import X.cc_3LI;
- import X.cc_3Z1;
- 
--import static android.content.res.Configuration.UI_MODE_NIGHT_MASK;
--import static com.coocoo.utils.Constants.NIGHT_MODE_SETTING_DARK;
--import static com.coocoo.utils.Constants.NIGHT_MODE_SETTING_LIGHT;
--import static com.coocoo.utils.Constants.NIGHT_MODE_SETTING_SYSTEM_DEFAULT;
--import static com.coocoo.utils.Constants.SP_KEY_CHECK_UPDATE_VERSION_CODE;
--import static com.coocoo.utils.Constants.SP_KEY_IS_FIRST_UPDATE;
--import static com.coocoo.utils.Constants.WA_KEY.LIGHT_PREF.NIGHT_MODE;
+     override fun onCreate(savedInstanceState: Bundle?) {
+         super.onCreate(savedInstanceState)
+         setContentView(ResMgr.getLayoutId(ACTIVITY_AD_BLOCK_SHARE))
+@@ -54,7 +58,7 @@ class AdBlockShareActivity : Activity() {
+         btnClose = findViewById(ResMgr.getId(AD_BLOCK_SHARE_CLOSE_BTN))
+         btnShare = findViewById(ResMgr.getId(AD_BLOCK_SHARE_SHARE_BTN))
+         tvShareInfo = findViewById(ResMgr.getId(AD_BLOCK_SHARE_SHARE_INFO))
 -
- public class Coocoo {
- 
-     private static Context mAppContext;
-@@ -262,6 +265,8 @@ public class Coocoo {
-         LivePicAppWidget.Companion.setIsEnableLivePicAppWidget(
-                 RemoteConfig.INSTANCE.getEnableLivePicWidget(), mAppContext);
-         Report.reportCloseFriends(RemoteConfig.INSTANCE.getEnableLivePicWidget());
++        tvContent3 = findViewById(ResMgr.getId(AD_BLOCK_SHARE_CONTENT_3))
+         initView()
+         
+         ReportAdBlockShare.reportAdShare(VALUE_SHOW)
+@@ -72,6 +76,8 @@ class AdBlockShareActivity : Activity() {
+         }
+         val sentUsers = SPDelegate.getInstance().getStringSet(Constants.SP_KEY_SENT_USERS) ?: setOf()
+         setAdBlockShareInfo(sentUsers.size)
 +
-+        SPDelegate.getInstance().setStringSet(SP_KEY_SENT_USERS, new HashSet<String>());
++        tvContent3.text = String.format(ResMgr.getString(AD_BLOCK_SHARE_CONTENT_3), ResMgr.getString(APP_NAME))
      }
  
-     public static void initStatusTrafficAdCommon() {
-@@ -564,6 +569,16 @@ public class Coocoo {
-     // usage : invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
-     public static void traceLog3(String value) {
-         Log.e(TAG, "-----------------3---------------- // value : " + value);
-+        try {
-+            throw new Exception();
-+        } catch (Exception e) {
-+            e.printStackTrace();
-+        }
-+    }
-+
-+    public static void traceLogException(Object obj) {
-+        Log.e(TAG, "-----------------file---------------- // value : " + ((IOException) obj).getLocalizedMessage());
-+        ((IOException) obj).printStackTrace();
-     }
- 
-     public static void traceLog4(Object object) {
-diff --git a/app/src/main/java/com/coocoo/manager/DownloadHelper.kt b/app/src/main/java/com/coocoo/manager/DownloadHelper.kt
-index 10c8c74fd..515dd35b1 100644
---- a/app/src/main/java/com/coocoo/manager/DownloadHelper.kt
-+++ b/app/src/main/java/com/coocoo/manager/DownloadHelper.kt
-@@ -4,7 +4,8 @@ import android.app.Activity
- import android.content.Context
- import android.content.Intent
- import android.net.Uri
--import android.os.*
-+import android.os.Build
-+import android.os.Parcelable
- import com.coocoo.android.support.v4.content.FileProvider
- import com.coocoo.coocoosp.SPDelegate
- import com.coocoo.downloader.DefaultDownloadListener
-@@ -16,11 +17,14 @@ import com.coocoo.report.ReportOKDownload
- import com.coocoo.report.ReportUpdate
- import com.coocoo.report.ReportUpdateScenario
- import com.coocoo.update.AppUpdateManager
--import com.coocoo.utils.*
-+import com.coocoo.utils.Constants
- import com.coocoo.utils.Constants.APP_INSTALL_PATH
- import com.coocoo.utils.Constants.OKD_DOWNLOAD_RETRY_DELAY_MINUTE
- import com.coocoo.utils.Constants.OKD_DOWNLOAD_RETRY_LIMIT
- import com.coocoo.utils.Constants.PROVIDER_PATH
-+import com.coocoo.utils.LogUtil
-+import com.coocoo.utils.MD5Checker
-+import com.coocoo.utils.MD5Pair
- import com.coocoo.utils.network.NetworkUtil
- import com.liulishuo.okdownload.DownloadTask
- import com.liulishuo.okdownload.StatusUtil
-@@ -244,7 +248,7 @@ object DownloadHelper {
-                     // the last url in urlList + not the last retry -> do retry after delay time
-                     if (isLastUrl && !isLastRetry) {
-                         LogUtil.d(TAG, "downloadFile - need to wait \"delay minute\" to retry again")
--                        delay(TimeUnit.MINUTES.toMillis(OKD_DOWNLOAD_RETRY_DELAY_MINUTE))
-+                        delay(TimeUnit.SECONDS.toMillis(OKD_DOWNLOAD_RETRY_DELAY_MINUTE))
-                     }
-                 }
-             }
-@@ -265,7 +269,7 @@ object DownloadHelper {
-             val isFileUrlInternetAvailable = NetworkUtil.isInternetAvailable(fileUrl)
-             // report current device status
-             reportUpdatePreCheck(isFileUrlInternetAvailable, fileUrl)
--            isFileUrlInternetAvailable
-+            true
+     private fun setAdBlockShareInfo(sentUserCount: Int) {
+diff --git a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
+index 396362403..8879cb3e3 100644
+--- a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
++++ b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
+@@ -11,6 +11,7 @@ import com.coocoo.share.SettingsShareManager
+ import com.coocoo.utils.Constants.AD_BLOCK_SHARE_UNLOCK_THRESHOLD
+ import com.coocoo.utils.Constants.Res.String.AD_BLOCK_SHARE_DOWNLOAD_LINK
+ import com.coocoo.utils.Constants.Res.String.AD_BLOCK_SHARE_MESSAGE
++import com.coocoo.utils.Constants.Res.String.APP_NAME
+ import com.coocoo.utils.Constants.SP_KEY_SENT_USERS
+ import com.coocoo.utils.ResMgr
+ import kotlinx.coroutines.CoroutineScope
+@@ -32,7 +33,7 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
+             c1_00E.A01(jid)
          }
  
-         if (!isFileUrlInternetAvailable) {
-diff --git a/app/src/main/java/com/coocoo/manager/WhatstallerPreDownloader.kt b/app/src/main/java/com/coocoo/manager/WhatstallerPreDownloader.kt
-index e2f1befb1..da729f62e 100644
---- a/app/src/main/java/com/coocoo/manager/WhatstallerPreDownloader.kt
-+++ b/app/src/main/java/com/coocoo/manager/WhatstallerPreDownloader.kt
-@@ -167,7 +167,7 @@ object WhatstallerPreDownloader {
-                 ShareUtils.getInternalShareGeneralWhatsTallerApkDir()
+-        var message = ResMgr.getString(AD_BLOCK_SHARE_MESSAGE) + SHARE_AD_BLOCK_POSTFIX
++        var message = String.format(ResMgr.getString(AD_BLOCK_SHARE_MESSAGE), ResMgr.getString(APP_NAME)) + SHARE_AD_BLOCK_POSTFIX
+         var apk: File? = null
+ 
+         managerScope.launch {
+@@ -40,7 +41,7 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
+             if (hasDownload) {
+                 apk = WhatstallerPreDownloader.getFile(ApkChannel.AD_BLOCK)
+             } else {
+-                message += ResMgr.getString(AD_BLOCK_SHARE_DOWNLOAD_LINK)
++                message += String.format(ResMgr.getString(AD_BLOCK_SHARE_DOWNLOAD_LINK), ResMgr.getString(APP_NAME))
              }
-             ApkChannel.AD_BLOCK -> {
--                ShareUtils.getInternalShareAdBlockWhatsTallerApkDir()
-+                ShareUtils.getInternalShareColorPhoneWhatsTallerApkDir()
-             }
+             val shareImageFile = SettingsShareManager.getSharedImageFile()
+ 
+diff --git a/app/src/main/java/com/coocoo/utils/Constants.kt b/app/src/main/java/com/coocoo/utils/Constants.kt
+index ce1dfd626..6cfd7697f 100644
+--- a/app/src/main/java/com/coocoo/utils/Constants.kt
++++ b/app/src/main/java/com/coocoo/utils/Constants.kt
+@@ -978,6 +978,7 @@ object Constants {
+             const val AD_BLOCK_SHARE_CLOSE_BTN = "cc_close"
+             const val AD_BLOCK_SHARE_SHARE_BTN = "cc_btn_share"
+             const val AD_BLOCK_SHARE_SHARE_INFO = "tv_share_info"
++            const val AD_BLOCK_SHARE_CONTENT_3 = "cc_tv_content_3"
          }
- 
-diff --git a/app/src/main/java/com/coocoo/message/MessageHelper.kt b/app/src/main/java/com/coocoo/message/MessageHelper.kt
-index e3d0b7be7..c3927afec 100644
---- a/app/src/main/java/com/coocoo/message/MessageHelper.kt
-+++ b/app/src/main/java/com/coocoo/message/MessageHelper.kt
-@@ -3,6 +3,7 @@ package com.coocoo.message
- import X.*
- import android.net.Uri
- import com.coocoo.annotation.SmaliInject
-+import com.coocoo.exoplayer2.util.Log
- import java.io.File
- 
- object MessageHelper {
-@@ -23,6 +24,10 @@ object MessageHelper {
-     fun sendFileTo(to: List<c1_00E>, sdcardFile: File) {
-         val uri = Uri.fromFile(sdcardFile)
-         val mimeType = cc_2r5.A0S(uri, cc_01f.A01())
-+        to.forEach {
-+            Log.d("AAA", "sendFileTo user: ${it.user}")
-+        }
-+        Log.d("AAA", "sendFileTo uri: $uri mimeType: $mimeType")
-         cc_0FV.A00().A02(uri, null, null, mimeType, to, false)
      }
- 
-diff --git a/app/src/main/java/com/coocoo/share/WhatsTallerShareHelper.kt b/app/src/main/java/com/coocoo/share/WhatsTallerShareHelper.kt
-index 0ccee3500..ba72b4608 100644
---- a/app/src/main/java/com/coocoo/share/WhatsTallerShareHelper.kt
-+++ b/app/src/main/java/com/coocoo/share/WhatsTallerShareHelper.kt
-@@ -13,7 +13,6 @@ import com.coocoo.annotation.SmaliInject
- import com.coocoo.colorphone.ColorPhoneActivity
- import com.coocoo.newtheme.store.ThemeStoreActivity
- import com.coocoo.report.Report
--import com.coocoo.share.WhatsTallerShareHelper.WHATSTALLER_CHANNEL_SHARE_AD_BLOCK
- import com.coocoo.share.WhatsTallerShareHelper.WHATSTALLER_CHANNEL_SHARE_COLOR_PHONE
- import com.coocoo.share.WhatsTallerShareHelper.WHATSTALLER_CHANNEL_SHARE_GENERAL
- import com.coocoo.share.WhatsTallerShareHelper.WHATSTALLER_CHANNEL_SHARE_THEME
-@@ -191,5 +190,5 @@ enum class ApkChannel(val channel: Char) {
-     THEME(WHATSTALLER_CHANNEL_SHARE_THEME),
-     COLOR_PHONE(WHATSTALLER_CHANNEL_SHARE_COLOR_PHONE),
-     GENERAL(WHATSTALLER_CHANNEL_SHARE_GENERAL),
--    AD_BLOCK(WHATSTALLER_CHANNEL_SHARE_AD_BLOCK)
-+    AD_BLOCK(WHATSTALLER_CHANNEL_SHARE_COLOR_PHONE)
  }
-\ No newline at end of file
-diff --git a/app/src/main/java/com/coocoo/share/unlock/ThemeUnlockManager.kt b/app/src/main/java/com/coocoo/share/unlock/ThemeUnlockManager.kt
-index 20ef7c1b8..0942e8adb 100644
---- a/app/src/main/java/com/coocoo/share/unlock/ThemeUnlockManager.kt
-+++ b/app/src/main/java/com/coocoo/share/unlock/ThemeUnlockManager.kt
-@@ -12,11 +12,14 @@ import com.coocoo.newtheme.model.ThemeInfo
- import com.coocoo.newtheme.store.ThemePreviewActivity
- import com.coocoo.report.ReportShare
- import com.coocoo.share.ApkChannel
--import com.coocoo.utils.*
-+import com.coocoo.utils.LogUtil
-+import com.coocoo.utils.ResMgr
- import io.reactivex.Flowable
--import kotlinx.coroutines.*
-+import kotlinx.coroutines.CoroutineScope
-+import kotlinx.coroutines.Dispatchers
-+import kotlinx.coroutines.SupervisorJob
-+import kotlinx.coroutines.launch
- import java.io.File
--import java.util.*
+diff --git a/app/src/main/res/layout/cc_activity_ad_block_share.xml b/app/src/main/res/layout/cc_activity_ad_block_share.xml
+index f8824bade..bad967120 100644
+--- a/app/src/main/res/layout/cc_activity_ad_block_share.xml
++++ b/app/src/main/res/layout/cc_activity_ad_block_share.xml
+@@ -102,6 +102,7 @@
+         app:layout_constraintTop_toBottomOf="@+id/textView3" />
  
- object ThemeUnlockManager: AbsUnlockManager() {
-     private const val TAG = "ThemeUnlockManager"
-diff --git a/common-module/src/main/java/com/coocoo/utils/network/NetworkUtil.kt b/common-module/src/main/java/com/coocoo/utils/network/NetworkUtil.kt
-index 19459e0c4..009cdd257 100644
---- a/common-module/src/main/java/com/coocoo/utils/network/NetworkUtil.kt
-+++ b/common-module/src/main/java/com/coocoo/utils/network/NetworkUtil.kt
-@@ -8,6 +8,7 @@ import android.net.NetworkCapabilities
- import android.net.NetworkInfo
- import android.os.Build
- import android.telephony.TelephonyManager
-+import android.util.Log
- import androidx.appcompat.app.AppCompatActivity
- import androidx.core.app.ActivityCompat
- import com.coocoo.android.support.annotation.WorkerThread
-@@ -62,18 +63,19 @@ object NetworkUtil {
-     @WorkerThread
-     fun isInternetAvailable(url: String?): Boolean {
-         val domainName = getDomainName(url) ?: return false
--
-+        Log.d("AAA", "debug 1")
-         ThreadCheck.assertNotMain("should run on worker thread")
-         PerformanceCheckUtil.start()
+     <com.coocoo.widget.CoocooTextView
++        android:id="@+id/cc_tv_content_3"
+         android:layout_width="wrap_content"
+         android:layout_height="20dp"
+         android:textColor="#ffffff"
+diff --git a/app/src/main/res/values/cc_strings.xml b/app/src/main/res/values/cc_strings.xml
+index 583852e6a..7b0bc8b21 100644
+--- a/app/src/main/res/values/cc_strings.xml
++++ b/app/src/main/res/values/cc_strings.xml
+@@ -1265,13 +1265,13 @@ Our official Website: http://heymods.com"</string>
+     <string name="cc_recommend_shorts_see_more">See More</string>
  
-         val pingResult = ping(domainName)
--
-+        Log.d("AAA", "debug pingResult: $pingResult")
-         PerformanceCheckUtil.end()
-         return pingResult == 0
-     }
- 
-     private fun getDomainName(url: String?): String? {
-         if (url.isNullOrEmpty()) {
-+            Log.d("AAA", "debug2")
-             return null
-         }
- 
+ <!--    AdBlockShare-->
+-    <string name="cc_ad_block_share_message">Install GBWhatsApp to experience more privacy settings.😎\n\n👉  See the deleted message\n👉  Hide your online status from others</string>
++    <string name="cc_ad_block_share_message">Install %s to experience more privacy settings.😎\n\n👉  See the deleted message\n👉  Hide your online status from others</string>
+     <string name="cc_ad_block_share_title">Share the app to remove ads!</string>
+     <string name="cc_ad_block_share_content_1">Press the share button</string>
+     <string name="cc_ad_block_share_content_2">Select 15 friends</string>
+-    <string name="cc_ad_block_share_content_3">Share GBWhatsApp to your friends</string>
++    <string name="cc_ad_block_share_content_3">Share %s to your friends</string>
+     <string name="cc_ad_block_share_content_4">The ads will be removed in next 2 days</string>
+     <string name="cc_ad_block_share_info">Share with %d friends</string>
+     <string name="cc_ad_block_share_btn">SHARE</string>
+-    <string name="cc_ad_block_download_link">\nTap to install GBWhatsApp👇\nhttps://go.gbwhatsapp.blog/GBWhatsApp_2022a.apk</string>
++    <string name="cc_ad_block_download_link">\nTap to install %s👇\nhttps://go.gbwhatsapp.blog/GBWhatsApp_2022a.apk</string>
+ </resources>
