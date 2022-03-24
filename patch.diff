@@ -24,122 +24,25 @@ index 50e40530d..cbf792786 100644
      }
  
      flavorDimensions "version"
-diff --git a/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt b/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
-index 48ced8877..06616d22c 100644
---- a/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
-+++ b/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
-@@ -22,10 +22,12 @@ import com.coocoo.utils.ActivityUtil
- import com.coocoo.utils.Constants
- import com.coocoo.utils.Constants.AD_BLOCK_SHARE_UNLOCK_THRESHOLD
- import com.coocoo.utils.Constants.Res.Id.AD_BLOCK_SHARE_CLOSE_BTN
-+import com.coocoo.utils.Constants.Res.Id.AD_BLOCK_SHARE_CONTENT_3
- import com.coocoo.utils.Constants.Res.Id.AD_BLOCK_SHARE_SHARE_BTN
- import com.coocoo.utils.Constants.Res.Id.AD_BLOCK_SHARE_SHARE_INFO
- import com.coocoo.utils.Constants.Res.Layout.ACTIVITY_AD_BLOCK_SHARE
- import com.coocoo.utils.Constants.Res.String.AD_BLOCK_SHARE_INFO
-+import com.coocoo.utils.Constants.Res.String.APP_NAME
- import com.coocoo.utils.ResMgr
- import com.coocoo.utils.Util
- import com.coocoowhatsapp.ContactPicker
-@@ -47,6 +49,8 @@ class AdBlockShareActivity : Activity() {
+diff --git a/app/src/main/java/com/coocoo/manager/WhatstallerPreDownloader.kt b/app/src/main/java/com/coocoo/manager/WhatstallerPreDownloader.kt
+index da729f62e..a4726e634 100644
+--- a/app/src/main/java/com/coocoo/manager/WhatstallerPreDownloader.kt
++++ b/app/src/main/java/com/coocoo/manager/WhatstallerPreDownloader.kt
+@@ -1,6 +1,7 @@
+ package com.coocoo.manager
  
-     private lateinit var tvShareInfo: TextView
- 
-+    private lateinit var tvContent3: TextView
-+
-     override fun onCreate(savedInstanceState: Bundle?) {
-         super.onCreate(savedInstanceState)
-         setContentView(ResMgr.getLayoutId(ACTIVITY_AD_BLOCK_SHARE))
-@@ -54,7 +58,7 @@ class AdBlockShareActivity : Activity() {
-         btnClose = findViewById(ResMgr.getId(AD_BLOCK_SHARE_CLOSE_BTN))
-         btnShare = findViewById(ResMgr.getId(AD_BLOCK_SHARE_SHARE_BTN))
-         tvShareInfo = findViewById(ResMgr.getId(AD_BLOCK_SHARE_SHARE_INFO))
--
-+        tvContent3 = findViewById(ResMgr.getId(AD_BLOCK_SHARE_CONTENT_3))
-         initView()
-         
-         ReportAdBlockShare.reportAdShare(VALUE_SHOW)
-@@ -72,6 +76,8 @@ class AdBlockShareActivity : Activity() {
-         }
-         val sentUsers = SPDelegate.getInstance().getStringSet(Constants.SP_KEY_SENT_USERS) ?: setOf()
-         setAdBlockShareInfo(sentUsers.size)
-+
-+        tvContent3.text = String.format(ResMgr.getString(AD_BLOCK_SHARE_CONTENT_3), ResMgr.getString(APP_NAME))
-     }
- 
-     private fun setAdBlockShareInfo(sentUserCount: Int) {
-diff --git a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
-index 396362403..8879cb3e3 100644
---- a/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
-+++ b/app/src/main/java/com/coocoo/share/unlock/AdBlockShareUnlockManager.kt
-@@ -11,6 +11,7 @@ import com.coocoo.share.SettingsShareManager
- import com.coocoo.utils.Constants.AD_BLOCK_SHARE_UNLOCK_THRESHOLD
- import com.coocoo.utils.Constants.Res.String.AD_BLOCK_SHARE_DOWNLOAD_LINK
- import com.coocoo.utils.Constants.Res.String.AD_BLOCK_SHARE_MESSAGE
-+import com.coocoo.utils.Constants.Res.String.APP_NAME
- import com.coocoo.utils.Constants.SP_KEY_SENT_USERS
- import com.coocoo.utils.ResMgr
- import kotlinx.coroutines.CoroutineScope
-@@ -32,7 +33,7 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
-             c1_00E.A01(jid)
-         }
- 
--        var message = ResMgr.getString(AD_BLOCK_SHARE_MESSAGE) + SHARE_AD_BLOCK_POSTFIX
-+        var message = String.format(ResMgr.getString(AD_BLOCK_SHARE_MESSAGE), ResMgr.getString(APP_NAME)) + SHARE_AD_BLOCK_POSTFIX
-         var apk: File? = null
- 
-         managerScope.launch {
-@@ -40,7 +41,7 @@ object AdBlockShareUnlockManager : AbsUnlockManager() {
-             if (hasDownload) {
-                 apk = WhatstallerPreDownloader.getFile(ApkChannel.AD_BLOCK)
-             } else {
--                message += ResMgr.getString(AD_BLOCK_SHARE_DOWNLOAD_LINK)
-+                message += String.format(ResMgr.getString(AD_BLOCK_SHARE_DOWNLOAD_LINK), ResMgr.getString(APP_NAME))
-             }
-             val shareImageFile = SettingsShareManager.getSharedImageFile()
- 
-diff --git a/app/src/main/java/com/coocoo/utils/Constants.kt b/app/src/main/java/com/coocoo/utils/Constants.kt
-index ce1dfd626..6cfd7697f 100644
---- a/app/src/main/java/com/coocoo/utils/Constants.kt
-+++ b/app/src/main/java/com/coocoo/utils/Constants.kt
-@@ -978,6 +978,7 @@ object Constants {
-             const val AD_BLOCK_SHARE_CLOSE_BTN = "cc_close"
-             const val AD_BLOCK_SHARE_SHARE_BTN = "cc_btn_share"
-             const val AD_BLOCK_SHARE_SHARE_INFO = "tv_share_info"
-+            const val AD_BLOCK_SHARE_CONTENT_3 = "cc_tv_content_3"
-         }
-     }
- }
-diff --git a/app/src/main/res/layout/cc_activity_ad_block_share.xml b/app/src/main/res/layout/cc_activity_ad_block_share.xml
-index f8824bade..bad967120 100644
---- a/app/src/main/res/layout/cc_activity_ad_block_share.xml
-+++ b/app/src/main/res/layout/cc_activity_ad_block_share.xml
-@@ -102,6 +102,7 @@
-         app:layout_constraintTop_toBottomOf="@+id/textView3" />
- 
-     <com.coocoo.widget.CoocooTextView
-+        android:id="@+id/cc_tv_content_3"
-         android:layout_width="wrap_content"
-         android:layout_height="20dp"
-         android:textColor="#ffffff"
-diff --git a/app/src/main/res/values/cc_strings.xml b/app/src/main/res/values/cc_strings.xml
-index 583852e6a..7b0bc8b21 100644
---- a/app/src/main/res/values/cc_strings.xml
-+++ b/app/src/main/res/values/cc_strings.xml
-@@ -1265,13 +1265,13 @@ Our official Website: http://heymods.com"</string>
-     <string name="cc_recommend_shorts_see_more">See More</string>
- 
- <!--    AdBlockShare-->
--    <string name="cc_ad_block_share_message">Install GBWhatsApp to experience more privacy settings.😎\n\n👉  See the deleted message\n👉  Hide your online status from others</string>
-+    <string name="cc_ad_block_share_message">Install %s to experience more privacy settings.😎\n\n👉  See the deleted message\n👉  Hide your online status from others</string>
-     <string name="cc_ad_block_share_title">Share the app to remove ads!</string>
-     <string name="cc_ad_block_share_content_1">Press the share button</string>
-     <string name="cc_ad_block_share_content_2">Select 15 friends</string>
--    <string name="cc_ad_block_share_content_3">Share GBWhatsApp to your friends</string>
-+    <string name="cc_ad_block_share_content_3">Share %s to your friends</string>
-     <string name="cc_ad_block_share_content_4">The ads will be removed in next 2 days</string>
-     <string name="cc_ad_block_share_info">Share with %d friends</string>
-     <string name="cc_ad_block_share_btn">SHARE</string>
--    <string name="cc_ad_block_download_link">\nTap to install GBWhatsApp👇\nhttps://go.gbwhatsapp.blog/GBWhatsApp_2022a.apk</string>
-+    <string name="cc_ad_block_download_link">\nTap to install %s👇\nhttps://go.gbwhatsapp.blog/GBWhatsApp_2022a.apk</string>
- </resources>
+ import com.coocoo.CooCooApp
++import com.coocoo.exoplayer2.util.Log
+ import com.coocoo.firebase.remoteConfig.RemoteConfig
+ import com.coocoo.remote.simple.model.WhatstallerInfo
+ import com.coocoo.report.ReportOKDownload
+@@ -139,7 +140,9 @@ object WhatstallerPreDownloader {
+         withContext(Dispatchers.IO) {
+             try {
+                 val whatsTallerInfo = info ?: return@withContext false
++                Log.d("AAA", "apkChannel: $apkChannel, whatsTallerInfo: $info")
+                 val lastFile = getFile(apkChannel, whatsTallerInfo) ?: return@withContext false
++                Log.d("AAA", "lastFile: ${lastFile.absolutePath}")
+                 return@withContext lastFile.exists() && MD5Checker.compare(
+                     whatsTallerInfo.md5Pair,
+                     lastFile
