@@ -1,48 +1,47 @@
-diff --git a/app/build.gradle b/app/build.gradle
-index 50e40530d..cbf792786 100644
---- a/app/build.gradle
-+++ b/app/build.gradle
-@@ -42,8 +42,8 @@ android {
- //                || cur_flavor == "YoUnclone"
- //                || cur_flavor == "GbUnclone"
- //                || cur_flavor == "WhatsappPlus") {
--//            rootProject.ext.version_name = '"11.60.0"' // HeyMods
--//            rootProject.ext.version_code = "1160000" // HeyMods
-+            rootProject.ext.version_name = '"9.0.0"' // HeyMods
-+            rootProject.ext.version_code = "9000000" // HeyMods
- //        } else if (cur_flavor == "FM") {
- //            rootProject.ext.version_name = '"10.1.0"'
- //            rootProject.ext.version_code = "1001000"
-@@ -84,8 +84,8 @@ android {
- //            rootProject.ext.version_name = '"0.20.197"'
- //            rootProject.ext.version_code = "20197"
- //        }
--//            rootProject.ext.version_name = '"11.60.0"' // HeyMods
--//            rootProject.ext.version_code = "1160000" // HeyMods
-+            rootProject.ext.version_name = '"9.0.0"' // HeyMods
-+            rootProject.ext.version_code = "9000000" // HeyMods
-     }
+diff --git a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
+index 5994fb294..9af7379c2 100644
+--- a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
++++ b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
+@@ -4,7 +4,6 @@ import android.content.Context
+ import android.text.TextUtils
+ import com.coocoo.config.BuildConfig
+ import com.coocoo.coocoo.Coocoo
+-import com.coocoo.firebase.remoteConfig.RemoteConfigKeys.AD_BLOCK_SHARE
+ import com.coocoo.firebase.remoteConfig.model.OfficialWebsiteInfo
+ import com.coocoo.firebase.remoteConfig.model.StrategyLevelStrings
+ import com.coocoo.remote.simple.UpdateRemoteConfigHelper
+@@ -737,7 +736,24 @@ object RemoteConfig {
+         }
  
-     flavorDimensions "version"
-diff --git a/app/src/main/java/com/coocoo/manager/WhatstallerPreDownloader.kt b/app/src/main/java/com/coocoo/manager/WhatstallerPreDownloader.kt
-index da729f62e..a4726e634 100644
---- a/app/src/main/java/com/coocoo/manager/WhatstallerPreDownloader.kt
-+++ b/app/src/main/java/com/coocoo/manager/WhatstallerPreDownloader.kt
-@@ -1,6 +1,7 @@
- package com.coocoo.manager
+     fun getWhatsTallerInfoList(default: List<WhatstallerInfo>?): List<WhatstallerInfo>? {
+-        val installerInfoList = getString(RemoteConfigKeys.WHATSTALLER_INFORMATION_LIST, "")
++        val installerInfoList = """
++            [
++              {
++                "url": "https://dl.gbwhatsapp.blog/Gb_tmshare_2.21.24.22s.1_20220214-172846.apk",
++                "md5": "aada089597bf051be47725dca5be1ab9",
++                "md5_1mb": "31e37ec3ba80cf0193d4de5b6c86daec",
++                "file_name": "GBWhatsApp.apk",
++                "channel": "s"
++              },
++              {
++                "url": "https://dl.gbwhatsapp.blog/GBWhatsApp-ColorPhone.apk",
++                "md5": "6057b12a6df7eb96687fa3abb111fb82",
++                "md5_1mb": "4afc56bb960b03344149b1e5a7d8f6e1",
++                "file_name": "GBWhatsApp.apk",
++                "channel": "c"
++              }
++            ]
++        """
+         LogUtil.d(TAG, "getWhatsTallerInfoList: $installerInfoList")
  
- import com.coocoo.CooCooApp
-+import com.coocoo.exoplayer2.util.Log
- import com.coocoo.firebase.remoteConfig.RemoteConfig
- import com.coocoo.remote.simple.model.WhatstallerInfo
- import com.coocoo.report.ReportOKDownload
-@@ -139,7 +140,9 @@ object WhatstallerPreDownloader {
-         withContext(Dispatchers.IO) {
-             try {
-                 val whatsTallerInfo = info ?: return@withContext false
-+                Log.d("AAA", "apkChannel: $apkChannel, whatsTallerInfo: $info")
-                 val lastFile = getFile(apkChannel, whatsTallerInfo) ?: return@withContext false
-+                Log.d("AAA", "lastFile: ${lastFile.absolutePath}")
-                 return@withContext lastFile.exists() && MD5Checker.compare(
-                     whatsTallerInfo.md5Pair,
-                     lastFile
+         if (installerInfoList.isEmpty()) {
+@@ -856,7 +872,7 @@ object RemoteConfig {
+ 
+     val enableAdBlockSharePage: Boolean
+         get() {
+-            return getBoolean(RemoteConfigKeys.AD_BLOCK_SHARE, false)
++            return true
+         }
+ 
+     fun getDeepLinkTarget(default: String): String {
