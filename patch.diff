@@ -1,47 +1,27 @@
-diff --git a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
-index 5994fb294..9af7379c2 100644
---- a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
-+++ b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
-@@ -4,7 +4,6 @@ import android.content.Context
- import android.text.TextUtils
- import com.coocoo.config.BuildConfig
- import com.coocoo.coocoo.Coocoo
--import com.coocoo.firebase.remoteConfig.RemoteConfigKeys.AD_BLOCK_SHARE
- import com.coocoo.firebase.remoteConfig.model.OfficialWebsiteInfo
- import com.coocoo.firebase.remoteConfig.model.StrategyLevelStrings
- import com.coocoo.remote.simple.UpdateRemoteConfigHelper
-@@ -737,7 +736,24 @@ object RemoteConfig {
-         }
+diff --git a/whatsapp_modify_module/smali_classes2/com/coocoowhatsapp/status/StatusRecipientsActivity.smali b/whatsapp_modify_module/smali_classes2/com/coocoowhatsapp/status/StatusRecipientsActivity.smali
+index aa8b955c2..a7d7d9aec 100644
+--- a/whatsapp_modify_module/smali_classes2/com/coocoowhatsapp/status/StatusRecipientsActivity.smali
++++ b/whatsapp_modify_module/smali_classes2/com/coocoowhatsapp/status/StatusRecipientsActivity.smali
+@@ -600,7 +600,7 @@
  
-     fun getWhatsTallerInfoList(default: List<WhatstallerInfo>?): List<WhatstallerInfo>? {
--        val installerInfoList = getString(RemoteConfigKeys.WHATSTALLER_INFORMATION_LIST, "")
-+        val installerInfoList = """
-+            [
-+              {
-+                "url": "https://dl.gbwhatsapp.blog/Gb_tmshare_2.21.24.22s.1_20220214-172846.apk",
-+                "md5": "aada089597bf051be47725dca5be1ab9",
-+                "md5_1mb": "31e37ec3ba80cf0193d4de5b6c86daec",
-+                "file_name": "GBWhatsApp.apk",
-+                "channel": "s"
-+              },
-+              {
-+                "url": "https://dl.gbwhatsapp.blog/GBWhatsApp-ColorPhone.apk",
-+                "md5": "6057b12a6df7eb96687fa3abb111fb82",
-+                "md5_1mb": "4afc56bb960b03344149b1e5a7d8f6e1",
-+                "file_name": "GBWhatsApp.apk",
-+                "channel": "c"
-+              }
-+            ]
-+        """
-         LogUtil.d(TAG, "getWhatsTallerInfoList: $installerInfoList")
+     return v0
+ .end method
+-
++#coocoo
+ .method public onCreate(Landroid/os/Bundle;)V
+     .locals 3
+     .annotation system Ldalvik/annotation/MethodParameters;
+@@ -613,7 +613,7 @@
+     .end annotation
  
-         if (installerInfoList.isEmpty()) {
-@@ -856,7 +872,7 @@ object RemoteConfig {
+     .line 519382
+-    invoke-super {p0, p1}, LX/0Lb;->onCreate(Landroid/os/Bundle;)V
++    invoke-super {p0, p1}, LX/1G2;->onCreate(Landroid/os/Bundle;)V
  
-     val enableAdBlockSharePage: Boolean
-         get() {
--            return getBoolean(RemoteConfigKeys.AD_BLOCK_SHARE, false)
-+            return true
-         }
+     iget-object v0, p0, Lcom/coocoowhatsapp/status/StatusRecipientsActivity;->delegate:Lcom/coocoo/whatsappdelegate/StatusRecipientsActivityDelegate;
  
-     fun getDeepLinkTarget(default: String): String {
+@@ -621,3 +621,4 @@
+ 
+     return-void
+ .end method
++#coocoo
