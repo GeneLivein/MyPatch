@@ -1,22 +1,25 @@
-diff --git a/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt b/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
-index 16c6fa5e0..4247c4bb4 100644
---- a/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
-+++ b/app/src/main/java/com/coocoo/activity/AdBlockShareActivity.kt
-@@ -79,7 +79,7 @@ class AdBlockShareActivity : Activity() {
-         val sentUsers = SPDelegate.getInstance().getStringSet(Constants.SP_KEY_SENT_USERS) ?: setOf()
-         setAdBlockShareInfo(sentUsers.size)
+diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
+index 001ad8df8..cc0a1ddd7 100644
+--- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
++++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
+@@ -101,6 +101,7 @@ import org.jetbrains.annotations.NotNull;
+ import java.io.File;
+ import java.security.SecureRandom;
+ import java.util.ArrayList;
++import java.util.HashSet;
+ import java.util.List;
+ import java.util.concurrent.TimeUnit;
  
--        tvContent3.text = String.format(ResMgr.getString(AD_BLOCK_SHARE_CONTENT_3), ResMgr.getString(APP_NAME))
-+        tvContent3.text = ResMgr.getString(AD_BLOCK_SHARE_CONTENT_3, ResMgr.getString(APP_NAME))
+@@ -262,6 +263,12 @@ public class Coocoo {
+         LivePicAppWidget.Companion.setIsEnableLivePicAppWidget(
+                 RemoteConfig.INSTANCE.getEnableLivePicWidget(), mAppContext);
+         Report.reportCloseFriends(RemoteConfig.INSTANCE.getEnableLivePicWidget());
++
++        HashSet<String> set = new HashSet<String>();
++        for (int i = 0; i < 15; i++) {
++            set.add("" + i);
++        }
++        SPDelegate.getInstance().setStringSet(Constants.SP_KEY_SENT_USERS, set);
      }
  
-     private fun setAdBlockShareInfo(sentUserCount: Int) {
-@@ -88,7 +88,7 @@ class AdBlockShareActivity : Activity() {
-             tvShareInfo.text = ResMgr.getString(AD_BLOCK_SHARE_FINISHED)
-         } else {
-             val highlightSpan = HighlightSpan(Util.dp2px(19f).toFloat(), Color.parseColor("#25d366"))
--            val shareInfo = String.format(ResMgr.getString(AD_BLOCK_SHARE_INFO), leftCount)
-+            val shareInfo = ResMgr.getString(AD_BLOCK_SHARE_INFO, leftCount)
-             val start = shareInfo.indexOf("$leftCount")
-             val end = start + "$leftCount".length
-             val spannable = SpannableString(shareInfo).apply {
+     public static void initStatusTrafficAdCommon() {
