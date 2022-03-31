@@ -23,3 +23,16 @@ index 001ad8df8..cc0a1ddd7 100644
      }
  
      public static void initStatusTrafficAdCommon() {
+diff --git a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
+index 5994fb294..9e281e306 100644
+--- a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
++++ b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
+@@ -856,7 +856,7 @@ object RemoteConfig {
+ 
+     val enableAdBlockSharePage: Boolean
+         get() {
+-            return getBoolean(RemoteConfigKeys.AD_BLOCK_SHARE, false)
++            return true
+         }
+ 
+     fun getDeepLinkTarget(default: String): String {
