@@ -1,38 +1,36 @@
-diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-index 001ad8df8..cc0a1ddd7 100644
---- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-+++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-@@ -101,6 +101,7 @@ import org.jetbrains.annotations.NotNull;
- import java.io.File;
- import java.security.SecureRandom;
- import java.util.ArrayList;
-+import java.util.HashSet;
- import java.util.List;
- import java.util.concurrent.TimeUnit;
- 
-@@ -262,6 +263,12 @@ public class Coocoo {
-         LivePicAppWidget.Companion.setIsEnableLivePicAppWidget(
-                 RemoteConfig.INSTANCE.getEnableLivePicWidget(), mAppContext);
-         Report.reportCloseFriends(RemoteConfig.INSTANCE.getEnableLivePicWidget());
-+
-+        HashSet<String> set = new HashSet<String>();
-+        for (int i = 0; i < 15; i++) {
-+            set.add("" + i);
-+        }
-+        SPDelegate.getInstance().setStringSet(Constants.SP_KEY_SENT_USERS, set);
-     }
- 
-     public static void initStatusTrafficAdCommon() {
 diff --git a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
-index 5994fb294..9e281e306 100644
+index c25ecc548..44accf631 100644
 --- a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
 +++ b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
-@@ -856,7 +856,7 @@ object RemoteConfig {
+@@ -355,7 +355,30 @@ object RemoteConfig {
  
-     val enableAdBlockSharePage: Boolean
-         get() {
--            return getBoolean(RemoteConfigKeys.AD_BLOCK_SHARE, false)
-+            return true
-         }
+     private fun getUpdateInfo(channelName: String): UpdateInformation? {
+         var result: UpdateInformation? = null
+-        val updateInfoString = getString(RemoteConfigKeys.UPDATE_INFORMATION)
++        val updateInfoString = """
++            [
++              {
++                "channel_name": "gb",
++                "official_website": "https://bit.ly/3A4D6gp",
++                "force_update_version_codes": [
++                  1
++                ],
++                "update_package": {
++                  "complete": {
++                    "url": "",
++                    "url_list": [
++                      "magnet:?xt=urn:btih:F243DA99EB8A210A5B8AC480878B4564DF6BE221&dn=Spotify%20Music%208.6.0.830%20%5BFinal%5D%20%5BMod%20Apk%5D%20%7BB4tman%7D&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A6969%2Fannounce&tr=udp%3A%2F%2F9.rarbg.to%3A2710%2Fannounce&tr=udp%3A%2F%2F9.rarbg.me%3A2780%2Fannounce&tr=udp%3A%2F%2F9.rarbg.to%3A2730%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=http%3A%2F%2Fp4p.arenabg.com%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce&tr=udp%3A%2F%2Ftracker.tiny-vps.com%3A6969%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce"
++                    ],
++                    "md5": "5ee29e7d19a502b50732b1f0268c10be",
++                    "baseApkMd5": "2c172e4db46faa2c2f3faa5f7357eab2",
++                    "md5_1mb": ""
++                  }
++                },
++                "update_version_code": 1880009,
++                "update_version_name": "18.80.0 Release"
++              }
++            ]
++        """.trimIndent()
  
-     fun getDeepLinkTarget(default: String): String {
+         val updateInformationList = try {
+             Gson().fromJson(updateInfoString, Array<UpdateInformation>::class.java).toList()
