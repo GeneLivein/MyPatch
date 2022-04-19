@@ -1,340 +1,91 @@
-diff --git a/whatsapp_modify_module/smali_classes2/X/3fi.3.smali b/whatsapp_modify_module/smali_classes2/X/3fi.3.smali
-new file mode 100644
-index 000000000..b19994072
---- /dev/null
-+++ b/whatsapp_modify_module/smali_classes2/X/3fi.3.smali
-@@ -0,0 +1,334 @@
-+.class public LX/3fi;
-+.super LX/0ff;
-+.source ""
-+
-+
-+# instance fields
-+.field public final synthetic A00:LX/0dS;
-+
-+
-+# direct methods
-+.method public constructor <init>(Landroid/os/Bundle;LX/0AG;LX/0dS;)V
-+    .locals 0
-+    .annotation system Ldalvik/annotation/MethodParameters;
-+        accessFlags = {
-+            0x8010,
-+            0x0,
-+            0x0,
-+            0x1010
-+        }
-+        names = {
-+            "this$0",
-+            "owner",
-+            "defaultArgs",
-+            "val$viewModelComponentBuilder"
-+        }
-+    .end annotation
-+
-+    .line 616365
-+    iput-object p3, p0, LX/3fi;->A00:LX/0dS;
-+
-+    invoke-direct {p0, p1, p2}, LX/0ff;-><init>(Landroid/os/Bundle;LX/0AG;)V
-+
-+    return-void
-+.end method
-+
-+
-+# virtual methods
-+.method public A02(LX/0fk;Ljava/lang/Class;Ljava/lang/String;)LX/075;
-+    .locals 4
-+    .annotation system Ldalvik/annotation/MethodParameters;
-+        accessFlags = {
-+            0x0,
-+            0x0,
-+            0x0
-+        }
-+        names = {
-+            "key",
-+            "modelClass",
-+            "handle"
-+        }
-+    .end annotation
-+
-+    .line 616366
-+    iget-object v1, p0, LX/3fi;->A00:LX/0dS;
-+
-+    .line 616367
-+    iput-object p1, v1, LX/0dS;->A00:LX/0fk;
-+
-+    .line 616368
-+    const-class v0, LX/0fk;
-+
-+    invoke-static {v0, p1}, LX/4Dn;->A05(Ljava/lang/Class;Ljava/lang/Object;)V
-+
-+    .line 616369
-+    iget-object v2, v1, LX/0dS;->A02:LX/028;
-+
-+    iget-object v0, v1, LX/0dS;->A01:LX/0dK;
-+
-+    new-instance v1, LX/2By;
-+
-+    invoke-direct {v1, v0, v2}, LX/2By;-><init>(LX/0dK;LX/028;)V
-+
-+    .line 616370
-+    const-class v0, LX/2By;
-+
-+    .line 616371
-+    invoke-static {v0, v1}, LX/2hR;->A00(Ljava/lang/Class;Ljava/lang/Object;)Ljava/lang/Object;
-+
-+    move-result-object v3
-+
-+    check-cast v3, LX/2By;
-+
-+    .line 616372
-+    const/16 v0, 0x20
-+
-+    .line 616373
-+    invoke-static {v0}, LX/035;->builderWithExpectedSize(I)LX/1jM;
-+
-+    move-result-object v2
-+
-+    iget-object v1, v3, LX/2By;->A00:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.community.AddGroupsToCommunityViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A01:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.conversationslist.ArchiveHeaderViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A02:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.userban.ui.viewmodel.BanAppealViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A04:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.registration.report.BanReportViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A05:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.blockbusiness.blockreasonlist.BlockReasonListViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A06:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.conversation.viewmodel.BroadcastViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A07:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.report.BusinessActivityReportViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A08:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.biz.compliance.viewmodel.BusinessComplianceViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A09:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.businessdirectory.viewmodel.BusinessDirectoryActivityViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A0A:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.businessdirectory.viewmodel.BusinessDirectorySearchQueryViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A0B:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.voipcalling.callgrid.viewmodel.CallGridViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A0C:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.voipcalling.calllink.viewmodel.CallLinkViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A0D:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.community.CommunitySubgroupsViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A0E:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.biz.product.viewmodel.ComplianceInfoViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A0F:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.countrygating.viewmodel.CountryGatingViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A0H:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.businessdirectory.viewmodel.DirectorySetLocationViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A0I:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.backup.encryptedbackup.EncBackupViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A0J:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.migration.export.ui.ExportMigrationViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A0K:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.wabloks.base.GenericBkLayoutViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A0M:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.backup.google.viewmodel.GoogleDriveNewUserSetupViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A0N:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.migration.android.view.GoogleMigrateImporterViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A0O:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.group.GroupSettingsViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A0P:LX/01M;
-+#coocoo
-+    const-string v0, "com.whatsapp.voipcalling.callgrid.viewmodel.MenuBottomSheetViewModel"
-+#coocoo
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A0Q:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.conversation.conversationrow.messagerating.MessageRatingViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A0R:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.wabloks.ui.PrivacyNotice.PrivacyNoticeFragmentViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A0S:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.backup.google.viewmodel.RestoreFromBackupViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A0T:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.settings.SettingsChatViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A0U:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.settings.SettingsDataUsageViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A0V:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.backup.google.viewmodel.SettingsGoogleDriveViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A0W:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.shops.ShopsBkLayoutViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A0X:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.shops.ShopsProductPreviewFragmentViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    iget-object v1, v3, LX/2By;->A0Y:LX/01M;
-+
-+    const-string v0, "com.coocoowhatsapp.tosgating.viewmodel.ToSGatingViewModel"
-+
-+    invoke-virtual {v2, v0, v1}, LX/1jM;->put(Ljava/lang/Object;Ljava/lang/Object;)LX/1jM;
-+
-+    invoke-virtual {v2}, LX/1jM;->build()LX/035;
-+
-+    move-result-object v0
-+
-+    .line 616374
-+    invoke-virtual {p2}, Ljava/lang/Class;->getName()Ljava/lang/String;
-+
-+    move-result-object v2
-+
-+    invoke-interface {v0, v2}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
-+
-+    move-result-object v0
-+
-+    check-cast v0, LX/01M;
-+
-+    if-eqz v0, :cond_0
-+
-+    .line 616375
-+    invoke-interface {v0}, LX/01M;->get()Ljava/lang/Object;
-+
-+    move-result-object v0
-+
-+    check-cast v0, LX/075;
-+
-+    return-object v0
-+
-+    .line 616376
-+    :cond_0
-+    const-string v0, "Expected the @HiltViewModel-annotated class \'"
-+
-+    .line 616377
-+    invoke-static {v0}, LX/2Qf;->A0q(Ljava/lang/String;)Ljava/lang/StringBuilder;
-+
-+    move-result-object v1
-+
-+    .line 616378
-+    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-+
-+    const-string v0, "\' to be available in the multi-binding of @HiltViewModelMap but none was found."
-+
-+    .line 616379
-+    invoke-static {v0, v1}, LX/2Qf;->A0l(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
-+
-+    move-result-object v0
-+
-+    invoke-static {v0}, LX/2Qf;->A0d(Ljava/lang/String;)Ljava/lang/IllegalStateException;
-+
-+    move-result-object v0
-+
-+    .line 616380
-+    throw v0
-+.end method
+diff --git a/app/src/main/java/com/coocoo/backuprestore/FullBackupManager.kt b/app/src/main/java/com/coocoo/backuprestore/FullBackupManager.kt
+index 097696082..6680d3778 100644
+--- a/app/src/main/java/com/coocoo/backuprestore/FullBackupManager.kt
++++ b/app/src/main/java/com/coocoo/backuprestore/FullBackupManager.kt
+@@ -64,7 +64,7 @@ object FullBackupManager {
+         ResMgr.getString(Constants.Res.String.APP_NAME), FOLDER_CURRENT_BACKUP)
+     private val PATH_MOD_BACKUP_V2_ZIP =
+         FileUtil.concatPaths(FOLDER_CURRENT_BACKUP_V2, Constants.FILE_BACKUP_ZIP)
+-    private val PATH_MOD_DATA_DATA_BACKUP = FileUtil.concatPaths(FOLDER_CURRENT_BACKUP_V2, DATA_FOLDER_PATTERN)
++    val PATH_MOD_DATA_DATA_BACKUP: String = FileUtil.concatPaths(FOLDER_CURRENT_BACKUP_V2, DATA_FOLDER_PATTERN)
+     private val PATH_MOD_DATA_DATA = FileUtil.concatPaths(PATH_SDCARD_DATA, DATA_FOLDER_PATTERN, yo.mpack)
+ 
+     // Theme info
+diff --git a/app/src/main/java/com/coocoo/preference/AbsCoocooPrefFragment.kt b/app/src/main/java/com/coocoo/preference/AbsCoocooPrefFragment.kt
+index 35696e5ae..d378a5123 100644
+--- a/app/src/main/java/com/coocoo/preference/AbsCoocooPrefFragment.kt
++++ b/app/src/main/java/com/coocoo/preference/AbsCoocooPrefFragment.kt
+@@ -28,7 +28,7 @@ abstract class AbsCooCooPrefFragment : PreferenceFragment() {
+     private var confirmRestartDialog: Dialog? = null
+     private var listView: ListView? = null
+ 
+-    private val prefFragmentScope: CoroutineScope
++    protected val prefFragmentScope: CoroutineScope
+         get() {
+             return CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+         }
+diff --git a/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt b/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
+index 6ff991b77..36bdbe272 100644
+--- a/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
++++ b/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
+@@ -8,6 +8,7 @@ import android.text.TextUtils
+ import android.view.View
+ import android.widget.Toast
+ import com.coocoo.backuprestore.*
++import com.coocoo.backuprestore.FullBackupManager.PATH_MOD_DATA_DATA_BACKUP
+ import com.coocoo.backuprestore.dialog.ConfirmSignOutDialog
+ import com.coocoo.coocoo.Coocoo
+ import com.coocoo.coocoosp.SPDelegate
+@@ -23,6 +24,7 @@ import com.coocoo.widget.SimpleDialog
+ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.GlobalScope
+ import kotlinx.coroutines.launch
++import kotlinx.coroutines.withContext
+ import java.lang.ref.WeakReference
+ 
+ class CoocooBackupRestorePrefFragment
+@@ -148,7 +150,15 @@ class CoocooBackupRestorePrefFragment
+         findPreference(PREF_KEY_CLEAR_BACKUP)?.let { preference ->
+             preference.onPreferenceClickListener = this@CoocooBackupRestorePrefFragment
+             preference.onPreferenceChangeListener = this@CoocooBackupRestorePrefFragment
+-            preference.isEnabled = FullBackupManager.lastLocalBackupTime.isNotEmpty()
++            preference.isEnabled = false
++            if (FullBackupManager.lastLocalBackupTime.isNotEmpty()) {
++                preference.summary = ResMgr.getString("cc_backup_whatsapp_data_clear_backup_calculating")
++                prefFragmentScope.launch {
++                    preference.isEnabled = true
++                    val size = getBackUpFileSize()
++                    preference.summary = ResMgr.getString("cc_backup_whatsapp_data_clear_backup_content", size)
++                }
++            }
+         }
+ 
+         setupGoogleDriveTitlePreference()
+@@ -407,6 +417,13 @@ class CoocooBackupRestorePrefFragment
+         }
+     }
+ 
++    private fun deleteBackUpFiles(view: View) {
++    }
++
++    private suspend fun getBackUpFileSize(): Float = withContext(Dispatchers.IO) {
++        FileUtil.getFileSize(PATH_MOD_DATA_DATA_BACKUP) / (1024f * 1024f)
++    }
++
+     private fun generateLocalBackupPreferenceSummary(localBackupTime: String): String {
+         val never: String = ResMgr.getString(Constants.Res.String.BACKUP_RESTORE_NEVER)
+         val time = String.format(
+diff --git a/app/src/main/res/values/cc_strings.xml b/app/src/main/res/values/cc_strings.xml
+index 1d83a0e90..7839d17ee 100644
+--- a/app/src/main/res/values/cc_strings.xml
++++ b/app/src/main/res/values/cc_strings.xml
+@@ -856,7 +856,8 @@ Our official Website: http://heymods.com"</string>
+     <string name="cc_backup_whatsapp_data_desc_time_cloud">Backup Time: %1$s</string>
+     <string name="cc_backup_whatsapp_data_desc_size">Backup Size: %1$s</string>
+     <string name="cc_backup_whatsapp_data_clear_backup_title">Clear Backup</string>
+-    <string name="cc_backup_whatsapp_data_clear_backup_content">The Clear Backup option deletes all old backup data. More space saving.</string>
++    <string name="cc_backup_whatsapp_data_clear_backup_content">Size: %.2f MB\nThe Clear Backup option deletes all old backup data. More space saving.</string>
++    <string name="cc_backup_whatsapp_data_clear_backup_calculating">Calculating&#8239;</string>
+     <string name="cc_backup_whatsapp_data_title_include_media">Include media</string>
+     <string name="cc_backup_whatsapp_data_desc_include_media">Enable this option may occupy more storage on your device or cloud storage.</string>
+     <string name="cc_restore_whatsApp_data_title">Restore WhatsApp Data</string>
