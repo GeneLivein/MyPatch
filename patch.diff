@@ -1,8 +1,16 @@
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt
-index c7b33d828..1a8c8566e 100644
+index c7b33d828..5adbb4717 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt
-@@ -700,6 +700,7 @@ class CameraUiDelegate(val activity: cc_0Ay, val uiHelperProvider: cc_0MI) {
+@@ -593,6 +593,7 @@ class CameraUiDelegate(val activity: cc_0Ay, val uiHelperProvider: cc_0MI) {
+         }
+ 
+         llSwitch.setSwitchFilterClickListener {
++            LogUtil.d("reportStatusFilterAction")
+             Report.reportStatusFilterAction(ReportConstant.VALUE_FILTER_CLICK_ENTRY)
+             showGallery(false)
+             switchFilter()
+@@ -700,6 +701,7 @@ class CameraUiDelegate(val activity: cc_0Ay, val uiHelperProvider: cc_0MI) {
          if (show) {
              uiHelperProvider.AAN().A05.visibility = View.VISIBLE
          }
