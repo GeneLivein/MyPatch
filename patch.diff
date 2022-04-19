@@ -1,17 +1,12 @@
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt
-index c7b33d828..dedc38f1b 100644
+index c7b33d828..1a8c8566e 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt
-@@ -697,6 +697,12 @@ class CameraUiDelegate(val activity: cc_0Ay, val uiHelperProvider: cc_0MI) {
-     }
- 
-     private fun showGallery(show: Boolean) {
-+        LogUtil.d("showGallery")
-+        try {
-+            throw Exception()
-+        } catch (e: Exception) {
-+            e.printStackTrace()
-+        }
+@@ -700,6 +700,7 @@ class CameraUiDelegate(val activity: cc_0Ay, val uiHelperProvider: cc_0MI) {
          if (show) {
              uiHelperProvider.AAN().A05.visibility = View.VISIBLE
          }
++        LogUtil.d(uiHelperProvider.AAN().A0C::class.java.canonicalName)
+         uiHelperProvider.AAN().A0C.visibility = if (show) View.VISIBLE else View.GONE
+         uiHelperProvider.AAN().A0C.alpha = if (show) 1.0F else 0.0F
+         uiHelperProvider.AAN().A06.visibility = if (show) View.INVISIBLE else View.VISIBLE  // Hide the camera_control view at showing the gallery view.
