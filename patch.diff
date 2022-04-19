@@ -1,20 +1,22 @@
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt
-index c7b33d828..5adbb4717 100644
+index c7b33d828..99f7412cb 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt
-@@ -593,6 +593,7 @@ class CameraUiDelegate(val activity: cc_0Ay, val uiHelperProvider: cc_0MI) {
-         }
- 
-         llSwitch.setSwitchFilterClickListener {
-+            LogUtil.d("reportStatusFilterAction")
-             Report.reportStatusFilterAction(ReportConstant.VALUE_FILTER_CLICK_ENTRY)
-             showGallery(false)
-             switchFilter()
-@@ -700,6 +701,7 @@ class CameraUiDelegate(val activity: cc_0Ay, val uiHelperProvider: cc_0MI) {
-         if (show) {
-             uiHelperProvider.AAN().A05.visibility = View.VISIBLE
-         }
-+        LogUtil.d(uiHelperProvider.AAN().A0C::class.java.canonicalName)
+@@ -10,6 +10,7 @@ import android.hardware.Camera
+ import android.net.ConnectivityManager
+ import android.opengl.GLSurfaceView
+ import android.opengl.Matrix
++import android.os.Build
+ import android.os.Handler
+ import android.view.MotionEvent
+ import android.view.View
+@@ -703,6 +704,9 @@ class CameraUiDelegate(val activity: cc_0Ay, val uiHelperProvider: cc_0MI) {
          uiHelperProvider.AAN().A0C.visibility = if (show) View.VISIBLE else View.GONE
          uiHelperProvider.AAN().A0C.alpha = if (show) 1.0F else 0.0F
          uiHelperProvider.AAN().A06.visibility = if (show) View.INVISIBLE else View.VISIBLE  // Hide the camera_control view at showing the gallery view.
++        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
++            LogUtil.d("Is A0C attached:${uiHelperProvider.AAN().A0C.isAttachedToWindow}")
++        }
+     }
+ 
+     private fun switchFilter() {
