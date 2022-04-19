@@ -25,7 +25,7 @@ index 35696e5ae..d378a5123 100644
              return CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
          }
 diff --git a/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt b/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
-index 6ff991b77..6dda7ad8d 100644
+index 6ff991b77..f53e72422 100644
 --- a/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
 +++ b/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
 @@ -8,6 +8,7 @@ import android.text.TextUtils
@@ -62,11 +62,38 @@ index 6ff991b77..6dda7ad8d 100644
          }
  
          setupGoogleDriveTitlePreference()
-@@ -407,6 +418,13 @@ class CoocooBackupRestorePrefFragment
+@@ -180,7 +191,7 @@ class CoocooBackupRestorePrefFragment
+                         context = this@CoocooBackupRestorePrefFragment.activity,
+                         title = ResMgr.getString("cc_delete_now_title"),
+                         message = ResMgr.getString("cc_delete_now_content"),
+-                        onConfirmClicked = {},
++                        onConfirmClicked = ::confirmDeleting,
+                     ).also {
+                         confirmDialog = it
+                     }.show()
+@@ -407,6 +418,31 @@ class CoocooBackupRestorePrefFragment
          }
      }
  
-+    private fun deleteBackUpFiles(view: View) {
++    private fun confirmDeleting(view: View) {
++        val dialog = ProgressDialog(
++            context = activity,
++            title = ResMgr.getString("cc_backup_whatsapp_data_clear_backup_dialog_deleting_title"),
++            message = ResMgr.getString("cc_universal_settings_please_wait")
++        )
++        dialog.show()
++        prefFragmentScope.launch {
++            deleteBackUpFiles()
++            dialog.dismiss()
++            SPDelegate.getInstance().setLongValue(
++                Constants.PREFERENCE_KEY_BACKUP_LOCAL_LAST_TIME,
++                -1
++            )
++        }
++    }
++
++    private suspend fun deleteBackUpFiles() = withContext(Dispatchers.IO) {
++        FileUtil.deleteDir(PATH_MOD_DATA_DATA_BACKUP)
 +    }
 +
 +    private suspend fun getFormattedBackUpFileSize(): String = withContext(Dispatchers.IO) {
@@ -77,16 +104,17 @@ index 6ff991b77..6dda7ad8d 100644
          val never: String = ResMgr.getString(Constants.Res.String.BACKUP_RESTORE_NEVER)
          val time = String.format(
 diff --git a/app/src/main/res/values/cc_strings.xml b/app/src/main/res/values/cc_strings.xml
-index 1d83a0e90..5d1a5f48d 100644
+index 1d83a0e90..fb375782e 100644
 --- a/app/src/main/res/values/cc_strings.xml
 +++ b/app/src/main/res/values/cc_strings.xml
-@@ -856,7 +856,8 @@ Our official Website: http://heymods.com"</string>
+@@ -856,7 +856,9 @@ Our official Website: http://heymods.com"</string>
      <string name="cc_backup_whatsapp_data_desc_time_cloud">Backup Time: %1$s</string>
      <string name="cc_backup_whatsapp_data_desc_size">Backup Size: %1$s</string>
      <string name="cc_backup_whatsapp_data_clear_backup_title">Clear Backup</string>
 -    <string name="cc_backup_whatsapp_data_clear_backup_content">The Clear Backup option deletes all old backup data. More space saving.</string>
 +    <string name="cc_backup_whatsapp_data_clear_backup_content">Size: %s\nThe Clear Backup option deletes all old backup data. More space saving.</string>
-+    <string name="cc_backup_whatsapp_data_clear_backup_calculating">Calculating&#8239;</string>
++    <string name="cc_backup_whatsapp_data_clear_backup_calculating">Calculating&#8320;</string>
++    <string name="cc_backup_whatsapp_data_clear_backup_dialog_deleting_title">Deleting Backup files&#8320;</string>
      <string name="cc_backup_whatsapp_data_title_include_media">Include media</string>
      <string name="cc_backup_whatsapp_data_desc_include_media">Enable this option may occupy more storage on your device or cloud storage.</string>
      <string name="cc_restore_whatsApp_data_title">Restore WhatsApp Data</string>
