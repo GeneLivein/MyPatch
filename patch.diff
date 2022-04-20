@@ -41,35 +41,6 @@ index c7b33d828..51701144b 100644
      }
  
      private fun switchFilter() {
-diff --git a/whatsapp_modify_module/smali/X/0GV.smali b/whatsapp_modify_module/smali/X/0GV.smali
-index ce59cd6c8..f5f69fcf5 100644
---- a/whatsapp_modify_module/smali/X/0GV.smali
-+++ b/whatsapp_modify_module/smali/X/0GV.smali
-@@ -1815,9 +1815,9 @@
- 
-     .line 63973
-     iget-object v5, p0, LX/0GV;->A05:Landroid/view/View;
--
--    invoke-virtual {v5, v3}, Landroid/view/View;->setVisibility(I)V
--
-+#coocoo
-+    #invoke-virtual {v5, v3}, Landroid/view/View;->setVisibility(I)V
-+#coocoo
-     .line 63974
-     :cond_3
-     iput-boolean v4, p0, LX/0GV;->A0o:Z
-@@ -6034,8 +6034,9 @@
- 
-     .line 64545
-     iget-object v0, p0, LX/0GV;->A05:Landroid/view/View;
--
--    invoke-virtual {v0, v1}, Landroid/view/View;->setVisibility(I)V
-+#coocoo
-+    #invoke-virtual {v0, v1}, Landroid/view/View;->setVisibility(I)V
-+#coocoo
- 
-     .line 64546
-     new-instance v3, Landroid/view/animation/AnimationSet;
 diff --git a/whatsapp_modify_module/smali/X/0kF.2.smali b/whatsapp_modify_module/smali/X/0kF.2.smali
 new file mode 100644
 index 000000000..467358940
