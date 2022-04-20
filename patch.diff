@@ -25,7 +25,7 @@ index 35696e5ae..d378a5123 100644
              return CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
          }
 diff --git a/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt b/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
-index 6ff991b77..c8795b461 100644
+index 6ff991b77..6606a7a59 100644
 --- a/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
 +++ b/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
 @@ -8,6 +8,7 @@ import android.text.TextUtils
@@ -36,7 +36,13 @@ index 6ff991b77..c8795b461 100644
  import com.coocoo.backuprestore.dialog.ConfirmSignOutDialog
  import com.coocoo.coocoo.Coocoo
  import com.coocoo.coocoosp.SPDelegate
-@@ -23,6 +24,7 @@ import com.coocoo.widget.SimpleDialog
+@@ -18,11 +19,13 @@ import com.coocoo.report.ReportConstant
+ import com.coocoo.utils.*
+ import com.coocoo.utils.ToastUtil.showToast
+ import com.coocoo.widget.ConfirmDialog
++import com.coocoo.widget.CyclicProgressDialog
+ import com.coocoo.widget.ProgressDialog
+ import com.coocoo.widget.SimpleDialog
  import kotlinx.coroutines.Dispatchers
  import kotlinx.coroutines.GlobalScope
  import kotlinx.coroutines.launch
@@ -44,7 +50,7 @@ index 6ff991b77..c8795b461 100644
  import java.lang.ref.WeakReference
  
  class CoocooBackupRestorePrefFragment
-@@ -148,7 +150,18 @@ class CoocooBackupRestorePrefFragment
+@@ -148,7 +151,18 @@ class CoocooBackupRestorePrefFragment
          findPreference(PREF_KEY_CLEAR_BACKUP)?.let { preference ->
              preference.onPreferenceClickListener = this@CoocooBackupRestorePrefFragment
              preference.onPreferenceChangeListener = this@CoocooBackupRestorePrefFragment
@@ -64,7 +70,7 @@ index 6ff991b77..c8795b461 100644
          }
  
          setupGoogleDriveTitlePreference()
-@@ -180,7 +193,7 @@ class CoocooBackupRestorePrefFragment
+@@ -180,7 +194,7 @@ class CoocooBackupRestorePrefFragment
                          context = this@CoocooBackupRestorePrefFragment.activity,
                          title = ResMgr.getString("cc_delete_now_title"),
                          message = ResMgr.getString("cc_delete_now_content"),
@@ -73,16 +79,15 @@ index 6ff991b77..c8795b461 100644
                      ).also {
                          confirmDialog = it
                      }.show()
-@@ -407,6 +420,32 @@ class CoocooBackupRestorePrefFragment
+@@ -407,6 +421,31 @@ class CoocooBackupRestorePrefFragment
          }
      }
  
 +    private fun confirmDeleting(view: View) {
-+        val dialog = ProgressDialog(
++        val dialog = CyclicProgressDialog(
 +            context = activity,
 +            title = ResMgr.getString("cc_backup_whatsapp_data_clear_backup_dialog_deleting_title"),
 +            message = ResMgr.getString("cc_universal_settings_please_wait"),
-+            isIndeterminate = true
 +        )
 +        dialog.show()
 +        prefFragmentScope.launch {
@@ -107,10 +112,18 @@ index 6ff991b77..c8795b461 100644
          val never: String = ResMgr.getString(Constants.Res.String.BACKUP_RESTORE_NEVER)
          val time = String.format(
 diff --git a/app/src/main/java/com/coocoo/widget/ProgressDialog.kt b/app/src/main/java/com/coocoo/widget/ProgressDialog.kt
-index 1a5703a47..c5ad3cca0 100644
+index 1a5703a47..693138978 100644
 --- a/app/src/main/java/com/coocoo/widget/ProgressDialog.kt
 +++ b/app/src/main/java/com/coocoo/widget/ProgressDialog.kt
-@@ -13,7 +13,8 @@ import kotlinx.coroutines.launch
+@@ -2,6 +2,7 @@ package com.coocoo.widget
+ 
+ import android.content.Context
+ import android.util.Log
++import android.view.View
+ import android.widget.ProgressBar
+ import android.widget.TextView
+ import com.coocoo.utils.Constants
+@@ -13,7 +14,8 @@ import kotlinx.coroutines.launch
  class ProgressDialog(
          context: Context,
          private val title: String?,
@@ -120,26 +133,50 @@ index 1a5703a47..c5ad3cca0 100644
  ) : CommonDialog(context) {
  
      override fun show() {
-@@ -36,6 +37,7 @@ class ProgressDialog(
- 
-         val progressBar = findViewById<ProgressBar>(ResMgr.getId("cc_dialog_progress"))
+@@ -38,6 +40,13 @@ class ProgressDialog(
          progressBar?.run {
-+            isIndeterminate = this@ProgressDialog.isIndeterminate
              progress = 0
          }
++        
++        val indeterminateProgressBar = findViewById<ProgressBar>(ResMgr.getId("cc_dialog_progress"))
++        if (isIndeterminate) {
++            indeterminateProgressBar.visibility = View.GONE
++        } else {
++            progressBar.visibility = View.GONE
++        }
      }
+ 
+     fun updateProgress(newProgress: Int) {
 diff --git a/app/src/main/res/layout/cc_dialog_progress.xml b/app/src/main/res/layout/cc_dialog_progress.xml
-index a3863d1fa..9de672a59 100644
+index a3863d1fa..67732045c 100644
 --- a/app/src/main/res/layout/cc_dialog_progress.xml
 +++ b/app/src/main/res/layout/cc_dialog_progress.xml
-@@ -21,7 +21,7 @@
+@@ -30,7 +30,15 @@
+         android:progressDrawable="@drawable/cc_update_progress"
+         android:layout_marginTop="25dp"
+         android:layout_marginStart="35dp"
+-        android:layout_marginEnd="35dp"/>
++        android:layout_marginEnd="35dp"
++        tools:visibility="gone"/>
++
++    <ProgressBar
++        android:id="@+id/cc_cyclic_dialog_progress"
++        android:layout_width="24dp"
++        android:layout_height="24dp"
++        android:layout_marginTop="25dp"
++        android:layout_gravity="center_horizontal"/>
  
-     <ProgressBar
-         android:id="@+id/cc_dialog_progress"
--        style="@android:style/Widget.Holo.ProgressBar.Horizontal"
-+        style="@android:style/Widget.Holo.ProgressBar"
-         tools:indeterminate="true"
-         android:layout_centerVertical="true"
+     <com.coocoo.widget.CoocooTextView
+         android:id="@+id/cc_dialog_progress_text"
+@@ -43,7 +51,8 @@
+         android:layout_marginRight="35dp"
+         android:textColor="#06979F"
+         android:layout_gravity="center_horizontal"
+-        tools:text="40%"/>
++        tools:text="40%"
++        tools:visibility="gone"/>
+ 
+     <View
          android:layout_width="match_parent"
 diff --git a/app/src/main/res/values/cc_strings.xml b/app/src/main/res/values/cc_strings.xml
 index 1d83a0e90..44a7b5718 100644
