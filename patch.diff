@@ -1,394 +1,142 @@
-diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt
-index c7b33d828..e9a041c66 100644
---- a/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt
-+++ b/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt
-@@ -10,6 +10,7 @@ import android.hardware.Camera
- import android.net.ConnectivityManager
- import android.opengl.GLSurfaceView
- import android.opengl.Matrix
-+import android.os.Build
- import android.os.Handler
- import android.view.MotionEvent
- import android.view.View
-@@ -49,13 +50,7 @@ import com.coocoo.newtheme.store.model.DownloadUnInitialised
- import com.coocoo.newtheme.store.model.Downloading
- import com.coocoo.report.Report
- import com.coocoo.report.ReportConstant
--import com.coocoo.utils.Constants
--import com.coocoo.utils.DialogUtils
--import com.coocoo.utils.LogUtil
--import com.coocoo.utils.ResMgr
--import com.coocoo.utils.ToastUtil
--import com.coocoo.utils.UnzipError
--import com.coocoo.utils.UnzipResult
-+import com.coocoo.utils.*
- import com.coocoo.utils.network.NetworkUtil
- import com.coocoo.widget.CameraUiFilterControlLayout
- import com.coocoo.widget.CameraUiFilterSwitchLayout
-@@ -700,9 +695,15 @@ class CameraUiDelegate(val activity: cc_0Ay, val uiHelperProvider: cc_0MI) {
-         if (show) {
-             uiHelperProvider.AAN().A05.visibility = View.VISIBLE
+diff --git a/app/src/main/java/com/coocoo/backuprestore/FullBackupManager.kt b/app/src/main/java/com/coocoo/backuprestore/FullBackupManager.kt
+index 097696082..6680d3778 100644
+--- a/app/src/main/java/com/coocoo/backuprestore/FullBackupManager.kt
++++ b/app/src/main/java/com/coocoo/backuprestore/FullBackupManager.kt
+@@ -64,7 +64,7 @@ object FullBackupManager {
+         ResMgr.getString(Constants.Res.String.APP_NAME), FOLDER_CURRENT_BACKUP)
+     private val PATH_MOD_BACKUP_V2_ZIP =
+         FileUtil.concatPaths(FOLDER_CURRENT_BACKUP_V2, Constants.FILE_BACKUP_ZIP)
+-    private val PATH_MOD_DATA_DATA_BACKUP = FileUtil.concatPaths(FOLDER_CURRENT_BACKUP_V2, DATA_FOLDER_PATTERN)
++    val PATH_MOD_DATA_DATA_BACKUP: String = FileUtil.concatPaths(FOLDER_CURRENT_BACKUP_V2, DATA_FOLDER_PATTERN)
+     private val PATH_MOD_DATA_DATA = FileUtil.concatPaths(PATH_SDCARD_DATA, DATA_FOLDER_PATTERN, yo.mpack)
+ 
+     // Theme info
+diff --git a/app/src/main/java/com/coocoo/preference/AbsCoocooPrefFragment.kt b/app/src/main/java/com/coocoo/preference/AbsCoocooPrefFragment.kt
+index 35696e5ae..d378a5123 100644
+--- a/app/src/main/java/com/coocoo/preference/AbsCoocooPrefFragment.kt
++++ b/app/src/main/java/com/coocoo/preference/AbsCoocooPrefFragment.kt
+@@ -28,7 +28,7 @@ abstract class AbsCooCooPrefFragment : PreferenceFragment() {
+     private var confirmRestartDialog: Dialog? = null
+     private var listView: ListView? = null
+ 
+-    private val prefFragmentScope: CoroutineScope
++    protected val prefFragmentScope: CoroutineScope
+         get() {
+             return CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
          }
-+        val parent = (uiHelperProvider.AAN().A0C.parent as View)
-         uiHelperProvider.AAN().A0C.visibility = if (show) View.VISIBLE else View.GONE
-         uiHelperProvider.AAN().A0C.alpha = if (show) 1.0F else 0.0F
-         uiHelperProvider.AAN().A06.visibility = if (show) View.INVISIBLE else View.VISIBLE  // Hide the camera_control view at showing the gallery view.
-+        uiHelperProvider.AAN().A05.postDelayed({
-+            LogUtil.d("1 parent.visibility: ${parent.visibility}, alpha: ${parent.alpha}, show: ${show}")
-+            uiHelperProvider.AAN().A05.visibility = View.VISIBLE
-+            LogUtil.d("2 parent.visibility: ${parent.visibility}, alpha: ${parent.alpha}")
-+        },1000)
+diff --git a/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt b/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
+index 6ff991b77..f53e72422 100644
+--- a/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
++++ b/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
+@@ -8,6 +8,7 @@ import android.text.TextUtils
+ import android.view.View
+ import android.widget.Toast
+ import com.coocoo.backuprestore.*
++import com.coocoo.backuprestore.FullBackupManager.PATH_MOD_DATA_DATA_BACKUP
+ import com.coocoo.backuprestore.dialog.ConfirmSignOutDialog
+ import com.coocoo.coocoo.Coocoo
+ import com.coocoo.coocoosp.SPDelegate
+@@ -23,6 +24,7 @@ import com.coocoo.widget.SimpleDialog
+ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.GlobalScope
+ import kotlinx.coroutines.launch
++import kotlinx.coroutines.withContext
+ import java.lang.ref.WeakReference
+ 
+ class CoocooBackupRestorePrefFragment
+@@ -148,7 +150,16 @@ class CoocooBackupRestorePrefFragment
+         findPreference(PREF_KEY_CLEAR_BACKUP)?.let { preference ->
+             preference.onPreferenceClickListener = this@CoocooBackupRestorePrefFragment
+             preference.onPreferenceChangeListener = this@CoocooBackupRestorePrefFragment
+-            preference.isEnabled = FullBackupManager.lastLocalBackupTime.isNotEmpty()
++            preference.isEnabled = false
++            if (FullBackupManager.lastLocalBackupTime.isNotEmpty()) {
++                val strCalculating = ResMgr.getString("cc_backup_whatsapp_data_clear_backup_calculating")
++                preference.summary = ResMgr.getString("cc_backup_whatsapp_data_clear_backup_content", strCalculating)
++                prefFragmentScope.launch {
++                    val size = getFormattedBackUpFileSize()
++                    preference.isEnabled = true
++                    preference.summary = ResMgr.getString("cc_backup_whatsapp_data_clear_backup_content", size)
++                }
++            }
+         }
+ 
+         setupGoogleDriveTitlePreference()
+@@ -180,7 +191,7 @@ class CoocooBackupRestorePrefFragment
+                         context = this@CoocooBackupRestorePrefFragment.activity,
+                         title = ResMgr.getString("cc_delete_now_title"),
+                         message = ResMgr.getString("cc_delete_now_content"),
+-                        onConfirmClicked = {},
++                        onConfirmClicked = ::confirmDeleting,
+                     ).also {
+                         confirmDialog = it
+                     }.show()
+@@ -407,6 +418,31 @@ class CoocooBackupRestorePrefFragment
+         }
      }
  
-     private fun switchFilter() {
-@@ -1027,6 +1028,13 @@ class CameraUiDelegate(val activity: cc_0Ay, val uiHelperProvider: cc_0MI) {
-         return false
-     }
- 
-+    @SmaliInject
-+    fun setBottomSheetVisibility(view: View) {
-+        if (FaceUnityManager == null) {
-+            view.visibility = View.GONE
++    private fun confirmDeleting(view: View) {
++        val dialog = ProgressDialog(
++            context = activity,
++            title = ResMgr.getString("cc_backup_whatsapp_data_clear_backup_dialog_deleting_title"),
++            message = ResMgr.getString("cc_universal_settings_please_wait")
++        )
++        dialog.show()
++        prefFragmentScope.launch {
++            deleteBackUpFiles()
++            dialog.dismiss()
++            SPDelegate.getInstance().setLongValue(
++                Constants.PREFERENCE_KEY_BACKUP_LOCAL_LAST_TIME,
++                -1
++            )
 +        }
 +    }
 +
-     fun onCameraUiCreate() {
-         LogUtil.d("onCameraUiCreate")
-         lifecycleOwner.onCreate()
-diff --git a/whatsapp_modify_module/smali/X/0kF.2.smali b/whatsapp_modify_module/smali/X/0kF.2.smali
-new file mode 100644
-index 000000000..3910bb18a
---- /dev/null
-+++ b/whatsapp_modify_module/smali/X/0kF.2.smali
-@@ -0,0 +1,331 @@
-+.class public final synthetic LX/0kF;
-+.super Ljava/lang/Object;
-+.source ""
-+
-+# interfaces
-+.implements Landroid/view/ViewTreeObserver$OnGlobalLayoutListener;
-+
-+
-+# instance fields
-+.field public final synthetic A00:I
-+
-+.field public final synthetic A01:Ljava/lang/Object;
-+
-+
-+# direct methods
-+.method public synthetic constructor <init>(LX/0GV;)V
-+    .locals 1
-+
-+    const/4 v0, 0x0
-+
-+    iput v0, p0, LX/0kF;->A00:I
-+
-+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
-+
-+    iput-object p1, p0, LX/0kF;->A01:Ljava/lang/Object;
-+
-+    return-void
-+.end method
-+
-+.method public synthetic constructor <init>(Lcom/coocoowhatsapp/chatinfo/ListChatInfo;)V
-+    .locals 1
-+
-+    const/4 v0, 0x1
-+
-+    iput v0, p0, LX/0kF;->A00:I
-+
-+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
-+
-+    iput-object p1, p0, LX/0kF;->A01:Ljava/lang/Object;
-+
-+    return-void
-+.end method
-+
-+.method public synthetic constructor <init>(Lcom/coocoowhatsapp/companiondevice/optin/ui/ForcedOptInActivity;)V
-+    .locals 1
-+
-+    const/4 v0, 0x2
-+
-+    iput v0, p0, LX/0kF;->A00:I
-+
-+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
-+
-+    iput-object p1, p0, LX/0kF;->A01:Ljava/lang/Object;
-+
-+    return-void
-+.end method
-+
-+.method public synthetic constructor <init>(Lcom/whatsapp/voipcalling/VoipCallControlBottomSheet;)V
-+    .locals 1
-+
-+    const/4 v0, 0x3
-+
-+    iput v0, p0, LX/0kF;->A00:I
-+
-+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
-+
-+    iput-object p1, p0, LX/0kF;->A01:Ljava/lang/Object;
-+
-+    return-void
-+.end method
-+
-+
-+# virtual methods
-+.method public final onGlobalLayout()V
-+    .locals 6
-+
-+    iget v0, p0, LX/0kF;->A00:I
-+
-+    const/4 v3, 0x1
-+
-+    const/4 v2, 0x0
-+
-+    const/4 v5, 0x4
-+
-+    .line 172021
-+    iget-object v4, p0, LX/0kF;->A01:Ljava/lang/Object;
-+
-+    packed-switch v0, :pswitch_data_0
-+
-+    check-cast v4, Lcom/whatsapp/voipcalling/VoipCallControlBottomSheet;
-+
-+    .line 172022
-+    invoke-virtual {v4}, Lcom/whatsapp/voipcalling/VoipCallControlBottomSheet;->A1D()V
-+
-+    .line 172023
-+    iget-object v2, v4, Lcom/whatsapp/voipcalling/VoipCallControlBottomSheet;->A0Q:LX/3Y1;
-+
-+    if-eqz v2, :cond_1
-+
-+    iget-object v1, v4, Lcom/whatsapp/voipcalling/VoipCallControlBottomSheet;->A0F:Lcom/google/android/material/bottomsheet/BottomSheetBehavior;
-+
-+    if-eqz v1, :cond_1
-+
-+    iget-boolean v0, v4, Lcom/whatsapp/voipcalling/VoipCallControlBottomSheet;->A0Z:Z
-+
-+    if-eqz v0, :cond_1
-+
-+    .line 172024
-+    iget v1, v1, Lcom/google/android/material/bottomsheet/BottomSheetBehavior;->A0B:I
-+
-+    const/4 v0, 0x5
-+
-+    if-ne v1, v0, :cond_0
-+
-+    const/4 v3, 0x0
-+
-+    .line 172025
-+    :cond_0
-+    invoke-virtual {v2, v3}, LX/3Y1;->A01(Z)V
-+
-+    :cond_1
-+    return-void
-+
-+    .line 172026
-+    :pswitch_0
-+    check-cast v4, LX/0GV;
-+
-+    .line 172027
-+    iget-object v0, v4, LX/0GV;->A0N:Lcom/google/android/material/bottomsheet/BottomSheetBehavior;
-+
-+    .line 172028
-+    iget v0, v0, Lcom/google/android/material/bottomsheet/BottomSheetBehavior;->A0B:I
-+
-+    if-ne v0, v5, :cond_9
-+
-+    .line 172029
-+    iget-object v0, v4, LX/0GV;->A0S:LX/0LU;
-+
-+    if-eqz v0, :cond_8
-+
-+    invoke-interface {v0}, LX/0LU;->AHp()Z
-+
-+    move-result v0
-+
-+    if-eqz v0, :cond_8
-+
-+    .line 172030
-+    :cond_2
-+    :goto_0
-+    const/16 v1, 0x8
-+
-+    .line 172031
-+    iget-object v0, v4, LX/0GV;->A05:Landroid/view/View;
-+
-+    invoke-virtual {v0}, Landroid/view/View;->getVisibility()I
-+
-+    move-result v0
-+
-+    if-eqz v3, :cond_7
-+
-+    .line 172032
-+    if-eq v0, v1, :cond_3
-+
-+    .line 172033
-+    iget-object v0, v4, LX/0GV;->A05:Landroid/view/View;
-+#coocoo
-+    #invoke-virtual {v0, v1}, Landroid/view/View;->setVisibility(I)V
-+    iget-object v1, v4, LX/0GV;->uiDelegate:Lcom/coocoo/whatsappdelegate/CameraUiDelegate;
-+
-+    invoke-virtual {v1, v0}, Lcom/coocoo/whatsappdelegate/CameraUiDelegate;->setBottomSheetVisibility(Landroid/view/View;)V
-+#coocoo
-+    .line 172034
-+    :cond_3
-+    :goto_1
-+    iget-object v0, v4, LX/0GV;->A09:Landroid/view/View;
-+
-+    invoke-virtual {v0}, Landroid/view/View;->getWidth()I
-+
-+    move-result v1
-+
-+    iget-object v0, v4, LX/0GV;->A09:Landroid/view/View;
-+
-+    invoke-virtual {v0}, Landroid/view/View;->getHeight()I
-+
-+    move-result v0
-+
-+    if-gt v1, v0, :cond_4
-+
-+    .line 172035
-+    iget-object v0, v4, LX/0GV;->A0S:LX/0LU;
-+
-+    if-eqz v0, :cond_6
-+
-+    invoke-interface {v0}, LX/0LU;->AHp()Z
-+
-+    move-result v0
-+
-+    if-eqz v0, :cond_6
-+
-+    .line 172036
-+    :cond_4
-+    iget-object v1, v4, LX/0GV;->A0I:Landroid/widget/TextView;
-+
-+    iget-boolean v0, v4, LX/0GV;->A1Y:Z
-+
-+    if-nez v0, :cond_5
-+
-+    const/16 v5, 0x8
-+
-+    :cond_5
-+    invoke-virtual {v1, v5}, Landroid/view/View;->setVisibility(I)V
-+
-+    return-void
-+
-+    .line 172037
-+    :cond_6
-+    iget-boolean v0, v4, LX/0GV;->A0p:Z
-+
-+    if-eqz v0, :cond_4
-+
-+    .line 172038
-+    iget-object v0, v4, LX/0GV;->A0I:Landroid/widget/TextView;
-+
-+    invoke-virtual {v0, v2}, Landroid/view/View;->setVisibility(I)V
-+
-+    return-void
-+
-+    .line 172039
-+    :cond_7
-+    if-eqz v0, :cond_3
-+
-+    .line 172040
-+    iget-object v0, v4, LX/0GV;->A05:Landroid/view/View;
-+
-+    invoke-virtual {v0, v2}, Landroid/view/View;->setVisibility(I)V
-+
-+    goto :goto_1
-+
-+    .line 172041
-+    :cond_8
-+    iget-object v0, v4, LX/0GV;->A09:Landroid/view/View;
-+
-+    invoke-virtual {v0}, Landroid/view/View;->getWidth()I
-+
-+    move-result v1
-+
-+    iget-object v0, v4, LX/0GV;->A09:Landroid/view/View;
-+
-+    invoke-virtual {v0}, Landroid/view/View;->getHeight()I
-+
-+    move-result v0
-+
-+    if-gt v1, v0, :cond_2
-+
-+    .line 172042
-+    iget-boolean v0, v4, LX/0GV;->A0o:Z
-+
-+    if-nez v0, :cond_9
-+
-+    iget-boolean v0, v4, LX/0GV;->A1Y:Z
-+
-+    if-nez v0, :cond_9
-+
-+    goto :goto_0
-+
-+    :cond_9
-+    const/4 v3, 0x0
-+
-+    goto :goto_0
-+
-+    .line 172043
-+    :pswitch_1
-+    check-cast v4, Lcom/coocoowhatsapp/chatinfo/ListChatInfo;
-+
-+    invoke-virtual {v4}, Lcom/coocoowhatsapp/chatinfo/ListChatInfo;->A2K()V
-+
-+    return-void
-+
-+    :pswitch_2
-+    check-cast v4, Lcom/coocoowhatsapp/companiondevice/optin/ui/ForcedOptInActivity;
-+
-+    .line 172044
-+    iget-object v0, v4, Lcom/coocoowhatsapp/companiondevice/optin/ui/ForcedOptInActivity;->A02:Landroid/widget/ScrollView;
-+
-+    .line 172045
-+    invoke-static {v0}, LX/0gO;->A04(Landroid/widget/ScrollView;)Z
-+
-+    move-result v0
-+
-+    if-eqz v0, :cond_b
-+
-+    iget-object v0, v4, Lcom/coocoowhatsapp/companiondevice/optin/ui/ForcedOptInActivity;->A02:Landroid/widget/ScrollView;
-+
-+    .line 172046
-+    invoke-virtual {v0, v3}, Landroid/view/View;->canScrollVertically(I)Z
-+
-+    move-result v0
-+
-+    xor-int/2addr v0, v3
-+
-+    .line 172047
-+    if-nez v0, :cond_b
-+
-+    .line 172048
-+    :goto_2
-+    iget-object v0, v4, Lcom/coocoowhatsapp/companiondevice/optin/ui/ForcedOptInActivity;->A01:Landroid/view/View;
-+
-+    if-nez v3, :cond_a
-+
-+    const/4 v2, 0x4
-+
-+    :cond_a
-+    invoke-virtual {v0, v2}, Landroid/view/View;->setVisibility(I)V
-+
-+    return-void
-+
-+    .line 172049
-+    :cond_b
-+    const/4 v3, 0x0
-+
-+    goto :goto_2
-+
-+    nop
-+
-+    :pswitch_data_0
-+    .packed-switch 0x0
-+        :pswitch_0
-+        :pswitch_1
-+        :pswitch_2
-+    .end packed-switch
-+.end method
++    private suspend fun deleteBackUpFiles() = withContext(Dispatchers.IO) {
++        FileUtil.deleteDir(PATH_MOD_DATA_DATA_BACKUP)
++    }
++
++    private suspend fun getFormattedBackUpFileSize(): String = withContext(Dispatchers.IO) {
++        String.format("%.2f MB", FileUtil.getFileSize(PATH_MOD_DATA_DATA_BACKUP) / (1024f * 1024f))
++    }
++
+     private fun generateLocalBackupPreferenceSummary(localBackupTime: String): String {
+         val never: String = ResMgr.getString(Constants.Res.String.BACKUP_RESTORE_NEVER)
+         val time = String.format(
+diff --git a/app/src/main/java/com/coocoo/widget/ProgressDialog.kt b/app/src/main/java/com/coocoo/widget/ProgressDialog.kt
+index 1a5703a47..c5ad3cca0 100644
+--- a/app/src/main/java/com/coocoo/widget/ProgressDialog.kt
++++ b/app/src/main/java/com/coocoo/widget/ProgressDialog.kt
+@@ -13,7 +13,8 @@ import kotlinx.coroutines.launch
+ class ProgressDialog(
+         context: Context,
+         private val title: String?,
+-        private val message: String?
++        private val message: String?,
++        private val isIndeterminate: Boolean = false
+ ) : CommonDialog(context) {
+ 
+     override fun show() {
+@@ -36,6 +37,7 @@ class ProgressDialog(
+ 
+         val progressBar = findViewById<ProgressBar>(ResMgr.getId("cc_dialog_progress"))
+         progressBar?.run {
++            isIndeterminate = this@ProgressDialog.isIndeterminate
+             progress = 0
+         }
+     }
+diff --git a/app/src/main/res/values/cc_strings.xml b/app/src/main/res/values/cc_strings.xml
+index 1d83a0e90..44a7b5718 100644
+--- a/app/src/main/res/values/cc_strings.xml
++++ b/app/src/main/res/values/cc_strings.xml
+@@ -856,7 +856,9 @@ Our official Website: http://heymods.com"</string>
+     <string name="cc_backup_whatsapp_data_desc_time_cloud">Backup Time: %1$s</string>
+     <string name="cc_backup_whatsapp_data_desc_size">Backup Size: %1$s</string>
+     <string name="cc_backup_whatsapp_data_clear_backup_title">Clear Backup</string>
+-    <string name="cc_backup_whatsapp_data_clear_backup_content">The Clear Backup option deletes all old backup data. More space saving.</string>
++    <string name="cc_backup_whatsapp_data_clear_backup_content">Size: %s\nThe Clear Backup option deletes all old backup data. More space saving.</string>
++    <string name="cc_backup_whatsapp_data_clear_backup_calculating">Calculating&#8320;</string>
++    <string name="cc_backup_whatsapp_data_clear_backup_dialog_deleting_title">Deleting Backup files…</string>
+     <string name="cc_backup_whatsapp_data_title_include_media">Include media</string>
+     <string name="cc_backup_whatsapp_data_desc_include_media">Enable this option may occupy more storage on your device or cloud storage.</string>
+     <string name="cc_restore_whatsApp_data_title">Restore WhatsApp Data</string>
