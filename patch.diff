@@ -1,5 +1,5 @@
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt
-index c7b33d828..120772f55 100644
+index c7b33d828..cdc2bbac3 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt
 @@ -10,6 +10,7 @@ import android.hardware.Camera
@@ -25,10 +25,11 @@ index c7b33d828..120772f55 100644
  import com.coocoo.utils.network.NetworkUtil
  import com.coocoo.widget.CameraUiFilterControlLayout
  import com.coocoo.widget.CameraUiFilterSwitchLayout
-@@ -700,6 +695,7 @@ class CameraUiDelegate(val activity: cc_0Ay, val uiHelperProvider: cc_0MI) {
+@@ -700,6 +695,8 @@ class CameraUiDelegate(val activity: cc_0Ay, val uiHelperProvider: cc_0MI) {
          if (show) {
              uiHelperProvider.AAN().A05.visibility = View.VISIBLE
          }
++        ((uiHelperProvider.AAN().A0C.parent as View).parent as View).visibility = if (show) View.VISIBLE else View.GONE
 +        (uiHelperProvider.AAN().A0C.parent as View).visibility = if (show) View.VISIBLE else View.GONE
          uiHelperProvider.AAN().A0C.visibility = if (show) View.VISIBLE else View.GONE
          uiHelperProvider.AAN().A0C.alpha = if (show) 1.0F else 0.0F
