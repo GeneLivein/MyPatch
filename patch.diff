@@ -41,3 +41,28 @@ index c7b33d828..51701144b 100644
      }
  
      private fun switchFilter() {
+diff --git a/whatsapp_modify_module/smali/X/0GV.smali b/whatsapp_modify_module/smali/X/0GV.smali
+index ce59cd6c8..ab53aa4fa 100644
+--- a/whatsapp_modify_module/smali/X/0GV.smali
++++ b/whatsapp_modify_module/smali/X/0GV.smali
+@@ -1793,7 +1793,7 @@
+ 
+     const-wide/16 v0, 0x96
+ 
+-    const/16 v3, 0x8
++    const/16 v3, 0x0
+ 
+     if-nez v5, :cond_3
+ 
+@@ -6028,8 +6028,9 @@
+ 
+     .line 64544
+     :cond_1
+-    const/16 v1, 0x8
+-
++#coocoo
++    const/16 v1, 0x0
++#coocoo
+     if-eq v0, v1, :cond_2
+ 
+     .line 64545
