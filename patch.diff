@@ -107,7 +107,7 @@ index 6ff991b77..c8795b461 100644
          val never: String = ResMgr.getString(Constants.Res.String.BACKUP_RESTORE_NEVER)
          val time = String.format(
 diff --git a/app/src/main/java/com/coocoo/widget/ProgressDialog.kt b/app/src/main/java/com/coocoo/widget/ProgressDialog.kt
-index 1a5703a47..d29862773 100644
+index 1a5703a47..41c810c3f 100644
 --- a/app/src/main/java/com/coocoo/widget/ProgressDialog.kt
 +++ b/app/src/main/java/com/coocoo/widget/ProgressDialog.kt
 @@ -2,6 +2,7 @@ package com.coocoo.widget
@@ -133,11 +133,11 @@ index 1a5703a47..d29862773 100644
              progress = 0
          }
 +
-+        val indeterminateProgressBar = findViewById<ProgressBar>(ResMgr.getId("cc_dialog_progress"))
++        val indeterminateProgressBar = findViewById<ProgressBar>(ResMgr.getId("cc_cyclic_dialog_progress"))
 +        if (isIndeterminate) {
-+            indeterminateProgressBar.visibility = View.GONE
-+        } else {
 +            progressBar.visibility = View.GONE
++        } else {
++            indeterminateProgressBar.visibility = View.GONE
 +        }
      }
  
