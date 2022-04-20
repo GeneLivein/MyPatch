@@ -57,7 +57,7 @@ index c7b33d828..e9a041c66 100644
          lifecycleOwner.onCreate()
 diff --git a/whatsapp_modify_module/smali/X/0kF.2.smali b/whatsapp_modify_module/smali/X/0kF.2.smali
 new file mode 100644
-index 000000000..ebfbcfdd2
+index 000000000..c3f4b5fa8
 --- /dev/null
 +++ b/whatsapp_modify_module/smali/X/0kF.2.smali
 @@ -0,0 +1,331 @@
@@ -228,7 +228,7 @@ index 000000000..ebfbcfdd2
 +    iget-object v0, v4, LX/0GV;->A05:Landroid/view/View;
 +#coocoo
 +    #invoke-virtual {v0, v1}, Landroid/view/View;->setVisibility(I)V
-+    iget-object v5, p4, LX/0GV;->uiDelegate:Lcom/coocoo/whatsappdelegate/CameraUiDelegate;
++    iget-object v5, v4, LX/0GV;->uiDelegate:Lcom/coocoo/whatsappdelegate/CameraUiDelegate;
 +
 +    invoke-virtual {v5, v0}, Lcom/coocoo/whatsappdelegate/CameraUiDelegate;->setBottomSheetVisibility(Landroid/view/View;)V
 +#coocoo
