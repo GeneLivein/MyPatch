@@ -1,5 +1,5 @@
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt
-index c7b33d828..51701144b 100644
+index c7b33d828..e9a041c66 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt
 @@ -10,6 +10,7 @@ import android.hardware.Camera
@@ -41,12 +41,26 @@ index c7b33d828..51701144b 100644
      }
  
      private fun switchFilter() {
+@@ -1027,6 +1028,13 @@ class CameraUiDelegate(val activity: cc_0Ay, val uiHelperProvider: cc_0MI) {
+         return false
+     }
+ 
++    @SmaliInject
++    fun setBottomSheetVisibility(view: View) {
++        if (FaceUnityManager == null) {
++            view.visibility = View.GONE
++        }
++    }
++
+     fun onCameraUiCreate() {
+         LogUtil.d("onCameraUiCreate")
+         lifecycleOwner.onCreate()
 diff --git a/whatsapp_modify_module/smali/X/0kF.2.smali b/whatsapp_modify_module/smali/X/0kF.2.smali
 new file mode 100644
-index 000000000..467358940
+index 000000000..ebfbcfdd2
 --- /dev/null
 +++ b/whatsapp_modify_module/smali/X/0kF.2.smali
-@@ -0,0 +1,328 @@
+@@ -0,0 +1,331 @@
 +.class public final synthetic LX/0kF;
 +.super Ljava/lang/Object;
 +.source ""
@@ -214,6 +228,9 @@ index 000000000..467358940
 +    iget-object v0, v4, LX/0GV;->A05:Landroid/view/View;
 +#coocoo
 +    #invoke-virtual {v0, v1}, Landroid/view/View;->setVisibility(I)V
++    iget-object v5, p4, LX/0GV;->uiDelegate:Lcom/coocoo/whatsappdelegate/CameraUiDelegate;
++
++    invoke-virtual {v5, v0}, Lcom/coocoo/whatsappdelegate/CameraUiDelegate;->setBottomSheetVisibility(Landroid/view/View;)V
 +#coocoo
 +    .line 172034
 +    :cond_3
