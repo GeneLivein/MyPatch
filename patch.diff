@@ -1,5 +1,5 @@
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt
-index c7b33d828..ea5ab9ddb 100644
+index c7b33d828..51701144b 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/CameraUiDelegate.kt
 @@ -10,6 +10,7 @@ import android.hardware.Camera
@@ -33,9 +33,9 @@ index c7b33d828..ea5ab9ddb 100644
          uiHelperProvider.AAN().A0C.visibility = if (show) View.VISIBLE else View.GONE
          uiHelperProvider.AAN().A0C.alpha = if (show) 1.0F else 0.0F
          uiHelperProvider.AAN().A06.visibility = if (show) View.INVISIBLE else View.VISIBLE  // Hide the camera_control view at showing the gallery view.
-+        Handler().postDelayed({
++        uiHelperProvider.AAN().A05.postDelayed({
 +            LogUtil.d("1 parent.visibility: ${parent.visibility}, alpha: ${parent.alpha}, show: ${show}")
-+            parent.visibility = if (show) View.VISIBLE else View.GONE
++            uiHelperProvider.AAN().A05.visibility = View.VISIBLE
 +            LogUtil.d("2 parent.visibility: ${parent.visibility}, alpha: ${parent.alpha}")
 +        },1000)
      }
