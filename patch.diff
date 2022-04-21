@@ -1,215 +1,106 @@
-diff --git a/app/src/main/java/com/coocoo/backuprestore/FullBackupManager.kt b/app/src/main/java/com/coocoo/backuprestore/FullBackupManager.kt
-index 097696082..6680d3778 100644
---- a/app/src/main/java/com/coocoo/backuprestore/FullBackupManager.kt
-+++ b/app/src/main/java/com/coocoo/backuprestore/FullBackupManager.kt
-@@ -64,7 +64,7 @@ object FullBackupManager {
-         ResMgr.getString(Constants.Res.String.APP_NAME), FOLDER_CURRENT_BACKUP)
-     private val PATH_MOD_BACKUP_V2_ZIP =
-         FileUtil.concatPaths(FOLDER_CURRENT_BACKUP_V2, Constants.FILE_BACKUP_ZIP)
--    private val PATH_MOD_DATA_DATA_BACKUP = FileUtil.concatPaths(FOLDER_CURRENT_BACKUP_V2, DATA_FOLDER_PATTERN)
-+    val PATH_MOD_DATA_DATA_BACKUP: String = FileUtil.concatPaths(FOLDER_CURRENT_BACKUP_V2, DATA_FOLDER_PATTERN)
-     private val PATH_MOD_DATA_DATA = FileUtil.concatPaths(PATH_SDCARD_DATA, DATA_FOLDER_PATTERN, yo.mpack)
- 
-     // Theme info
-diff --git a/app/src/main/java/com/coocoo/preference/AbsCoocooPrefFragment.kt b/app/src/main/java/com/coocoo/preference/AbsCoocooPrefFragment.kt
-index 35696e5ae..d378a5123 100644
---- a/app/src/main/java/com/coocoo/preference/AbsCoocooPrefFragment.kt
-+++ b/app/src/main/java/com/coocoo/preference/AbsCoocooPrefFragment.kt
-@@ -28,7 +28,7 @@ abstract class AbsCooCooPrefFragment : PreferenceFragment() {
-     private var confirmRestartDialog: Dialog? = null
-     private var listView: ListView? = null
- 
--    private val prefFragmentScope: CoroutineScope
-+    protected val prefFragmentScope: CoroutineScope
-         get() {
-             return CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
-         }
 diff --git a/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt b/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
-index 6ff991b77..fa96656f0 100644
+index cd63a5a1d..00a7c81bd 100644
 --- a/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
 +++ b/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
-@@ -8,6 +8,7 @@ import android.text.TextUtils
- import android.view.View
- import android.widget.Toast
- import com.coocoo.backuprestore.*
-+import com.coocoo.backuprestore.FullBackupManager.PATH_MOD_DATA_DATA_BACKUP
- import com.coocoo.backuprestore.dialog.ConfirmSignOutDialog
- import com.coocoo.coocoo.Coocoo
- import com.coocoo.coocoosp.SPDelegate
-@@ -23,6 +24,7 @@ import com.coocoo.widget.SimpleDialog
- import kotlinx.coroutines.Dispatchers
- import kotlinx.coroutines.GlobalScope
- import kotlinx.coroutines.launch
-+import kotlinx.coroutines.withContext
- import java.lang.ref.WeakReference
- 
- class CoocooBackupRestorePrefFragment
-@@ -148,7 +150,18 @@ class CoocooBackupRestorePrefFragment
-         findPreference(PREF_KEY_CLEAR_BACKUP)?.let { preference ->
-             preference.onPreferenceClickListener = this@CoocooBackupRestorePrefFragment
-             preference.onPreferenceChangeListener = this@CoocooBackupRestorePrefFragment
--            preference.isEnabled = FullBackupManager.lastLocalBackupTime.isNotEmpty()
-+            preference.isEnabled = false
-+            val strCalculating = ResMgr.getString("cc_backup_whatsapp_data_clear_backup_calculating")
-+            preference.summary = ResMgr.getString("cc_backup_whatsapp_data_clear_backup_content", strCalculating)
-+            prefFragmentScope.launch {
-+                val size = getFormattedBackUpFileSize()
-+                preference.summary = if (size > 0) {
-+                    preference.isEnabled = true
-+                    ResMgr.getString("cc_backup_whatsapp_data_clear_backup_content", "%.2f MB".format(size))
-+                } else {
-+                    ResMgr.getString("cc_backup_whatsapp_data_clear_backup_content", "0 MB")
-+                }
+@@ -429,7 +429,18 @@ class CoocooBackupRestorePrefFragment
+         )
+         dialog.show()
+         prefFragmentScope.launch {
+-            deleteBackUpFiles()
++            val isSuccess = deleteBackUpFiles()
++            if (isSuccess) {
++                showToast(
++                    Coocoo.getAppContext(),
++                    ResMgr.getString(Constants.Res.String.BACKUP_RESTORE_CLEAR_TOAST_DONE)
++                )
++            } else {
++                showToast(
++                    Coocoo.getAppContext(),
++                    ResMgr.getString(Constants.Res.String.BACKUP_RESTORE_CLEAR_TOAST_FAIL)
++                )
 +            }
-         }
- 
-         setupGoogleDriveTitlePreference()
-@@ -180,7 +193,7 @@ class CoocooBackupRestorePrefFragment
-                         context = this@CoocooBackupRestorePrefFragment.activity,
-                         title = ResMgr.getString("cc_delete_now_title"),
-                         message = ResMgr.getString("cc_delete_now_content"),
--                        onConfirmClicked = {},
-+                        onConfirmClicked = ::confirmDeleting,
-                     ).also {
-                         confirmDialog = it
-                     }.show()
-@@ -407,6 +420,33 @@ class CoocooBackupRestorePrefFragment
+             dialog.dismiss()
+             SPDelegate.getInstance().setLongValue(
+                 Constants.PREFERENCE_KEY_BACKUP_LOCAL_LAST_TIME,
+@@ -439,7 +450,7 @@ class CoocooBackupRestorePrefFragment
          }
      }
  
-+    private fun confirmDeleting(view: View) {
-+        val dialog = ProgressDialog(
-+            context = activity,
-+            title = ResMgr.getString("cc_backup_whatsapp_data_clear_backup_dialog_deleting_title"),
-+            message = ResMgr.getString("cc_universal_settings_please_wait"),
-+            isIndeterminate = true
-+        )
-+        dialog.show()
-+        prefFragmentScope.launch {
-+            deleteBackUpFiles()
-+            dialog.dismiss()
-+            SPDelegate.getInstance().setLongValue(
-+                Constants.PREFERENCE_KEY_BACKUP_LOCAL_LAST_TIME,
-+                -1
-+            )
-+            setupPref()
-+        }
-+    }
-+
-+    private suspend fun deleteBackUpFiles() = withContext(Dispatchers.IO) {
-+        FileUtil.deleteDir(PATH_MOD_DATA_DATA_BACKUP)
-+    }
-+
-+    private suspend fun getFormattedBackUpFileSize(): Float = withContext(Dispatchers.IO) {
-+        FileUtil.getFileSize(PATH_MOD_DATA_DATA_BACKUP) / (1024f * 1024f)
-+    }
-+
-     private fun generateLocalBackupPreferenceSummary(localBackupTime: String): String {
-         val never: String = ResMgr.getString(Constants.Res.String.BACKUP_RESTORE_NEVER)
-         val time = String.format(
-diff --git a/app/src/main/java/com/coocoo/widget/ProgressDialog.kt b/app/src/main/java/com/coocoo/widget/ProgressDialog.kt
-index 1a5703a47..41c810c3f 100644
---- a/app/src/main/java/com/coocoo/widget/ProgressDialog.kt
-+++ b/app/src/main/java/com/coocoo/widget/ProgressDialog.kt
-@@ -2,6 +2,7 @@ package com.coocoo.widget
- 
- import android.content.Context
- import android.util.Log
-+import android.view.View
- import android.widget.ProgressBar
- import android.widget.TextView
- import com.coocoo.utils.Constants
-@@ -13,7 +14,8 @@ import kotlinx.coroutines.launch
- class ProgressDialog(
-         context: Context,
-         private val title: String?,
--        private val message: String?
-+        private val message: String?,
-+        private val isIndeterminate: Boolean = false
- ) : CommonDialog(context) {
- 
-     override fun show() {
-@@ -38,6 +40,13 @@ class ProgressDialog(
-         progressBar?.run {
-             progress = 0
-         }
-+
-+        val indeterminateProgressBar = findViewById<ProgressBar>(ResMgr.getId("cc_cyclic_dialog_progress"))
-+        if (isIndeterminate) {
-+            progressBar.visibility = View.GONE
-+        } else {
-+            indeterminateProgressBar.visibility = View.GONE
-+        }
+-    private suspend fun deleteBackUpFiles() = withContext(Dispatchers.IO) {
++    private suspend fun deleteBackUpFiles(): Boolean = withContext(Dispatchers.IO) {
+         FileUtil.deleteDir(PATH_MOD_DATA_DATA_BACKUP)
      }
  
-     fun updateProgress(newProgress: Int) {
-diff --git a/app/src/main/res/layout/cc_dialog_progress.xml b/app/src/main/res/layout/cc_dialog_progress.xml
-index a3863d1fa..51f8cba93 100644
---- a/app/src/main/res/layout/cc_dialog_progress.xml
-+++ b/app/src/main/res/layout/cc_dialog_progress.xml
-@@ -30,7 +30,17 @@
-         android:progressDrawable="@drawable/cc_update_progress"
-         android:layout_marginTop="25dp"
-         android:layout_marginStart="35dp"
--        android:layout_marginEnd="35dp"/>
-+        android:layout_marginEnd="35dp"
-+        tools:visibility="gone"/>
-+
-+    <ProgressBar
-+        android:id="@+id/cc_cyclic_dialog_progress"
-+        style="@style/cc_cyclic_progress_bar"
-+        android:indeterminateTint="@color/cc_progress_dialog_accent"
-+        android:layout_width="24dp"
-+        android:layout_height="24dp"
-+        android:layout_gravity="center_horizontal"
-+        android:layout_marginTop="25dp" />
+diff --git a/app/src/main/java/com/coocoo/utils/Constants.kt b/app/src/main/java/com/coocoo/utils/Constants.kt
+index 5a2ad5fa3..8ebe05488 100644
+--- a/app/src/main/java/com/coocoo/utils/Constants.kt
++++ b/app/src/main/java/com/coocoo/utils/Constants.kt
+@@ -517,6 +517,8 @@ object Constants {
+             const val BACKUP_PROGRESS_MESSAGE = "cc_dialog_backup_progress_message"
+             const val BACKUP_COMPLETE_MESSAGE = "cc_dialog_backup_complete_message"
+             const val BACKUP_FAILED_MESSAGE = "cc_dialog_backup_failed_title"
++            const val BACKUP_RESTORE_CLEAR_TOAST_DONE = "cc_backup_whatsapp_data_clear_backup_toast_done"
++            const val BACKUP_RESTORE_CLEAR_TOAST_FAIL = "cc_backup_whatsapp_data_clear_backup_toast_fail"
  
-     <com.coocoo.widget.CoocooTextView
-         android:id="@+id/cc_dialog_progress_text"
-@@ -43,7 +53,8 @@
-         android:layout_marginRight="35dp"
-         android:textColor="#06979F"
-         android:layout_gravity="center_horizontal"
--        tools:text="40%"/>
-+        tools:text="40%"
-+        tools:visibility="gone"/>
- 
-     <View
-         android:layout_width="match_parent"
-diff --git a/app/src/main/res/values-v21/cc_styles.xml b/app/src/main/res/values-v21/cc_styles.xml
-new file mode 100644
-index 000000000..6ccb10e00
---- /dev/null
-+++ b/app/src/main/res/values-v21/cc_styles.xml
-@@ -0,0 +1,4 @@
-+<?xml version="1.0" encoding="utf-8"?>
-+<resources>
-+    <style name="cc_cyclic_progress_bar" parent="@android:style/Widget.Material.ProgressBar"/>
-+</resources>
-\ No newline at end of file
+             // Backup
+             const val BACKUP_STATUS_MESSAGE_PREPARE = "cc_backup_status_message_prepare"
 diff --git a/app/src/main/res/values/cc_strings.xml b/app/src/main/res/values/cc_strings.xml
-index 1d83a0e90..44a7b5718 100644
+index 44a7b5718..628a7e8e1 100644
 --- a/app/src/main/res/values/cc_strings.xml
 +++ b/app/src/main/res/values/cc_strings.xml
-@@ -856,7 +856,9 @@ Our official Website: http://heymods.com"</string>
-     <string name="cc_backup_whatsapp_data_desc_time_cloud">Backup Time: %1$s</string>
-     <string name="cc_backup_whatsapp_data_desc_size">Backup Size: %1$s</string>
-     <string name="cc_backup_whatsapp_data_clear_backup_title">Clear Backup</string>
--    <string name="cc_backup_whatsapp_data_clear_backup_content">The Clear Backup option deletes all old backup data. More space saving.</string>
-+    <string name="cc_backup_whatsapp_data_clear_backup_content">Size: %s\nThe Clear Backup option deletes all old backup data. More space saving.</string>
-+    <string name="cc_backup_whatsapp_data_clear_backup_calculating">Calculating&#8320;</string>
-+    <string name="cc_backup_whatsapp_data_clear_backup_dialog_deleting_title">Deleting Backup files…</string>
+@@ -859,6 +859,8 @@ Our official Website: http://heymods.com"</string>
+     <string name="cc_backup_whatsapp_data_clear_backup_content">Size: %s\nThe Clear Backup option deletes all old backup data. More space saving.</string>
+     <string name="cc_backup_whatsapp_data_clear_backup_calculating">Calculating&#8320;</string>
+     <string name="cc_backup_whatsapp_data_clear_backup_dialog_deleting_title">Deleting Backup files…</string>
++    <string name="cc_backup_whatsapp_data_clear_backup_toast_done">Done</string>
++    <string name="cc_backup_whatsapp_data_clear_backup_toast_fail">Fail to delete</string>
      <string name="cc_backup_whatsapp_data_title_include_media">Include media</string>
      <string name="cc_backup_whatsapp_data_desc_include_media">Enable this option may occupy more storage on your device or cloud storage.</string>
      <string name="cc_restore_whatsApp_data_title">Restore WhatsApp Data</string>
-diff --git a/app/src/main/res/values/cc_styles.xml b/app/src/main/res/values/cc_styles.xml
-index b35caa69a..31240b0e3 100644
---- a/app/src/main/res/values/cc_styles.xml
-+++ b/app/src/main/res/values/cc_styles.xml
-@@ -391,4 +391,6 @@
-         <item name="android:paddingEnd">@dimen/info_screen_padding</item>
-         <item name="android:drawableTint">@color/conversations_text_gray</item>
-     </style>
-+
-+    <style name="cc_cyclic_progress_bar" parent="@android:style/Widget.ProgressBar"/>
- </resources>
+diff --git a/common-module/src/main/java/com/coocoo/utils/FileUtil.java b/common-module/src/main/java/com/coocoo/utils/FileUtil.java
+index 082510321..66f21c8f6 100644
+--- a/common-module/src/main/java/com/coocoo/utils/FileUtil.java
++++ b/common-module/src/main/java/com/coocoo/utils/FileUtil.java
+@@ -512,32 +512,35 @@ public class FileUtil {
+         }
+     }
+ 
+-    public static void deleteDir(String dirPath, boolean includeDirSelf) {
++    public static boolean deleteDir(String dirPath, boolean includeDirSelf) {
++        boolean isSuccess = true;
+         try {
+             dirPath = trimPathName(dirPath);
+             File dir = new File(dirPath);
+             if (!isDirExists(dir)) {
+-                return;
++                return false;
+             }
+ 
+             for (File child : dir.listFiles()) {
+                 if (isFileExists(child)) {
+-                    deleteFile(child.getAbsolutePath());
++                    isSuccess = deleteFile(child.getAbsolutePath()) && isSuccess;
+                 } else if (isDirExists(child)) {
+-                    deleteDir(child.getAbsolutePath(), true);
++                    isSuccess = deleteDir(child.getAbsolutePath(), true) && isSuccess;
+                 }
+             }
+ 
+             if (includeDirSelf) {
+-                dir.delete();
++                isSuccess = dir.delete() && isSuccess;
+             }
+         } catch (Exception e) {
+             e.printStackTrace();
++            return false;
+         }
++        return isSuccess;
+     }
+ 
+-    public static void deleteDir(String dirPath) {
+-        deleteDir(dirPath, true);
++    public static boolean deleteDir(String dirPath) {
++        return deleteDir(dirPath, true);
+     }
+ 
+     public static boolean deleteFile(String filePath) {
