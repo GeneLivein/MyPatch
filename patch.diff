@@ -1,8 +1,29 @@
 diff --git a/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt b/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
-index cd63a5a1d..00a7c81bd 100644
+index cd63a5a1d..204688a88 100644
 --- a/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
 +++ b/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
-@@ -429,7 +429,18 @@ class CoocooBackupRestorePrefFragment
+@@ -21,10 +21,7 @@ import com.coocoo.utils.ToastUtil.showToast
+ import com.coocoo.widget.ConfirmDialog
+ import com.coocoo.widget.ProgressDialog
+ import com.coocoo.widget.SimpleDialog
+-import kotlinx.coroutines.Dispatchers
+-import kotlinx.coroutines.GlobalScope
+-import kotlinx.coroutines.launch
+-import kotlinx.coroutines.withContext
++import kotlinx.coroutines.*
+ import java.lang.ref.WeakReference
+ 
+ class CoocooBackupRestorePrefFragment
+@@ -155,7 +152,7 @@ class CoocooBackupRestorePrefFragment
+             preference.summary = ResMgr.getString("cc_backup_whatsapp_data_clear_backup_content", strCalculating)
+             prefFragmentScope.launch {
+                 val size = getFormattedBackUpFileSize()
+-                preference.summary = if (size > 0) {
++                preference.summary = if (size == 0f) {
+                     preference.isEnabled = true
+                     ResMgr.getString("cc_backup_whatsapp_data_clear_backup_content", "%.2f MB".format(size))
+                 } else {
+@@ -429,7 +426,18 @@ class CoocooBackupRestorePrefFragment
          )
          dialog.show()
          prefFragmentScope.launch {
@@ -22,15 +43,19 @@ index cd63a5a1d..00a7c81bd 100644
              dialog.dismiss()
              SPDelegate.getInstance().setLongValue(
                  Constants.PREFERENCE_KEY_BACKUP_LOCAL_LAST_TIME,
-@@ -439,7 +450,7 @@ class CoocooBackupRestorePrefFragment
+@@ -439,8 +447,10 @@ class CoocooBackupRestorePrefFragment
          }
      }
  
 -    private suspend fun deleteBackUpFiles() = withContext(Dispatchers.IO) {
+-        FileUtil.deleteDir(PATH_MOD_DATA_DATA_BACKUP)
 +    private suspend fun deleteBackUpFiles(): Boolean = withContext(Dispatchers.IO) {
-         FileUtil.deleteDir(PATH_MOD_DATA_DATA_BACKUP)
++//        FileUtil.deleteDir(PATH_MOD_DATA_DATA_BACKUP)
++        delay(3000)
++        true
      }
  
+     private suspend fun getFormattedBackUpFileSize(): Float = withContext(Dispatchers.IO) {
 diff --git a/app/src/main/java/com/coocoo/utils/Constants.kt b/app/src/main/java/com/coocoo/utils/Constants.kt
 index 5a2ad5fa3..8ebe05488 100644
 --- a/app/src/main/java/com/coocoo/utils/Constants.kt
