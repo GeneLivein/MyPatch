@@ -25,7 +25,7 @@ index 35696e5ae..d378a5123 100644
              return CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
          }
 diff --git a/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt b/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
-index 6ff991b77..fa96656f0 100644
+index 6ff991b77..998a65506 100644
 --- a/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
 +++ b/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
 @@ -8,6 +8,7 @@ import android.text.TextUtils
@@ -92,7 +92,7 @@ index 6ff991b77..fa96656f0 100644
 +                Constants.PREFERENCE_KEY_BACKUP_LOCAL_LAST_TIME,
 +                -1
 +            )
-+            setupPref()
++//            setupPref()
 +        }
 +    }
 +
