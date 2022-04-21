@@ -1,5 +1,5 @@
 diff --git a/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt b/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
-index cd63a5a1d..204688a88 100644
+index cd63a5a1d..606b13bf2 100644
 --- a/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
 +++ b/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
 @@ -21,10 +21,7 @@ import com.coocoo.utils.ToastUtil.showToast
@@ -52,7 +52,7 @@ index cd63a5a1d..204688a88 100644
 +    private suspend fun deleteBackUpFiles(): Boolean = withContext(Dispatchers.IO) {
 +//        FileUtil.deleteDir(PATH_MOD_DATA_DATA_BACKUP)
 +        delay(3000)
-+        true
++        false
      }
  
      private suspend fun getFormattedBackUpFileSize(): Float = withContext(Dispatchers.IO) {
