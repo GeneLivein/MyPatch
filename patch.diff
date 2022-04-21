@@ -143,10 +143,10 @@ index 1a5703a47..41c810c3f 100644
  
      fun updateProgress(newProgress: Int) {
 diff --git a/app/src/main/res/layout/cc_dialog_progress.xml b/app/src/main/res/layout/cc_dialog_progress.xml
-index a3863d1fa..40a2f6564 100644
+index a3863d1fa..51f8cba93 100644
 --- a/app/src/main/res/layout/cc_dialog_progress.xml
 +++ b/app/src/main/res/layout/cc_dialog_progress.xml
-@@ -30,7 +30,16 @@
+@@ -30,7 +30,17 @@
          android:progressDrawable="@drawable/cc_update_progress"
          android:layout_marginTop="25dp"
          android:layout_marginStart="35dp"
@@ -156,7 +156,8 @@ index a3863d1fa..40a2f6564 100644
 +
 +    <ProgressBar
 +        android:id="@+id/cc_cyclic_dialog_progress"
-+        style="@android:style/Widget.Material.ProgressBar"
++        style="@style/cc_cyclic_progress_bar"
++        android:indeterminateTint="@color/cc_progress_dialog_accent"
 +        android:layout_width="24dp"
 +        android:layout_height="24dp"
 +        android:layout_gravity="center_horizontal"
@@ -164,7 +165,7 @@ index a3863d1fa..40a2f6564 100644
  
      <com.coocoo.widget.CoocooTextView
          android:id="@+id/cc_dialog_progress_text"
-@@ -43,7 +52,8 @@
+@@ -43,7 +53,8 @@
          android:layout_marginRight="35dp"
          android:textColor="#06979F"
          android:layout_gravity="center_horizontal"
@@ -174,6 +175,17 @@ index a3863d1fa..40a2f6564 100644
  
      <View
          android:layout_width="match_parent"
+diff --git a/app/src/main/res/values-v21/cc_styles.xml b/app/src/main/res/values-v21/cc_styles.xml
+new file mode 100644
+index 000000000..6ccb10e00
+--- /dev/null
++++ b/app/src/main/res/values-v21/cc_styles.xml
+@@ -0,0 +1,4 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++    <style name="cc_cyclic_progress_bar" parent="@android:style/Widget.Material.ProgressBar"/>
++</resources>
+\ No newline at end of file
 diff --git a/app/src/main/res/values/cc_strings.xml b/app/src/main/res/values/cc_strings.xml
 index 1d83a0e90..44a7b5718 100644
 --- a/app/src/main/res/values/cc_strings.xml
@@ -189,3 +201,14 @@ index 1d83a0e90..44a7b5718 100644
      <string name="cc_backup_whatsapp_data_title_include_media">Include media</string>
      <string name="cc_backup_whatsapp_data_desc_include_media">Enable this option may occupy more storage on your device or cloud storage.</string>
      <string name="cc_restore_whatsApp_data_title">Restore WhatsApp Data</string>
+diff --git a/app/src/main/res/values/cc_styles.xml b/app/src/main/res/values/cc_styles.xml
+index b35caa69a..31240b0e3 100644
+--- a/app/src/main/res/values/cc_styles.xml
++++ b/app/src/main/res/values/cc_styles.xml
+@@ -391,4 +391,6 @@
+         <item name="android:paddingEnd">@dimen/info_screen_padding</item>
+         <item name="android:drawableTint">@color/conversations_text_gray</item>
+     </style>
++
++    <style name="cc_cyclic_progress_bar" parent="@android:style/Widget.ProgressBar"/>
+ </resources>
