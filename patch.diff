@@ -1,95 +1,323 @@
-diff --git a/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt b/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
-index bfb1f5265..e893a6812 100644
---- a/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
-+++ b/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
-@@ -1,5 +1,6 @@
- package com.coocoo.preference
- 
-+import android.app.Dialog
- import android.content.Intent
- import android.os.Bundle
- import android.preference.ListPreference
-@@ -42,6 +43,7 @@ class CoocooBackupRestorePrefFragment
-     private var commonDialog: SimpleDialog? = null
-     private var progressDialog: ProgressDialog? = null
-     private var confirmDialog: ConfirmDialog? = null
-+    private var deleteDialog: Dialog? = null
- 
-     private val backupListener: BackupRestoreListener by lazy {
-         BackupRestoreListenerHelper.createBackupProgressDialogListener(
-@@ -186,12 +188,7 @@ class CoocooBackupRestorePrefFragment
-                     true
-                 }
-                 PREF_KEY_CLEAR_BACKUP -> {
--                    ConfirmSignOutDialog(
--                        context = this@CoocooBackupRestorePrefFragment.activity,
--                        title = ResMgr.getString(Constants.Res.String.CLEAR_BACKUP_DATA_DELETE_NOW_TITLE),
--                        message = ResMgr.getString(Constants.Res.String.CLEAR_BACKUP_DATA_DELETE_NOW_CONTENT),
--                        onConfirmClicked = ::confirmDelete,
--                    ).show()
-+                    showConfirmDeleteDialog()
-                     return true
-                 }
-                 Constants.GOOGLE_DRIVE_PREFERENCE_KEY_ACCOUNT -> {
-@@ -415,6 +412,18 @@ class CoocooBackupRestorePrefFragment
-         }
+diff --git a/app/src/main/java/com/coocoo/CoocooRepoContainer.kt b/app/src/main/java/com/coocoo/CoocooRepoContainer.kt
+index 574c096ae..1d9511a90 100644
+--- a/app/src/main/java/com/coocoo/CoocooRepoContainer.kt
++++ b/app/src/main/java/com/coocoo/CoocooRepoContainer.kt
+@@ -23,6 +23,7 @@ import com.coocoo.tira.TiraRepository
+ import com.coocoo.googleservice.auth.repo.GoogleAuthRepository
+ import com.coocoo.manager.DownloadHelper
+ import com.coocoo.masssender.repository.MessageSenderRepository
++import com.coocoo.statuses.StatusListRepository
+ import com.wormhole.openchat.whisper.WhisperInjectUtil
+ import kotlinx.coroutines.CoroutineScope
+ import kotlinx.coroutines.Dispatchers
+@@ -90,4 +91,8 @@ class CoocooRepoContainer(private val appContext: Context) {
+             CallerIdMocker
+         )
      }
- 
-+    private fun showConfirmDeleteDialog() {
-+        closeAllDialog()
-+        ConfirmSignOutDialog(
-+            context = this@CoocooBackupRestorePrefFragment.activity,
-+            title = ResMgr.getString(Constants.Res.String.CLEAR_BACKUP_DATA_DELETE_NOW_TITLE),
-+            message = ResMgr.getString(Constants.Res.String.CLEAR_BACKUP_DATA_DELETE_NOW_CONTENT),
-+            onConfirmClicked = ::confirmDelete,
-+        ).also {
-+            deleteDialog = it
-+        }.safelyShow()
++
++    val statusListRepo: StatusListRepository by lazy {
++        StatusListRepository()
++    }
+ }
+diff --git a/app/src/main/java/com/coocoo/statuses/HistoryStatusActivity.kt b/app/src/main/java/com/coocoo/statuses/HistoryStatusActivity.kt
+new file mode 100644
+index 000000000..e0a77e6ec
+--- /dev/null
++++ b/app/src/main/java/com/coocoo/statuses/HistoryStatusActivity.kt
+@@ -0,0 +1,101 @@
++package com.coocoo.statuses
++
++import android.content.Context
++import android.os.Bundle
++import android.os.PersistableBundle
++import android.view.LayoutInflater
++import android.view.View
++import android.view.ViewGroup
++import android.widget.ArrayAdapter
++import android.widget.GridView
++import android.widget.ImageView
++import android.widget.TextView
++import androidx.lifecycle.CCViewModelProvider
++import com.bumptech.glide.Glide
++import com.coocoo.base.CCBaseActivity
++import com.coocoo.utils.ResMgr
++import java.text.DateFormat
++import java.text.SimpleDateFormat
++import java.time.LocalDate
++import java.util.*
++
++class HistoryStatusActivity : CCBaseActivity() {
++
++    private val viewModel: StatusViewModel by lazy {
++        CCViewModelProvider(viewModelStore, StatusViewModel.Factory())[StatusViewModel::class.java]
 +    }
 +
-     private fun confirmDelete(view: View) {
-         val dialog = ProgressDialog(
-             context = activity,
-@@ -495,10 +504,9 @@ class CoocooBackupRestorePrefFragment
-         GlobalScope.launch(Dispatchers.Main) {
-             closeAllDialog()
-             activity?.let {
--                if (!it.isFinishing && !it.isDestroyed) {
--                    confirmDialog = ConfirmSignOutDialog(it, title, message, onConfirmed, onCanceled)
--                    confirmDialog?.show()
--                }
-+                ConfirmSignOutDialog(it, title, message, onConfirmed, onCanceled).also { dialog ->
-+                    confirmDialog = dialog
-+                }.safelyShow()
-             }
-         }
-     }
-@@ -507,5 +515,6 @@ class CoocooBackupRestorePrefFragment
-         commonDialog?.dismiss()
-         progressDialog?.dismiss()
-         confirmDialog?.dismiss()
-+        deleteDialog?.dismiss()
-     }
- }
-\ No newline at end of file
-diff --git a/common-module/src/main/java/com/coocoo/utils/DialogUtils.kt b/common-module/src/main/java/com/coocoo/utils/DialogUtils.kt
-index deb163bc0..ca0c1a4d1 100644
---- a/common-module/src/main/java/com/coocoo/utils/DialogUtils.kt
-+++ b/common-module/src/main/java/com/coocoo/utils/DialogUtils.kt
-@@ -2,6 +2,7 @@ package com.coocoo.utils
- 
- import android.app.Activity
- import android.app.Dialog
-+import com.coocoo.utils.DialogUtils.showDialogSafely
- 
- object DialogUtils {
- 
-@@ -39,3 +40,8 @@ object DialogUtils {
-         }
-     }
- }
++    private val statusGridAdapter: StatusGridAdapter by lazy {
++        StatusGridAdapter(this)
++    }
 +
++    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
++        super.onCreate(savedInstanceState, persistentState)
++        setContentView(ResMgr.getLayoutId("cc_activity_history_status"))
 +
-+fun Dialog.safelyShow() {
-+    showDialogSafely(context as Activity, this)
++        findViewById<GridView>(ResMgr.getId("cc_grid_view")).adapter = statusGridAdapter
++
++        bindView()
++    }
++
++    private fun bindView() {
++        viewModel.statusList.observe(lifecycleOwner) {
++            statusGridAdapter.addAll(it)
++        }
++    }
++
++    data class StatusInfo(
++        val url: String,
++        val viewCount: Int,
++        val date: Date
++    )
++
++    class StatusGridAdapter(context: Context) : ArrayAdapter<StatusInfo>(context, ResMgr.getLayoutId("")) {
++
++        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
++            val vh = if (convertView == null) {
++                onCreateViewHolder(LayoutInflater.from(context), parent)
++            } else {
++                convertView.tag as StatusViewHolder
++            }
++
++            onBindViewHolder(position, vh)
++
++            return vh.itemView
++        }
++
++        private fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup): StatusViewHolder {
++            val view = inflater.inflate(ResMgr.getLayoutId(""), parent, false)
++            val width = context.resources.displayMetrics.widthPixels / 2
++            val height = width * 4 / 3
++            view.layoutParams.width = width
++            view.layoutParams.height = height
++            return StatusViewHolder(view).also {
++                view.tag = it
++            }
++        }
++
++        private fun onBindViewHolder(position: Int, vh: StatusViewHolder) {
++            vh.bind(getItem(position) as StatusInfo)
++        }
++
++        class StatusViewHolder(val itemView: View) {
++
++            private val ivStatus: ImageView = itemView.findViewById(ResMgr.getId("iv_status"))
++            private val tvViewCount: TextView = itemView.findViewById(ResMgr.getId("tv_view_count"))
++            private val tvDate: TextView = itemView.findViewById(ResMgr.getId("tv_date"))
++
++            init {
++
++            }
++
++            fun bind(data: StatusInfo) = with(data){
++                Glide.with(itemView.context)
++                    .load(url)
++                    .into(ivStatus)
++                tvViewCount.text = "$viewCount"
++                tvDate.text = SimpleDateFormat("yyyy/MM/dd", Locale.US).format(date)
++            }
++        }
++    }
 +}
+\ No newline at end of file
+diff --git a/app/src/main/java/com/coocoo/statuses/StatusListRepository.kt b/app/src/main/java/com/coocoo/statuses/StatusListRepository.kt
+new file mode 100644
+index 000000000..6b5dad405
+--- /dev/null
++++ b/app/src/main/java/com/coocoo/statuses/StatusListRepository.kt
+@@ -0,0 +1,15 @@
++package com.coocoo.statuses
++
++import java.util.*
++
++class StatusListRepository {
++    fun getStatusList(): List<HistoryStatusActivity.StatusInfo> {
++        return List(20) { position ->
++            HistoryStatusActivity.StatusInfo(
++                url = "https://picsum.photos/300/400",
++                viewCount = position,
++                date = Date(position, position, position)
++            )
++        }
++    }
++}
+\ No newline at end of file
+diff --git a/app/src/main/java/com/coocoo/statuses/StatusViewModel.kt b/app/src/main/java/com/coocoo/statuses/StatusViewModel.kt
+new file mode 100644
+index 000000000..f923c9fb0
+--- /dev/null
++++ b/app/src/main/java/com/coocoo/statuses/StatusViewModel.kt
+@@ -0,0 +1,19 @@
++package com.coocoo.statuses
++
++import androidx.lifecycle.*
++import com.coocoo.coocoo.Coocoo
++import com.coocoo.statuses.HistoryStatusActivity.StatusInfo
++
++class StatusViewModel(repo: StatusListRepository) : CCViewModel() {
++
++    private val _statusList: CCMutableLiveData<List<StatusInfo>> = CCMutableLiveData(repo.getStatusList())
++    val statusList: CCLiveData<List<StatusInfo>> get() = _statusList
++
++    @Suppress("UNCHECKED_CAST")
++    class Factory : CCViewModelProvider.Factory {
++        override fun <T : CCViewModel?> create(p0: Class<T>): T {
++            val container = Coocoo.getRepoContainer()
++            return StatusViewModel(container.statusListRepo) as T
++        }
++    }
++}
+\ No newline at end of file
+diff --git a/app/src/main/res/drawable-xxhdpi/cc_ic_view_count.webp b/app/src/main/res/drawable-xxhdpi/cc_ic_view_count.webp
+new file mode 100644
+index 000000000..a7efff2a0
+Binary files /dev/null and b/app/src/main/res/drawable-xxhdpi/cc_ic_view_count.webp differ
+diff --git a/app/src/main/res/drawable/cc_bg_gradien_black_70.xml b/app/src/main/res/drawable/cc_bg_gradien_black_70.xml
+new file mode 100644
+index 000000000..a013673fa
+--- /dev/null
++++ b/app/src/main/res/drawable/cc_bg_gradien_black_70.xml
+@@ -0,0 +1,10 @@
++<?xml version="1.0" encoding="utf-8"?>
++<shape
++    xmlns:android="http://schemas.android.com/apk/res/android"
++    android:shape="rectangle">
++    <gradient
++        android:type="linear"
++        android:startColor="#00000000"
++        android:endColor="@color/black_70"
++        android:angle="270" />
++</shape>
+\ No newline at end of file
+diff --git a/app/src/main/res/layout/cc_activity_history_status.xml b/app/src/main/res/layout/cc_activity_history_status.xml
+new file mode 100644
+index 000000000..0fac3a6b7
+--- /dev/null
++++ b/app/src/main/res/layout/cc_activity_history_status.xml
+@@ -0,0 +1,33 @@
++<?xml version="1.0" encoding="utf-8"?>
++<LinearLayout
++    xmlns:android="http://schemas.android.com/apk/res/android"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent">
++
++    <androidx.appcompat.widget.Toolbar
++        android:id="@+id/top_toolbar"
++        style="@style/Theme.App.Toolbar"
++        android:background="@color/cc_setting_category_title">
++
++        <ImageView
++            android:id="@+id/cc_back"
++            style="@style/Theme.App.Toolbar.BackButton.Light" />
++
++        <com.coocoo.widget.CoocooTextView
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:fontFamily="sans-serif-medium"
++            android:text="@string/settings_calls_data_usage"
++            android:textColor="@color/white"
++            android:textSize="20sp"
++            android:gravity="center" />
++
++    </androidx.appcompat.widget.Toolbar>
++
++    <GridView
++        android:id="@+id/cc_grid_view"
++        android:layout_width="match_parent"
++        android:layout_height="match_parent"
++        android:numColumns="2"/>
++
++</LinearLayout>
+\ No newline at end of file
+diff --git a/app/src/main/res/layout/cc_vh_status_grid.xml b/app/src/main/res/layout/cc_vh_status_grid.xml
+new file mode 100644
+index 000000000..a67ae0bd6
+--- /dev/null
++++ b/app/src/main/res/layout/cc_vh_status_grid.xml
+@@ -0,0 +1,52 @@
++<?xml version="1.0" encoding="utf-8"?>
++<androidx.constraintlayout.widget.ConstraintLayout
++    xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    android:padding="2dp">
++
++    <ImageView
++        android:id="@+id/iv_status"
++        android:layout_width="match_parent"
++        android:layout_height="match_parent"
++        tools:background="@color/cc_colorPrimary"/>
++
++    <View
++        android:layout_width="match_parent"
++        android:layout_height="88dp"
++        app:layout_constraintBottom_toBottomOf="parent"
++        android:background="@drawable/cc_bg_gradien_black_70"/>
++
++    <ImageView
++        android:id="@+id/imageView1"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:layout_marginStart="16dp"
++        android:src="@drawable/cc_ic_view_count"
++        app:layout_constraintBottom_toTopOf="@+id/tv_date"
++        app:layout_constraintStart_toStartOf="parent"/>
++
++    <TextView
++        android:id="@+id/tv_view_count"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:textSize="13sp"
++        android:textColor="@color/white"
++        android:layout_marginStart="3dp"
++        app:layout_constraintTop_toTopOf="@+id/imageView1"
++        app:layout_constraintStart_toEndOf="@+id/imageView1"
++        tools:text="97"/>
++
++    <TextView
++        android:id="@+id/tv_date"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:textColor="@color/white"
++        android:layout_marginBottom="14dp"
++        app:layout_constraintStart_toStartOf="@+id/imageView1"
++        app:layout_constraintBottom_toBottomOf="parent"
++        tools:text="2021/4/30"/>
++
++</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
+diff --git a/app/src/main/res/values/cc_colors.xml b/app/src/main/res/values/cc_colors.xml
+index 530aa5779..abafd1ebc 100644
+--- a/app/src/main/res/values/cc_colors.xml
++++ b/app/src/main/res/values/cc_colors.xml
+@@ -80,5 +80,6 @@
+     <color name="cc_banner_ad_message">#989CA2</color>
+ 
+     <color name="cc_menu_item_setting_hint_color">#FF4E54</color>
++    <color name="black_70">#B2000000</color>
+ 
+ </resources>
+diff --git a/whatsapp_modify_module/AndroidManifest.xml b/whatsapp_modify_module/AndroidManifest.xml
+index 9d8e240e0..1723b3140 100644
+--- a/whatsapp_modify_module/AndroidManifest.xml
++++ b/whatsapp_modify_module/AndroidManifest.xml
+@@ -3897,5 +3897,9 @@
+         <activity
+             android:name="com.coocoo.activity.AdBlockShareActivity"
+             android:screenOrientation="portrait" />
++
++        <activity
++            android:name="com.coocoo.statuses.HistoryStatusActivity"
++            android:screenOrientation="portrait" />
+     </application>
+ </manifest>
+\ No newline at end of file
