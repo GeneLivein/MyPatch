@@ -186,22 +186,24 @@ index 000000000..f923c9fb0
 +}
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusesActivityDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusesActivityDelegate.java
-index 67e917ada..c9179b229 100644
+index 67e917ada..a4fb80de3 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusesActivityDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusesActivityDelegate.java
-@@ -8,6 +8,7 @@ import com.coocoo.annotation.SmaliInject;
+@@ -8,6 +8,8 @@ import com.coocoo.annotation.SmaliInject;
  import com.coocoo.highlight.AbsFunction;
  import com.coocoo.highlight.Entry2Function;
  import com.coocoo.report.Report;
 +import com.coocoo.statuses.HistoryStatusActivity;
++import com.coocoo.utils.LogUtil;
  import com.coocoo.utils.ResMgr;
  import com.coocoo.whatsappdelegate.base.ActivityDelegate;
  import com.coocoowhatsapp.status.playback.MyStatusesActivity;
-@@ -66,7 +67,7 @@ public class MyStatusesActivityDelegate extends ActivityDelegate {
+@@ -66,7 +68,8 @@ public class MyStatusesActivityDelegate extends ActivityDelegate {
      @SmaliInject
      public boolean onOptionsItemSelected(MenuItem item) {
          if (item.getItemId() == MENU_ID_HISTORY) {
 -            // TODO
++            LogUtil.d("onOptionsItemSelected MENU_ID_HISTORY");
 +            HistoryStatusActivity.launch(mHostActivity);
              return true;
          }
