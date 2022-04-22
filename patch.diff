@@ -21,13 +21,15 @@ index 574c096ae..1d9511a90 100644
  }
 diff --git a/app/src/main/java/com/coocoo/statuses/HistoryStatusActivity.kt b/app/src/main/java/com/coocoo/statuses/HistoryStatusActivity.kt
 new file mode 100644
-index 000000000..e0a77e6ec
+index 000000000..44bd507b1
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/statuses/HistoryStatusActivity.kt
-@@ -0,0 +1,101 @@
+@@ -0,0 +1,111 @@
 +package com.coocoo.statuses
 +
++import android.app.Activity
 +import android.content.Context
++import android.content.Intent
 +import android.os.Bundle
 +import android.os.PersistableBundle
 +import android.view.LayoutInflater
@@ -125,6 +127,14 @@ index 000000000..e0a77e6ec
 +            }
 +        }
 +    }
++
++    companion object {
++        @JvmStatic
++        fun launch(activity: Activity) {
++            val intent = Intent(activity, HistoryStatusActivity::class.java)
++            activity.startActivity(intent)
++        }
++    }
 +}
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/statuses/StatusListRepository.kt b/app/src/main/java/com/coocoo/statuses/StatusListRepository.kt
@@ -175,6 +185,27 @@ index 000000000..f923c9fb0
 +    }
 +}
 \ No newline at end of file
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusesActivityDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusesActivityDelegate.java
+index 67e917ada..c9179b229 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusesActivityDelegate.java
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusesActivityDelegate.java
+@@ -8,6 +8,7 @@ import com.coocoo.annotation.SmaliInject;
+ import com.coocoo.highlight.AbsFunction;
+ import com.coocoo.highlight.Entry2Function;
+ import com.coocoo.report.Report;
++import com.coocoo.statuses.HistoryStatusActivity;
+ import com.coocoo.utils.ResMgr;
+ import com.coocoo.whatsappdelegate.base.ActivityDelegate;
+ import com.coocoowhatsapp.status.playback.MyStatusesActivity;
+@@ -66,7 +67,7 @@ public class MyStatusesActivityDelegate extends ActivityDelegate {
+     @SmaliInject
+     public boolean onOptionsItemSelected(MenuItem item) {
+         if (item.getItemId() == MENU_ID_HISTORY) {
+-            // TODO
++            HistoryStatusActivity.launch(mHostActivity);
+             return true;
+         }
+         return false;
 diff --git a/app/src/main/res/drawable-xxhdpi/cc_ic_view_count.webp b/app/src/main/res/drawable-xxhdpi/cc_ic_view_count.webp
 new file mode 100644
 index 000000000..a7efff2a0
