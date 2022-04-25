@@ -25,7 +25,7 @@ index 50e40530d..cbf792786 100644
  
      flavorDimensions "version"
 diff --git a/app/src/main/java/com/coocoo/statuses/HistoryStatusActivity.kt b/app/src/main/java/com/coocoo/statuses/HistoryStatusActivity.kt
-index 44bd507b1..e179ec0cd 100644
+index 44bd507b1..7749494a4 100644
 --- a/app/src/main/java/com/coocoo/statuses/HistoryStatusActivity.kt
 +++ b/app/src/main/java/com/coocoo/statuses/HistoryStatusActivity.kt
 @@ -15,6 +15,7 @@ import android.widget.TextView
@@ -36,10 +36,14 @@ index 44bd507b1..e179ec0cd 100644
  import com.coocoo.utils.ResMgr
  import java.text.DateFormat
  import java.text.SimpleDateFormat
-@@ -33,6 +34,7 @@ class HistoryStatusActivity : CCBaseActivity() {
+@@ -31,8 +32,9 @@ class HistoryStatusActivity : CCBaseActivity() {
+         StatusGridAdapter(this)
+     }
  
-     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-         super.onCreate(savedInstanceState, persistentState)
+-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+-        super.onCreate(savedInstanceState, persistentState)
++    override fun onCreate(savedInstanceState: Bundle?) {
++        super.onCreate(savedInstanceState)
 +        LogUtil.d("onCreate")
          setContentView(ResMgr.getLayoutId("cc_activity_history_status"))
  
