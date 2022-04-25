@@ -24,6 +24,22 @@ index 50e40530d..cbf792786 100644
      }
  
      flavorDimensions "version"
+diff --git a/app/src/main/java/com/coocoo/statuses/StatusListRepository.kt b/app/src/main/java/com/coocoo/statuses/StatusListRepository.kt
+index 6b5dad405..a9e55c323 100644
+--- a/app/src/main/java/com/coocoo/statuses/StatusListRepository.kt
++++ b/app/src/main/java/com/coocoo/statuses/StatusListRepository.kt
+@@ -1,9 +1,11 @@
+ package com.coocoo.statuses
+ 
++import com.coocoo.utils.LogUtil
+ import java.util.*
+ 
+ class StatusListRepository {
+     fun getStatusList(): List<HistoryStatusActivity.StatusInfo> {
++        LogUtil.d("getStatusList")
+         return List(20) { position ->
+             HistoryStatusActivity.StatusInfo(
+                 url = "https://picsum.photos/300/400",
 diff --git a/app/src/main/res/layout/cc_activity_history_status.xml b/app/src/main/res/layout/cc_activity_history_status.xml
 index c93016a88..83b15c8ed 100644
 --- a/app/src/main/res/layout/cc_activity_history_status.xml
