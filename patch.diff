@@ -25,7 +25,7 @@ index 50e40530d..cbf792786 100644
  
      flavorDimensions "version"
 diff --git a/app/src/main/java/com/coocoo/statuses/HistoryStatusActivity.kt b/app/src/main/java/com/coocoo/statuses/HistoryStatusActivity.kt
-index 44bd507b1..7749494a4 100644
+index 44bd507b1..fd6c73481 100644
 --- a/app/src/main/java/com/coocoo/statuses/HistoryStatusActivity.kt
 +++ b/app/src/main/java/com/coocoo/statuses/HistoryStatusActivity.kt
 @@ -15,6 +15,7 @@ import android.widget.TextView
@@ -56,7 +56,7 @@ index 44bd507b1..7749494a4 100644
              statusGridAdapter.addAll(it)
          }
      }
-@@ -62,7 +65,7 @@ class HistoryStatusActivity : CCBaseActivity() {
+@@ -62,12 +65,12 @@ class HistoryStatusActivity : CCBaseActivity() {
              }
  
              onBindViewHolder(position, vh)
@@ -65,6 +65,12 @@ index 44bd507b1..7749494a4 100644
              return vh.itemView
          }
  
+         private fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup): StatusViewHolder {
+-            val view = inflater.inflate(ResMgr.getLayoutId(""), parent, false)
++            val view = inflater.inflate(ResMgr.getLayoutId("cc_vh_status_grid"), parent, false)
+             val width = context.resources.displayMetrics.widthPixels / 2
+             val height = width * 4 / 3
+             view.layoutParams.width = width
 diff --git a/app/src/main/java/com/coocoo/statuses/StatusListRepository.kt b/app/src/main/java/com/coocoo/statuses/StatusListRepository.kt
 index 6b5dad405..a9e55c323 100644
 --- a/app/src/main/java/com/coocoo/statuses/StatusListRepository.kt
