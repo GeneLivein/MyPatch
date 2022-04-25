@@ -24,6 +24,43 @@ index 50e40530d..cbf792786 100644
      }
  
      flavorDimensions "version"
+diff --git a/app/src/main/java/com/coocoo/statuses/HistoryStatusActivity.kt b/app/src/main/java/com/coocoo/statuses/HistoryStatusActivity.kt
+index 44bd507b1..e179ec0cd 100644
+--- a/app/src/main/java/com/coocoo/statuses/HistoryStatusActivity.kt
++++ b/app/src/main/java/com/coocoo/statuses/HistoryStatusActivity.kt
+@@ -15,6 +15,7 @@ import android.widget.TextView
+ import androidx.lifecycle.CCViewModelProvider
+ import com.bumptech.glide.Glide
+ import com.coocoo.base.CCBaseActivity
++import com.coocoo.utils.LogUtil
+ import com.coocoo.utils.ResMgr
+ import java.text.DateFormat
+ import java.text.SimpleDateFormat
+@@ -33,6 +34,7 @@ class HistoryStatusActivity : CCBaseActivity() {
+ 
+     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+         super.onCreate(savedInstanceState, persistentState)
++        LogUtil.d("onCreate")
+         setContentView(ResMgr.getLayoutId("cc_activity_history_status"))
+ 
+         findViewById<GridView>(ResMgr.getId("cc_grid_view")).adapter = statusGridAdapter
+@@ -42,6 +44,7 @@ class HistoryStatusActivity : CCBaseActivity() {
+ 
+     private fun bindView() {
+         viewModel.statusList.observe(lifecycleOwner) {
++            LogUtil.d("bindView")
+             statusGridAdapter.addAll(it)
+         }
+     }
+@@ -62,7 +65,7 @@ class HistoryStatusActivity : CCBaseActivity() {
+             }
+ 
+             onBindViewHolder(position, vh)
+-
++            LogUtil.d("getView")
+             return vh.itemView
+         }
+ 
 diff --git a/app/src/main/java/com/coocoo/statuses/StatusListRepository.kt b/app/src/main/java/com/coocoo/statuses/StatusListRepository.kt
 index 6b5dad405..a9e55c323 100644
 --- a/app/src/main/java/com/coocoo/statuses/StatusListRepository.kt
