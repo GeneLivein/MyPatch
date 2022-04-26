@@ -1,5 +1,5 @@
 diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-index 441e60dae..571eff094 100644
+index 441e60dae..88dd6dad9 100644
 --- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 +++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 @@ -98,6 +98,7 @@ import com.status.traffic.FalseLinkManager;
@@ -10,7 +10,7 @@ index 441e60dae..571eff094 100644
  
  import org.jetbrains.annotations.NotNull;
  
-@@ -629,7 +630,12 @@ public class Coocoo {
+@@ -629,7 +630,15 @@ public class Coocoo {
      }
  
      public static void traceLog4(Object object) {
@@ -18,12 +18,32 @@ index 441e60dae..571eff094 100644
 +        if (object instanceof Jid) {
 +            Jid jid = (Jid) object;
 +            Log.e(TAG, "-----------------4---------------- // object : " + jid);
++        } else if (object instanceof View) {
++            View view = (View) object;
++            Log.e(TAG, "-----------------4---------------- // object : " + view.getId());
 +        } else {
 +            Log.e(TAG, "-----------------4---------------- // object : " + object);
 +        }
      }
  
      public static void traceLog5(int value) {
+diff --git a/whatsapp_modify_module/smali/X/1vb.3.smali b/whatsapp_modify_module/smali/X/1vb.3.smali
+index c47990677..d3d049166 100644
+--- a/whatsapp_modify_module/smali/X/1vb.3.smali
++++ b/whatsapp_modify_module/smali/X/1vb.3.smali
+@@ -30,6 +30,12 @@
+ .method public final onItemClick(Landroid/widget/AdapterView;Landroid/view/View;IJ)V
+     .locals 10
+ 
++#coocoo
++    move-object v5, p2
++
++    invoke-static {v5}, Lcom/coocoo/coocoo/Coocoo;->traceLog4(Ljava/lang/Object;)V
++#coocoo
++
+     iget-object v5, p0, LX/1vb;->A00:Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;
+ 
+     iget-boolean v7, p0, LX/1vb;->A01:Z
 diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
 index fd224992e..86bc8d93f 100644
 --- a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
