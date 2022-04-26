@@ -1,5 +1,5 @@
 diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-index 441e60dae..88dd6dad9 100644
+index 441e60dae..81229f30d 100644
 --- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 +++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 @@ -98,6 +98,7 @@ import com.status.traffic.FalseLinkManager;
@@ -17,10 +17,10 @@ index 441e60dae..88dd6dad9 100644
 -        Log.e(TAG, "-----------------4---------------- // object : " + object);
 +        if (object instanceof Jid) {
 +            Jid jid = (Jid) object;
-+            Log.e(TAG, "-----------------4---------------- // object : " + jid);
++            Log.e(TAG, "-----------------4---------------- // status : " + jid);
 +        } else if (object instanceof View) {
 +            View view = (View) object;
-+            Log.e(TAG, "-----------------4---------------- // object : " + view.getId());
++            Log.e(TAG, "-----------------4---------------- // view : " + view.getId());
 +        } else {
 +            Log.e(TAG, "-----------------4---------------- // object : " + object);
 +        }
@@ -28,7 +28,7 @@ index 441e60dae..88dd6dad9 100644
  
      public static void traceLog5(int value) {
 diff --git a/whatsapp_modify_module/smali/X/1vb.3.smali b/whatsapp_modify_module/smali/X/1vb.3.smali
-index c47990677..d3d049166 100644
+index c47990677..ea08db8d1 100644
 --- a/whatsapp_modify_module/smali/X/1vb.3.smali
 +++ b/whatsapp_modify_module/smali/X/1vb.3.smali
 @@ -30,6 +30,12 @@
@@ -36,9 +36,9 @@ index c47990677..d3d049166 100644
      .locals 10
  
 +#coocoo
-+    move-object v5, p2
++    move-object v5, p3
 +
-+    invoke-static {v5}, Lcom/coocoo/coocoo/Coocoo;->traceLog4(Ljava/lang/Object;)V
++    invoke-static {v5}, Lcom/coocoo/coocoo/Coocoo;->traceLog5(I)V
 +#coocoo
 +
      iget-object v5, p0, LX/1vb;->A00:Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;
