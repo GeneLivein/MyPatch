@@ -53,7 +53,7 @@ index 1c50b155e..373655063 100644
  
  class ScheduledMessageReceiver : BroadcastReceiver() {
 diff --git a/whatsapp_modify_module/smali/X/1vb.3.smali b/whatsapp_modify_module/smali/X/1vb.3.smali
-index c47990677..a22731f11 100644
+index c47990677..0a2694115 100644
 --- a/whatsapp_modify_module/smali/X/1vb.3.smali
 +++ b/whatsapp_modify_module/smali/X/1vb.3.smali
 @@ -28,8 +28,10 @@
@@ -75,7 +75,7 @@ index c47990677..a22731f11 100644
  
 +    invoke-static {v0, p3}, Lcom/coocoo/manager/MessageScheduler;->isMyStatusItem(LX/0AA;I)Z
 +
-+    move-result-object v11
++    move-result v11
 +
 +    if-eqz v11, :cond_continue_flow
 +
