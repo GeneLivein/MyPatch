@@ -28,17 +28,15 @@ index 441e60dae..81229f30d 100644
  
      public static void traceLog5(int value) {
 diff --git a/whatsapp_modify_module/smali/X/1vb.3.smali b/whatsapp_modify_module/smali/X/1vb.3.smali
-index c47990677..ea08db8d1 100644
+index c47990677..e0de32ed0 100644
 --- a/whatsapp_modify_module/smali/X/1vb.3.smali
 +++ b/whatsapp_modify_module/smali/X/1vb.3.smali
-@@ -30,6 +30,12 @@
+@@ -30,6 +30,10 @@
  .method public final onItemClick(Landroid/widget/AdapterView;Landroid/view/View;IJ)V
      .locals 10
  
 +#coocoo
-+    move-object v5, p3
-+
-+    invoke-static {v5}, Lcom/coocoo/coocoo/Coocoo;->traceLog5(I)V
++    invoke-static {p3}, Lcom/coocoo/coocoo/Coocoo;->traceLog5(I)V
 +#coocoo
 +
      iget-object v5, p0, LX/1vb;->A00:Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;
