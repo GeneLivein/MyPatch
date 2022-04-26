@@ -1,69 +1,70 @@
 diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-index 9dd4ffd60..c16738536 100644
+index 441e60dae..571eff094 100644
 --- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 +++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-@@ -84,6 +84,7 @@ import com.status.traffic.AdSceneManager;
- import com.status.traffic.FalseLinkManager;
+@@ -98,6 +98,7 @@ import com.status.traffic.FalseLinkManager;
  import com.status.traffic.StatusTrafficSdk;
+ import com.status.traffic.YeahMobiManager;
  import com.status.traffic.loader.IImageLoader;
 +import com.whatsapp.jid.Jid;
  
  import org.jetbrains.annotations.NotNull;
  
-@@ -585,6 +586,12 @@ public class Coocoo {
+@@ -629,7 +630,12 @@ public class Coocoo {
      }
  
      public static void traceLog4(Object object) {
-+        if (object == null) {
-+            Log.e("CoocooTraceLog", "-----------------4---------------- // object is null");
-+        } else if (object instanceof Jid) {
+-        Log.e(TAG, "-----------------4---------------- // object : " + object);
++        if (object instanceof Jid) {
 +            Jid jid = (Jid) object;
-+            Log.e("CoocooTraceLog", "-----------------4---------------- // object : " + jid);
++            Log.e(TAG, "-----------------4---------------- // object : " + jid);
++        } else {
++            Log.e(TAG, "-----------------4---------------- // object : " + object);
 +        }
-         Log.e("CoocooTraceLog", "-----------------4---------------- // object : " + object);
      }
  
+     public static void traceLog5(int value) {
 diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
-index 7ef84b81b..2956a7835 100644
+index fd224992e..7da0b41af 100644
 --- a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
 +++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
-@@ -8173,6 +8173,12 @@
-         }
-     .end annotation
+@@ -8657,6 +8657,12 @@
+ .method public final A1Q(LX/2R4;)V
+     .locals 22
  
 +#coocoo
-+    const-string v0, "Debug A1L"
++    const-string v0, "Debug A1Q"
 +
 +    invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
 +#coocoo
 +
-     .line 195694
+     .line 55609
      move-object/from16 v0, p0
  
-@@ -8831,6 +8837,10 @@
+@@ -9192,6 +9198,10 @@
  
-     move-result-object v13
+     move-result-object v15
  
 +#coocoo
-+    invoke-static {v13}, Lcom/coocoo/coocoo/Coocoo;->traceLog4(Ljava/lang/Object;)V
++    invoke-static {v15}, Lcom/coocoo/coocoo/Coocoo;->traceLog4(Ljava/lang/Object;)V
 +#coocoo
 +
-     invoke-static {v13}, LX/00G;->A1E(Lcom/whatsapp/jid/Jid;)Z
+     invoke-static {v15}, LX/2R8;->A0P(Lcom/whatsapp/jid/Jid;)Z
  
-     move-result v8
-@@ -9815,6 +9825,11 @@
-             "intent"
-         }
-     .end annotation
+     move-result v3
+@@ -10321,6 +10331,11 @@
+ 
+ .method public A1i(Landroid/content/Intent;LX/2R4;)Z
+     .locals 6
 +#coocoo
-+    const-string v0, "Debug A1c"
++    const-string v0, "Debug A1i"
 +
 +    invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
 +#coocoo
  
      const-string v0, "contactpicker/picked "
  
-@@ -9855,6 +9870,10 @@
+@@ -10363,6 +10378,10 @@
  
      if-eqz v4, :cond_continue_wa_flow
  
@@ -74,7 +75,7 @@ index 7ef84b81b..2956a7835 100644
      # check UserJid instance
      const-class v5, Lcom/whatsapp/jid/UserJid;
  
-@@ -9862,8 +9881,14 @@
+@@ -10370,8 +10389,14 @@
  
      move-result-object v5
  
@@ -89,7 +90,7 @@ index 7ef84b81b..2956a7835 100644
      # check GroupJid instance
      const-class v5, Lcom/whatsapp/jid/GroupJid;
  
-@@ -9871,17 +9896,29 @@
+@@ -10379,8 +10404,14 @@
  
      move-result-object v5
  
@@ -102,14 +103,14 @@ index 7ef84b81b..2956a7835 100644
 +    invoke-static {v3}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
 +
      # check broadcast group instance
-     const-class v5, LX/00P;
+     const-class v5, LX/2jc;
  
-     invoke-virtual {p2, v5}, LX/058;->A03(Ljava/lang/Class;)Lcom/whatsapp/jid/Jid;
+@@ -10388,8 +10419,14 @@
  
      move-result-object v5
-+    
-+    invoke-static {v5}, Lcom/coocoo/coocoo/Coocoo;->traceLog4(Ljava/lang/Object;)V
  
++    invoke-static {v5}, Lcom/coocoo/coocoo/Coocoo;->traceLog4(Ljava/lang/Object;)V
++
      if-eqz v5, :cond_continue_wa_flow
  
 +    const-string v3, "Debug 4"
@@ -119,7 +120,7 @@ index 7ef84b81b..2956a7835 100644
      :coocoo_continue_intent
      # check instance <end>
  
-@@ -9896,6 +9933,10 @@
+@@ -10404,6 +10441,10 @@
      goto :coocoo_skip_null_check
  
      :cond_continue_wa_flow
