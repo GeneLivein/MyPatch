@@ -27,21 +27,51 @@ index 441e60dae..81229f30d 100644
      }
  
      public static void traceLog5(int value) {
+diff --git a/app/src/main/java/com/coocoo/manager/MessageScheduler.kt b/app/src/main/java/com/coocoo/manager/MessageScheduler.kt
+index 1c50b155e..d0e5ddcec 100644
+--- a/app/src/main/java/com/coocoo/manager/MessageScheduler.kt
++++ b/app/src/main/java/com/coocoo/manager/MessageScheduler.kt
+@@ -11,6 +11,7 @@ import android.os.Build
+ import androidx.annotation.WorkerThread
+ import androidx.core.content.ContextCompat.getSystemService
+ import com.coocoo.activity.SingleContactPickActivity
++import com.coocoo.annotation.SmaliInject
+ import com.coocoo.coocoo.Coocoo
+ import com.coocoo.db.room.messagescheduler.MessageSchedulerRepository
+ import com.coocoo.db.room.messagescheduler.ScheduledMessageDataModel
+@@ -130,6 +131,11 @@ object MessageScheduler {
+         CCLog.d(TAG, "isSingleContactPick: $isSingleContactPick")
+         return isSingleContactPick
+     }
++
++    @SmaliInject
++    fun isMyStatusItem(activity: cc_0AA?, position: Int): Boolean {
++        return activity is SingleContactPickActivity && position == 0
++    }
+ }
+ 
+ class ScheduledMessageReceiver : BroadcastReceiver() {
 diff --git a/whatsapp_modify_module/smali/X/1vb.3.smali b/whatsapp_modify_module/smali/X/1vb.3.smali
-index c47990677..e0de32ed0 100644
+index c47990677..f54b3729c 100644
 --- a/whatsapp_modify_module/smali/X/1vb.3.smali
 +++ b/whatsapp_modify_module/smali/X/1vb.3.smali
-@@ -30,6 +30,10 @@
- .method public final onItemClick(Landroid/widget/AdapterView;Landroid/view/View;IJ)V
-     .locals 10
+@@ -261,6 +261,16 @@
  
-+#coocoo
-+    invoke-static {p3}, Lcom/coocoo/coocoo/Coocoo;->traceLog5(I)V
-+#coocoo
+     move-result-object v0
+ 
++    invoke-static {v0, p3}, Lcom/coocoo/manager/MessageScheduler;->isMyStatusItem(LX/0AA;I)Z
 +
-     iget-object v5, p0, LX/1vb;->A00:Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;
++    move-result-object v13
++
++    if-eqz v13, :cond_continue_flow
++
++    return-void
++
++    :cond_continue_flow
++
+     invoke-static {v0}, Lcom/coocoo/manager/MessageScheduler;->isSingleContactPick(LX/0AA;)Z
  
-     iget-boolean v7, p0, LX/1vb;->A01:Z
+     move-result v0
 diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
 index fd224992e..86bc8d93f 100644
 --- a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
