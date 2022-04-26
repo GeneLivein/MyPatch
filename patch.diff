@@ -25,7 +25,7 @@ index 441e60dae..571eff094 100644
  
      public static void traceLog5(int value) {
 diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
-index fd224992e..7da0b41af 100644
+index fd224992e..86bc8d93f 100644
 --- a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
 +++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
 @@ -8657,6 +8657,12 @@
@@ -68,9 +68,9 @@ index fd224992e..7da0b41af 100644
  
      if-eqz v4, :cond_continue_wa_flow
  
-+    const-string v3, "Debug 1"
++    const-string v2, "Debug 1"
 +
-+    invoke-static {v3}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
++    invoke-static {v2}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
 +
      # check UserJid instance
      const-class v5, Lcom/whatsapp/jid/UserJid;
@@ -83,9 +83,9 @@ index fd224992e..7da0b41af 100644
 +
      if-nez v5, :coocoo_continue_intent
  
-+    const-string v3, "Debug 2"
++    const-string v2, "Debug 2"
 +
-+    invoke-static {v3}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
++    invoke-static {v2}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
 +
      # check GroupJid instance
      const-class v5, Lcom/whatsapp/jid/GroupJid;
@@ -98,9 +98,9 @@ index fd224992e..7da0b41af 100644
 +
      if-nez v5, :coocoo_continue_intent
  
-+    const-string v3, "Debug 3"
++    const-string v2, "Debug 3"
 +
-+    invoke-static {v3}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
++    invoke-static {v2}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
 +
      # check broadcast group instance
      const-class v5, LX/2jc;
@@ -113,9 +113,9 @@ index fd224992e..7da0b41af 100644
 +
      if-eqz v5, :cond_continue_wa_flow
  
-+    const-string v3, "Debug 4"
++    const-string v2, "Debug 4"
 +
-+    invoke-static {v3}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
++    invoke-static {v2}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
 +
      :coocoo_continue_intent
      # check instance <end>
@@ -125,9 +125,9 @@ index fd224992e..7da0b41af 100644
  
      :cond_continue_wa_flow
 +
-+    const-string v3, "cond_continue_wa_flow"
++    const-string v2, "cond_continue_wa_flow"
 +
-+    invoke-static {v3}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
++    invoke-static {v2}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
  #coocoo
  
      check-cast v0, Lcom/whatsapp/jid/UserJid;
