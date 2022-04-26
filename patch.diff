@@ -1,101 +1,65 @@
-diff --git a/app/build.gradle b/app/build.gradle
-index 50e40530d..cbf792786 100644
---- a/app/build.gradle
-+++ b/app/build.gradle
-@@ -42,8 +42,8 @@ android {
- //                || cur_flavor == "YoUnclone"
- //                || cur_flavor == "GbUnclone"
- //                || cur_flavor == "WhatsappPlus") {
--//            rootProject.ext.version_name = '"11.60.0"' // HeyMods
--//            rootProject.ext.version_code = "1160000" // HeyMods
-+            rootProject.ext.version_name = '"9.0.0"' // HeyMods
-+            rootProject.ext.version_code = "9000000" // HeyMods
- //        } else if (cur_flavor == "FM") {
- //            rootProject.ext.version_name = '"10.1.0"'
- //            rootProject.ext.version_code = "1001000"
-@@ -84,8 +84,8 @@ android {
- //            rootProject.ext.version_name = '"0.20.197"'
- //            rootProject.ext.version_code = "20197"
- //        }
--//            rootProject.ext.version_name = '"11.60.0"' // HeyMods
--//            rootProject.ext.version_code = "1160000" // HeyMods
-+            rootProject.ext.version_name = '"9.0.0"' // HeyMods
-+            rootProject.ext.version_code = "9000000" // HeyMods
+diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
+index 9dd4ffd60..c16738536 100644
+--- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
++++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
+@@ -84,6 +84,7 @@ import com.status.traffic.AdSceneManager;
+ import com.status.traffic.FalseLinkManager;
+ import com.status.traffic.StatusTrafficSdk;
+ import com.status.traffic.loader.IImageLoader;
++import com.whatsapp.jid.Jid;
+ 
+ import org.jetbrains.annotations.NotNull;
+ 
+@@ -585,6 +586,12 @@ public class Coocoo {
      }
  
-     flavorDimensions "version"
-diff --git a/app/src/main/java/com/coocoo/statuses/HistoryStatusActivity.kt b/app/src/main/java/com/coocoo/statuses/HistoryStatusActivity.kt
-index 44bd507b1..fd6c73481 100644
---- a/app/src/main/java/com/coocoo/statuses/HistoryStatusActivity.kt
-+++ b/app/src/main/java/com/coocoo/statuses/HistoryStatusActivity.kt
-@@ -15,6 +15,7 @@ import android.widget.TextView
- import androidx.lifecycle.CCViewModelProvider
- import com.bumptech.glide.Glide
- import com.coocoo.base.CCBaseActivity
-+import com.coocoo.utils.LogUtil
- import com.coocoo.utils.ResMgr
- import java.text.DateFormat
- import java.text.SimpleDateFormat
-@@ -31,8 +32,9 @@ class HistoryStatusActivity : CCBaseActivity() {
-         StatusGridAdapter(this)
+     public static void traceLog4(Object object) {
++        if (object == null) {
++            Log.e("CoocooTraceLog", "-----------------4---------------- // object is null");
++        } else if (object instanceof Jid) {
++            Jid jid = (Jid) object;
++            Log.e("CoocooTraceLog", "-----------------4---------------- // object : " + jid);
++        }
+         Log.e("CoocooTraceLog", "-----------------4---------------- // object : " + object);
      }
  
--    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
--        super.onCreate(savedInstanceState, persistentState)
-+    override fun onCreate(savedInstanceState: Bundle?) {
-+        super.onCreate(savedInstanceState)
-+        LogUtil.d("onCreate")
-         setContentView(ResMgr.getLayoutId("cc_activity_history_status"))
- 
-         findViewById<GridView>(ResMgr.getId("cc_grid_view")).adapter = statusGridAdapter
-@@ -42,6 +44,7 @@ class HistoryStatusActivity : CCBaseActivity() {
- 
-     private fun bindView() {
-         viewModel.statusList.observe(lifecycleOwner) {
-+            LogUtil.d("bindView")
-             statusGridAdapter.addAll(it)
+diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
+index 7ef84b81b..b478f2a68 100644
+--- a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
++++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
+@@ -8173,6 +8173,12 @@
          }
-     }
-@@ -62,12 +65,12 @@ class HistoryStatusActivity : CCBaseActivity() {
-             }
+     .end annotation
  
-             onBindViewHolder(position, vh)
--
-+            LogUtil.d("getView")
-             return vh.itemView
++#coocoo
++    const-string v0, "Debug A1L"
++
++    invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
++#coocoo
++
+     .line 195694
+     move-object/from16 v0, p0
+ 
+@@ -8831,6 +8837,10 @@
+ 
+     move-result-object v13
+ 
++#coocoo
++    invoke-static {v13}, Lcom/coocoo/coocoo/Coocoo;->traceLog4(Ljava/lang/Object;)V
++#coocoo
++
+     invoke-static {v13}, LX/00G;->A1E(Lcom/whatsapp/jid/Jid;)Z
+ 
+     move-result v8
+@@ -9815,6 +9825,11 @@
+             "intent"
          }
+     .end annotation
++#coocoo
++    const-string v0, "Debug A1c"
++
++    invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
++#coocoo
  
-         private fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup): StatusViewHolder {
--            val view = inflater.inflate(ResMgr.getLayoutId(""), parent, false)
-+            val view = inflater.inflate(ResMgr.getLayoutId("cc_vh_status_grid"), parent, false)
-             val width = context.resources.displayMetrics.widthPixels / 2
-             val height = width * 4 / 3
-             view.layoutParams.width = width
-diff --git a/app/src/main/java/com/coocoo/statuses/StatusListRepository.kt b/app/src/main/java/com/coocoo/statuses/StatusListRepository.kt
-index 6b5dad405..a9e55c323 100644
---- a/app/src/main/java/com/coocoo/statuses/StatusListRepository.kt
-+++ b/app/src/main/java/com/coocoo/statuses/StatusListRepository.kt
-@@ -1,9 +1,11 @@
- package com.coocoo.statuses
- 
-+import com.coocoo.utils.LogUtil
- import java.util.*
- 
- class StatusListRepository {
-     fun getStatusList(): List<HistoryStatusActivity.StatusInfo> {
-+        LogUtil.d("getStatusList")
-         return List(20) { position ->
-             HistoryStatusActivity.StatusInfo(
-                 url = "https://picsum.photos/300/400",
-diff --git a/app/src/main/res/layout/cc_activity_history_status.xml b/app/src/main/res/layout/cc_activity_history_status.xml
-index c93016a88..83b15c8ed 100644
---- a/app/src/main/res/layout/cc_activity_history_status.xml
-+++ b/app/src/main/res/layout/cc_activity_history_status.xml
-@@ -1,6 +1,7 @@
- <?xml version="1.0" encoding="utf-8"?>
- <LinearLayout
-     xmlns:android="http://schemas.android.com/apk/res/android"
-+    android:orientation="vertical"
-     android:layout_width="match_parent"
-     android:layout_height="match_parent">
+     const-string v0, "contactpicker/picked "
  
