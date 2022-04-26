@@ -53,18 +53,31 @@ index 1c50b155e..373655063 100644
  
  class ScheduledMessageReceiver : BroadcastReceiver() {
 diff --git a/whatsapp_modify_module/smali/X/1vb.3.smali b/whatsapp_modify_module/smali/X/1vb.3.smali
-index c47990677..f54b3729c 100644
+index c47990677..a22731f11 100644
 --- a/whatsapp_modify_module/smali/X/1vb.3.smali
 +++ b/whatsapp_modify_module/smali/X/1vb.3.smali
-@@ -261,6 +261,16 @@
+@@ -28,8 +28,10 @@
+ 
+ # virtual methods
+ .method public final onItemClick(Landroid/widget/AdapterView;Landroid/view/View;IJ)V
+-    .locals 10
+-
++#coocoo
++    #.locals 10
++    .locals 11
++#coocoo
+     iget-object v5, p0, LX/1vb;->A00:Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;
+ 
+     iget-boolean v7, p0, LX/1vb;->A01:Z
+@@ -261,6 +263,16 @@
  
      move-result-object v0
  
 +    invoke-static {v0, p3}, Lcom/coocoo/manager/MessageScheduler;->isMyStatusItem(LX/0AA;I)Z
 +
-+    move-result-object v13
++    move-result-object v11
 +
-+    if-eqz v13, :cond_continue_flow
++    if-eqz v11, :cond_continue_flow
 +
 +    return-void
 +
