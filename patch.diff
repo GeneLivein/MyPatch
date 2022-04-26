@@ -28,7 +28,7 @@ index 441e60dae..81229f30d 100644
  
      public static void traceLog5(int value) {
 diff --git a/app/src/main/java/com/coocoo/manager/MessageScheduler.kt b/app/src/main/java/com/coocoo/manager/MessageScheduler.kt
-index 1c50b155e..d0e5ddcec 100644
+index 1c50b155e..373655063 100644
 --- a/app/src/main/java/com/coocoo/manager/MessageScheduler.kt
 +++ b/app/src/main/java/com/coocoo/manager/MessageScheduler.kt
 @@ -11,6 +11,7 @@ import android.os.Build
@@ -39,12 +39,13 @@ index 1c50b155e..d0e5ddcec 100644
  import com.coocoo.coocoo.Coocoo
  import com.coocoo.db.room.messagescheduler.MessageSchedulerRepository
  import com.coocoo.db.room.messagescheduler.ScheduledMessageDataModel
-@@ -130,6 +131,11 @@ object MessageScheduler {
+@@ -130,6 +131,12 @@ object MessageScheduler {
          CCLog.d(TAG, "isSingleContactPick: $isSingleContactPick")
          return isSingleContactPick
      }
 +
 +    @SmaliInject
++    @JvmStatic
 +    fun isMyStatusItem(activity: cc_0AA?, position: Int): Boolean {
 +        return activity is SingleContactPickActivity && position == 0
 +    }
