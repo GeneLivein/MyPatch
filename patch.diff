@@ -22,3 +22,21 @@ index 0f23f1ddc..73c74f66f 100644
              sb2.append(this.b);
              final Cursor rawQuery2 = readableDatabase.rawQuery(sb2.toString(), (String[])null);
              rawQuery2.moveToFirst();
+diff --git a/whatsapp_modify_module/smali_classes2/X/2jf.smali b/whatsapp_modify_module/smali_classes2/X/2jf.smali
+index c0c6cb232..da191af88 100644
+--- a/whatsapp_modify_module/smali_classes2/X/2jf.smali
++++ b/whatsapp_modify_module/smali_classes2/X/2jf.smali
+@@ -116,9 +116,10 @@
+ 
+ .method public constructor <init>(Landroid/content/Context;LX/02d;LX/2SZ;LX/2sw;LX/2Vr;LX/2SS;LX/2R0;Ljava/io/File;)V
+     .locals 3
+-
+-    const/4 v2, 0x1
+-
++#coocoo
++    #const/4 v2, 0x1
++    const/4 v2, 0x2
++#coocoo
+     const-string v0, "msgstore.db"
+ 
+     const/4 v1, 0x0
