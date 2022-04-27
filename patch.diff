@@ -1,6 +1,6 @@
 diff --git a/app/src/main/java/X/cc_2jf.java b/app/src/main/java/X/cc_2jf.java
 new file mode 100644
-index 000000000..10c0d609a
+index 000000000..4396f1219
 --- /dev/null
 +++ b/app/src/main/java/X/cc_2jf.java
 @@ -0,0 +1,25 @@
@@ -13,7 +13,7 @@ index 000000000..10c0d609a
 +import androidx.annotation.Nullable;
 +
 +public class cc_2jf extends SQLiteOpenHelper {
-+    public boolean A0A;
++    public boolean A0C;
 +
 +    public cc_2jf(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
 +        super(context, name, factory, version);
