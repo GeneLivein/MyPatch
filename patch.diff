@@ -1,3 +1,34 @@
+diff --git a/app/src/main/java/X/cc_2jf.java b/app/src/main/java/X/cc_2jf.java
+new file mode 100644
+index 000000000..10c0d609a
+--- /dev/null
++++ b/app/src/main/java/X/cc_2jf.java
+@@ -0,0 +1,25 @@
++package X;
++
++import android.content.Context;
++import android.database.sqlite.SQLiteDatabase;
++import android.database.sqlite.SQLiteOpenHelper;
++
++import androidx.annotation.Nullable;
++
++public class cc_2jf extends SQLiteOpenHelper {
++    public boolean A0A;
++
++    public cc_2jf(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
++        super(context, name, factory, version);
++    }
++
++    @Override
++    public void onCreate(SQLiteDatabase db) {
++
++    }
++
++    @Override
++    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
++
++    }
++}
 diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 index 5622d7dcf..3f9bd0e78 100644
 --- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
@@ -14,19 +45,29 @@ index 5622d7dcf..3f9bd0e78 100644
          String valueMsg = new StringBuilder()
                  .append("max_items: " + value.A00)
 diff --git a/app/src/main/java/com/coocoo/fm/h.java b/app/src/main/java/com/coocoo/fm/h.java
-index 0f23f1ddc..73c74f66f 100644
+index 0f23f1ddc..c964f1afd 100644
 --- a/app/src/main/java/com/coocoo/fm/h.java
 +++ b/app/src/main/java/com/coocoo/fm/h.java
-@@ -29,7 +29,7 @@ final class h extends AsyncTask<String, String, String>
+@@ -4,6 +4,8 @@ import android.database.sqlite.*;
+ import android.database.*;
+ import android.content.*;
+ 
++import com.coocoo.exoplayer2.util.Log;
++
+ final class h extends AsyncTask<String, String, String>
+ {
+     private com.coocoowhatsapp.Conversation a;
+@@ -29,7 +31,8 @@ final class h extends AsyncTask<String, String, String>
      @Override
      protected String doInBackground(String... strings) {
          final SQLiteDatabase readableDatabase = yo.sql.getReadableDatabase();
 -        final StringBuilder sb = new StringBuilder("SELECT data,timestamp,_id,key_id,media_size FROM messages WHERE key_remote_jid='");
++        Log.d("Coocoo", "isMigrated:" + yo.sql.A0A);
 +        final StringBuilder sb = new StringBuilder("SELECT _id FROM chat_view WHERE raw_string_jid='");
          sb.append(this.c);
          sb.append("'");
          final Cursor rawQuery = readableDatabase.rawQuery(sb.toString(), (String[])null);
-@@ -41,9 +41,7 @@ final class h extends AsyncTask<String, String, String>
+@@ -41,9 +44,7 @@ final class h extends AsyncTask<String, String, String>
                  }
              } while (rawQuery.moveToNext());
              rawQuery.close();
@@ -37,27 +78,50 @@ index 0f23f1ddc..73c74f66f 100644
              sb2.append(this.b);
              final Cursor rawQuery2 = readableDatabase.rawQuery(sb2.toString(), (String[])null);
              rawQuery2.moveToFirst();
+diff --git a/app/src/main/java/com/coocoo/fm/yo.java b/app/src/main/java/com/coocoo/fm/yo.java
+index 5abb06300..7a5fdccd7 100644
+--- a/app/src/main/java/com/coocoo/fm/yo.java
++++ b/app/src/main/java/com/coocoo/fm/yo.java
+@@ -48,6 +48,7 @@ import java.util.Locale;
+ 
+ import X.c1_2R5;
+ import X.c1_2Ql;
++import X.cc_2jf;
+ 
+ public class yo extends dep {
+ 
+@@ -59,7 +60,7 @@ public class yo extends dep {
+     public static String mpack = "com.coocoowhatsapp";
+     public static final String pname = ResMgr.getString("cc_app_name");
+     private static HashMap<Pair<String, String>, Integer> q = new HashMap();
+-    public static SQLiteOpenHelper sql;
++    public static cc_2jf sql;
+     public static String datafolder;
+ 
+     @SmaliInject
+@@ -497,7 +498,7 @@ public class yo extends dep {
+     }
+ 
+     @SmaliInject
+-    public static void SetDB(SQLiteOpenHelper sQLiteOpenHelper) {
++    public static void SetDB(cc_2jf sQLiteOpenHelper) {
+         sql = sQLiteOpenHelper;
+     }
+ 
 diff --git a/whatsapp_modify_module/smali_classes2/X/2jf.smali b/whatsapp_modify_module/smali_classes2/X/2jf.smali
-index c0c6cb232..c33f51a57 100644
+index c0c6cb232..103d371ec 100644
 --- a/whatsapp_modify_module/smali_classes2/X/2jf.smali
 +++ b/whatsapp_modify_module/smali_classes2/X/2jf.smali
-@@ -116,9 +116,13 @@
+@@ -127,7 +127,7 @@
+     invoke-direct {p0, p1, v0, v1, v2}, Landroid/database/sqlite/SQLiteOpenHelper;-><init>(Landroid/content/Context;Ljava/lang/String;Landroid/database/sqlite/SQLiteDatabase$CursorFactory;I)V
  
- .method public constructor <init>(Landroid/content/Context;LX/02d;LX/2SZ;LX/2sw;LX/2Vr;LX/2SS;LX/2R0;Ljava/io/File;)V
-     .locals 3
-+#coocoo
-+    const-string v2, "2jf init"
-+    invoke-static {v2}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
+ #coocoo
+-    invoke-static {p0}, Lcom/coocoo/fm/yo;->SetDB(Landroid/database/sqlite/SQLiteOpenHelper;)V
++    invoke-static {p0}, Lcom/coocoo/fm/yo;->SetDB(LX/2jf;)V
+ #coocoo
  
--    const/4 v2, 0x1
--
-+    #const/4 v2, 0x1
-+    const/4 v2, 0x3
-+#coocoo
-     const-string v0, "msgstore.db"
- 
-     const/4 v1, 0x0
-@@ -12017,6 +12021,9 @@
+     .line 448656
+@@ -12017,6 +12017,9 @@
  
      .line 450754
      invoke-static {v1, v0, p2, p3}, LX/0FM;->A00(Ljava/lang/String;Ljava/lang/String;II)V
