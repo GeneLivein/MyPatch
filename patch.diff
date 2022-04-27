@@ -38,24 +38,26 @@ index 0f23f1ddc..73c74f66f 100644
              final Cursor rawQuery2 = readableDatabase.rawQuery(sb2.toString(), (String[])null);
              rawQuery2.moveToFirst();
 diff --git a/whatsapp_modify_module/smali_classes2/X/2jf.smali b/whatsapp_modify_module/smali_classes2/X/2jf.smali
-index c0c6cb232..2faf8aec9 100644
+index c0c6cb232..c33f51a57 100644
 --- a/whatsapp_modify_module/smali_classes2/X/2jf.smali
 +++ b/whatsapp_modify_module/smali_classes2/X/2jf.smali
-@@ -116,9 +116,10 @@
+@@ -116,9 +116,13 @@
  
  .method public constructor <init>(Landroid/content/Context;LX/02d;LX/2SZ;LX/2sw;LX/2Vr;LX/2SS;LX/2R0;Ljava/io/File;)V
      .locals 3
--
++#coocoo
++    const-string v2, "2jf init"
++    invoke-static {v2}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
+ 
 -    const/4 v2, 0x1
 -
-+#coocoo
 +    #const/4 v2, 0x1
 +    const/4 v2, 0x3
 +#coocoo
      const-string v0, "msgstore.db"
  
      const/4 v1, 0x0
-@@ -12017,6 +12018,9 @@
+@@ -12017,6 +12021,9 @@
  
      .line 450754
      invoke-static {v1, v0, p2, p3}, LX/0FM;->A00(Ljava/lang/String;Ljava/lang/String;II)V
