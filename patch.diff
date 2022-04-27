@@ -45,7 +45,7 @@ index 5622d7dcf..3f9bd0e78 100644
          String valueMsg = new StringBuilder()
                  .append("max_items: " + value.A00)
 diff --git a/app/src/main/java/com/coocoo/fm/h.java b/app/src/main/java/com/coocoo/fm/h.java
-index 0f23f1ddc..c964f1afd 100644
+index 0f23f1ddc..5cd6da1b6 100644
 --- a/app/src/main/java/com/coocoo/fm/h.java
 +++ b/app/src/main/java/com/coocoo/fm/h.java
 @@ -4,6 +4,8 @@ import android.database.sqlite.*;
@@ -62,7 +62,7 @@ index 0f23f1ddc..c964f1afd 100644
      protected String doInBackground(String... strings) {
          final SQLiteDatabase readableDatabase = yo.sql.getReadableDatabase();
 -        final StringBuilder sb = new StringBuilder("SELECT data,timestamp,_id,key_id,media_size FROM messages WHERE key_remote_jid='");
-+        Log.d("Coocoo", "isMigrated:" + yo.sql.A0A);
++        Log.d("Coocoo", "isMigrated:" + yo.sql.A0C);
 +        final StringBuilder sb = new StringBuilder("SELECT _id FROM chat_view WHERE raw_string_jid='");
          sb.append(this.c);
          sb.append("'");
