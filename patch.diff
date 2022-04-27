@@ -1,5 +1,5 @@
 diff --git a/app/src/main/java/com/coocoo/fm/h.java b/app/src/main/java/com/coocoo/fm/h.java
-index 0f23f1ddc..8febc404e 100644
+index 0f23f1ddc..73c74f66f 100644
 --- a/app/src/main/java/com/coocoo/fm/h.java
 +++ b/app/src/main/java/com/coocoo/fm/h.java
 @@ -29,7 +29,7 @@ final class h extends AsyncTask<String, String, String>
@@ -18,7 +18,7 @@ index 0f23f1ddc..8febc404e 100644
 -            final StringBuilder sb2 = new StringBuilder("SELECT key_id FROM messages WHERE key_remote_jid='");
 -            sb2.append(this.c);
 -            sb2.append("' AND _id=");
-+            final StringBuilder sb2 = new StringBuilder("SELECT key_id FROM message WHERE chat_row_id='");
++            final StringBuilder sb2 = new StringBuilder("SELECT key_id FROM message WHERE chat_row_id=");
              sb2.append(this.b);
              final Cursor rawQuery2 = readableDatabase.rawQuery(sb2.toString(), (String[])null);
              rawQuery2.moveToFirst();
