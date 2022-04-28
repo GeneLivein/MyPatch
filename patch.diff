@@ -1,24 +1,29 @@
 diff --git a/common-module/src/main/java/com/coocoo/utils/DialogUtils.kt b/common-module/src/main/java/com/coocoo/utils/DialogUtils.kt
-index ca0c1a4d1..8aaad923c 100644
+index ca0c1a4d1..66d53e01c 100644
 --- a/common-module/src/main/java/com/coocoo/utils/DialogUtils.kt
 +++ b/common-module/src/main/java/com/coocoo/utils/DialogUtils.kt
-@@ -2,6 +2,8 @@ package com.coocoo.utils
+@@ -1,7 +1,10 @@
+ package com.coocoo.utils
  
  import android.app.Activity
++import android.app.AlertDialog
  import android.app.Dialog
 +import android.content.Context
 +import android.content.ContextWrapper
  import com.coocoo.utils.DialogUtils.showDialogSafely
  
  object DialogUtils {
-@@ -43,5 +45,9 @@ object DialogUtils {
+@@ -42,6 +45,11 @@ object DialogUtils {
+ }
  
  
- fun Dialog.safelyShow() {
+-fun Dialog.safelyShow() {
 -    showDialogSafely(context as Activity, this)
-+    var ctx: Context = context
-+    while (ctx is ContextWrapper) {
-+        ctx = ctx.baseContext
++fun AlertDialog.safelyShow() {
++    val ctx = if (context is Activity) {
++        context
++    } else {
++        (context as ContextWrapper).baseContext
 +    }
 +    showDialogSafely(ctx as Activity, this)
  }
