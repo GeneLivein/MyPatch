@@ -1,38 +1,52 @@
-diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
-index 9db832892..f769318cc 100644
---- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
-+++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
-@@ -35,6 +35,12 @@ class MyStatusHistoryActivity : CCBaseActivity(), AdapterView.OnItemClickListene
-             gridView.onItemClickListener = this
-         }
+diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
+index 27c23b2d6..30329698c 100644
+--- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
++++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
+@@ -2,12 +2,14 @@ package com.coocoo.statuses.myhistory
  
-+        findViewById<ImageView>(ResMgr.getId("cc_back"))?.let { btnBack ->
-+            btnBack.setOnClickListener {
-+                finish()
+ import X.c1_2Ql
+ import X.cc_2Qk
++import android.database.Cursor
+ import android.os.Environment
+ import android.util.Log
+ import androidx.annotation.WorkerThread
+ import com.coocoo.annotation.SmaliInject
+ import com.coocoo.db.room.mystatus.MyStatusDatabase
+ import com.coocoo.db.room.mystatus.entity.MyStatusHistoryEntity
++import com.coocoo.fm.yo
+ import com.coocoo.utils.Constant
+ import com.coocoo.utils.FileUtil
+ import java.io.File
+@@ -74,7 +76,8 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
+                 // save to database
+                 val myStatusHistory = MyStatusHistoryEntity(
+                     messageRowId = messageRowId, filePath = copiedFilePath,
+-                    timestamp = timestamp, messageType = messageType
++                    timestamp = timestamp, messageType = messageType,
++                    viewCount = queryReceiptUsers(c12Ql)
+                 )
+                 database.getMyStatusDao().insertMyStatusHistory(myStatusHistory)
+                 Log.d(
+@@ -86,4 +89,21 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
+             }
+         }
+     }
++
++    private fun queryReceiptUsers(c12Ql: c1_2Ql): Int {
++        var count = 0
++        val msgRowIds = arrayOf(c12Ql.A0y.toString())
++        val query = "SELECT read_timestamp FROM receipt_user WHERE message_row_id=?"
++        val db = yo.sql.readableDatabase
++        val cursor = db.rawQuery(query, msgRowIds)
++        val indexReadTimestamp = cursor.getColumnIndexOrThrow("read_timestamp")
++        while (cursor.moveToNext()) {
++            val timestamp = cursor.getLong(indexReadTimestamp)
++            if (timestamp > 0L) {
++                count++
 +            }
 +        }
-+
-         bindView()
- 
-         viewModel.loadMyStatusHistory()
-@@ -84,6 +90,7 @@ class MyStatusHistoryActivity : CCBaseActivity(), AdapterView.OnItemClickListene
-             fun bind(data: MyStatusHistoryInfo) = with(data){
-                 Glide.with(itemView.context)
-                     .load(filePath)
-+                    .centerCrop()
-                     .into(ivStatus)
-                 tvViewCount.text = "$viewCount"
-                 tvDate.text = DateUtil.getDateString(timestamp)
-diff --git a/app/src/main/res/layout/cc_activity_history_status.xml b/app/src/main/res/layout/cc_activity_history_status.xml
-index 83b15c8ed..dd9208d96 100644
---- a/app/src/main/res/layout/cc_activity_history_status.xml
-+++ b/app/src/main/res/layout/cc_activity_history_status.xml
-@@ -10,7 +10,7 @@
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         style="@style/Theme.App.Toolbar"
--        android:background="@color/cc_setting_category_title">
-+        android:background="?colorPrimary">
- 
-         <ImageView
-             android:id="@+id/cc_back"
++        cursor.close()
++        return count
++    }
+ }
+\ No newline at end of file
