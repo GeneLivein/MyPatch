@@ -112,16 +112,31 @@ index 000000000..a1b1fc30a
 +}
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java
-index 7a94651c5..c5fa01209 100644
+index 7a94651c5..e42b4d957 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java
-@@ -298,6 +298,11 @@ public class StatusPlaybackContactFragmentDelegate implements ILaunchInstallActi
+@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
+ import com.coocoo.annotation.SmaliInject;
+ import com.coocoo.business.BusinessController;
+ import com.coocoo.coocoo.Coocoo;
++import com.coocoo.exoplayer2.util.Log;
+ import com.coocoo.firebase.remoteConfig.RemoteConfig;
+ import com.coocoo.fm.yo;
+ import com.coocoo.highlight.AbsFunction;
+@@ -298,6 +299,18 @@ public class StatusPlaybackContactFragmentDelegate implements ILaunchInstallActi
          }
      }
  
 +    @SmaliInject
-+    public void onPageChanged() {
-+
++    public void onPageViewCreated(View view) {
++        Activity activity = mPlaybackFragment.A09();
++        Log.d("StatusPlaybackContactFragmentDelegate", "activity" + activity);
++        if (activity instanceof MyStatusHistoryPlaybackActivity) {
++            ImageView btnDelete = view.findViewById(ResMgr.getId("delete"));
++            btnDelete.setOnClickListener((v) -> {
++                ((MyStatusHistoryPlaybackActivity) activity).showConfirmDeleteDialog();
++            });
++        }
 +    }
 +
      @Override
@@ -138,6 +153,22 @@ index bc6b31d81..be30bebe7 100644
 +    <string name="cc_my_status_delete_now">Delete Now?</string>
 +    <string name="cc_my_status_delete_now_message">Are you sure to delete the status now?</string>
  </resources>
+diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/status/playback/fragment/StatusPlaybackContactFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/status/playback/fragment/StatusPlaybackContactFragment.smali
+index c755c5ec2..acb5c62fd 100644
+--- a/whatsapp_modify_module/smali/com/coocoowhatsapp/status/playback/fragment/StatusPlaybackContactFragment.smali
++++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/status/playback/fragment/StatusPlaybackContactFragment.smali
+@@ -1257,6 +1257,11 @@
+ 
+     .line 444385
+     invoke-virtual {v2, v0}, LX/2xx;->A0K(Landroid/view/View;)V
++#coocoo
++    iget-object v16, v6, Lcom/coocoowhatsapp/status/playback/fragment/StatusPlaybackContactFragment;->statusPlaybackContactFragmentDelegate:Lcom/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate;
++
++    invoke-virtual {v16, v0}, Lcom/coocoowhatsapp/status/playback/fragment/StatusPlaybackContactFragment;->onPageViewCreated(Landroid/view/View;)
++#coocoo
+ 
+     .line 444386
+     invoke-virtual {v2}, LX/2xx;->A0F()V
 diff --git a/whatsapp_modify_module/smali_classes2/X/2y0.1.smali b/whatsapp_modify_module/smali_classes2/X/2y0.1.smali
 new file mode 100644
 index 000000000..c618013ed
