@@ -1,29 +1,38 @@
-diff --git a/common-module/src/main/java/com/coocoo/utils/DialogUtils.kt b/common-module/src/main/java/com/coocoo/utils/DialogUtils.kt
-index ca0c1a4d1..66d53e01c 100644
---- a/common-module/src/main/java/com/coocoo/utils/DialogUtils.kt
-+++ b/common-module/src/main/java/com/coocoo/utils/DialogUtils.kt
-@@ -1,7 +1,10 @@
- package com.coocoo.utils
+diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
+index 9db832892..f769318cc 100644
+--- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
++++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
+@@ -35,6 +35,12 @@ class MyStatusHistoryActivity : CCBaseActivity(), AdapterView.OnItemClickListene
+             gridView.onItemClickListener = this
+         }
  
- import android.app.Activity
-+import android.app.AlertDialog
- import android.app.Dialog
-+import android.content.Context
-+import android.content.ContextWrapper
- import com.coocoo.utils.DialogUtils.showDialogSafely
++        findViewById<ImageView>(ResMgr.getId("cc_back"))?.let { btnBack ->
++            btnBack.setOnClickListener {
++                finish()
++            }
++        }
++
+         bindView()
  
- object DialogUtils {
-@@ -42,6 +45,11 @@ object DialogUtils {
- }
+         viewModel.loadMyStatusHistory()
+@@ -84,6 +90,7 @@ class MyStatusHistoryActivity : CCBaseActivity(), AdapterView.OnItemClickListene
+             fun bind(data: MyStatusHistoryInfo) = with(data){
+                 Glide.with(itemView.context)
+                     .load(filePath)
++                    .centerCrop()
+                     .into(ivStatus)
+                 tvViewCount.text = "$viewCount"
+                 tvDate.text = DateUtil.getDateString(timestamp)
+diff --git a/app/src/main/res/layout/cc_activity_history_status.xml b/app/src/main/res/layout/cc_activity_history_status.xml
+index 83b15c8ed..dd9208d96 100644
+--- a/app/src/main/res/layout/cc_activity_history_status.xml
++++ b/app/src/main/res/layout/cc_activity_history_status.xml
+@@ -10,7 +10,7 @@
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         style="@style/Theme.App.Toolbar"
+-        android:background="@color/cc_setting_category_title">
++        android:background="?colorPrimary">
  
- 
--fun Dialog.safelyShow() {
--    showDialogSafely(context as Activity, this)
-+fun AlertDialog.safelyShow() {
-+    val ctx = if (context is Activity) {
-+        context
-+    } else {
-+        (context as ContextWrapper).baseContext
-+    }
-+    showDialogSafely(ctx as Activity, this)
- }
+         <ImageView
+             android:id="@+id/cc_back"
