@@ -46,10 +46,10 @@ index 5b5720a02..000000000
 -}
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt
 new file mode 100644
-index 000000000..563f6b49a
+index 000000000..7e9307598
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt
-@@ -0,0 +1,31 @@
+@@ -0,0 +1,27 @@
 +package com.coocoo.statuses.myhistory
 +
 +import android.os.Bundle
@@ -65,21 +65,42 @@ index 000000000..563f6b49a
 +
 +class MyStatusHistoryPlaybackActivity : StatusPlaybackActivity() {
 +
-+    override fun onCreate(savedInstanceState: Bundle?) {
-+        super.onCreate(savedInstanceState)
-+        val btnDelete = findViewById<ImageView>(ResMgr.getId("delete"))
-+        btnDelete.setOnClickListener {
-+            CoocooAlertDialog(this,
-+                title = ResMgr.getString("cc_my_status_delete_now"),
-+                message = ResMgr.getString("cc_my_status_delete_now_message"),
-+                onConfirmClicked = {},
-+                onCancelClicked = {}
-+            ).safelyShow()
-+        }
-+    }
-+
 +    val myStatusHistoryInfoList: ArrayList<MyStatusHistoryInfo>
 +        get() = intent.getParcelableArrayListExtra(MyStatusHistoryActivity.KEY_MY_STATUS_HISTORY_INFO_LIST)
++
++    fun showConfirmDeleteDialog() {
++        CoocooAlertDialog(this,
++            title = ResMgr.getString("cc_my_status_delete_now"),
++            message = ResMgr.getString("cc_my_status_delete_now_message"),
++            onConfirmClicked = {},
++            onCancelClicked = {}
++        ).safelyShow()
++    }
++}
+\ No newline at end of file
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusDeleteBtnDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusDeleteBtnDelegate.kt
+new file mode 100644
+index 000000000..8a54dd42c
+--- /dev/null
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusDeleteBtnDelegate.kt
+@@ -0,0 +1,18 @@
++package com.coocoo.whatsappdelegate
++
++import android.view.View
++import com.coocoo.annotation.SmaliInject
++import com.coocoo.statuses.myhistory.MyStatusHistoryPlaybackActivity
++
++object MyStatusDeleteBtnDelegate {
++    @SmaliInject
++    @JvmStatic
++    fun onViewCreated(btnDelete: View) {
++        val activity = btnDelete.context
++        if (activity is MyStatusHistoryPlaybackActivity) {
++            btnDelete.setOnClickListener {
++                activity.showConfirmDeleteDialog()
++            }
++        }
++    }
 +}
 \ No newline at end of file
 diff --git a/app/src/main/res/values/cc_strings.xml b/app/src/main/res/values/cc_strings.xml
@@ -93,3 +114,627 @@ index bc6b31d81..be30bebe7 100644
 +    <string name="cc_my_status_delete_now">Delete Now?</string>
 +    <string name="cc_my_status_delete_now_message">Are you sure to delete the status now?</string>
  </resources>
+diff --git a/whatsapp_modify_module/smali_classes2/X/2y0.1.smali b/whatsapp_modify_module/smali_classes2/X/2y0.1.smali
+new file mode 100644
+index 000000000..c618013ed
+--- /dev/null
++++ b/whatsapp_modify_module/smali_classes2/X/2y0.1.smali
+@@ -0,0 +1,618 @@
++.class public LX/2y0;
++.super LX/2xw;
++.source ""
++
++
++# instance fields
++.field public A00:LX/3zo;
++
++.field public A01:Z
++
++.field public final A02:LX/02S;
++
++.field public final A03:LX/03J;
++
++.field public final A04:LX/02B;
++
++.field public final A05:LX/03o;
++
++.field public final A06:LX/02D;
++
++.field public final A07:LX/04Z;
++
++.field public final A08:LX/02Y;
++
++.field public final A09:LX/02d;
++
++.field public final A0A:LX/02a;
++
++.field public final A0B:LX/2UR;
++
++.field public final A0C:LX/2SF;
++
++.field public final A0D:LX/2aw;
++
++
++# direct methods
++.method public constructor <init>(LX/05H;LX/02S;LX/07M;LX/02R;LX/03J;LX/02B;LX/03o;LX/02D;LX/04Z;LX/02Y;LX/02d;LX/02a;LX/2RN;LX/2SF;LX/2TM;LX/2Si;LX/2aw;LX/2e4;LX/2VM;LX/2Uk;LX/2Ql;LX/2Rf;LX/2Vh;LX/2e6;LX/2e5;LX/47E;LX/2VX;LX/2RJ;LX/2ci;)V
++    .locals 18
++
++    .line 482657
++    move-object/from16 v1, p0
++
++    move-object/from16 v12, p24
++
++    move-object/from16 v11, p23
++
++    move-object/from16 v10, p21
++
++    move-object/from16 v14, p26
++
++    move-object/from16 v3, p3
++
++    move-object/from16 v16, p28
++
++    move-object/from16 v17, p29
++
++    move-object/from16 v15, p27
++
++    move-object/from16 v4, p4
++
++    move-object/from16 v2, p2
++
++    move-object/from16 v13, p25
++
++    move-object/from16 v5, p13
++
++    move-object/from16 v6, p15
++
++    move-object/from16 v7, p16
++
++    move-object/from16 v8, p19
++
++    move-object/from16 v9, p20
++
++    invoke-direct/range {v1 .. v17}, LX/2xw;-><init>(LX/02S;LX/07M;LX/02R;LX/2RN;LX/2TM;LX/2Si;LX/2VM;LX/2Uk;LX/2Ql;LX/2Vh;LX/2e6;LX/2e5;LX/47E;LX/2VX;LX/2RJ;LX/2ci;)V
++
++    .line 482658
++    new-instance v0, LX/2xV;
++
++    invoke-direct {v0, v1}, LX/2xV;-><init>(LX/2y0;)V
++
++    iput-object v0, v1, LX/2y0;->A0B:LX/2UR;
++
++    .line 482659
++    move-object/from16 v0, p10
++
++    iput-object v0, v1, LX/2y0;->A08:LX/02Y;
++
++    .line 482660
++    iput-object v2, v1, LX/2y0;->A02:LX/02S;
++
++    .line 482661
++    move-object/from16 v0, p9
++
++    iput-object v0, v1, LX/2y0;->A07:LX/04Z;
++
++    .line 482662
++    move-object/from16 v0, p6
++
++    iput-object v0, v1, LX/2y0;->A04:LX/02B;
++
++    .line 482663
++    move-object/from16 v0, p8
++
++    iput-object v0, v1, LX/2y0;->A06:LX/02D;
++
++    .line 482664
++    move-object/from16 v0, p12
++
++    iput-object v0, v1, LX/2y0;->A0A:LX/02a;
++
++    .line 482665
++    move-object/from16 v0, p7
++
++    iput-object v0, v1, LX/2y0;->A05:LX/03o;
++
++    .line 482666
++    move-object/from16 v0, p14
++
++    iput-object v0, v1, LX/2y0;->A0C:LX/2SF;
++
++    .line 482667
++    move-object/from16 v0, p5
++
++    iput-object v0, v1, LX/2y0;->A03:LX/03J;
++
++    .line 482668
++    move-object/from16 v0, p11
++
++    iput-object v0, v1, LX/2y0;->A09:LX/02d;
++
++    .line 482669
++    move-object/from16 v0, p17
++
++    iput-object v0, v1, LX/2y0;->A0D:LX/2aw;
++
++    return-void
++.end method
++
++
++# virtual methods
++.method public A01()V
++    .locals 3
++
++    .line 482670
++    invoke-super {p0}, LX/2xx;->A01()V
++
++    .line 482671
++    invoke-virtual {p0}, LX/2y0;->A0Q()LX/3yW;
++
++    move-result-object v0
++
++    .line 482672
++    iget-object v2, v0, LX/3yW;->A05:LX/49k;
++
++    .line 482673
++    iget-object v0, v2, LX/49k;->A0A:LX/0RQ;
++
++    invoke-virtual {v0}, LX/0RQ;->A00()V
++
++    .line 482674
++    iget-object v1, v2, LX/49k;->A08:LX/03o;
++
++    iget-object v0, v2, LX/49k;->A07:LX/0ID;
++
++    invoke-virtual {v1, v0}, LX/2SH;->A05(Ljava/lang/Object;)V
++
++    .line 482675
++    iget-object v1, v2, LX/49k;->A05:LX/03J;
++
++    iget-object v0, v2, LX/49k;->A04:LX/0NF;
++
++    invoke-virtual {v1, v0}, LX/2SH;->A05(Ljava/lang/Object;)V
++
++    .line 482676
++    iget-object v1, v2, LX/49k;->A0E:LX/2aw;
++
++    iget-object v0, v2, LX/49k;->A0D:LX/2s3;
++
++    invoke-virtual {v1, v0}, LX/2SH;->A05(Ljava/lang/Object;)V
++
++    .line 482677
++    iget-object v0, v2, LX/49k;->A03:LX/02S;
++
++    iget-object v1, v2, LX/49k;->A0G:Ljava/lang/Runnable;
++
++    .line 482678
++    iget-object v0, v0, LX/02S;->A02:Landroid/os/Handler;
++
++    invoke-virtual {v0, v1}, Landroid/os/Handler;->removeCallbacks(Ljava/lang/Runnable;)V
++
++    const/4 v1, 0x1
++
++    .line 482679
++    iput-boolean v1, v2, LX/49k;->A00:Z
++
++    .line 482680
++    iget-object v0, p0, LX/2y0;->A00:LX/3zo;
++
++    if-eqz v0, :cond_0
++
++    .line 482681
++    invoke-virtual {v0, v1}, LX/2i2;->A03(Z)V
++
++    const/4 v0, 0x0
++
++    .line 482682
++    iput-object v0, p0, LX/2y0;->A00:LX/3zo;
++
++    .line 482683
++    :cond_0
++    iget-object v1, p0, LX/2y0;->A0C:LX/2SF;
++
++    iget-object v0, p0, LX/2y0;->A0B:LX/2UR;
++
++    invoke-virtual {v1, v0}, LX/2SH;->A05(Ljava/lang/Object;)V
++
++    return-void
++.end method
++
++.method public A08(Landroid/graphics/Rect;)V
++    .locals 5
++
++    .line 482684
++    invoke-virtual {p0}, LX/2y0;->A0Q()LX/3yW;
++
++    move-result-object v0
++
++    .line 482685
++    iget-object v4, v0, LX/3yW;->A02:Landroid/view/View;
++
++    if-eqz v4, :cond_0
++
++    .line 482686
++    iget v3, p1, Landroid/graphics/Rect;->left:I
++
++    const/4 v2, 0x0
++
++    iget v1, p1, Landroid/graphics/Rect;->right:I
++
++    iget v0, p1, Landroid/graphics/Rect;->bottom:I
++
++    invoke-virtual {v4, v3, v2, v1, v0}, Landroid/view/View;->setPadding(IIII)V
++
++    .line 482687
++    :cond_0
++    invoke-super {p0, p1}, LX/2xx;->A08(Landroid/graphics/Rect;)V
++
++    return-void
++.end method
++
++.method public A09(Landroid/view/LayoutInflater;Landroid/view/ViewGroup;)Landroid/view/View;
++    .locals 14
++
++    .line 482688
++    move-object/from16 v0, p2
++
++    invoke-super {p0, p1, v0}, LX/2xx;->A09(Landroid/view/LayoutInflater;Landroid/view/ViewGroup;)Landroid/view/View;
++
++    move-result-object v1
++
++    .line 482689
++    invoke-static {v1}, LX/008;->A03(Landroid/view/View;)V
++
++    .line 482690
++    invoke-virtual {p0}, LX/2y0;->A0Q()LX/3yW;
++
++    move-result-object v0
++
++    .line 482691
++    iget-object v2, v0, LX/2yQ;->A0A:Landroid/view/ViewGroup;
++
++    invoke-virtual {v2}, Landroid/view/ViewGroup;->removeAllViews()V
++
++    .line 482692
++    iget-object v4, v0, LX/2yQ;->A0A:Landroid/view/ViewGroup;
++
++    const v3, 0x7f0d048a
++
++    const/4 v2, 0x1
++
++    invoke-virtual {p1, v3, v4, v2}, Landroid/view/LayoutInflater;->inflate(ILandroid/view/ViewGroup;Z)Landroid/view/View;
++
++    .line 482693
++    iget-object v10, p0, LX/2y0;->A08:LX/02Y;
++
++    iget-object v4, p0, LX/2y0;->A02:LX/02S;
++
++    iget-object v9, p0, LX/2y0;->A07:LX/04Z;
++
++    iget-object v6, p0, LX/2y0;->A04:LX/02B;
++
++    iget-object v8, p0, LX/2y0;->A06:LX/02D;
++
++    iget-object v12, p0, LX/2y0;->A0A:LX/02a;
++
++    iget-object v7, p0, LX/2y0;->A05:LX/03o;
++
++    iget-object v5, p0, LX/2y0;->A03:LX/03J;
++
++    iget-object v11, p0, LX/2y0;->A09:LX/02d;
++
++    iget-object v13, p0, LX/2y0;->A0D:LX/2aw;
++
++    iget-object v3, v0, LX/2yQ;->A08:Landroid/view/ViewGroup;
++
++    new-instance v2, LX/49k;
++
++    invoke-direct/range {v2 .. v13}, LX/49k;-><init>(Landroid/view/ViewGroup;LX/02S;LX/03J;LX/02B;LX/03o;LX/02D;LX/04Z;LX/02Y;LX/02d;LX/02a;LX/2aw;)V
++
++    iput-object v2, v0, LX/3yW;->A05:LX/49k;
++
++    const v2, 0x7f0a0eb2
++
++    .line 482694
++    invoke-virtual {v1, v2}, Landroid/view/View;->findViewById(I)Landroid/view/View;
++
++    move-result-object v2
++
++    check-cast v2, Landroid/widget/ImageView;
++
++    iput-object v2, v0, LX/3yW;->A03:Landroid/widget/ImageView;
++
++    const v2, 0x7f0a0c64
++
++    .line 482695
++    invoke-virtual {v1, v2}, Landroid/view/View;->findViewById(I)Landroid/view/View;
++
++    move-result-object v2
++
++    check-cast v2, Landroid/widget/TextView;
++
++    iput-object v2, v0, LX/3yW;->A04:Landroid/widget/TextView;
++
++    const v2, 0x7f0a0432
++
++    .line 482696
++    invoke-virtual {v1, v2}, Landroid/view/View;->findViewById(I)Landroid/view/View;
++
++    move-result-object v2
++
++    iput-object v2, v0, LX/3yW;->A00:Landroid/view/View;
++
++    const v2, 0x7f0a060b
++
++    .line 482697
++    invoke-virtual {v1, v2}, Landroid/view/View;->findViewById(I)Landroid/view/View;
++
++    move-result-object v2
++
++    iput-object v2, v0, LX/3yW;->A01:Landroid/view/View;
++
++    .line 482698
++    iget-object v3, v0, LX/2yQ;->A08:Landroid/view/ViewGroup;
++
++    const v2, 0x7f0a07e6
++
++    invoke-virtual {v3, v2}, Landroid/view/View;->findViewById(I)Landroid/view/View;
++
++    move-result-object v2
++
++    iput-object v2, v0, LX/3yW;->A02:Landroid/view/View;
++
++    return-object v1
++.end method
++
++.method public A0I()V
++    .locals 1
++
++    .line 482699
++    iget-boolean v0, p0, LX/2y0;->A01:Z
++
++    if-eqz v0, :cond_0
++
++    .line 482700
++    invoke-super {p0}, LX/2xw;->A0I()V
++
++    .line 482701
++    :cond_0
++    return-void
++.end method
++
++.method public A0J(I)V
++    .locals 2
++
++    .line 482702
++    invoke-super {p0, p1}, LX/2xx;->A0J(I)V
++
++    const/4 v0, 0x3
++
++    if-ne p1, v0, :cond_0
++
++    .line 482703
++    invoke-virtual {p0}, LX/2y0;->A0Q()LX/3yW;
++
++    move-result-object v0
++
++    .line 482704
++    iget-object v0, v0, LX/3yW;->A05:LX/49k;
++
++    iget-object v1, v0, LX/49k;->A02:Landroid/widget/TextView;
++
++    const/16 v0, 0x8
++
++    invoke-virtual {v1, v0}, Landroid/view/View;->sendAccessibilityEvent(I)V
++
++    :cond_0
++    return-void
++.end method
++
++.method public A0K(Landroid/view/View;)V
++    .locals 6
++
++    .line 482705
++    invoke-super {p0, p1}, LX/2xx;->A0K(Landroid/view/View;)V
++
++    .line 482706
++    invoke-virtual {p0}, LX/2y0;->A0Q()LX/3yW;
++
++    move-result-object v3
++
++    .line 482707
++    iget-object v5, v3, LX/2yQ;->A08:Landroid/view/ViewGroup;
++
++    .line 482708
++    invoke-virtual {v5}, Landroid/view/View;->getPaddingLeft()I
++
++    move-result v2
++
++    iget-object v0, v3, LX/2yQ;->A08:Landroid/view/ViewGroup;
++
++    .line 482709
++    invoke-virtual {v0}, Landroid/view/View;->getPaddingTop()I
++
++    move-result v1
++
++    iget-object v0, v3, LX/2yQ;->A08:Landroid/view/ViewGroup;
++
++    .line 482710
++    invoke-virtual {v0}, Landroid/view/View;->getPaddingRight()I
++
++    move-result v0
++
++    const/4 v4, 0x0
++
++    .line 482711
++    invoke-virtual {v5, v2, v1, v0, v4}, Landroid/view/View;->setPadding(IIII)V
++
++    .line 482712
++    iget-object v1, v3, LX/2yQ;->A06:Landroid/view/View;
++
++    new-instance v0, Lcom/facebook/redex/ViewOnClickCListenerShape0S0101000_I0;
++
++    invoke-direct {v0, p0}, Lcom/facebook/redex/ViewOnClickCListenerShape0S0101000_I0;-><init>(LX/2y0;)V
++
++    invoke-virtual {v1, v0}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    .line 482713
++    iget-object v2, v3, LX/2yQ;->A0A:Landroid/view/ViewGroup;
++
++    const/16 v1, 0x14
++
++    new-instance v0, Lcom/whatsapp/util/ViewOnClickCListenerShape2S0100000_I0_1;
++
++    invoke-direct {v0, p0, v1}, Lcom/whatsapp/util/ViewOnClickCListenerShape2S0100000_I0_1;-><init>(Ljava/lang/Object;I)V
++
++    invoke-virtual {v2, v0}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    .line 482714
++    iget-object v2, v3, LX/3yW;->A00:Landroid/view/View;
++
++    const/16 v1, 0x15
++
++    new-instance v0, Lcom/whatsapp/util/ViewOnClickCListenerShape2S0100000_I0_1;
++
++    invoke-direct {v0, p0, v1}, Lcom/whatsapp/util/ViewOnClickCListenerShape2S0100000_I0_1;-><init>(Ljava/lang/Object;I)V
++
++    invoke-virtual {v2, v0}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++#coocoo
++    invoke-static {v2}, Lcom/coocoo/whatsappdelegate/MyStatusDeleteBtnDelegate;->onViewCreated(Landroid/view/View;)V
++#coocoo
++
++    .line 482715
++    iget-object v2, v3, LX/3yW;->A01:Landroid/view/View;
++
++    const/16 v1, 0x16
++
++    new-instance v0, Lcom/whatsapp/util/ViewOnClickCListenerShape2S0100000_I0_1;
++
++    invoke-direct {v0, p0, v1}, Lcom/whatsapp/util/ViewOnClickCListenerShape2S0100000_I0_1;-><init>(Ljava/lang/Object;I)V
++
++    invoke-virtual {v2, v0}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    .line 482716
++    invoke-virtual {p0}, LX/2y0;->A0R()V
++
++    .line 482717
++    iget-object v2, p0, LX/2xw;->A03:LX/2Ql;
++
++    .line 482718
++    instance-of v0, v2, LX/2p6;
++
++    if-eqz v0, :cond_0
++
++    .line 482719
++    move-object v0, v2
++
++    check-cast v0, LX/2p3;
++
++    invoke-static {v0}, LX/2qX;->A15(LX/2p3;)Z
++
++    move-result v1
++
++    const/4 v0, 0x1
++
++    if-nez v1, :cond_1
++
++    :cond_0
++    const/4 v0, 0x0
++
++    :cond_1
++    iput-boolean v0, p0, LX/2y0;->A01:Z
++
++    if-eqz v0, :cond_3
++
++    .line 482720
++    invoke-virtual {p0, v4}, LX/2xx;->A0O(Z)Z
++
++    .line 482721
++    invoke-virtual {p0}, LX/2xx;->A0I()V
++
++    .line 482722
++    :goto_0
++    invoke-static {v2}, LX/2qX;->A0n(LX/2Ql;)Z
++
++    move-result v0
++
++    if-eqz v0, :cond_2
++
++    .line 482723
++    iget-object v1, v3, LX/2yQ;->A08:Landroid/view/ViewGroup;
++
++    const/16 v0, 0x8
++
++    invoke-virtual {v1, v0}, Landroid/view/View;->setVisibility(I)V
++
++    .line 482724
++    :cond_2
++    iget-object v1, p0, LX/2y0;->A0C:LX/2SF;
++
++    iget-object v0, p0, LX/2y0;->A0B:LX/2UR;
++
++    invoke-virtual {v1, v0}, LX/2SH;->A04(Ljava/lang/Object;)V
++
++    return-void
++
++    .line 482725
++    :cond_3
++    invoke-virtual {p0}, LX/2xw;->A0P()V
++
++    goto :goto_0
++.end method
++
++.method public A0Q()LX/3yW;
++    .locals 1
++
++    .line 482726
++    iget-object v0, p0, LX/2xx;->A01:LX/2yQ;
++
++    if-nez v0, :cond_0
++
++    .line 482727
++    new-instance v0, LX/3yW;
++
++    invoke-direct {v0}, LX/3yW;-><init>()V
++
++    iput-object v0, p0, LX/2xx;->A01:LX/2yQ;
++
++    .line 482728
++    :cond_0
++    check-cast v0, LX/3yW;
++
++    return-object v0
++.end method
++
++.method public final A0R()V
++    .locals 3
++
++    .line 482729
++    iget-object v1, p0, LX/2y0;->A00:LX/3zo;
++
++    if-eqz v1, :cond_0
++
++    const/4 v0, 0x1
++
++    .line 482730
++    invoke-virtual {v1, v0}, LX/2i2;->A03(Z)V
++
++    .line 482731
++    :cond_0
++    new-instance v2, LX/3zo;
++
++    invoke-direct {v2, p0}, LX/3zo;-><init>(LX/2y0;)V
++
++    iput-object v2, p0, LX/2y0;->A00:LX/3zo;
++
++    .line 482732
++    iget-object v1, p0, LX/2xx;->A0M:LX/2RJ;
++
++    const/4 v0, 0x0
++
++    new-array v0, v0, [Ljava/lang/Void;
++
++    invoke-interface {v1, v2, v0}, LX/2RJ;->AVZ(LX/2i2;[Ljava/lang/Object;)V
++
++    return-void
++.end method
