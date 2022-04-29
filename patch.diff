@@ -80,7 +80,7 @@ index 000000000..7e9307598
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusDeleteBtnDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusDeleteBtnDelegate.kt
 new file mode 100644
-index 000000000..1fd70ffe0
+index 000000000..39af6751d
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusDeleteBtnDelegate.kt
 @@ -0,0 +1,26 @@
@@ -101,7 +101,7 @@ index 000000000..1fd70ffe0
 +        } catch (e: Exception) {
 +            e.printStackTrace()
 +        }
-+        val activity = (btnDelete.context as ContextWrapper).baseContext
++        val activity = ((btnDelete.context as ContextWrapper).baseContext as ContextWrapper).baseContext
 +        Log.d("MyStatusDeleteBtnDelegate", "onViewCreated: $activity")
 +        if (activity is MyStatusHistoryPlaybackActivity) {
 +            btnDelete.setOnClickListener {
