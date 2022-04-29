@@ -80,20 +80,22 @@ index 000000000..7e9307598
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusDeleteBtnDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusDeleteBtnDelegate.kt
 new file mode 100644
-index 000000000..8a54dd42c
+index 000000000..e1773a5bf
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusDeleteBtnDelegate.kt
-@@ -0,0 +1,18 @@
+@@ -0,0 +1,20 @@
 +package com.coocoo.whatsappdelegate
 +
 +import android.view.View
 +import com.coocoo.annotation.SmaliInject
++import com.coocoo.exoplayer2.util.Log
 +import com.coocoo.statuses.myhistory.MyStatusHistoryPlaybackActivity
 +
 +object MyStatusDeleteBtnDelegate {
 +    @SmaliInject
 +    @JvmStatic
 +    fun onViewCreated(btnDelete: View) {
++        Log.d("MyStatusDeleteBtnDelegate", "onViewCreated")
 +        val activity = btnDelete.context
 +        if (activity is MyStatusHistoryPlaybackActivity) {
 +            btnDelete.setOnClickListener {
