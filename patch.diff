@@ -1,52 +1,95 @@
-diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-index 27c23b2d6..30329698c 100644
---- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-+++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-@@ -2,12 +2,14 @@ package com.coocoo.statuses.myhistory
- 
- import X.c1_2Ql
- import X.cc_2Qk
-+import android.database.Cursor
- import android.os.Environment
- import android.util.Log
- import androidx.annotation.WorkerThread
- import com.coocoo.annotation.SmaliInject
- import com.coocoo.db.room.mystatus.MyStatusDatabase
- import com.coocoo.db.room.mystatus.entity.MyStatusHistoryEntity
-+import com.coocoo.fm.yo
- import com.coocoo.utils.Constant
- import com.coocoo.utils.FileUtil
- import java.io.File
-@@ -74,7 +76,8 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
-                 // save to database
-                 val myStatusHistory = MyStatusHistoryEntity(
-                     messageRowId = messageRowId, filePath = copiedFilePath,
--                    timestamp = timestamp, messageType = messageType
-+                    timestamp = timestamp, messageType = messageType,
-+                    viewCount = queryReceiptUsers(c12Ql)
-                 )
-                 database.getMyStatusDao().insertMyStatusHistory(myStatusHistory)
-                 Log.d(
-@@ -86,4 +89,21 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
-             }
-         }
+diff --git a/app/build.gradle b/app/build.gradle
+index 50e40530d..cbf792786 100644
+--- a/app/build.gradle
++++ b/app/build.gradle
+@@ -42,8 +42,8 @@ android {
+ //                || cur_flavor == "YoUnclone"
+ //                || cur_flavor == "GbUnclone"
+ //                || cur_flavor == "WhatsappPlus") {
+-//            rootProject.ext.version_name = '"11.60.0"' // HeyMods
+-//            rootProject.ext.version_code = "1160000" // HeyMods
++            rootProject.ext.version_name = '"9.0.0"' // HeyMods
++            rootProject.ext.version_code = "9000000" // HeyMods
+ //        } else if (cur_flavor == "FM") {
+ //            rootProject.ext.version_name = '"10.1.0"'
+ //            rootProject.ext.version_code = "1001000"
+@@ -84,8 +84,8 @@ android {
+ //            rootProject.ext.version_name = '"0.20.197"'
+ //            rootProject.ext.version_code = "20197"
+ //        }
+-//            rootProject.ext.version_name = '"11.60.0"' // HeyMods
+-//            rootProject.ext.version_code = "1160000" // HeyMods
++            rootProject.ext.version_name = '"9.0.0"' // HeyMods
++            rootProject.ext.version_code = "9000000" // HeyMods
      }
+ 
+     flavorDimensions "version"
+diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.java b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.java
+deleted file mode 100644
+index 5b5720a02..000000000
+--- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.java
++++ /dev/null
+@@ -1,14 +0,0 @@
+-package com.coocoo.statuses.myhistory;
+-
+-import com.coocoowhatsapp.status.playback.StatusPlaybackActivity;
+-
+-import java.util.ArrayList;
+-
+-import static com.coocoo.statuses.myhistory.MyStatusHistoryActivity.KEY_MY_STATUS_HISTORY_INFO_LIST;
+-
+-public class MyStatusHistoryPlaybackActivity extends StatusPlaybackActivity {
+-
+-    public ArrayList<MyStatusHistoryInfo> getMyStatusHistoryInfoList() {
+-        return getIntent().getParcelableArrayListExtra(KEY_MY_STATUS_HISTORY_INFO_LIST);
+-    }
+-}
+diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt
+new file mode 100644
+index 000000000..563f6b49a
+--- /dev/null
++++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt
+@@ -0,0 +1,31 @@
++package com.coocoo.statuses.myhistory
 +
-+    private fun queryReceiptUsers(c12Ql: c1_2Ql): Int {
-+        var count = 0
-+        val msgRowIds = arrayOf(c12Ql.A0y.toString())
-+        val query = "SELECT read_timestamp FROM receipt_user WHERE message_row_id=?"
-+        val db = yo.sql.readableDatabase
-+        val cursor = db.rawQuery(query, msgRowIds)
-+        val indexReadTimestamp = cursor.getColumnIndexOrThrow("read_timestamp")
-+        while (cursor.moveToNext()) {
-+            val timestamp = cursor.getLong(indexReadTimestamp)
-+            if (timestamp > 0L) {
-+                count++
-+            }
++import android.os.Bundle
++import android.view.View
++import android.widget.ImageView
++import com.coocoowhatsapp.status.playback.StatusPlaybackActivity
++import com.coocoo.utils.ResMgr
++import com.coocoo.widget.CoocooAlertDialog
++import com.coocoo.statuses.myhistory.MyStatusHistoryInfo
++import com.coocoo.statuses.myhistory.MyStatusHistoryActivity
++import com.coocoo.utils.safelyShow
++import java.util.ArrayList
++
++class MyStatusHistoryPlaybackActivity : StatusPlaybackActivity() {
++
++    override fun onCreate(savedInstanceState: Bundle?) {
++        super.onCreate(savedInstanceState)
++        val btnDelete = findViewById<ImageView>(ResMgr.getId("delete"))
++        btnDelete.setOnClickListener {
++            CoocooAlertDialog(this,
++                title = ResMgr.getString("cc_my_status_delete_now"),
++                message = ResMgr.getString("cc_my_status_delete_now_message"),
++                onConfirmClicked = {},
++                onCancelClicked = {}
++            ).safelyShow()
 +        }
-+        cursor.close()
-+        return count
 +    }
- }
++
++    val myStatusHistoryInfoList: ArrayList<MyStatusHistoryInfo>
++        get() = intent.getParcelableArrayListExtra(MyStatusHistoryActivity.KEY_MY_STATUS_HISTORY_INFO_LIST)
++}
 \ No newline at end of file
+diff --git a/app/src/main/res/values/cc_strings.xml b/app/src/main/res/values/cc_strings.xml
+index bc6b31d81..be30bebe7 100644
+--- a/app/src/main/res/values/cc_strings.xml
++++ b/app/src/main/res/values/cc_strings.xml
+@@ -1287,4 +1287,6 @@ Our official Website: http://heymods.com"</string>
+     <!-- MyStatus History -->
+     <string name="cc_my_status_menu_history_title">History Status</string>
+     <string name="cc_my_status_menu_history_hint_msg">Your status will be saved as "History Status" after 24 hours.</string>
++    <string name="cc_my_status_delete_now">Delete Now?</string>
++    <string name="cc_my_status_delete_now_message">Are you sure to delete the status now?</string>
+ </resources>
