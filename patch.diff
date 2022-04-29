@@ -154,7 +154,7 @@ index bc6b31d81..be30bebe7 100644
 +    <string name="cc_my_status_delete_now_message">Are you sure to delete the status now?</string>
  </resources>
 diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/status/playback/fragment/StatusPlaybackContactFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/status/playback/fragment/StatusPlaybackContactFragment.smali
-index c755c5ec2..ae23b98fe 100644
+index c755c5ec2..d9133da71 100644
 --- a/whatsapp_modify_module/smali/com/coocoowhatsapp/status/playback/fragment/StatusPlaybackContactFragment.smali
 +++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/status/playback/fragment/StatusPlaybackContactFragment.smali
 @@ -1257,6 +1257,11 @@
@@ -162,7 +162,7 @@ index c755c5ec2..ae23b98fe 100644
      .line 444385
      invoke-virtual {v2, v0}, LX/2xx;->A0K(Landroid/view/View;)V
 +#coocoo
-+    iget-object v16, v6, Lcom/coocoowhatsapp/status/playback/fragment/StatusPlaybackContactFragment;->statusPlaybackContactFragmentDelegate:Lcom/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate;
++    iget-object v15, v6, Lcom/coocoowhatsapp/status/playback/fragment/StatusPlaybackContactFragment;->statusPlaybackContactFragmentDelegate:Lcom/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate;
 +
 +    invoke-virtual {v15, v0}, Lcom/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate;->onPageViewCreated(Landroid/view/View;)V
 +#coocoo
