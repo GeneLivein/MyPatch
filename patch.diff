@@ -80,12 +80,13 @@ index 000000000..7e9307598
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusDeleteBtnDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusDeleteBtnDelegate.kt
 new file mode 100644
-index 000000000..dbd71df4f
+index 000000000..eb1281027
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusDeleteBtnDelegate.kt
-@@ -0,0 +1,25 @@
+@@ -0,0 +1,26 @@
 +package com.coocoo.whatsappdelegate
 +
++import android.content.ContextWrapper
 +import android.view.View
 +import com.coocoo.annotation.SmaliInject
 +import com.coocoo.exoplayer2.util.Log
@@ -101,7 +102,7 @@ index 000000000..dbd71df4f
 +            e.printStackTrace()
 +        }
 +        Log.d("MyStatusDeleteBtnDelegate", "onViewCreated: ${btnDelete.context}")
-+        val activity = btnDelete.context
++        val activity = (btnDelete.context as ContextWrapper).baseContext
 +        if (activity is MyStatusHistoryPlaybackActivity) {
 +            btnDelete.setOnClickListener {
 +                activity.showConfirmDeleteDialog()
@@ -110,6 +111,22 @@ index 000000000..dbd71df4f
 +    }
 +}
 \ No newline at end of file
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java
+index 7a94651c5..c5fa01209 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java
+@@ -298,6 +298,11 @@ public class StatusPlaybackContactFragmentDelegate implements ILaunchInstallActi
+         }
+     }
+ 
++    @SmaliInject
++    public void onPageChanged() {
++
++    }
++
+     @Override
+     public void startInstallActivity(@NotNull InstallTag installTag,
+                                      @NotNull File apkFile,
 diff --git a/app/src/main/res/values/cc_strings.xml b/app/src/main/res/values/cc_strings.xml
 index bc6b31d81..be30bebe7 100644
 --- a/app/src/main/res/values/cc_strings.xml
