@@ -153,28 +153,40 @@ index 000000000..5ffb54548
 +    </group>
 +</vector>
 diff --git a/app/src/main/res/layout/cc_activity_history_status.xml b/app/src/main/res/layout/cc_activity_history_status.xml
-index dd9208d96..e02e1e41a 100644
+index dd9208d96..e485a97df 100644
 --- a/app/src/main/res/layout/cc_activity_history_status.xml
 +++ b/app/src/main/res/layout/cc_activity_history_status.xml
 @@ -1,6 +1,7 @@
  <?xml version="1.0" encoding="utf-8"?>
 -<LinearLayout
-+<FrameLayout
++<androidx.constraintlayout.widget.ConstraintLayout
      xmlns:android="http://schemas.android.com/apk/res/android"
 +    xmlns:app="http://schemas.android.com/apk/res-auto"
      android:orientation="vertical"
      android:layout_width="match_parent"
      android:layout_height="match_parent">
-@@ -27,10 +28,30 @@
+@@ -10,7 +11,8 @@
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         style="@style/Theme.App.Toolbar"
+-        android:background="?colorPrimary">
++        android:background="?colorPrimary"
++        app:layout_constraintTop_toTopOf="parent">
+ 
+         <ImageView
+             android:id="@+id/cc_back"
+@@ -27,10 +29,34 @@
  
      </androidx.appcompat.widget.Toolbar>
  
 +    <LinearLayout
 +        android:id="@+id/cc_empty"
 +        android:layout_width="match_parent"
-+        android:layout_height="match_parent"
++        android:layout_height="0dp"
 +        android:gravity="center"
-+        android:orientation="vertical">
++        android:orientation="vertical"
++        app:layout_constraintBottom_toBottomOf="parent"
++        app:layout_constraintTop_toBottomOf="@+id/top_toolbar">
 +        <ImageView
 +            android:layout_width="48dp"
 +            android:layout_height="48dp"
@@ -192,12 +204,16 @@ index dd9208d96..e02e1e41a 100644
      <GridView
          android:id="@+id/cc_grid_view"
          android:layout_width="match_parent"
-         android:layout_height="match_parent"
-         android:numColumns="2"/>
+-        android:layout_height="match_parent"
+-        android:numColumns="2"/>
++        android:layout_height="0dp"
++        android:numColumns="2"
++        app:layout_constraintBottom_toBottomOf="parent"
++        app:layout_constraintTop_toBottomOf="@+id/top_toolbar"/>
  
 -</LinearLayout>
 \ No newline at end of file
-+</FrameLayout>
++</androidx.constraintlayout.widget.ConstraintLayout>
 \ No newline at end of file
 diff --git a/app/src/main/res/values/cc_strings.xml b/app/src/main/res/values/cc_strings.xml
 index be30bebe7..cee98f2c3 100644
