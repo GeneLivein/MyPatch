@@ -67,7 +67,7 @@ index fa29b64e9..a396f5e3a 100644
          }
      }
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-index 30329698c..5708c142d 100644
+index 30329698c..a5811e697 100644
 --- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
 @@ -2,16 +2,21 @@ package com.coocoo.statuses.myhistory
@@ -93,7 +93,7 @@ index 30329698c..5708c142d 100644
  import java.io.File
  
  class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
-@@ -29,21 +34,37 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
+@@ -29,21 +34,35 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
          const val MEDIA_TYPE_PHOTO = 1
      }
  
@@ -125,9 +125,7 @@ index 30329698c..5708c142d 100644
 +    }
 +
 +    private suspend fun updateMyStatusHistoryInfoList(liveData: CCMutableLiveData<List<MyStatusHistoryEntity>>) {
-+        liveData.value = database.getMyStatusDao().getMyStatusHistoryEntities().also {
-+            Log.d("Gene", "updateMyStatusHistoryInfoList ${it.size}")
-+        }
++        liveData.value = database.getMyStatusDao().getMyStatusHistoryEntities()
 +    }
  
 -        return statusList
@@ -200,16 +198,17 @@ index 000000000..bcb7ad35d
 +}
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt
-index 25cc5a6be..0aa935d4e 100644
+index 25cc5a6be..cf625af02 100644
 --- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt
-@@ -2,14 +2,14 @@ package com.coocoo.statuses.myhistory
+@@ -2,14 +2,16 @@ package com.coocoo.statuses.myhistory
  
  import androidx.lifecycle.*
  import com.coocoo.coocoo.Coocoo
 -import kotlinx.coroutines.Dispatchers
 -import kotlinx.coroutines.launch
 -import kotlinx.coroutines.withContext
++import com.coocoo.exoplayer2.util.Log
  
 -class MyStatusHistoryViewModel(private val repo: MyStatusHistoryListRepository) : CCViewModel() {
 +class MyStatusHistoryViewModel(val repo: MyStatusHistoryListRepository) : CCViewModel() {
@@ -219,12 +218,13 @@ index 25cc5a6be..0aa935d4e 100644
 +    val statusList: CCLiveData<List<MyStatusHistoryInfo>> get() = repo.getMyStatusHistoryInfoList()
 +
 +    fun getCurrentMyStatusHistoryInfoList(): List<MyStatusHistoryInfo> {
++        Log.d("Gene", "getCurrentMyStatusHistoryInfoList ${statusList.value?.size}")
 +        return statusList.value ?: emptyList()
 +    }
  
      @Suppress("UNCHECKED_CAST")
      class Factory : CCViewModelProvider.Factory {
-@@ -18,16 +18,4 @@ class MyStatusHistoryViewModel(private val repo: MyStatusHistoryListRepository)
+@@ -18,16 +20,4 @@ class MyStatusHistoryViewModel(private val repo: MyStatusHistoryListRepository)
              return MyStatusHistoryViewModel(container.myStatusHistoryListRepo) as T
          }
      }
