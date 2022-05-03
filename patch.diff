@@ -25,7 +25,7 @@ index 50e40530d..cbf792786 100644
  
      flavorDimensions "version"
 diff --git a/app/src/main/java/com/coocoo/db/room/mystatus/dao/MyStatusDao.kt b/app/src/main/java/com/coocoo/db/room/mystatus/dao/MyStatusDao.kt
-index 694dfb2f1..92e26ecf2 100644
+index 694dfb2f1..1c200fa49 100644
 --- a/app/src/main/java/com/coocoo/db/room/mystatus/dao/MyStatusDao.kt
 +++ b/app/src/main/java/com/coocoo/db/room/mystatus/dao/MyStatusDao.kt
 @@ -1,5 +1,7 @@
@@ -41,7 +41,7 @@ index 694dfb2f1..92e26ecf2 100644
      fun getMyStatusHistoryEntities(): List<MyStatusHistoryEntity>
  
 +    @Query("SELECT * FROM my_status_history")
-+    fun getMyStatusHistoryEntities2(): CCLiveData<List<MyStatusHistoryEntity>>
++    fun getMyStatusHistoryEntities2(): LiveData<List<MyStatusHistoryEntity>>
 +
      @Query("DELETE FROM my_status_history WHERE message_row_id = :messageRowId")
      fun deleteMyStatusHistory(messageRowId: Long)
