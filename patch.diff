@@ -198,33 +198,38 @@ index 000000000..bcb7ad35d
 +}
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt
-index 25cc5a6be..cf625af02 100644
+index 25cc5a6be..d6c51afe9 100644
 --- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt
-@@ -2,14 +2,16 @@ package com.coocoo.statuses.myhistory
+@@ -2,14 +2,21 @@ package com.coocoo.statuses.myhistory
  
  import androidx.lifecycle.*
  import com.coocoo.coocoo.Coocoo
 -import kotlinx.coroutines.Dispatchers
 -import kotlinx.coroutines.launch
 -import kotlinx.coroutines.withContext
-+import com.coocoo.exoplayer2.util.Log
  
 -class MyStatusHistoryViewModel(private val repo: MyStatusHistoryListRepository) : CCViewModel() {
 +class MyStatusHistoryViewModel(val repo: MyStatusHistoryListRepository) : CCViewModel() {
  
 -    private val _statusListLive: CCMutableLiveData<List<MyStatusHistoryInfo>> = CCMutableLiveData<List<MyStatusHistoryInfo>>()
 -    val statusList: CCLiveData<List<MyStatusHistoryInfo>> get() = _statusListLive
-+    val statusList: CCLiveData<List<MyStatusHistoryInfo>> get() = repo.getMyStatusHistoryInfoList()
++    private val _statusList: CCMediatorLiveData<List<MyStatusHistoryInfo>> = CCMediatorLiveData()
++    val statusList: CCLiveData<List<MyStatusHistoryInfo>> get() = _statusList
++
++    init {
++        _statusList.addSource(repo.getMyStatusHistoryInfoList()) {
++            _statusList.value = it
++        }
++    }
 +
 +    fun getCurrentMyStatusHistoryInfoList(): List<MyStatusHistoryInfo> {
-+        Log.d("Gene", "getCurrentMyStatusHistoryInfoList ${statusList.value?.size}")
-+        return statusList.value ?: emptyList()
++        return _statusList.value ?: emptyList()
 +    }
  
      @Suppress("UNCHECKED_CAST")
      class Factory : CCViewModelProvider.Factory {
-@@ -18,16 +20,4 @@ class MyStatusHistoryViewModel(private val repo: MyStatusHistoryListRepository)
+@@ -18,16 +25,4 @@ class MyStatusHistoryViewModel(private val repo: MyStatusHistoryListRepository)
              return MyStatusHistoryViewModel(container.myStatusHistoryListRepo) as T
          }
      }
