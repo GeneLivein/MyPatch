@@ -26,10 +26,10 @@ index 50e40530d..cbf792786 100644
      flavorDimensions "version"
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.java b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.java
 deleted file mode 100644
-index 5b5720a02..000000000
+index 1527c50ea..000000000
 --- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.java
 +++ /dev/null
-@@ -1,14 +0,0 @@
+@@ -1,19 +0,0 @@
 -package com.coocoo.statuses.myhistory;
 -
 -import com.coocoowhatsapp.status.playback.StatusPlaybackActivity;
@@ -37,36 +37,41 @@ index 5b5720a02..000000000
 -import java.util.ArrayList;
 -
 -import static com.coocoo.statuses.myhistory.MyStatusHistoryActivity.KEY_MY_STATUS_HISTORY_INFO_LIST;
+-import static com.coocoo.statuses.myhistory.MyStatusHistoryActivity.KEY_MY_STATUS_START_POSITION;
 -
 -public class MyStatusHistoryPlaybackActivity extends StatusPlaybackActivity {
 -
 -    public ArrayList<MyStatusHistoryInfo> getMyStatusHistoryInfoList() {
 -        return getIntent().getParcelableArrayListExtra(KEY_MY_STATUS_HISTORY_INFO_LIST);
 -    }
+-
+-    public int getStatusStartPosition() {
+-        return getIntent().getIntExtra(KEY_MY_STATUS_START_POSITION, 0);
+-    }
 -}
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt
 new file mode 100644
-index 000000000..7e9307598
+index 000000000..2ad159790
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt
 @@ -0,0 +1,27 @@
 +package com.coocoo.statuses.myhistory
 +
-+import android.os.Bundle
-+import android.view.View
-+import android.widget.ImageView
 +import com.coocoowhatsapp.status.playback.StatusPlaybackActivity
-+import com.coocoo.utils.ResMgr
-+import com.coocoo.widget.CoocooAlertDialog
 +import com.coocoo.statuses.myhistory.MyStatusHistoryInfo
 +import com.coocoo.statuses.myhistory.MyStatusHistoryActivity
++import com.coocoo.utils.ResMgr
 +import com.coocoo.utils.safelyShow
++import com.coocoo.widget.CoocooAlertDialog
 +import java.util.ArrayList
 +
 +class MyStatusHistoryPlaybackActivity : StatusPlaybackActivity() {
 +
 +    val myStatusHistoryInfoList: ArrayList<MyStatusHistoryInfo>
 +        get() = intent.getParcelableArrayListExtra(MyStatusHistoryActivity.KEY_MY_STATUS_HISTORY_INFO_LIST)
++
++    val statusStartPosition: Int
++        get() = intent.getIntExtra(MyStatusHistoryActivity.KEY_MY_STATUS_START_POSITION, 0)
 +
 +    fun showConfirmDeleteDialog() {
 +        CoocooAlertDialog(this,
@@ -78,41 +83,8 @@ index 000000000..7e9307598
 +    }
 +}
 \ No newline at end of file
-diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusDeleteBtnDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusDeleteBtnDelegate.kt
-new file mode 100644
-index 000000000..a1b1fc30a
---- /dev/null
-+++ b/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusDeleteBtnDelegate.kt
-@@ -0,0 +1,26 @@
-+package com.coocoo.whatsappdelegate
-+
-+import android.app.Activity
-+import android.content.ContextWrapper
-+import android.view.View
-+import com.coocoo.annotation.SmaliInject
-+import com.coocoo.exoplayer2.util.Log
-+import com.coocoo.statuses.myhistory.MyStatusHistoryPlaybackActivity
-+
-+object MyStatusDeleteBtnDelegate {
-+    @SmaliInject
-+    @JvmStatic
-+    fun onViewCreated(btnDelete: View) {
-+
-+        var activity = btnDelete.context
-+        while (activity is ContextWrapper) {
-+           activity = activity.baseContext
-+        }
-+        Log.d("MyStatusDeleteBtnDelegate", "onViewCreated: $activity")
-+        if (activity is MyStatusHistoryPlaybackActivity) {
-+            btnDelete.setOnClickListener {
-+                activity.showConfirmDeleteDialog()
-+            }
-+        }
-+    }
-+}
-\ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java
-index 7a94651c5..e42b4d957 100644
+index eb6dafbb1..758dd55e8 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java
 @@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
@@ -123,7 +95,7 @@ index 7a94651c5..e42b4d957 100644
  import com.coocoo.firebase.remoteConfig.RemoteConfig;
  import com.coocoo.fm.yo;
  import com.coocoo.highlight.AbsFunction;
-@@ -298,6 +299,18 @@ public class StatusPlaybackContactFragmentDelegate implements ILaunchInstallActi
+@@ -298,6 +299,20 @@ public class StatusPlaybackContactFragmentDelegate implements ILaunchInstallActi
          }
      }
  
@@ -133,9 +105,11 @@ index 7a94651c5..e42b4d957 100644
 +        Log.d("StatusPlaybackContactFragmentDelegate", "activity" + activity);
 +        if (activity instanceof MyStatusHistoryPlaybackActivity) {
 +            ImageView btnDelete = view.findViewById(ResMgr.getId("delete"));
-+            btnDelete.setOnClickListener((v) -> {
-+                ((MyStatusHistoryPlaybackActivity) activity).showConfirmDeleteDialog();
-+            });
++            if (btnDelete != null) {
++                btnDelete.setOnClickListener((v) -> {
++                    ((MyStatusHistoryPlaybackActivity) activity).showConfirmDeleteDialog();
++                });
++            }
 +        }
 +    }
 +
