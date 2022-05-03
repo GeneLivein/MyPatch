@@ -38,10 +38,10 @@ index fa29b64e9..56c21decf 100644
  
      private fun bindView() {
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-index 30329698c..0b1e577f9 100644
+index 30329698c..3b7b8d893 100644
 --- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-@@ -2,16 +2,20 @@ package com.coocoo.statuses.myhistory
+@@ -2,16 +2,22 @@ package com.coocoo.statuses.myhistory
  
  import X.c1_2Ql
  import X.cc_2Qk
@@ -59,11 +59,13 @@ index 30329698c..0b1e577f9 100644
  import com.coocoo.utils.Constant
  import com.coocoo.utils.FileUtil
 +import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.GlobalScope
++import kotlinx.coroutines.launch
 +import kotlinx.coroutines.withContext
  import java.io.File
  
  class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
-@@ -29,21 +33,32 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
+@@ -29,21 +35,34 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
          const val MEDIA_TYPE_PHOTO = 1
      }
  
@@ -75,7 +77,9 @@ index 30329698c..0b1e577f9 100644
 -        myStatusHistoryEntities.forEach { myStatusHistoryEntity ->
 -            statusList.add(
 +    fun getMyStatusHistoryInfoList(): CCLiveData<List<MyStatusHistoryInfo>> {
-+        updateMyStatusHistoryInfoList(_statusList)
++        GlobalScope.launch {
++            updateMyStatusHistoryInfoList(_statusList)
++        }
 +        return CCTransformations.map(_statusList) { list ->
 +            list.map { myStatusHistoryEntity ->
                  MyStatusHistoryInfo(
@@ -90,7 +94,7 @@ index 30329698c..0b1e577f9 100644
 +    }
  
 -        return statusList
-+    private fun updateMyStatusHistoryInfoList(liveData: CCMutableLiveData<List<MyStatusHistoryEntity>>) {
++    private suspend fun updateMyStatusHistoryInfoList(liveData: CCMutableLiveData<List<MyStatusHistoryEntity>>) = withContext(Dispatchers.IO) {
 +        liveData.value = database.getMyStatusDao().getMyStatusHistoryEntities()
 +    }
 +
