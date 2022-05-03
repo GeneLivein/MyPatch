@@ -25,7 +25,7 @@ index 50e40530d..cbf792786 100644
  
      flavorDimensions "version"
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
-index a284cb808..42d69811a 100644
+index a284cb808..4599493c3 100644
 --- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
 @@ -26,20 +26,17 @@ class MyStatusHistoryActivity : CCBaseActivity(), AdapterView.OnItemClickListene
@@ -56,7 +56,7 @@ index a284cb808..42d69811a 100644
  
          bindView()
      }
-@@ -49,6 +46,23 @@ class MyStatusHistoryActivity : CCBaseActivity(), AdapterView.OnItemClickListene
+@@ -49,6 +46,25 @@ class MyStatusHistoryActivity : CCBaseActivity(), AdapterView.OnItemClickListene
              statusGridAdapter.clear()
              statusGridAdapter.addAll(it)
          }
@@ -64,8 +64,10 @@ index a284cb808..42d69811a 100644
 +        viewModel.isShownEmptyView.observe(lifecycleOwner) { isShown ->
 +            if (isShown) {
 +                emptyView.visibility = View.VISIBLE
++                gridView.visibility = View.INVISIBLE
 +            } else {
-+                emptyView.visibility = View.VISIBLE
++                emptyView.visibility = View.INVISIBLE
++                gridView.visibility = View.VISIBLE
 +            }
 +        }
 +
