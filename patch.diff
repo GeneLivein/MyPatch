@@ -54,10 +54,10 @@ index fa29b64e9..56c21decf 100644
  
      private fun bindView() {
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-index 30329698c..d05a9757a 100644
+index 30329698c..0ff1a6b2d 100644
 --- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-@@ -2,16 +2,22 @@ package com.coocoo.statuses.myhistory
+@@ -2,16 +2,23 @@ package com.coocoo.statuses.myhistory
  
  import X.c1_2Ql
  import X.cc_2Qk
@@ -74,6 +74,7 @@ index 30329698c..d05a9757a 100644
  import com.coocoo.fm.yo
  import com.coocoo.utils.Constant
  import com.coocoo.utils.FileUtil
++import com.coocoo.utils.LogUtil
 +import kotlinx.coroutines.Dispatchers
 +import kotlinx.coroutines.GlobalScope
 +import kotlinx.coroutines.launch
@@ -81,7 +82,7 @@ index 30329698c..d05a9757a 100644
  import java.io.File
  
  class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
-@@ -29,21 +35,32 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
+@@ -29,21 +36,34 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
          const val MEDIA_TYPE_PHOTO = 1
      }
  
@@ -106,11 +107,13 @@ index 30329698c..d05a9757a 100644
 -                    myStatusHistoryEntity.messageType))
 +                    myStatusHistoryEntity.messageType)
 +            }
-         }
++        }
 +    }
 +
 +    private suspend fun updateMyStatusHistoryInfoList(liveData: CCMutableLiveData<List<MyStatusHistoryEntity>>) {
-+        liveData.value = database.getMyStatusDao().getMyStatusHistoryEntities()
++        liveData.value = database.getMyStatusDao().getMyStatusHistoryEntities().also {
++            LogUtil.d("updateMyStatusHistoryInfoList $it")
+         }
 +    }
  
 -        return statusList
@@ -183,34 +186,31 @@ index 000000000..bcb7ad35d
 +}
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt
-index 25cc5a6be..7618e4870 100644
+index 25cc5a6be..0aa935d4e 100644
 --- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt
-@@ -6,11 +6,21 @@ import kotlinx.coroutines.Dispatchers
- import kotlinx.coroutines.launch
- import kotlinx.coroutines.withContext
+@@ -2,14 +2,14 @@ package com.coocoo.statuses.myhistory
+ 
+ import androidx.lifecycle.*
+ import com.coocoo.coocoo.Coocoo
+-import kotlinx.coroutines.Dispatchers
+-import kotlinx.coroutines.launch
+-import kotlinx.coroutines.withContext
  
 -class MyStatusHistoryViewModel(private val repo: MyStatusHistoryListRepository) : CCViewModel() {
-+class MyStatusHistoryViewModel(repo: MyStatusHistoryListRepository) : CCViewModel() {
++class MyStatusHistoryViewModel(val repo: MyStatusHistoryListRepository) : CCViewModel() {
  
 -    private val _statusListLive: CCMutableLiveData<List<MyStatusHistoryInfo>> = CCMutableLiveData<List<MyStatusHistoryInfo>>()
-+    private val _statusListLive: CCMediatorLiveData<List<MyStatusHistoryInfo>> = CCMediatorLiveData()
-     val statusList: CCLiveData<List<MyStatusHistoryInfo>> get() = _statusListLive
- 
-+    init {
-+        _statusListLive.addSource(repo.getMyStatusHistoryInfoList()) {
-+            _statusListLive.value = it
-+        }
-+    }
+-    val statusList: CCLiveData<List<MyStatusHistoryInfo>> get() = _statusListLive
++    val statusList: CCLiveData<List<MyStatusHistoryInfo>> get() = repo.getMyStatusHistoryInfoList()
 +
 +    fun getCurrentMyStatusHistoryInfoList(): List<MyStatusHistoryInfo> {
-+        return _statusListLive.value ?: emptyList()
++        return statusList.value ?: emptyList()
 +    }
-+
+ 
      @Suppress("UNCHECKED_CAST")
      class Factory : CCViewModelProvider.Factory {
-         override fun <T : CCViewModel?> create(p0: Class<T>): T {
-@@ -18,16 +28,4 @@ class MyStatusHistoryViewModel(private val repo: MyStatusHistoryListRepository)
+@@ -18,16 +18,4 @@ class MyStatusHistoryViewModel(private val repo: MyStatusHistoryListRepository)
              return MyStatusHistoryViewModel(container.myStatusHistoryListRepo) as T
          }
      }
