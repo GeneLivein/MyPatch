@@ -25,33 +25,45 @@ index 50e40530d..cbf792786 100644
  
      flavorDimensions "version"
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-index 30329698c..596931744 100644
+index 30329698c..49d264763 100644
 --- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-@@ -46,6 +46,11 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
+@@ -12,6 +12,8 @@ import com.coocoo.db.room.mystatus.entity.MyStatusHistoryEntity
+ import com.coocoo.fm.yo
+ import com.coocoo.utils.Constant
+ import com.coocoo.utils.FileUtil
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.withContext
+ import java.io.File
+ 
+ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
+@@ -46,6 +48,13 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
          return statusList
      }
  
-+    fun deleteStatus(messageRowId: Long) {
++    suspend fun deleteStatus(messageRowId: Long) {
 +        val dao = database.getMyStatusDao()
-+        dao.deleteMyStatusHistory(messageRowId)
++        withContext(Dispatchers.IO) {
++            dao.deleteMyStatusHistory(messageRowId)
++        }
 +    }
 +
      @SmaliInject
      @WorkerThread
      fun onMyStatusHistoryDelete(c12Ql: c1_2Ql) {
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt
-index 2ad159790..2b18ad9c2 100644
+index 2ad159790..494a590ee 100644
 --- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt
-@@ -1,5 +1,6 @@
+@@ -1,5 +1,7 @@
  package com.coocoo.statuses.myhistory
  
 +import X.c1_2Ql
++import androidx.lifecycle.CCViewModelProvider
  import com.coocoowhatsapp.status.playback.StatusPlaybackActivity
  import com.coocoo.statuses.myhistory.MyStatusHistoryInfo
  import com.coocoo.statuses.myhistory.MyStatusHistoryActivity
-@@ -10,17 +11,22 @@ import java.util.ArrayList
+@@ -10,17 +12,22 @@ import java.util.ArrayList
  
  class MyStatusHistoryPlaybackActivity : StatusPlaybackActivity() {
  
@@ -78,21 +90,26 @@ index 2ad159790..2b18ad9c2 100644
      }
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackViewModel.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackViewModel.kt
 new file mode 100644
-index 000000000..b4a382290
+index 000000000..452048d5e
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackViewModel.kt
-@@ -0,0 +1,13 @@
+@@ -0,0 +1,18 @@
 +package com.coocoo.statuses.myhistory
 +
 +import X.c1_2Ql
 +import com.coocoo.coocoo.Coocoo
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.GlobalScope
++import kotlinx.coroutines.launch
 +
 +class MyStatusHistoryPlaybackViewModel(
 +    private val repo: MyStatusHistoryListRepository = Coocoo.getRepoContainer().myStatusHistoryListRepo
 +) {
 +
 +    fun deleteStatus(c12Ql: c1_2Ql) {
-+        repo.deleteStatus(c12Ql.A0y)
++        GlobalScope.launch {
++            repo.deleteStatus(c12Ql.A0y)
++        }
 +    }
 +}
 \ No newline at end of file
