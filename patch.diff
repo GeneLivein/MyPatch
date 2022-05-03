@@ -175,14 +175,15 @@ index 2ad159790..494a590ee 100644
      }
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackViewModel.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackViewModel.kt
 new file mode 100644
-index 000000000..bcb7ad35d
+index 000000000..a566a2ac1
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackViewModel.kt
-@@ -0,0 +1,17 @@
+@@ -0,0 +1,18 @@
 +package com.coocoo.statuses.myhistory
 +
 +import X.c1_2Ql
 +import com.coocoo.coocoo.Coocoo
++import kotlinx.coroutines.Dispatchers
 +import kotlinx.coroutines.GlobalScope
 +import kotlinx.coroutines.launch
 +
@@ -191,7 +192,7 @@ index 000000000..bcb7ad35d
 +) {
 +
 +    fun deleteStatus(c12Ql: c1_2Ql) {
-+        GlobalScope.launch {
++        GlobalScope.launch(Dispatchers.Main) {
 +            repo.deleteStatus(c12Ql.A0y)
 +        }
 +    }
