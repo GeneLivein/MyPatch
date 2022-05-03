@@ -41,7 +41,7 @@ index 694dfb2f1..6ab0c8329 100644
  }
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
-index fa29b64e9..2ec9b7a8e 100644
+index fa29b64e9..a396f5e3a 100644
 --- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
 @@ -11,6 +11,7 @@ import android.widget.*
@@ -62,15 +62,15 @@ index fa29b64e9..2ec9b7a8e 100644
  
      private fun bindView() {
          viewModel.statusList.observe(lifecycleOwner) {
-+            Log.d("Gene", "statusList.observe $it")
++            Log.d("Gene", "statusList.observe ${it.size}")
              statusGridAdapter.addAll(it)
          }
      }
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-index 30329698c..bf7142313 100644
+index 30329698c..0fcd79ab6 100644
 --- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-@@ -2,16 +2,24 @@ package com.coocoo.statuses.myhistory
+@@ -2,16 +2,21 @@ package com.coocoo.statuses.myhistory
  
  import X.c1_2Ql
  import X.cc_2Qk
@@ -87,16 +87,13 @@ index 30329698c..bf7142313 100644
  import com.coocoo.fm.yo
  import com.coocoo.utils.Constant
  import com.coocoo.utils.FileUtil
-+import com.coocoo.utils.LogUtil
-+import io.reactivex.exceptions.Exceptions
 +import kotlinx.coroutines.Dispatchers
 +import kotlinx.coroutines.GlobalScope
 +import kotlinx.coroutines.launch
-+import kotlinx.coroutines.withContext
  import java.io.File
  
  class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
-@@ -29,21 +37,39 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
+@@ -29,21 +34,39 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
          const val MEDIA_TYPE_PHOTO = 1
      }
  
@@ -131,7 +128,7 @@ index 30329698c..bf7142313 100644
 +
 +    private suspend fun updateMyStatusHistoryInfoList(liveData: CCMutableLiveData<List<MyStatusHistoryEntity>>) {
 +        liveData.value = database.getMyStatusDao().getMyStatusHistoryEntities().also {
-+            Log.d("Gene", "updateMyStatusHistoryInfoList $it")
++            Log.d("Gene", "updateMyStatusHistoryInfoList ${it.size}")
 +        }
 +    }
  
