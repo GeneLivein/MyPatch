@@ -67,7 +67,7 @@ index fa29b64e9..a396f5e3a 100644
          }
      }
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-index 30329698c..0fcd79ab6 100644
+index 30329698c..27f72b700 100644
 --- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
 @@ -2,16 +2,21 @@ package com.coocoo.statuses.myhistory
@@ -93,26 +93,22 @@ index 30329698c..0fcd79ab6 100644
  import java.io.File
  
  class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
-@@ -29,21 +34,39 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
+@@ -29,21 +34,35 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
          const val MEDIA_TYPE_PHOTO = 1
      }
  
 -    fun getMyStatusHistoryInfoList(): List<MyStatusHistoryInfo> {
 -        val myStatusHistoryEntities = database.getMyStatusDao().getMyStatusHistoryEntities()
-+    private val _statusList: CCMutableLiveData<List<MyStatusHistoryEntity>> = CCMutableLiveData()
++    private val _statusList: CCMutableLiveData<List<MyStatusHistoryEntity>> = CCMutableLiveData<List<MyStatusHistoryEntity>>().also {
++        GlobalScope.launch(Dispatchers.Main) {
++            updateMyStatusHistoryInfoList(it)
++        }
++    }
  
 -        val statusList = mutableListOf<MyStatusHistoryInfo>()
 -        myStatusHistoryEntities.forEach { myStatusHistoryEntity ->
 -            statusList.add(
 +    fun getMyStatusHistoryInfoList(): CCLiveData<List<MyStatusHistoryInfo>> {
-+        try {
-+            throw Exception("Gene")
-+        } catch (e: Exception) {
-+            e.printStackTrace()
-+        }
-+        GlobalScope.launch(Dispatchers.Main) {
-+            updateMyStatusHistoryInfoList(_statusList)
-+        }
 +        return CCTransformations.map(_statusList) { list ->
 +            list.map { myStatusHistoryEntity ->
                  MyStatusHistoryInfo(
