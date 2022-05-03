@@ -41,7 +41,7 @@ index 694dfb2f1..6ab0c8329 100644
  }
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
-index fa29b64e9..a396f5e3a 100644
+index fa29b64e9..3b6a0bf1c 100644
 --- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
 @@ -11,6 +11,7 @@ import android.widget.*
@@ -62,7 +62,7 @@ index fa29b64e9..a396f5e3a 100644
  
      private fun bindView() {
          viewModel.statusList.observe(lifecycleOwner) {
-+            Log.d("Gene", "statusList.observe ${it.size}")
++            statusGridAdapter.clear()
              statusGridAdapter.addAll(it)
          }
      }
