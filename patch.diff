@@ -24,6 +24,22 @@ index 50e40530d..cbf792786 100644
      }
  
      flavorDimensions "version"
+diff --git a/app/src/main/java/com/coocoo/db/room/mystatus/dao/MyStatusDao.kt b/app/src/main/java/com/coocoo/db/room/mystatus/dao/MyStatusDao.kt
+index 694dfb2f1..6ab0c8329 100644
+--- a/app/src/main/java/com/coocoo/db/room/mystatus/dao/MyStatusDao.kt
++++ b/app/src/main/java/com/coocoo/db/room/mystatus/dao/MyStatusDao.kt
+@@ -10,8 +10,8 @@ interface MyStatusDao {
+     fun insertMyStatusHistory(vararg myStatusHistoryEntity: MyStatusHistoryEntity)
+ 
+     @Query("SELECT * FROM my_status_history")
+-    fun getMyStatusHistoryEntities(): List<MyStatusHistoryEntity>
++    suspend fun getMyStatusHistoryEntities(): List<MyStatusHistoryEntity>
+ 
+     @Query("DELETE FROM my_status_history WHERE message_row_id = :messageRowId")
+-    fun deleteMyStatusHistory(messageRowId: Long)
++    suspend fun deleteMyStatusHistory(messageRowId: Long)
+ }
+\ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
 index fa29b64e9..56c21decf 100644
 --- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
@@ -38,7 +54,7 @@ index fa29b64e9..56c21decf 100644
  
      private fun bindView() {
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-index 30329698c..3b7b8d893 100644
+index 30329698c..d05a9757a 100644
 --- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
 @@ -2,16 +2,22 @@ package com.coocoo.statuses.myhistory
@@ -65,7 +81,7 @@ index 30329698c..3b7b8d893 100644
  import java.io.File
  
  class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
-@@ -29,21 +35,34 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
+@@ -29,21 +35,32 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
          const val MEDIA_TYPE_PHOTO = 1
      }
  
@@ -77,7 +93,7 @@ index 30329698c..3b7b8d893 100644
 -        myStatusHistoryEntities.forEach { myStatusHistoryEntity ->
 -            statusList.add(
 +    fun getMyStatusHistoryInfoList(): CCLiveData<List<MyStatusHistoryInfo>> {
-+        GlobalScope.launch {
++        GlobalScope.launch(Dispatchers.Main) {
 +            updateMyStatusHistoryInfoList(_statusList)
 +        }
 +        return CCTransformations.map(_statusList) { list ->
@@ -92,18 +108,16 @@ index 30329698c..3b7b8d893 100644
 +            }
          }
 +    }
- 
--        return statusList
-+    private suspend fun updateMyStatusHistoryInfoList(liveData: CCMutableLiveData<List<MyStatusHistoryEntity>>) = withContext(Dispatchers.IO) {
++
++    private suspend fun updateMyStatusHistoryInfoList(liveData: CCMutableLiveData<List<MyStatusHistoryEntity>>) {
 +        liveData.value = database.getMyStatusDao().getMyStatusHistoryEntities()
 +    }
-+
+ 
+-        return statusList
 +    suspend fun deleteStatus(messageRowId: Long) {
 +        val dao = database.getMyStatusDao()
-+        withContext(Dispatchers.IO) {
-+            dao.deleteMyStatusHistory(messageRowId)
-+            updateMyStatusHistoryInfoList(_statusList)
-+        }
++        dao.deleteMyStatusHistory(messageRowId)
++        updateMyStatusHistoryInfoList(_statusList)
      }
  
      @SmaliInject
