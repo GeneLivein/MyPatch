@@ -24,265 +24,186 @@ index 50e40530d..cbf792786 100644
      }
  
      flavorDimensions "version"
-diff --git a/app/src/main/java/com/coocoo/db/room/mystatus/dao/MyStatusDao.kt b/app/src/main/java/com/coocoo/db/room/mystatus/dao/MyStatusDao.kt
-index 694dfb2f1..6ab0c8329 100644
---- a/app/src/main/java/com/coocoo/db/room/mystatus/dao/MyStatusDao.kt
-+++ b/app/src/main/java/com/coocoo/db/room/mystatus/dao/MyStatusDao.kt
-@@ -10,8 +10,8 @@ interface MyStatusDao {
-     fun insertMyStatusHistory(vararg myStatusHistoryEntity: MyStatusHistoryEntity)
- 
-     @Query("SELECT * FROM my_status_history")
--    fun getMyStatusHistoryEntities(): List<MyStatusHistoryEntity>
-+    suspend fun getMyStatusHistoryEntities(): List<MyStatusHistoryEntity>
- 
-     @Query("DELETE FROM my_status_history WHERE message_row_id = :messageRowId")
--    fun deleteMyStatusHistory(messageRowId: Long)
-+    suspend fun deleteMyStatusHistory(messageRowId: Long)
- }
-\ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
-index fa29b64e9..3b6a0bf1c 100644
+index a284cb808..42d69811a 100644
 --- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
-@@ -11,6 +11,7 @@ import android.widget.*
- import androidx.lifecycle.CCViewModelProvider
- import com.bumptech.glide.Glide
- import com.coocoo.base.CCBaseActivity
-+import com.coocoo.exoplayer2.util.Log
- import com.coocoo.utils.ActivityUtil
- import com.coocoo.utils.DateUtil
- import com.coocoo.utils.ResMgr
-@@ -42,12 +43,11 @@ class MyStatusHistoryActivity : CCBaseActivity(), AdapterView.OnItemClickListene
-         }
+@@ -26,20 +26,17 @@ class MyStatusHistoryActivity : CCBaseActivity(), AdapterView.OnItemClickListene
+         StatusGridAdapter(this)
+     }
  
-         bindView()
++    private lateinit var emptyView: View
++    private lateinit var btnBack: View
++    private lateinit var gridView: GridView
++
+     override fun onCreate(savedInstanceState: Bundle?) {
+         super.onCreate(savedInstanceState)
+         setContentView(ResMgr.getLayoutId("cc_activity_history_status"))
+ 
+-        findViewById<GridView>(ResMgr.getId("cc_grid_view"))?.let { gridView ->
+-            gridView.adapter = statusGridAdapter
+-            gridView.onItemClickListener = this
+-        }
 -
--        viewModel.loadMyStatusHistory()
-     }
- 
-     private fun bindView() {
-         viewModel.statusList.observe(lifecycleOwner) {
-+            statusGridAdapter.clear()
-             statusGridAdapter.addAll(it)
-         }
-     }
-diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-index 30329698c..a5811e697 100644
---- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-+++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-@@ -2,16 +2,21 @@ package com.coocoo.statuses.myhistory
- 
- import X.c1_2Ql
- import X.cc_2Qk
--import android.database.Cursor
- import android.os.Environment
- import android.util.Log
- import androidx.annotation.WorkerThread
-+import androidx.lifecycle.CCLiveData
-+import androidx.lifecycle.CCMutableLiveData
-+import androidx.lifecycle.CCTransformations
- import com.coocoo.annotation.SmaliInject
- import com.coocoo.db.room.mystatus.MyStatusDatabase
- import com.coocoo.db.room.mystatus.entity.MyStatusHistoryEntity
- import com.coocoo.fm.yo
- import com.coocoo.utils.Constant
- import com.coocoo.utils.FileUtil
-+import kotlinx.coroutines.Dispatchers
-+import kotlinx.coroutines.GlobalScope
-+import kotlinx.coroutines.launch
- import java.io.File
- 
- class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
-@@ -29,21 +34,35 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
-         const val MEDIA_TYPE_PHOTO = 1
-     }
- 
--    fun getMyStatusHistoryInfoList(): List<MyStatusHistoryInfo> {
--        val myStatusHistoryEntities = database.getMyStatusDao().getMyStatusHistoryEntities()
-+    private val _statusList: CCMutableLiveData<List<MyStatusHistoryEntity>> by lazy {
-+        CCMutableLiveData<List<MyStatusHistoryEntity>>().also {
-+            GlobalScope.launch(Dispatchers.Main) {
-+                updateMyStatusHistoryInfoList(it)
-+            }
-+        }
-+    }
- 
--        val statusList = mutableListOf<MyStatusHistoryInfo>()
--        myStatusHistoryEntities.forEach { myStatusHistoryEntity ->
--            statusList.add(
-+    fun getMyStatusHistoryInfoList(): CCLiveData<List<MyStatusHistoryInfo>> {
-+        return CCTransformations.map(_statusList) { list ->
-+            list.map { myStatusHistoryEntity ->
-                 MyStatusHistoryInfo(
-                     myStatusHistoryEntity.messageRowId,
-                     myStatusHistoryEntity.filePath,
-                     myStatusHistoryEntity.timestamp,
-                     myStatusHistoryEntity.viewCount,
--                    myStatusHistoryEntity.messageType))
-+                    myStatusHistoryEntity.messageType)
-+            }
-         }
-+    }
-+
-+    private suspend fun updateMyStatusHistoryInfoList(liveData: CCMutableLiveData<List<MyStatusHistoryEntity>>) {
-+        liveData.value = database.getMyStatusDao().getMyStatusHistoryEntities()
-+    }
- 
--        return statusList
-+    suspend fun deleteStatus(messageRowId: Long) {
-+        val dao = database.getMyStatusDao()
-+        dao.deleteMyStatusHistory(messageRowId)
-+        updateMyStatusHistoryInfoList(_statusList)
-     }
- 
-     @SmaliInject
-diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt
-index 2ad159790..494a590ee 100644
---- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt
-+++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt
-@@ -1,5 +1,7 @@
- package com.coocoo.statuses.myhistory
- 
-+import X.c1_2Ql
-+import androidx.lifecycle.CCViewModelProvider
- import com.coocoowhatsapp.status.playback.StatusPlaybackActivity
- import com.coocoo.statuses.myhistory.MyStatusHistoryInfo
- import com.coocoo.statuses.myhistory.MyStatusHistoryActivity
-@@ -10,17 +12,22 @@ import java.util.ArrayList
- 
- class MyStatusHistoryPlaybackActivity : StatusPlaybackActivity() {
- 
-+    val viewModel: MyStatusHistoryPlaybackViewModel = MyStatusHistoryPlaybackViewModel()
-+
-     val myStatusHistoryInfoList: ArrayList<MyStatusHistoryInfo>
-         get() = intent.getParcelableArrayListExtra(MyStatusHistoryActivity.KEY_MY_STATUS_HISTORY_INFO_LIST)
- 
-     val statusStartPosition: Int
-         get() = intent.getIntExtra(MyStatusHistoryActivity.KEY_MY_STATUS_START_POSITION, 0)
- 
--    fun showConfirmDeleteDialog() {
-+    fun showConfirmDeleteDialog(c12Ql: c1_2Ql) {
-         CoocooAlertDialog(this,
-             title = ResMgr.getString("cc_my_status_delete_now"),
-             message = ResMgr.getString("cc_my_status_delete_now_message"),
--            onConfirmClicked = {},
-+            onConfirmClicked = {
-+                viewModel.deleteStatus(c12Ql)
-+                finish()
-+            },
-             onCancelClicked = {}
-         ).safelyShow()
-     }
-diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackViewModel.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackViewModel.kt
-new file mode 100644
-index 000000000..a566a2ac1
---- /dev/null
-+++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackViewModel.kt
-@@ -0,0 +1,18 @@
-+package com.coocoo.statuses.myhistory
-+
-+import X.c1_2Ql
-+import com.coocoo.coocoo.Coocoo
-+import kotlinx.coroutines.Dispatchers
-+import kotlinx.coroutines.GlobalScope
-+import kotlinx.coroutines.launch
-+
-+class MyStatusHistoryPlaybackViewModel(
-+    private val repo: MyStatusHistoryListRepository = Coocoo.getRepoContainer().myStatusHistoryListRepo
-+) {
-+
-+    fun deleteStatus(c12Ql: c1_2Ql) {
-+        GlobalScope.launch(Dispatchers.Main) {
-+            repo.deleteStatus(c12Ql.A0y)
-+        }
-+    }
-+}
-\ No newline at end of file
-diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt
-index 25cc5a6be..d6c51afe9 100644
---- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt
-+++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt
-@@ -2,14 +2,21 @@ package com.coocoo.statuses.myhistory
- 
- import androidx.lifecycle.*
- import com.coocoo.coocoo.Coocoo
--import kotlinx.coroutines.Dispatchers
--import kotlinx.coroutines.launch
--import kotlinx.coroutines.withContext
- 
--class MyStatusHistoryViewModel(private val repo: MyStatusHistoryListRepository) : CCViewModel() {
-+class MyStatusHistoryViewModel(val repo: MyStatusHistoryListRepository) : CCViewModel() {
- 
--    private val _statusListLive: CCMutableLiveData<List<MyStatusHistoryInfo>> = CCMutableLiveData<List<MyStatusHistoryInfo>>()
--    val statusList: CCLiveData<List<MyStatusHistoryInfo>> get() = _statusListLive
-+    private val _statusList: CCMediatorLiveData<List<MyStatusHistoryInfo>> = CCMediatorLiveData()
-+    val statusList: CCLiveData<List<MyStatusHistoryInfo>> get() = _statusList
-+
-+    init {
-+        _statusList.addSource(repo.getMyStatusHistoryInfoList()) {
-+            _statusList.value = it
-+        }
-+    }
-+
-+    fun getCurrentMyStatusHistoryInfoList(): List<MyStatusHistoryInfo> {
-+        return _statusList.value ?: emptyList()
-+    }
- 
-     @Suppress("UNCHECKED_CAST")
-     class Factory : CCViewModelProvider.Factory {
-@@ -18,16 +25,4 @@ class MyStatusHistoryViewModel(private val repo: MyStatusHistoryListRepository)
-             return MyStatusHistoryViewModel(container.myStatusHistoryListRepo) as T
-         }
-     }
--
--    fun loadMyStatusHistory() {
--        viewModelScope.launch {
--            _statusListLive.value = withContext(Dispatchers.IO) {
--                repo.getMyStatusHistoryInfoList()
+-        findViewById<ImageView>(ResMgr.getId("cc_back"))?.let { btnBack ->
+-            btnBack.setOnClickListener {
+-                finish()
 -            }
 -        }
--    }
--
--    fun getCurrentMyStatusHistoryInfoList(): List<MyStatusHistoryInfo> {
--        return _statusListLive.value ?: emptyList()
--    }
- }
-\ No newline at end of file
-diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java
-index 042c5bde2..bd0ad0e7b 100644
---- a/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java
-+++ b/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java
-@@ -302,14 +302,14 @@ public class StatusPlaybackContactFragmentDelegate implements ILaunchInstallActi
++        gridView = findViewById(ResMgr.getId("cc_grid_view"))
++        btnBack = findViewById(ResMgr.getId("cc_back"))
++        emptyView = findViewById(ResMgr.getId("cc_empty"))
+ 
+         bindView()
+     }
+@@ -49,6 +46,23 @@ class MyStatusHistoryActivity : CCBaseActivity(), AdapterView.OnItemClickListene
+             statusGridAdapter.clear()
+             statusGridAdapter.addAll(it)
+         }
++
++        viewModel.isShownEmptyView.observe(lifecycleOwner) { isShown ->
++            if (isShown) {
++                emptyView.visibility = View.VISIBLE
++            } else {
++                emptyView.visibility = View.VISIBLE
++            }
++        }
++
++        btnBack.setOnClickListener {
++            finish()
++        }
++
++        gridView.apply {
++            adapter = statusGridAdapter
++            onItemClickListener = this@MyStatusHistoryActivity
++        }
      }
  
-     @SmaliInject
--    public void onPageViewCreated(View view) {
-+    public void onPageViewCreated(View view, c1_2Ql c12Ql) {
-         Activity activity = mPlaybackFragment.A09();
-         Log.d("StatusPlaybackContactFragmentDelegate", "activity" + activity);
-         if (activity instanceof MyStatusHistoryPlaybackActivity) {
-             ImageView btnDelete = view.findViewById(ResMgr.getId("delete"));
-             if (btnDelete != null) {
-                 btnDelete.setOnClickListener((v) -> {
--                    ((MyStatusHistoryPlaybackActivity) activity).showConfirmDeleteDialog();
-+                    ((MyStatusHistoryPlaybackActivity) activity).showConfirmDeleteDialog(c12Ql);
-                 });
-             }
-         }
-diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/status/playback/fragment/StatusPlaybackContactFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/status/playback/fragment/StatusPlaybackContactFragment.smali
-index d9133da71..527fa1a62 100644
---- a/whatsapp_modify_module/smali/com/coocoowhatsapp/status/playback/fragment/StatusPlaybackContactFragment.smali
-+++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/status/playback/fragment/StatusPlaybackContactFragment.smali
-@@ -1258,9 +1258,11 @@
-     .line 444385
-     invoke-virtual {v2, v0}, LX/2xx;->A0K(Landroid/view/View;)V
- #coocoo
-+    move-object/from16 v14, p1
+     class StatusGridAdapter(context: Context) : ArrayAdapter<MyStatusHistoryInfo>(context, ResMgr.getLayoutId("")) {
+diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt
+index d6c51afe9..c45aa55a5 100644
+--- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt
++++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt
+@@ -8,6 +8,10 @@ class MyStatusHistoryViewModel(val repo: MyStatusHistoryListRepository) : CCView
+     private val _statusList: CCMediatorLiveData<List<MyStatusHistoryInfo>> = CCMediatorLiveData()
+     val statusList: CCLiveData<List<MyStatusHistoryInfo>> get() = _statusList
+ 
++    val isShownEmptyView: CCLiveData<Boolean> get() = CCTransformations.map(_statusList) {
++        return@map it.isEmpty()
++    }
 +
-     iget-object v15, v6, Lcom/coocoowhatsapp/status/playback/fragment/StatusPlaybackContactFragment;->statusPlaybackContactFragmentDelegate:Lcom/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate;
+     init {
+         _statusList.addSource(repo.getMyStatusHistoryInfoList()) {
+             _statusList.value = it
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusesActivityDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusesActivityDelegate.java
+index 5ae2b4701..dec42def6 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusesActivityDelegate.java
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusesActivityDelegate.java
+@@ -1,10 +1,12 @@
+ package com.coocoo.whatsappdelegate;
  
--    invoke-virtual {v15, v0}, Lcom/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate;->onPageViewCreated(Landroid/view/View;)V
-+    invoke-virtual {v15, v0, v14}, Lcom/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate;->onPageViewCreated(Landroid/view/View;LX/2Ql;)V
- #coocoo
++import android.graphics.drawable.Drawable;
+ import android.os.Bundle;
+ import android.view.Menu;
+ import android.view.MenuItem;
  
-     .line 444386
+ import com.coocoo.annotation.SmaliInject;
++import com.coocoo.coocoo.Coocoo;
+ import com.coocoo.highlight.AbsFunction;
+ import com.coocoo.highlight.Entry2Function;
+ import com.coocoo.report.Report;
+@@ -21,6 +23,8 @@ import static com.coocoo.utils.Constants.Res.Drawable.CC_MY_STATUS_MENU_HISTORY_
+ import static com.coocoo.utils.Constants.Res.String.CC_MY_STATUS_MENU_HISTORY_HINT_MSG;
+ import static com.coocoo.utils.Constants.Res.String.CC_MY_STATUS_MENU_HISTORY_TITLE;
+ 
++import androidx.core.content.res.ResourcesCompat;
++
+ public class MyStatusesActivityDelegate extends ActivityDelegate {
+     public static final String TAG = MyStatusesActivityDelegate.class.getSimpleName();
+     
+@@ -55,9 +59,10 @@ public class MyStatusesActivityDelegate extends ActivityDelegate {
+     @SmaliInject
+     public boolean onCreateOptionsMenu(Menu menu) {
+         if (menu.findItem(MENU_ID_HISTORY) == null) {
++            Drawable icon = ResourcesCompat.getDrawable(Coocoo.getAppContext().getResources(), ResMgr.getDrawableId(CC_MY_STATUS_MENU_HISTORY_ICON), null);
+             menu.add(Menu.NONE, MENU_ID_HISTORY, Menu.NONE,
+                     ResMgr.getString(CC_MY_STATUS_MENU_HISTORY_TITLE))
+-                    .setIcon(ResMgr.getDrawableId(CC_MY_STATUS_MENU_HISTORY_ICON))
++                    .setIcon(icon)
+                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+         }
+ 
+diff --git a/app/src/main/res/drawable-xxhdpi/cc_ic_access_time.webp b/app/src/main/res/drawable-xxhdpi/cc_ic_access_time.webp
+deleted file mode 100644
+index 754ac60f4..000000000
+Binary files a/app/src/main/res/drawable-xxhdpi/cc_ic_access_time.webp and /dev/null differ
+diff --git a/app/src/main/res/drawable/cc_ic_access_time.xml b/app/src/main/res/drawable/cc_ic_access_time.xml
+new file mode 100644
+index 000000000..5ffb54548
+--- /dev/null
++++ b/app/src/main/res/drawable/cc_ic_access_time.xml
+@@ -0,0 +1,7 @@
++<vector android:height="24dp" android:viewportHeight="48"
++    android:viewportWidth="48" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
++    <group>
++        <clip-path android:pathData="M23.98,4C12.94,4 4,12.96 4,24s8.94,20 19.98,20C35.04,44 44,35.04 44,24S35.04,4 23.98,4zM24,8c8.84,0 16,7.16 16,16s-7.16,16 -16,16S8,32.84 8,24 15.16,8 24,8zM25,14h-3v12l10.5,6.3 1.5,-2.46 -9,-5.34L25,14z"/>
++        <path android:fillColor="#FFFFFFFF" android:fillType="evenOdd" android:pathData="M-26,-26H74V74H-26z"/>
++    </group>
++</vector>
+diff --git a/app/src/main/res/layout/cc_activity_history_status.xml b/app/src/main/res/layout/cc_activity_history_status.xml
+index dd9208d96..e02e1e41a 100644
+--- a/app/src/main/res/layout/cc_activity_history_status.xml
++++ b/app/src/main/res/layout/cc_activity_history_status.xml
+@@ -1,6 +1,7 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<LinearLayout
++<FrameLayout
+     xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
+     android:orientation="vertical"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent">
+@@ -27,10 +28,30 @@
+ 
+     </androidx.appcompat.widget.Toolbar>
+ 
++    <LinearLayout
++        android:id="@+id/cc_empty"
++        android:layout_width="match_parent"
++        android:layout_height="match_parent"
++        android:gravity="center"
++        android:orientation="vertical">
++        <ImageView
++            android:layout_width="48dp"
++            android:layout_height="48dp"
++            app:tint="#d5d9df"
++            android:src="@drawable/cc_ic_access_time"/>
++        <TextView
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:layout_marginTop="6dp"
++            android:text="@string/cc_my_status_empty"
++            android:textSize="13sp"
++            android:textColor="#626262"/>
++    </LinearLayout>
++
+     <GridView
+         android:id="@+id/cc_grid_view"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:numColumns="2"/>
+ 
+-</LinearLayout>
+\ No newline at end of file
++</FrameLayout>
+\ No newline at end of file
+diff --git a/app/src/main/res/values/cc_strings.xml b/app/src/main/res/values/cc_strings.xml
+index be30bebe7..cee98f2c3 100644
+--- a/app/src/main/res/values/cc_strings.xml
++++ b/app/src/main/res/values/cc_strings.xml
+@@ -1289,4 +1289,5 @@ Our official Website: http://heymods.com"</string>
+     <string name="cc_my_status_menu_history_hint_msg">Your status will be saved as "History Status" after 24 hours.</string>
+     <string name="cc_my_status_delete_now">Delete Now?</string>
+     <string name="cc_my_status_delete_now_message">Are you sure to delete the status now?</string>
++    <string name="cc_my_status_empty">No history found</string>
+ </resources>
