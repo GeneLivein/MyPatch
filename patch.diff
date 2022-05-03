@@ -24,122 +24,91 @@ index 50e40530d..cbf792786 100644
      }
  
      flavorDimensions "version"
-diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.java b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.java
-deleted file mode 100644
-index 1527c50ea..000000000
---- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.java
-+++ /dev/null
-@@ -1,19 +0,0 @@
--package com.coocoo.statuses.myhistory;
--
--import com.coocoowhatsapp.status.playback.StatusPlaybackActivity;
--
--import java.util.ArrayList;
--
--import static com.coocoo.statuses.myhistory.MyStatusHistoryActivity.KEY_MY_STATUS_HISTORY_INFO_LIST;
--import static com.coocoo.statuses.myhistory.MyStatusHistoryActivity.KEY_MY_STATUS_START_POSITION;
--
--public class MyStatusHistoryPlaybackActivity extends StatusPlaybackActivity {
--
--    public ArrayList<MyStatusHistoryInfo> getMyStatusHistoryInfoList() {
--        return getIntent().getParcelableArrayListExtra(KEY_MY_STATUS_HISTORY_INFO_LIST);
--    }
--
--    public int getStatusStartPosition() {
--        return getIntent().getIntExtra(KEY_MY_STATUS_START_POSITION, 0);
--    }
--}
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt
-new file mode 100644
-index 000000000..2ad159790
---- /dev/null
+index 2ad159790..e1fb245d9 100644
+--- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt
-@@ -0,0 +1,27 @@
+@@ -1,5 +1,6 @@
+ package com.coocoo.statuses.myhistory
+ 
++import X.c1_2Ql
+ import com.coocoowhatsapp.status.playback.StatusPlaybackActivity
+ import com.coocoo.statuses.myhistory.MyStatusHistoryInfo
+ import com.coocoo.statuses.myhistory.MyStatusHistoryActivity
+@@ -10,17 +11,19 @@ import java.util.ArrayList
+ 
+ class MyStatusHistoryPlaybackActivity : StatusPlaybackActivity() {
+ 
++    val viewModel: MyStatusHistoryPlaybackViewModel = MyStatusHistoryPlaybackViewModel()
++
+     val myStatusHistoryInfoList: ArrayList<MyStatusHistoryInfo>
+         get() = intent.getParcelableArrayListExtra(MyStatusHistoryActivity.KEY_MY_STATUS_HISTORY_INFO_LIST)
+ 
+     val statusStartPosition: Int
+         get() = intent.getIntExtra(MyStatusHistoryActivity.KEY_MY_STATUS_START_POSITION, 0)
+ 
+-    fun showConfirmDeleteDialog() {
++    fun showConfirmDeleteDialog(c12Ql: c1_2Ql) {
+         CoocooAlertDialog(this,
+             title = ResMgr.getString("cc_my_status_delete_now"),
+             message = ResMgr.getString("cc_my_status_delete_now_message"),
+-            onConfirmClicked = {},
++            onConfirmClicked = { viewModel.deleteStatus(c12Ql) },
+             onCancelClicked = {}
+         ).safelyShow()
+     }
+diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackViewModel.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackViewModel.kt
+new file mode 100644
+index 000000000..54f5e10ac
+--- /dev/null
++++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackViewModel.kt
+@@ -0,0 +1,10 @@
 +package com.coocoo.statuses.myhistory
 +
-+import com.coocoowhatsapp.status.playback.StatusPlaybackActivity
-+import com.coocoo.statuses.myhistory.MyStatusHistoryInfo
-+import com.coocoo.statuses.myhistory.MyStatusHistoryActivity
-+import com.coocoo.utils.ResMgr
-+import com.coocoo.utils.safelyShow
-+import com.coocoo.widget.CoocooAlertDialog
-+import java.util.ArrayList
++import X.c1_2Ql
 +
-+class MyStatusHistoryPlaybackActivity : StatusPlaybackActivity() {
++class MyStatusHistoryPlaybackViewModel {
 +
-+    val myStatusHistoryInfoList: ArrayList<MyStatusHistoryInfo>
-+        get() = intent.getParcelableArrayListExtra(MyStatusHistoryActivity.KEY_MY_STATUS_HISTORY_INFO_LIST)
++    fun deleteStatus(c12Ql: c1_2Ql) {
 +
-+    val statusStartPosition: Int
-+        get() = intent.getIntExtra(MyStatusHistoryActivity.KEY_MY_STATUS_START_POSITION, 0)
-+
-+    fun showConfirmDeleteDialog() {
-+        CoocooAlertDialog(this,
-+            title = ResMgr.getString("cc_my_status_delete_now"),
-+            message = ResMgr.getString("cc_my_status_delete_now_message"),
-+            onConfirmClicked = {},
-+            onCancelClicked = {}
-+        ).safelyShow()
 +    }
 +}
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java
-index eb6dafbb1..758dd55e8 100644
+index 042c5bde2..21c15dce4 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java
-@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
- import com.coocoo.annotation.SmaliInject;
- import com.coocoo.business.BusinessController;
- import com.coocoo.coocoo.Coocoo;
-+import com.coocoo.exoplayer2.util.Log;
- import com.coocoo.firebase.remoteConfig.RemoteConfig;
- import com.coocoo.fm.yo;
- import com.coocoo.highlight.AbsFunction;
-@@ -298,6 +299,20 @@ public class StatusPlaybackContactFragmentDelegate implements ILaunchInstallActi
-         }
+@@ -302,14 +302,14 @@ public class StatusPlaybackContactFragmentDelegate implements ILaunchInstallActi
      }
  
-+    @SmaliInject
-+    public void onPageViewCreated(View view) {
-+        Activity activity = mPlaybackFragment.A09();
-+        Log.d("StatusPlaybackContactFragmentDelegate", "activity" + activity);
-+        if (activity instanceof MyStatusHistoryPlaybackActivity) {
-+            ImageView btnDelete = view.findViewById(ResMgr.getId("delete"));
-+            if (btnDelete != null) {
-+                btnDelete.setOnClickListener((v) -> {
-+                    ((MyStatusHistoryPlaybackActivity) activity).showConfirmDeleteDialog();
-+                });
-+            }
-+        }
-+    }
-+
-     @Override
-     public void startInstallActivity(@NotNull InstallTag installTag,
-                                      @NotNull File apkFile,
-diff --git a/app/src/main/res/values/cc_strings.xml b/app/src/main/res/values/cc_strings.xml
-index bc6b31d81..be30bebe7 100644
---- a/app/src/main/res/values/cc_strings.xml
-+++ b/app/src/main/res/values/cc_strings.xml
-@@ -1287,4 +1287,6 @@ Our official Website: http://heymods.com"</string>
-     <!-- MyStatus History -->
-     <string name="cc_my_status_menu_history_title">History Status</string>
-     <string name="cc_my_status_menu_history_hint_msg">Your status will be saved as "History Status" after 24 hours.</string>
-+    <string name="cc_my_status_delete_now">Delete Now?</string>
-+    <string name="cc_my_status_delete_now_message">Are you sure to delete the status now?</string>
- </resources>
+     @SmaliInject
+-    public void onPageViewCreated(View view) {
++    public void onPageViewCreated(View view, c1_2Ql c12Ql1) {
+         Activity activity = mPlaybackFragment.A09();
+         Log.d("StatusPlaybackContactFragmentDelegate", "activity" + activity);
+         if (activity instanceof MyStatusHistoryPlaybackActivity) {
+             ImageView btnDelete = view.findViewById(ResMgr.getId("delete"));
+             if (btnDelete != null) {
+                 btnDelete.setOnClickListener((v) -> {
+-                    ((MyStatusHistoryPlaybackActivity) activity).showConfirmDeleteDialog();
++                    ((MyStatusHistoryPlaybackActivity) activity).showConfirmDeleteDialog(c12Ql1);
+                 });
+             }
+         }
 diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/status/playback/fragment/StatusPlaybackContactFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/status/playback/fragment/StatusPlaybackContactFragment.smali
-index c755c5ec2..d9133da71 100644
+index d9133da71..527fa1a62 100644
 --- a/whatsapp_modify_module/smali/com/coocoowhatsapp/status/playback/fragment/StatusPlaybackContactFragment.smali
 +++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/status/playback/fragment/StatusPlaybackContactFragment.smali
-@@ -1257,6 +1257,11 @@
- 
+@@ -1258,9 +1258,11 @@
      .line 444385
      invoke-virtual {v2, v0}, LX/2xx;->A0K(Landroid/view/View;)V
-+#coocoo
-+    iget-object v15, v6, Lcom/coocoowhatsapp/status/playback/fragment/StatusPlaybackContactFragment;->statusPlaybackContactFragmentDelegate:Lcom/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate;
+ #coocoo
++    move-object/from16 v14, p1
 +
-+    invoke-virtual {v15, v0}, Lcom/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate;->onPageViewCreated(Landroid/view/View;)V
-+#coocoo
+     iget-object v15, v6, Lcom/coocoowhatsapp/status/playback/fragment/StatusPlaybackContactFragment;->statusPlaybackContactFragmentDelegate:Lcom/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate;
+ 
+-    invoke-virtual {v15, v0}, Lcom/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate;->onPageViewCreated(Landroid/view/View;)V
++    invoke-virtual {v15, v0, v14}, Lcom/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate;->onPageViewCreated(Landroid/view/View;LX/2Ql;)V
+ #coocoo
  
      .line 444386
-     invoke-virtual {v2}, LX/2xx;->A0F()V
