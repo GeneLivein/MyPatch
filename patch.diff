@@ -25,203 +25,77 @@ index 50e40530d..cbf792786 100644
  
      flavorDimensions "version"
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
-index a284cb808..4599493c3 100644
+index 4599493c3..a848ce931 100644
 --- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
-@@ -26,20 +26,17 @@ class MyStatusHistoryActivity : CCBaseActivity(), AdapterView.OnItemClickListene
-         StatusGridAdapter(this)
-     }
+@@ -8,10 +8,14 @@ import android.view.LayoutInflater
+ import android.view.View
+ import android.view.ViewGroup
+ import android.widget.*
++import androidx.core.content.res.ResourcesCompat
++import androidx.core.graphics.drawable.DrawableCompat
+ import androidx.lifecycle.CCViewModelProvider
+ import com.bumptech.glide.Glide
+ import com.coocoo.base.CCBaseActivity
++import com.coocoo.coocoo.Coocoo
+ import com.coocoo.utils.ActivityUtil
++import com.coocoo.utils.Constants.Res.Drawable.CC_MY_STATUS_MENU_HISTORY_ICON
+ import com.coocoo.utils.DateUtil
+ import com.coocoo.utils.ResMgr
+ import java.util.*
+@@ -29,6 +33,7 @@ class MyStatusHistoryActivity : CCBaseActivity(), AdapterView.OnItemClickListene
+     private lateinit var emptyView: View
+     private lateinit var btnBack: View
+     private lateinit var gridView: GridView
++    private lateinit var imgTime: ImageView
  
-+    private lateinit var emptyView: View
-+    private lateinit var btnBack: View
-+    private lateinit var gridView: GridView
-+
      override fun onCreate(savedInstanceState: Bundle?) {
          super.onCreate(savedInstanceState)
-         setContentView(ResMgr.getLayoutId("cc_activity_history_status"))
- 
--        findViewById<GridView>(ResMgr.getId("cc_grid_view"))?.let { gridView ->
--            gridView.adapter = statusGridAdapter
--            gridView.onItemClickListener = this
--        }
--
--        findViewById<ImageView>(ResMgr.getId("cc_back"))?.let { btnBack ->
--            btnBack.setOnClickListener {
--                finish()
--            }
--        }
-+        gridView = findViewById(ResMgr.getId("cc_grid_view"))
-+        btnBack = findViewById(ResMgr.getId("cc_back"))
-+        emptyView = findViewById(ResMgr.getId("cc_empty"))
+@@ -37,11 +42,24 @@ class MyStatusHistoryActivity : CCBaseActivity(), AdapterView.OnItemClickListene
+         gridView = findViewById(ResMgr.getId("cc_grid_view"))
+         btnBack = findViewById(ResMgr.getId("cc_back"))
+         emptyView = findViewById(ResMgr.getId("cc_empty"))
++        imgTime = findViewById(ResMgr.getId("cc_time"))
  
          bindView()
      }
-@@ -49,6 +46,25 @@ class MyStatusHistoryActivity : CCBaseActivity(), AdapterView.OnItemClickListene
+ 
+     private fun bindView() {
++        val drawable = ResourcesCompat.getDrawable(
++            Coocoo.getAppContext().resources,
++            ResMgr.getDrawableId(CC_MY_STATUS_MENU_HISTORY_ICON),
++            null
++        )?.let { d ->
++            val color = ResourcesCompat.getColor(Coocoo.getAppContext().resources, ResMgr.getId("cc_access_time_color"), null)
++            val wrappedDrawable = DrawableCompat.wrap(d)
++            DrawableCompat.setTint(wrappedDrawable, color)
++            wrappedDrawable
++        }
++        imgTime.setImageDrawable(drawable)
++
+         viewModel.statusList.observe(lifecycleOwner) {
              statusGridAdapter.clear()
              statusGridAdapter.addAll(it)
-         }
-+
-+        viewModel.isShownEmptyView.observe(lifecycleOwner) { isShown ->
-+            if (isShown) {
-+                emptyView.visibility = View.VISIBLE
-+                gridView.visibility = View.INVISIBLE
-+            } else {
-+                emptyView.visibility = View.INVISIBLE
-+                gridView.visibility = View.VISIBLE
-+            }
-+        }
-+
-+        btnBack.setOnClickListener {
-+            finish()
-+        }
-+
-+        gridView.apply {
-+            adapter = statusGridAdapter
-+            onItemClickListener = this@MyStatusHistoryActivity
-+        }
-     }
- 
-     class StatusGridAdapter(context: Context) : ArrayAdapter<MyStatusHistoryInfo>(context, ResMgr.getLayoutId("")) {
-diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt
-index d6c51afe9..c45aa55a5 100644
---- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt
-+++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt
-@@ -8,6 +8,10 @@ class MyStatusHistoryViewModel(val repo: MyStatusHistoryListRepository) : CCView
-     private val _statusList: CCMediatorLiveData<List<MyStatusHistoryInfo>> = CCMediatorLiveData()
-     val statusList: CCLiveData<List<MyStatusHistoryInfo>> get() = _statusList
- 
-+    val isShownEmptyView: CCLiveData<Boolean> get() = CCTransformations.map(_statusList) {
-+        return@map it.isEmpty()
-+    }
-+
-     init {
-         _statusList.addSource(repo.getMyStatusHistoryInfoList()) {
-             _statusList.value = it
-diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusesActivityDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusesActivityDelegate.java
-index 5ae2b4701..dec42def6 100644
---- a/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusesActivityDelegate.java
-+++ b/app/src/main/java/com/coocoo/whatsappdelegate/MyStatusesActivityDelegate.java
-@@ -1,10 +1,12 @@
- package com.coocoo.whatsappdelegate;
- 
-+import android.graphics.drawable.Drawable;
- import android.os.Bundle;
- import android.view.Menu;
- import android.view.MenuItem;
- 
- import com.coocoo.annotation.SmaliInject;
-+import com.coocoo.coocoo.Coocoo;
- import com.coocoo.highlight.AbsFunction;
- import com.coocoo.highlight.Entry2Function;
- import com.coocoo.report.Report;
-@@ -21,6 +23,8 @@ import static com.coocoo.utils.Constants.Res.Drawable.CC_MY_STATUS_MENU_HISTORY_
- import static com.coocoo.utils.Constants.Res.String.CC_MY_STATUS_MENU_HISTORY_HINT_MSG;
- import static com.coocoo.utils.Constants.Res.String.CC_MY_STATUS_MENU_HISTORY_TITLE;
- 
-+import androidx.core.content.res.ResourcesCompat;
-+
- public class MyStatusesActivityDelegate extends ActivityDelegate {
-     public static final String TAG = MyStatusesActivityDelegate.class.getSimpleName();
-     
-@@ -55,9 +59,10 @@ public class MyStatusesActivityDelegate extends ActivityDelegate {
-     @SmaliInject
-     public boolean onCreateOptionsMenu(Menu menu) {
-         if (menu.findItem(MENU_ID_HISTORY) == null) {
-+            Drawable icon = ResourcesCompat.getDrawable(Coocoo.getAppContext().getResources(), ResMgr.getDrawableId(CC_MY_STATUS_MENU_HISTORY_ICON), null);
-             menu.add(Menu.NONE, MENU_ID_HISTORY, Menu.NONE,
-                     ResMgr.getString(CC_MY_STATUS_MENU_HISTORY_TITLE))
--                    .setIcon(ResMgr.getDrawableId(CC_MY_STATUS_MENU_HISTORY_ICON))
-+                    .setIcon(icon)
-                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-         }
- 
-diff --git a/app/src/main/res/drawable-xxhdpi/cc_ic_access_time.webp b/app/src/main/res/drawable-xxhdpi/cc_ic_access_time.webp
-deleted file mode 100644
-index 754ac60f4..000000000
-Binary files a/app/src/main/res/drawable-xxhdpi/cc_ic_access_time.webp and /dev/null differ
-diff --git a/app/src/main/res/drawable/cc_ic_access_time.xml b/app/src/main/res/drawable/cc_ic_access_time.xml
-new file mode 100644
-index 000000000..5ffb54548
---- /dev/null
-+++ b/app/src/main/res/drawable/cc_ic_access_time.xml
-@@ -0,0 +1,7 @@
-+<vector android:height="24dp" android:viewportHeight="48"
-+    android:viewportWidth="48" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
-+    <group>
-+        <clip-path android:pathData="M23.98,4C12.94,4 4,12.96 4,24s8.94,20 19.98,20C35.04,44 44,35.04 44,24S35.04,4 23.98,4zM24,8c8.84,0 16,7.16 16,16s-7.16,16 -16,16S8,32.84 8,24 15.16,8 24,8zM25,14h-3v12l10.5,6.3 1.5,-2.46 -9,-5.34L25,14z"/>
-+        <path android:fillColor="#FFFFFFFF" android:fillType="evenOdd" android:pathData="M-26,-26H74V74H-26z"/>
-+    </group>
-+</vector>
 diff --git a/app/src/main/res/layout/cc_activity_history_status.xml b/app/src/main/res/layout/cc_activity_history_status.xml
-index dd9208d96..e485a97df 100644
+index e485a97df..3b38f1b9f 100644
 --- a/app/src/main/res/layout/cc_activity_history_status.xml
 +++ b/app/src/main/res/layout/cc_activity_history_status.xml
-@@ -1,6 +1,7 @@
- <?xml version="1.0" encoding="utf-8"?>
--<LinearLayout
-+<androidx.constraintlayout.widget.ConstraintLayout
-     xmlns:android="http://schemas.android.com/apk/res/android"
-+    xmlns:app="http://schemas.android.com/apk/res-auto"
-     android:orientation="vertical"
-     android:layout_width="match_parent"
-     android:layout_height="match_parent">
-@@ -10,7 +11,8 @@
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         style="@style/Theme.App.Toolbar"
--        android:background="?colorPrimary">
-+        android:background="?colorPrimary"
-+        app:layout_constraintTop_toTopOf="parent">
- 
+@@ -38,6 +38,7 @@
+         app:layout_constraintBottom_toBottomOf="parent"
+         app:layout_constraintTop_toBottomOf="@+id/top_toolbar">
          <ImageView
-             android:id="@+id/cc_back"
-@@ -27,10 +29,34 @@
++            android:id="@+id/cc_time"
+             android:layout_width="48dp"
+             android:layout_height="48dp"
+             app:tint="#d5d9df"
+diff --git a/app/src/main/res/values/cc_colors.xml b/app/src/main/res/values/cc_colors.xml
+index 530aa5779..0baf091ca 100644
+--- a/app/src/main/res/values/cc_colors.xml
++++ b/app/src/main/res/values/cc_colors.xml
+@@ -81,4 +81,6 @@
  
-     </androidx.appcompat.widget.Toolbar>
+     <color name="cc_menu_item_setting_hint_color">#FF4E54</color>
  
-+    <LinearLayout
-+        android:id="@+id/cc_empty"
-+        android:layout_width="match_parent"
-+        android:layout_height="0dp"
-+        android:gravity="center"
-+        android:orientation="vertical"
-+        app:layout_constraintBottom_toBottomOf="parent"
-+        app:layout_constraintTop_toBottomOf="@+id/top_toolbar">
-+        <ImageView
-+            android:layout_width="48dp"
-+            android:layout_height="48dp"
-+            app:tint="#d5d9df"
-+            android:src="@drawable/cc_ic_access_time"/>
-+        <TextView
-+            android:layout_width="wrap_content"
-+            android:layout_height="wrap_content"
-+            android:layout_marginTop="6dp"
-+            android:text="@string/cc_my_status_empty"
-+            android:textSize="13sp"
-+            android:textColor="#626262"/>
-+    </LinearLayout>
++    <color name="cc_access_time_color">#d5d9df</color>
 +
-     <GridView
-         android:id="@+id/cc_grid_view"
-         android:layout_width="match_parent"
--        android:layout_height="match_parent"
--        android:numColumns="2"/>
-+        android:layout_height="0dp"
-+        android:numColumns="2"
-+        app:layout_constraintBottom_toBottomOf="parent"
-+        app:layout_constraintTop_toBottomOf="@+id/top_toolbar"/>
- 
--</LinearLayout>
-\ No newline at end of file
-+</androidx.constraintlayout.widget.ConstraintLayout>
-\ No newline at end of file
-diff --git a/app/src/main/res/values/cc_strings.xml b/app/src/main/res/values/cc_strings.xml
-index be30bebe7..cee98f2c3 100644
---- a/app/src/main/res/values/cc_strings.xml
-+++ b/app/src/main/res/values/cc_strings.xml
-@@ -1289,4 +1289,5 @@ Our official Website: http://heymods.com"</string>
-     <string name="cc_my_status_menu_history_hint_msg">Your status will be saved as "History Status" after 24 hours.</string>
-     <string name="cc_my_status_delete_now">Delete Now?</string>
-     <string name="cc_my_status_delete_now_message">Are you sure to delete the status now?</string>
-+    <string name="cc_my_status_empty">No history found</string>
  </resources>
