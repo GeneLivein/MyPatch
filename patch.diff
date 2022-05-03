@@ -24,11 +24,42 @@ index 50e40530d..cbf792786 100644
      }
  
      flavorDimensions "version"
+diff --git a/app/src/main/java/com/coocoo/db/room/mystatus/dao/MyStatusDao.kt b/app/src/main/java/com/coocoo/db/room/mystatus/dao/MyStatusDao.kt
+index 694dfb2f1..92e26ecf2 100644
+--- a/app/src/main/java/com/coocoo/db/room/mystatus/dao/MyStatusDao.kt
++++ b/app/src/main/java/com/coocoo/db/room/mystatus/dao/MyStatusDao.kt
+@@ -1,5 +1,7 @@
+ package com.coocoo.db.room.mystatus.dao
+ 
++import androidx.lifecycle.CCLiveData
++import androidx.lifecycle.LiveData
+ import androidx.room.*
+ import com.coocoo.db.room.mystatus.entity.MyStatusHistoryEntity
+ 
+@@ -12,6 +14,9 @@ interface MyStatusDao {
+     @Query("SELECT * FROM my_status_history")
+     fun getMyStatusHistoryEntities(): List<MyStatusHistoryEntity>
+ 
++    @Query("SELECT * FROM my_status_history")
++    fun getMyStatusHistoryEntities2(): CCLiveData<List<MyStatusHistoryEntity>>
++
+     @Query("DELETE FROM my_status_history WHERE message_row_id = :messageRowId")
+     fun deleteMyStatusHistory(messageRowId: Long)
+ }
+\ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-index 30329698c..49d264763 100644
+index 30329698c..6b2e6bc61 100644
 --- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-@@ -12,6 +12,8 @@ import com.coocoo.db.room.mystatus.entity.MyStatusHistoryEntity
+@@ -2,7 +2,6 @@ package com.coocoo.statuses.myhistory
+ 
+ import X.c1_2Ql
+ import X.cc_2Qk
+-import android.database.Cursor
+ import android.os.Environment
+ import android.util.Log
+ import androidx.annotation.WorkerThread
+@@ -12,6 +11,8 @@ import com.coocoo.db.room.mystatus.entity.MyStatusHistoryEntity
  import com.coocoo.fm.yo
  import com.coocoo.utils.Constant
  import com.coocoo.utils.FileUtil
@@ -37,7 +68,7 @@ index 30329698c..49d264763 100644
  import java.io.File
  
  class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
-@@ -46,6 +48,13 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
+@@ -46,6 +47,13 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
          return statusList
      }
  
@@ -90,15 +121,14 @@ index 2ad159790..494a590ee 100644
      }
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackViewModel.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackViewModel.kt
 new file mode 100644
-index 000000000..452048d5e
+index 000000000..bcb7ad35d
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackViewModel.kt
-@@ -0,0 +1,18 @@
+@@ -0,0 +1,17 @@
 +package com.coocoo.statuses.myhistory
 +
 +import X.c1_2Ql
 +import com.coocoo.coocoo.Coocoo
-+import kotlinx.coroutines.Dispatchers
 +import kotlinx.coroutines.GlobalScope
 +import kotlinx.coroutines.launch
 +
