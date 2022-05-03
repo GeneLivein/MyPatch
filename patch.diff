@@ -24,8 +24,24 @@ index 50e40530d..cbf792786 100644
      }
  
      flavorDimensions "version"
+diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
+index 30329698c..596931744 100644
+--- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
++++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
+@@ -46,6 +46,11 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
+         return statusList
+     }
+ 
++    fun deleteStatus(messageRowId: Long) {
++        val dao = database.getMyStatusDao()
++        dao.deleteMyStatusHistory(messageRowId)
++    }
++
+     @SmaliInject
+     @WorkerThread
+     fun onMyStatusHistoryDelete(c12Ql: c1_2Ql) {
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt
-index 2ad159790..e1fb245d9 100644
+index 2ad159790..2b18ad9c2 100644
 --- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt
 @@ -1,5 +1,6 @@
@@ -35,7 +51,7 @@ index 2ad159790..e1fb245d9 100644
  import com.coocoowhatsapp.status.playback.StatusPlaybackActivity
  import com.coocoo.statuses.myhistory.MyStatusHistoryInfo
  import com.coocoo.statuses.myhistory.MyStatusHistoryActivity
-@@ -10,17 +11,19 @@ import java.util.ArrayList
+@@ -10,17 +11,22 @@ import java.util.ArrayList
  
  class MyStatusHistoryPlaybackActivity : StatusPlaybackActivity() {
  
@@ -53,25 +69,30 @@ index 2ad159790..e1fb245d9 100644
              title = ResMgr.getString("cc_my_status_delete_now"),
              message = ResMgr.getString("cc_my_status_delete_now_message"),
 -            onConfirmClicked = {},
-+            onConfirmClicked = { viewModel.deleteStatus(c12Ql) },
++            onConfirmClicked = {
++                viewModel.deleteStatus(c12Ql)
++                finish()
++            },
              onCancelClicked = {}
          ).safelyShow()
      }
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackViewModel.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackViewModel.kt
 new file mode 100644
-index 000000000..d991baccb
+index 000000000..b4a382290
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackViewModel.kt
-@@ -0,0 +1,11 @@
+@@ -0,0 +1,13 @@
 +package com.coocoo.statuses.myhistory
 +
 +import X.c1_2Ql
-+import com.coocoo.exoplayer2.util.Log
++import com.coocoo.coocoo.Coocoo
 +
-+class MyStatusHistoryPlaybackViewModel {
++class MyStatusHistoryPlaybackViewModel(
++    private val repo: MyStatusHistoryListRepository = Coocoo.getRepoContainer().myStatusHistoryListRepo
++) {
 +
 +    fun deleteStatus(c12Ql: c1_2Ql) {
-+        Log.d("MyStatusHistoryPlaybackViewModel", "2Ql ${c12Ql.A0y}")
++        repo.deleteStatus(c12Ql.A0y)
 +    }
 +}
 \ No newline at end of file
