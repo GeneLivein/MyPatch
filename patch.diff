@@ -67,10 +67,10 @@ index fa29b64e9..2ec9b7a8e 100644
          }
      }
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-index 30329698c..e6ed367d9 100644
+index 30329698c..bf7142313 100644
 --- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-@@ -2,16 +2,23 @@ package com.coocoo.statuses.myhistory
+@@ -2,16 +2,24 @@ package com.coocoo.statuses.myhistory
  
  import X.c1_2Ql
  import X.cc_2Qk
@@ -88,6 +88,7 @@ index 30329698c..e6ed367d9 100644
  import com.coocoo.utils.Constant
  import com.coocoo.utils.FileUtil
 +import com.coocoo.utils.LogUtil
++import io.reactivex.exceptions.Exceptions
 +import kotlinx.coroutines.Dispatchers
 +import kotlinx.coroutines.GlobalScope
 +import kotlinx.coroutines.launch
@@ -95,7 +96,7 @@ index 30329698c..e6ed367d9 100644
  import java.io.File
  
  class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
-@@ -29,21 +36,34 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
+@@ -29,21 +37,39 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
          const val MEDIA_TYPE_PHOTO = 1
      }
  
@@ -107,6 +108,11 @@ index 30329698c..e6ed367d9 100644
 -        myStatusHistoryEntities.forEach { myStatusHistoryEntity ->
 -            statusList.add(
 +    fun getMyStatusHistoryInfoList(): CCLiveData<List<MyStatusHistoryInfo>> {
++        try {
++            throw Exception("Gene")
++        } catch (e: Exception) {
++            e.printStackTrace()
++        }
 +        GlobalScope.launch(Dispatchers.Main) {
 +            updateMyStatusHistoryInfoList(_statusList)
 +        }
@@ -120,13 +126,13 @@ index 30329698c..e6ed367d9 100644
 -                    myStatusHistoryEntity.messageType))
 +                    myStatusHistoryEntity.messageType)
 +            }
-+        }
+         }
 +    }
 +
 +    private suspend fun updateMyStatusHistoryInfoList(liveData: CCMutableLiveData<List<MyStatusHistoryEntity>>) {
 +        liveData.value = database.getMyStatusDao().getMyStatusHistoryEntities().also {
 +            Log.d("Gene", "updateMyStatusHistoryInfoList $it")
-         }
++        }
 +    }
  
 -        return statusList
