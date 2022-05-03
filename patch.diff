@@ -59,23 +59,24 @@ index 2ad159790..e1fb245d9 100644
      }
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackViewModel.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackViewModel.kt
 new file mode 100644
-index 000000000..54f5e10ac
+index 000000000..d991baccb
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackViewModel.kt
-@@ -0,0 +1,10 @@
+@@ -0,0 +1,11 @@
 +package com.coocoo.statuses.myhistory
 +
 +import X.c1_2Ql
++import com.coocoo.exoplayer2.util.Log
 +
 +class MyStatusHistoryPlaybackViewModel {
 +
 +    fun deleteStatus(c12Ql: c1_2Ql) {
-+
++        Log.d("MyStatusHistoryPlaybackViewModel", "2Ql ${c12Ql.A0y}")
 +    }
 +}
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java
-index 042c5bde2..21c15dce4 100644
+index 042c5bde2..bd0ad0e7b 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java
 @@ -302,14 +302,14 @@ public class StatusPlaybackContactFragmentDelegate implements ILaunchInstallActi
@@ -83,7 +84,7 @@ index 042c5bde2..21c15dce4 100644
  
      @SmaliInject
 -    public void onPageViewCreated(View view) {
-+    public void onPageViewCreated(View view, c1_2Ql c12Ql1) {
++    public void onPageViewCreated(View view, c1_2Ql c12Ql) {
          Activity activity = mPlaybackFragment.A09();
          Log.d("StatusPlaybackContactFragmentDelegate", "activity" + activity);
          if (activity instanceof MyStatusHistoryPlaybackActivity) {
@@ -91,7 +92,7 @@ index 042c5bde2..21c15dce4 100644
              if (btnDelete != null) {
                  btnDelete.setOnClickListener((v) -> {
 -                    ((MyStatusHistoryPlaybackActivity) activity).showConfirmDeleteDialog();
-+                    ((MyStatusHistoryPlaybackActivity) activity).showConfirmDeleteDialog(c12Ql1);
++                    ((MyStatusHistoryPlaybackActivity) activity).showConfirmDeleteDialog(c12Ql);
                  });
              }
          }
