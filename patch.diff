@@ -67,7 +67,7 @@ index fa29b64e9..a396f5e3a 100644
          }
      }
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-index 30329698c..27f72b700 100644
+index 30329698c..5708c142d 100644
 --- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
 @@ -2,16 +2,21 @@ package com.coocoo.statuses.myhistory
@@ -93,15 +93,17 @@ index 30329698c..27f72b700 100644
  import java.io.File
  
  class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
-@@ -29,21 +34,35 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
+@@ -29,21 +34,37 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
          const val MEDIA_TYPE_PHOTO = 1
      }
  
 -    fun getMyStatusHistoryInfoList(): List<MyStatusHistoryInfo> {
 -        val myStatusHistoryEntities = database.getMyStatusDao().getMyStatusHistoryEntities()
-+    private val _statusList: CCMutableLiveData<List<MyStatusHistoryEntity>> = CCMutableLiveData<List<MyStatusHistoryEntity>>().also {
-+        GlobalScope.launch(Dispatchers.Main) {
-+            updateMyStatusHistoryInfoList(it)
++    private val _statusList: CCMutableLiveData<List<MyStatusHistoryEntity>> by lazy {
++        CCMutableLiveData<List<MyStatusHistoryEntity>>().also {
++            GlobalScope.launch(Dispatchers.Main) {
++                updateMyStatusHistoryInfoList(it)
++            }
 +        }
 +    }
  
