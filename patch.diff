@@ -25,7 +25,7 @@ index 50e40530d..cbf792786 100644
  
      flavorDimensions "version"
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
-index 4599493c3..0a66f5187 100644
+index 4599493c3..502e4ab0c 100644
 --- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
 @@ -8,10 +8,14 @@ import android.view.LayoutInflater
@@ -66,7 +66,7 @@ index 4599493c3..0a66f5187 100644
 +            ResMgr.getDrawableId(CC_MY_STATUS_MENU_HISTORY_ICON),
 +            null
 +        )?.let { d ->
-+            val color = ResourcesCompat.getColor(Coocoo.getAppContext().resources, ResMgr.getColorId("access_time_color"), null)
++            val color = ResourcesCompat.getColor(Coocoo.getAppContext().resources, ResMgr.getColorId("cc_msg_scheduler_tab_not_selected"), null)
 +            val wrappedDrawable = DrawableCompat.wrap(d)
 +            DrawableCompat.setTint(wrappedDrawable, color)
 +            wrappedDrawable
@@ -89,13 +89,13 @@ index e485a97df..3b38f1b9f 100644
              android:layout_height="48dp"
              app:tint="#d5d9df"
 diff --git a/app/src/main/res/values/cc_colors.xml b/app/src/main/res/values/cc_colors.xml
-index 530aa5779..e0409462f 100644
+index 530aa5779..862f8d50d 100644
 --- a/app/src/main/res/values/cc_colors.xml
 +++ b/app/src/main/res/values/cc_colors.xml
 @@ -81,4 +81,6 @@
  
      <color name="cc_menu_item_setting_hint_color">#FF4E54</color>
  
-+    <color name="access_time_color">#D5D9DF</color>
++    <color name="cc_access_time_color">#D5D9DF</color>
 +
  </resources>
