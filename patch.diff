@@ -25,10 +25,16 @@ index 50e40530d..cbf792786 100644
  
      flavorDimensions "version"
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
-index 4599493c3..502e4ab0c 100644
+index 4599493c3..565209af4 100644
 --- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
-@@ -8,10 +8,14 @@ import android.view.LayoutInflater
+@@ -3,15 +3,20 @@ package com.coocoo.statuses.myhistory
+ import android.app.Activity
+ import android.content.Context
+ import android.content.Intent
++import android.graphics.Color
+ import android.os.Bundle
+ import android.view.LayoutInflater
  import android.view.View
  import android.view.ViewGroup
  import android.widget.*
@@ -43,7 +49,7 @@ index 4599493c3..502e4ab0c 100644
  import com.coocoo.utils.DateUtil
  import com.coocoo.utils.ResMgr
  import java.util.*
-@@ -29,6 +33,7 @@ class MyStatusHistoryActivity : CCBaseActivity(), AdapterView.OnItemClickListene
+@@ -29,6 +34,7 @@ class MyStatusHistoryActivity : CCBaseActivity(), AdapterView.OnItemClickListene
      private lateinit var emptyView: View
      private lateinit var btnBack: View
      private lateinit var gridView: GridView
@@ -51,7 +57,7 @@ index 4599493c3..502e4ab0c 100644
  
      override fun onCreate(savedInstanceState: Bundle?) {
          super.onCreate(savedInstanceState)
-@@ -37,11 +42,24 @@ class MyStatusHistoryActivity : CCBaseActivity(), AdapterView.OnItemClickListene
+@@ -37,11 +43,24 @@ class MyStatusHistoryActivity : CCBaseActivity(), AdapterView.OnItemClickListene
          gridView = findViewById(ResMgr.getId("cc_grid_view"))
          btnBack = findViewById(ResMgr.getId("cc_back"))
          emptyView = findViewById(ResMgr.getId("cc_empty"))
@@ -66,7 +72,7 @@ index 4599493c3..502e4ab0c 100644
 +            ResMgr.getDrawableId(CC_MY_STATUS_MENU_HISTORY_ICON),
 +            null
 +        )?.let { d ->
-+            val color = ResourcesCompat.getColor(Coocoo.getAppContext().resources, ResMgr.getColorId("cc_msg_scheduler_tab_not_selected"), null)
++            val color = Color.parseColor("#D5D9DF")
 +            val wrappedDrawable = DrawableCompat.wrap(d)
 +            DrawableCompat.setTint(wrappedDrawable, color)
 +            wrappedDrawable
