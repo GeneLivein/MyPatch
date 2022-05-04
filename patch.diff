@@ -1,8 +1,39 @@
+diff --git a/app/src/main/java/X/cc_3Ao.java b/app/src/main/java/X/cc_3Ao.java
+new file mode 100644
+index 000000000..1b5f0acdf
+--- /dev/null
++++ b/app/src/main/java/X/cc_3Ao.java
+@@ -0,0 +1,8 @@
++package X;
++
++public class cc_3Ao {
++
++    public long A01(int r6) {
++        return 0L;
++    }
++}
 diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-index 7ff796fbf..e190744e0 100644
+index 7ff796fbf..4e5032958 100644
 --- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 +++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-@@ -648,6 +648,10 @@ public class Coocoo {
+@@ -117,6 +117,7 @@ import X.c1_0gC;
+ import X.c1_02d;
+ import X.c1_2Ql;
+ import X.c1_2pa;
++import X.cc_3Ao;
+ import X.cc_3LJ;
+ import X.cc_3Xe;
+ 
+@@ -641,6 +642,8 @@ public class Coocoo {
+     }
+ 
+     public static void traceLog4(Object object) {
++        cc_3Ao cc3Ao = (cc_3Ao) object;
++        Log.d("Gene", "0x0:" + cc3Ao.A01(0x0) + " 0x8:" + cc3Ao.A01(0x8) + " 0xd:" + cc3Ao.A01(0xd));
+         Log.e(TAG, "-----------------4---------------- // object : " + object);
+     }
+ 
+@@ -648,6 +651,10 @@ public class Coocoo {
          Log.e(TAG, "-----------------5---------------- // value : " + value);
      }
  
@@ -14,17 +45,15 @@ index 7ff796fbf..e190744e0 100644
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
 diff --git a/whatsapp_modify_module/smali_classes2/X/2i2.smali b/whatsapp_modify_module/smali_classes2/X/2i2.smali
-index b3a0af478..bc7970cd5 100644
+index b3a0af478..78e611542 100644
 --- a/whatsapp_modify_module/smali_classes2/X/2i2.smali
 +++ b/whatsapp_modify_module/smali_classes2/X/2i2.smali
-@@ -15050,7 +15050,9 @@
-     invoke-virtual {v1, v0}, LX/3Ao;->A01(I)J
+@@ -15044,6 +15044,8 @@
  
-     move-result-wide v2
--
-+#coocoo
-+    invoke-static {v2}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(J)V
-+#coocoo
-     const-wide/16 v4, 0x0
+     check-cast v1, LX/3Ao;
  
-     cmp-long v0, v2, v4
++    invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog4(Ljava/lang/Object;)V
++
+     const/16 v0, 0xd
+ 
+     .line 436111
