@@ -1,100 +1,30 @@
-diff --git a/app/build.gradle b/app/build.gradle
-index 50e40530d..cbf792786 100644
---- a/app/build.gradle
-+++ b/app/build.gradle
-@@ -42,8 +42,8 @@ android {
- //                || cur_flavor == "YoUnclone"
- //                || cur_flavor == "GbUnclone"
- //                || cur_flavor == "WhatsappPlus") {
--//            rootProject.ext.version_name = '"11.60.0"' // HeyMods
--//            rootProject.ext.version_code = "1160000" // HeyMods
-+            rootProject.ext.version_name = '"9.0.0"' // HeyMods
-+            rootProject.ext.version_code = "9000000" // HeyMods
- //        } else if (cur_flavor == "FM") {
- //            rootProject.ext.version_name = '"10.1.0"'
- //            rootProject.ext.version_code = "1001000"
-@@ -84,8 +84,8 @@ android {
- //            rootProject.ext.version_name = '"0.20.197"'
- //            rootProject.ext.version_code = "20197"
- //        }
--//            rootProject.ext.version_name = '"11.60.0"' // HeyMods
--//            rootProject.ext.version_code = "1160000" // HeyMods
-+            rootProject.ext.version_name = '"9.0.0"' // HeyMods
-+            rootProject.ext.version_code = "9000000" // HeyMods
-     }
- 
-     flavorDimensions "version"
-diff --git a/app/src/main/java/X/cc_46h.java b/app/src/main/java/X/cc_46h.java
-new file mode 100644
-index 000000000..e9bbb0a6b
---- /dev/null
-+++ b/app/src/main/java/X/cc_46h.java
-@@ -0,0 +1,13 @@
-+package X;
-+
-+import com.whatsapp.jid.UserJid;
-+
-+public class cc_46h {
-+    public final long A00;
-+    public final UserJid A01;
-+
-+    public cc_46h(UserJid userJid, long j) {
-+        this.A01 = userJid;
-+        this.A00 = j;
-+    }
-+}
 diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-index 7ff796fbf..64029e81e 100644
+index 7ff796fbf..e190744e0 100644
 --- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 +++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-@@ -119,6 +119,7 @@ import X.c1_2Ql;
- import X.c1_2pa;
- import X.cc_3LJ;
- import X.cc_3Xe;
-+import X.cc_46h;
- 
- public class Coocoo {
- 
-@@ -641,6 +642,9 @@ public class Coocoo {
-     }
- 
-     public static void traceLog4(Object object) {
-+//        List list = (List) object;
-+//        cc_46h obj = (cc_46h) list.get(0);
-+//        Log.d("Gene", "obj " + obj);
-         Log.e(TAG, "-----------------4---------------- // object : " + object);
-     }
- 
-@@ -648,6 +652,10 @@ public class Coocoo {
+@@ -648,6 +648,10 @@ public class Coocoo {
          Log.e(TAG, "-----------------5---------------- // value : " + value);
      }
  
 +    public static void traceLog6(long value) {
-+        Log.d("Gene", "-----------------5---------------- // value : " + value);
++        Log.e(TAG, "-----------------5---------------- // value : " + value);
 +    }
 +
      public static void traceLogCodeStack() {
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
 diff --git a/whatsapp_modify_module/smali_classes2/X/2i2.smali b/whatsapp_modify_module/smali_classes2/X/2i2.smali
-index b3a0af478..75696e144 100644
+index b3a0af478..bc7970cd5 100644
 --- a/whatsapp_modify_module/smali_classes2/X/2i2.smali
 +++ b/whatsapp_modify_module/smali_classes2/X/2i2.smali
-@@ -15053,6 +15053,8 @@
+@@ -15050,7 +15050,9 @@
+     invoke-virtual {v1, v0}, LX/3Ao;->A01(I)J
  
+     move-result-wide v2
+-
++#coocoo
++    invoke-static {v2}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(J)V
++#coocoo
      const-wide/16 v4, 0x0
  
-+    invoke-static {v2}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(J)V
-+
      cmp-long v0, v2, v4
- 
-     if-lez v0, :cond_132
-@@ -24855,6 +24857,8 @@
-     .line 437496
-     iput-object v1, v0, LX/3gV;->A00:Ljava/util/List;
- 
-+    #invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog4(Ljava/lang/Object;)V
-+
-     .line 437497
-     iget-object v0, v0, LX/0AT;->A01:LX/0AU;
- 
