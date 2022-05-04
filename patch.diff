@@ -32,10 +32,18 @@ index 000000000..e9bbb0a6b
 +    }
 +}
 diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-index 7ff796fbf..a322abac6 100644
+index 7ff796fbf..49f18e339 100644
 --- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 +++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-@@ -117,8 +117,10 @@ import X.c1_0gC;
+@@ -101,6 +101,7 @@ import com.status.traffic.StatusTrafficSdk;
+ import com.status.traffic.YeahMobiManager;
+ import com.status.traffic.loader.IImageLoader;
+ import com.status.traffic.sdk.AppLovInDelegate;
++import com.whatsapp.jid.UserJid;
+ 
+ import org.jetbrains.annotations.NotNull;
+ 
+@@ -117,8 +118,10 @@ import X.c1_0gC;
  import X.c1_02d;
  import X.c1_2Ql;
  import X.c1_2pa;
@@ -46,20 +54,22 @@ index 7ff796fbf..a322abac6 100644
  
  public class Coocoo {
  
-@@ -641,6 +643,12 @@ public class Coocoo {
+@@ -641,6 +644,14 @@ public class Coocoo {
      }
  
      public static void traceLog4(Object object) {
 +//        cc_3Ao cc3Ao = (cc_3Ao) object;
 +//        Log.d("Gene", "0x0:" + cc3Ao.A01(0x0) + " 0x8:" + cc3Ao.A01(0x8) + " 0xd:" + cc3Ao.A01(0xdd));
-+        List list = (List) object;
-+        cc_46h obj = (cc_46h) list.get(0);
-+        Log.d("Gene", "A00:" + obj.A00 + " A01:" + obj.A01.getRawString());
++//        List list = (List) object;
++//        cc_46h obj = (cc_46h) list.get(0);
++//        Log.d("Gene", "A00:" + obj.A00 + " A01:" + obj.A01.getRawString() );
++        ArrayList arr = (ArrayList) object;
++        arr.add(new cc_46h(UserJid.get("86983331992"), 1651629386000L));
 +
          Log.e(TAG, "-----------------4---------------- // object : " + object);
      }
  
-@@ -648,6 +656,10 @@ public class Coocoo {
+@@ -648,6 +659,10 @@ public class Coocoo {
          Log.e(TAG, "-----------------5---------------- // value : " + value);
      }
  
@@ -71,15 +81,15 @@ index 7ff796fbf..a322abac6 100644
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
 diff --git a/whatsapp_modify_module/smali_classes2/X/2i2.smali b/whatsapp_modify_module/smali_classes2/X/2i2.smali
-index b3a0af478..8d58a23bc 100644
+index b3a0af478..792687d66 100644
 --- a/whatsapp_modify_module/smali_classes2/X/2i2.smali
 +++ b/whatsapp_modify_module/smali_classes2/X/2i2.smali
-@@ -24855,6 +24855,8 @@
-     .line 437496
-     iput-object v1, v0, LX/3gV;->A00:Ljava/util/List;
+@@ -15011,6 +15011,8 @@
  
-+    invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog4(Ljava/lang/Object;)V
+     invoke-direct {v6}, Ljava/util/ArrayList;-><init>()V
+ 
++    invoke-static {v6}, Lcom/coocoo/coocoo/Coocoo;->traceLog4(Ljava/lang/Object;)V
 +
-     .line 437497
-     iget-object v0, v0, LX/0AT;->A01:LX/0AU;
+     .line 436108
+     iget-object v0, v0, LX/3An;->A00:Ljava/util/concurrent/ConcurrentHashMap;
  
