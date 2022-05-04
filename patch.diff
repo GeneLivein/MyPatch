@@ -24,73 +24,30 @@ index 50e40530d..cbf792786 100644
      }
  
      flavorDimensions "version"
-diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
-index 4599493c3..565209af4 100644
---- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
-+++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
-@@ -3,15 +3,20 @@ package com.coocoo.statuses.myhistory
- import android.app.Activity
- import android.content.Context
- import android.content.Intent
-+import android.graphics.Color
- import android.os.Bundle
- import android.view.LayoutInflater
- import android.view.View
- import android.view.ViewGroup
- import android.widget.*
-+import androidx.core.content.res.ResourcesCompat
-+import androidx.core.graphics.drawable.DrawableCompat
- import androidx.lifecycle.CCViewModelProvider
- import com.bumptech.glide.Glide
- import com.coocoo.base.CCBaseActivity
-+import com.coocoo.coocoo.Coocoo
- import com.coocoo.utils.ActivityUtil
-+import com.coocoo.utils.Constants.Res.Drawable.CC_MY_STATUS_MENU_HISTORY_ICON
- import com.coocoo.utils.DateUtil
- import com.coocoo.utils.ResMgr
- import java.util.*
-@@ -29,6 +34,7 @@ class MyStatusHistoryActivity : CCBaseActivity(), AdapterView.OnItemClickListene
-     private lateinit var emptyView: View
-     private lateinit var btnBack: View
-     private lateinit var gridView: GridView
-+    private lateinit var imgTime: ImageView
- 
-     override fun onCreate(savedInstanceState: Bundle?) {
-         super.onCreate(savedInstanceState)
-@@ -37,11 +43,24 @@ class MyStatusHistoryActivity : CCBaseActivity(), AdapterView.OnItemClickListene
-         gridView = findViewById(ResMgr.getId("cc_grid_view"))
-         btnBack = findViewById(ResMgr.getId("cc_back"))
-         emptyView = findViewById(ResMgr.getId("cc_empty"))
-+        imgTime = findViewById(ResMgr.getId("cc_time"))
- 
-         bindView()
+diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
+index 7ff796fbf..9a1102392 100644
+--- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
++++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
+@@ -641,6 +641,9 @@ public class Coocoo {
      }
  
-     private fun bindView() {
-+        val drawable = ResourcesCompat.getDrawable(
-+            Coocoo.getAppContext().resources,
-+            ResMgr.getDrawableId(CC_MY_STATUS_MENU_HISTORY_ICON),
-+            null
-+        )?.let { d ->
-+            val color = Color.parseColor("#D5D9DF")
-+            val wrappedDrawable = DrawableCompat.wrap(d)
-+            DrawableCompat.setTint(wrappedDrawable, color)
-+            wrappedDrawable
-+        }
-+        imgTime.setImageDrawable(drawable)
+     public static void traceLog4(Object object) {
++        List list = (List) object;
++        Object obj = list.get(0);
++        Log.d("Gene", "obj" + obj);
+         Log.e(TAG, "-----------------4---------------- // object : " + object);
+     }
+ 
+diff --git a/whatsapp_modify_module/smali_classes2/X/2i2.smali b/whatsapp_modify_module/smali_classes2/X/2i2.smali
+index b3a0af478..8d58a23bc 100644
+--- a/whatsapp_modify_module/smali_classes2/X/2i2.smali
++++ b/whatsapp_modify_module/smali_classes2/X/2i2.smali
+@@ -24855,6 +24855,8 @@
+     .line 437496
+     iput-object v1, v0, LX/3gV;->A00:Ljava/util/List;
+ 
++    invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog4(Ljava/lang/Object;)V
 +
-         viewModel.statusList.observe(lifecycleOwner) {
-             statusGridAdapter.clear()
-             statusGridAdapter.addAll(it)
-diff --git a/app/src/main/res/layout/cc_activity_history_status.xml b/app/src/main/res/layout/cc_activity_history_status.xml
-index e485a97df..3b38f1b9f 100644
---- a/app/src/main/res/layout/cc_activity_history_status.xml
-+++ b/app/src/main/res/layout/cc_activity_history_status.xml
-@@ -38,6 +38,7 @@
-         app:layout_constraintBottom_toBottomOf="parent"
-         app:layout_constraintTop_toBottomOf="@+id/top_toolbar">
-         <ImageView
-+            android:id="@+id/cc_time"
-             android:layout_width="48dp"
-             android:layout_height="48dp"
-             app:tint="#d5d9df"
+     .line 437497
+     iget-object v0, v0, LX/0AT;->A01:LX/0AU;
+ 
