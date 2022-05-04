@@ -44,7 +44,7 @@ index 000000000..e9bbb0a6b
 +    }
 +}
 diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-index 7ff796fbf..b8bbeedf2 100644
+index 7ff796fbf..64029e81e 100644
 --- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 +++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 @@ -119,6 +119,7 @@ import X.c1_2Ql;
@@ -59,9 +59,9 @@ index 7ff796fbf..b8bbeedf2 100644
      }
  
      public static void traceLog4(Object object) {
-+        List list = (List) object;
-+        cc_46h obj = (cc_46h) list.get(0);
-+        Log.d("Gene", "obj " + obj);
++//        List list = (List) object;
++//        cc_46h obj = (cc_46h) list.get(0);
++//        Log.d("Gene", "obj " + obj);
          Log.e(TAG, "-----------------4---------------- // object : " + object);
      }
  
