@@ -45,22 +45,43 @@ index 7ff796fbf..97cbf03f5 100644
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
 diff --git a/whatsapp_modify_module/smali_classes2/X/2i2.smali b/whatsapp_modify_module/smali_classes2/X/2i2.smali
-index b3a0af478..e311b5daa 100644
+index b3a0af478..6f4afa769 100644
 --- a/whatsapp_modify_module/smali_classes2/X/2i2.smali
 +++ b/whatsapp_modify_module/smali_classes2/X/2i2.smali
-@@ -14996,6 +14996,11 @@
+@@ -14979,6 +14979,10 @@
+     :cond_130
+     check-cast v0, LX/3zo;
+ 
++    const-string v1, "Gene Debug 1"
++
++    invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
++
+     .line 436103
+     iget-object v0, v0, LX/3zo;->A00:Ljava/lang/ref/WeakReference;
+ 
+@@ -14990,12 +14994,21 @@
+ 
+     if-nez v0, :cond_131
+ 
++    const-string v1, "Gene Debug 2"
++
++    invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
++
+     const/4 v6, 0x0
+ 
+     return-object v6
  
      .line 436104
      :cond_131
 +
-+    const-string v1, "Gene Debug 1"
++    const-string v1, "Gene Debug 3"
 +
 +    invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
 +
      iget-object v1, v0, LX/2xw;->A03:LX/2Ql;
  
      .line 436105
-@@ -15044,6 +15049,8 @@
+@@ -15044,6 +15057,8 @@
  
      check-cast v1, LX/3Ao;
  
