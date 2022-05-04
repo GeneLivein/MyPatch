@@ -77,7 +77,7 @@ index 7ff796fbf..b8bbeedf2 100644
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
 diff --git a/whatsapp_modify_module/smali_classes2/X/2i2.smali b/whatsapp_modify_module/smali_classes2/X/2i2.smali
-index b3a0af478..6875ef62f 100644
+index b3a0af478..75696e144 100644
 --- a/whatsapp_modify_module/smali_classes2/X/2i2.smali
 +++ b/whatsapp_modify_module/smali_classes2/X/2i2.smali
 @@ -15053,6 +15053,8 @@
@@ -93,7 +93,7 @@ index b3a0af478..6875ef62f 100644
      .line 437496
      iput-object v1, v0, LX/3gV;->A00:Ljava/util/List;
  
-+    invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog4(Ljava/lang/Object;)V
++    #invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog4(Ljava/lang/Object;)V
 +
      .line 437497
      iget-object v0, v0, LX/0AT;->A01:LX/0AU;
