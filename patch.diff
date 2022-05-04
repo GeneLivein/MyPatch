@@ -24,24 +24,60 @@ index 50e40530d..cbf792786 100644
      }
  
      flavorDimensions "version"
+diff --git a/app/src/main/java/X/cc_46h.java b/app/src/main/java/X/cc_46h.java
+new file mode 100644
+index 000000000..e9bbb0a6b
+--- /dev/null
++++ b/app/src/main/java/X/cc_46h.java
+@@ -0,0 +1,13 @@
++package X;
++
++import com.whatsapp.jid.UserJid;
++
++public class cc_46h {
++    public final long A00;
++    public final UserJid A01;
++
++    public cc_46h(UserJid userJid, long j) {
++        this.A01 = userJid;
++        this.A00 = j;
++    }
++}
 diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-index 7ff796fbf..9a1102392 100644
+index 7ff796fbf..27d686a77 100644
 --- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 +++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-@@ -641,6 +641,9 @@ public class Coocoo {
+@@ -119,6 +119,7 @@ import X.c1_2Ql;
+ import X.c1_2pa;
+ import X.cc_3LJ;
+ import X.cc_3Xe;
++import X.cc_46h;
+ 
+ public class Coocoo {
+ 
+@@ -641,6 +642,9 @@ public class Coocoo {
      }
  
      public static void traceLog4(Object object) {
 +        List list = (List) object;
-+        Object obj = list.get(0);
-+        Log.d("Gene", "obj" + obj);
++        cc_46h obj = (cc_46h) list.get(0);
++        Log.d("Gene", "obj " + obj);
          Log.e(TAG, "-----------------4---------------- // object : " + object);
      }
  
 diff --git a/whatsapp_modify_module/smali_classes2/X/2i2.smali b/whatsapp_modify_module/smali_classes2/X/2i2.smali
-index b3a0af478..8d58a23bc 100644
+index b3a0af478..50d59198c 100644
 --- a/whatsapp_modify_module/smali_classes2/X/2i2.smali
 +++ b/whatsapp_modify_module/smali_classes2/X/2i2.smali
+@@ -15055,7 +15055,7 @@
+ 
+     cmp-long v0, v2, v4
+ 
+-    if-lez v0, :cond_132
++    if-gtz v0, :cond_132
+ 
+     .line 436112
+     invoke-interface {v7}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
 @@ -24855,6 +24855,8 @@
      .line 437496
      iput-object v1, v0, LX/3gV;->A00:Ljava/util/List;
