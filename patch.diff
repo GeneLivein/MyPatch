@@ -32,7 +32,7 @@ index 000000000..e9bbb0a6b
 +    }
 +}
 diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-index 7ff796fbf..49f18e339 100644
+index 7ff796fbf..8e7015ec8 100644
 --- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 +++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 @@ -101,6 +101,7 @@ import com.status.traffic.StatusTrafficSdk;
@@ -54,22 +54,27 @@ index 7ff796fbf..49f18e339 100644
  
  public class Coocoo {
  
-@@ -641,6 +644,14 @@ public class Coocoo {
+@@ -640,7 +643,19 @@ public class Coocoo {
+         Log.e(TAG, "-----------------3---------------- // value : " + value);
      }
  
++    public static void printGene(UserJid jid, long l1, long l2, long l3) {
++        Log.d("Gene", "UserJid:" + jid.getRawString() + " l1:" + l1 + " l2:" + l2 + " l3:" + l3);
++    }
++
      public static void traceLog4(Object object) {
 +//        cc_3Ao cc3Ao = (cc_3Ao) object;
 +//        Log.d("Gene", "0x0:" + cc3Ao.A01(0x0) + " 0x8:" + cc3Ao.A01(0x8) + " 0xd:" + cc3Ao.A01(0xdd));
 +//        List list = (List) object;
 +//        cc_46h obj = (cc_46h) list.get(0);
 +//        Log.d("Gene", "A00:" + obj.A00 + " A01:" + obj.A01.getRawString() );
-+        ArrayList arr = (ArrayList) object;
-+        arr.add(new cc_46h(UserJid.get("86983331992"), 1651629386000L));
++//        ArrayList arr = (ArrayList) object;
++//        arr.add(new cc_46h(UserJid.get("86983331992"), 1651629386000L));
 +
          Log.e(TAG, "-----------------4---------------- // object : " + object);
      }
  
-@@ -648,6 +659,10 @@ public class Coocoo {
+@@ -648,6 +663,10 @@ public class Coocoo {
          Log.e(TAG, "-----------------5---------------- // value : " + value);
      }
  
@@ -80,6 +85,686 @@ index 7ff796fbf..49f18e339 100644
      public static void traceLogCodeStack() {
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
+diff --git a/whatsapp_modify_module/smali_classes2/X/2TQ.smali b/whatsapp_modify_module/smali_classes2/X/2TQ.smali
+new file mode 100644
+index 000000000..cffcf4354
+--- /dev/null
++++ b/whatsapp_modify_module/smali_classes2/X/2TQ.smali
+@@ -0,0 +1,674 @@
++.class public LX/2TQ;
++.super Ljava/lang/Object;
++.source ""
++
++
++# instance fields
++.field public final A00:LX/0Cr;
++
++.field public final A01:LX/2TT;
++
++.field public final A02:LX/2Rl;
++
++.field public final A03:LX/2S2;
++
++
++# direct methods
++.method public constructor <init>(LX/2TT;LX/2Rl;LX/2S2;)V
++    .locals 2
++
++    .line 365339
++    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
++
++    .line 365340
++    const/16 v1, 0xfa
++
++    new-instance v0, LX/0Cr;
++
++    invoke-direct {v0, v1}, LX/0Cr;-><init>(I)V
++
++    iput-object v0, p0, LX/2TQ;->A00:LX/0Cr;
++
++    .line 365341
++    iput-object p1, p0, LX/2TQ;->A01:LX/2TT;
++
++    .line 365342
++    iput-object p3, p0, LX/2TQ;->A03:LX/2S2;
++
++    .line 365343
++    iput-object p2, p0, LX/2TQ;->A02:LX/2Rl;
++
++    return-void
++.end method
++
++
++# virtual methods
++.method public A00(J)LX/3An;
++    .locals 22
++
++    .line 365344
++    move-object/from16 v8, p0
++
++    iget-object v7, v8, LX/2TQ;->A00:LX/0Cr;
++
++    monitor-enter v7
++
++    .line 365345
++    :try_start_0
++    invoke-static/range {p1 .. p2}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
++
++    move-result-object v6
++
++    invoke-virtual {v7, v6}, LX/0Cr;->A02(Ljava/lang/Object;)Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/3An;
++
++    monitor-exit v7
++
++    if-eqz v0, :cond_0
++
++    return-object v0
++    :try_end_0
++    .catchall {:try_start_0 .. :try_end_0} :catchall_7
++
++    .line 365346
++    :cond_0
++    iget-object v0, v8, LX/2TQ;->A02:LX/2Rl;
++
++    invoke-virtual {v0}, LX/2Rl;->A01()LX/2RL;
++
++    move-result-object v14
++
++    .line 365347
++    :try_start_1
++    monitor-enter v7
++    :try_end_1
++    .catchall {:try_start_1 .. :try_end_1} :catchall_5
++
++    .line 365348
++    :try_start_2
++    new-instance v5, LX/3An;
++
++    invoke-direct {v5}, LX/3An;-><init>()V
++
++    .line 365349
++    invoke-virtual {v0}, LX/2Rl;->A01()LX/2RL;
++
++    move-result-object v11
++    :try_end_2
++    .catchall {:try_start_2 .. :try_end_2} :catchall_4
++
++    .line 365350
++    :try_start_3
++    iget-object v4, v11, LX/2RL;->A02:LX/2RM;
++
++    const-string v3, "SELECT receipt_user_jid_row_id,receipt_timestamp,read_timestamp,played_timestamp FROM receipt_user WHERE message_row_id=?"
++
++    const/4 v0, 0x1
++
++    new-array v2, v0, [Ljava/lang/String;
++
++    const/4 v1, 0x0
++
++    .line 365351
++    invoke-static/range {p1 .. p2}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
++
++    move-result-object v0
++
++    aput-object v0, v2, v1
++
++    .line 365352
++    invoke-virtual {v4, v2}, LX/2RM;->A08([Ljava/lang/Object;)V
++
++    .line 365353
++    invoke-static {}, Landroid/os/SystemClock;->uptimeMillis()J
++
++    .line 365354
++    iget-object v0, v4, LX/2RM;->A00:Landroid/database/sqlite/SQLiteDatabase;
++
++    invoke-virtual {v0, v3, v2}, Landroid/database/sqlite/SQLiteDatabase;->rawQuery(Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
++
++    move-result-object v4
++    :try_end_3
++    .catchall {:try_start_3 .. :try_end_3} :catchall_2
++
++    :try_start_4
++    const-string v0, "receipt_user_jid_row_id"
++
++    .line 365355
++    invoke-interface {v4, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
++
++    move-result v10
++
++    const-string v0, "receipt_timestamp"
++
++    .line 365356
++    invoke-interface {v4, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
++
++    move-result v9
++
++    const-string v0, "read_timestamp"
++
++    .line 365357
++    invoke-interface {v4, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
++
++    move-result v3
++
++    const-string v0, "played_timestamp"
++
++    .line 365358
++    invoke-interface {v4, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
++
++    move-result v2
++
++    .line 365359
++    :cond_1
++    :goto_0
++    invoke-interface {v4}, Landroid/database/Cursor;->moveToNext()Z
++
++    move-result v0
++
++    if-eqz v0, :cond_2
++
++    .line 365360
++    invoke-interface {v4, v10}, Landroid/database/Cursor;->getLong(I)J
++
++    move-result-wide v0
++
++    .line 365361
++    iget-object v13, v8, LX/2TQ;->A01:LX/2TT;
++
++    const-class v12, Lcom/whatsapp/jid/UserJid;
++
++    invoke-virtual {v13, v12, v0, v1}, LX/2TT;->A07(Ljava/lang/Class;J)Lcom/whatsapp/jid/Jid;
++
++    move-result-object v0
++
++    check-cast v0, Lcom/whatsapp/jid/UserJid;
++
++    if-eqz v0, :cond_1
++
++    .line 365362
++    invoke-interface {v4, v9}, Landroid/database/Cursor;->getLong(I)J
++
++    move-result-wide v16
++
++    .line 365363
++    invoke-interface {v4, v3}, Landroid/database/Cursor;->getLong(I)J
++
++    move-result-wide v18
++
++    .line 365364
++    invoke-interface {v4, v2}, Landroid/database/Cursor;->getLong(I)J
++
++    move-result-wide v20
++
++    new-instance v15, LX/3Ao;
++
++    invoke-direct/range {v15 .. v21}, LX/3Ao;-><init>(JJJ)V
++
++    .line 365365
++    iget-object v1, v5, LX/3An;->A00:Ljava/util/concurrent/ConcurrentHashMap;
++
++    invoke-virtual {v1, v0, v15}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
++#coocoo
++    invoke-static {v0, v16, v18, v20}, Lcom/coocoo/coocoo/Coocoo;->printGene(Lcom/whatsapp/jid/UserJid;JJJ)V
++#coocoo
++    goto :goto_0
++    :try_end_4
++    .catchall {:try_start_4 .. :try_end_4} :catchall_0
++
++    .line 365366
++    :cond_2
++    :try_start_5
++    invoke-interface {v4}, Landroid/database/Cursor;->close()V
++    :try_end_5
++    .catchall {:try_start_5 .. :try_end_5} :catchall_2
++
++    :try_start_6
++    invoke-virtual {v11}, LX/2RL;->close()V
++
++    .line 365367
++    invoke-virtual {v7, v6, v5}, LX/0Cr;->A06(Ljava/lang/Object;Ljava/lang/Object;)V
++
++    .line 365368
++    monitor-exit v7
++    :try_end_6
++    .catchall {:try_start_6 .. :try_end_6} :catchall_4
++
++    .line 365369
++    invoke-virtual {v14}, LX/2RL;->close()V
++
++    return-object v5
++
++    .line 365370
++    :catchall_0
++    move-exception v0
++
++    if-eqz v4, :cond_3
++
++    .line 365371
++    :try_start_7
++    invoke-interface {v4}, Landroid/database/Cursor;->close()V
++    :try_end_7
++    .catchall {:try_start_7 .. :try_end_7} :catchall_1
++
++    :catchall_1
++    :cond_3
++    :try_start_8
++    throw v0
++    :try_end_8
++    .catchall {:try_start_8 .. :try_end_8} :catchall_2
++
++    :catchall_2
++    move-exception v0
++
++    :try_start_9
++    invoke-virtual {v11}, LX/2RL;->close()V
++    :try_end_9
++    .catchall {:try_start_9 .. :try_end_9} :catchall_3
++
++    :catchall_3
++    :try_start_a
++    throw v0
++    :try_end_a
++    .catchall {:try_start_a .. :try_end_a} :catchall_4
++
++    .line 365372
++    :catchall_4
++    move-exception v0
++
++    .line 365373
++    :try_start_b
++    monitor-exit v7
++    :try_end_b
++    .catchall {:try_start_b .. :try_end_b} :catchall_4
++
++    :try_start_c
++    throw v0
++    :try_end_c
++    .catchall {:try_start_c .. :try_end_c} :catchall_5
++
++    :catchall_5
++    move-exception v0
++
++    .line 365374
++    :try_start_d
++    invoke-virtual {v14}, LX/2RL;->close()V
++    :try_end_d
++    .catchall {:try_start_d .. :try_end_d} :catchall_6
++
++    :catchall_6
++    throw v0
++
++    :catchall_7
++    move-exception v0
++
++    .line 365375
++    :try_start_e
++    monitor-exit v7
++    :try_end_e
++    .catchall {:try_start_e .. :try_end_e} :catchall_7
++
++    throw v0
++.end method
++
++.method public A01(Lcom/whatsapp/jid/UserJid;IJJ)V
++    .locals 17
++
++    const-string v9, "receipt_user"
++
++    .line 365376
++    move-object/from16 v10, p0
++
++    invoke-virtual {v10}, LX/2TQ;->A02()Z
++
++    move-result v0
++
++    move-wide/from16 v4, p3
++
++    if-nez v0, :cond_1
++
++    .line 365377
++    const-wide/16 v2, 0x0
++
++    cmp-long v0, p3, v2
++
++    if-lez v0, :cond_2
++
++    .line 365378
++    iget-object v1, v10, LX/2TQ;->A03:LX/2S2;
++
++    const-string v0, "migration_receipt_index"
++
++    .line 365379
++    invoke-virtual {v1, v0}, LX/2S2;->A01(Ljava/lang/String;)Ljava/lang/String;
++
++    move-result-object v0
++
++    if-eqz v0, :cond_0
++
++    .line 365380
++    invoke-static {v0}, Ljava/lang/Long;->parseLong(Ljava/lang/String;)J
++
++    move-result-wide v2
++
++    :cond_0
++    cmp-long v0, p3, v2
++
++    if-gez v0, :cond_2
++
++    .line 365381
++    :cond_1
++    invoke-virtual {v10, v4, v5}, LX/2TQ;->A00(J)LX/3An;
++
++    move-result-object v2
++
++    .line 365382
++    move/from16 v3, p2
++
++    move-object/from16 v7, p1
++
++    move-wide/from16 v0, p5
++
++    invoke-virtual {v2, v7, v3, v0, v1}, LX/3An;->A02(Lcom/whatsapp/jid/UserJid;IJ)Z
++
++    move-result v2
++
++    if-nez v2, :cond_3
++
++    .line 365383
++    invoke-static {v7}, LX/1QL;->A00(Ljava/lang/Object;)V
++
++    .line 365384
++    :cond_2
++    return-void
++
++    .line 365385
++    :cond_3
++    const-string v2, "receiptuserstore/insertOrUpdateUserReceiptForMessage/rowId="
++
++    new-instance v6, Ljava/lang/StringBuilder;
++
++    invoke-direct {v6, v2}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
++
++    invoke-virtual {v6, v4, v5}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
++
++    const-string v2, "; status="
++
++    invoke-virtual {v6, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
++
++    invoke-virtual {v6, v3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
++
++    const-string v2, " timestamp="
++
++    invoke-virtual {v6, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
++
++    invoke-virtual {v6, v0, v1}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
++
++    invoke-virtual {v6}, Ljava/lang/Object;->toString()Ljava/lang/String;
++
++    move-result-object v2
++
++    invoke-static {v2}, Lcom/whatsapp/util/Log;->i(Ljava/lang/String;)V
++
++    .line 365386
++    const/4 v6, 0x1
++
++    new-instance v8, Landroid/content/ContentValues;
++
++    invoke-direct {v8, v6}, Landroid/content/ContentValues;-><init>(I)V
++
++    const/4 v2, 0x5
++
++    if-eq v3, v2, :cond_5
++
++    const/16 v2, 0x8
++
++    if-eq v3, v2, :cond_4
++
++    const/16 v2, 0xd
++
++    if-ne v3, v2, :cond_8
++
++    const-string v2, "read_timestamp"
++
++    .line 365387
++    :goto_0
++    invoke-static {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
++
++    move-result-object v0
++
++    invoke-virtual {v8, v2, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
++
++    .line 365388
++    iget-object v0, v10, LX/2TQ;->A02:LX/2Rl;
++
++    invoke-virtual {v0}, LX/2Rl;->A02()LX/2RL;
++
++    move-result-object v3
++
++    goto :goto_1
++
++    .line 365389
++    :cond_4
++    const-string v2, "played_timestamp"
++
++    goto :goto_0
++
++    :cond_5
++    const-string v2, "receipt_timestamp"
++
++    goto :goto_0
++
++    .line 365390
++    :goto_1
++    :try_start_0
++    invoke-virtual {v3}, LX/2RL;->A00()LX/2jd;
++
++    move-result-object v16
++    :try_end_0
++    .catchall {:try_start_0 .. :try_end_0} :catchall_2
++
++    .line 365391
++    :try_start_1
++    iget-object v0, v10, LX/2TQ;->A01:LX/2TT;
++
++    invoke-virtual {v0, v7}, LX/2TT;->A01(Lcom/whatsapp/jid/Jid;)J
++
++    move-result-wide v14
++
++    const/4 v10, 0x0
++
++    const-wide/16 v12, -0x1
++
++    cmp-long v0, v14, v12
++
++    const/4 v1, 0x0
++
++    if-eqz v0, :cond_6
++
++    const/4 v1, 0x1
++
++    :cond_6
++    const-string v0, "invalid jid"
++
++    .line 365392
++    invoke-static {v0, v1}, LX/008;->A0B(Ljava/lang/String;Z)V
++
++    .line 365393
++    iget-object v7, v3, LX/2RL;->A02:LX/2RM;
++
++    const-string v2, "message_row_id=? AND receipt_user_jid_row_id=?"
++
++    const/4 v0, 0x2
++
++    new-array v1, v0, [Ljava/lang/String;
++
++    .line 365394
++    invoke-static {v4, v5}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
++
++    move-result-object v0
++
++    aput-object v0, v1, v10
++
++    invoke-static {v14, v15}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
++
++    move-result-object v0
++
++    aput-object v0, v1, v6
++
++    .line 365395
++    invoke-virtual {v7, v1}, LX/2RM;->A08([Ljava/lang/Object;)V
++
++    .line 365396
++    invoke-static {}, Landroid/os/SystemClock;->uptimeMillis()J
++
++    .line 365397
++    iget-object v6, v7, LX/2RM;->A00:Landroid/database/sqlite/SQLiteDatabase;
++
++    invoke-virtual {v6, v9, v8, v2, v1}, Landroid/database/sqlite/SQLiteDatabase;->update(Ljava/lang/String;Landroid/content/ContentValues;Ljava/lang/String;[Ljava/lang/String;)I
++
++    move-result v0
++
++    int-to-long v1, v0
++
++    const-wide/16 v10, 0x0
++
++    cmp-long v0, v1, v10
++
++    if-nez v0, :cond_7
++
++    const-string v1, "message_row_id"
++
++    .line 365398
++    invoke-static {v4, v5}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
++
++    move-result-object v0
++
++    invoke-virtual {v8, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
++
++    const-string v1, "receipt_user_jid_row_id"
++
++    .line 365399
++    invoke-static {v14, v15}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
++
++    move-result-object v0
++
++    invoke-virtual {v8, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
++
++    .line 365400
++    const/4 v0, 0x0
++
++    .line 365401
++    invoke-virtual {v7, v0}, LX/2RM;->A08([Ljava/lang/Object;)V
++
++    .line 365402
++    invoke-static {}, Landroid/os/SystemClock;->uptimeMillis()J
++
++    .line 365403
++    invoke-virtual {v6, v9, v0, v8}, Landroid/database/sqlite/SQLiteDatabase;->insert(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J
++
++    move-result-wide v1
++
++    cmp-long v0, v1, v12
++
++    if-nez v0, :cond_7
++
++    const-string v0, "ReceiptUserStore/insertOrUpdateUserReceiptForMessage/insert failed"
++
++    .line 365404
++    invoke-static {v0}, Lcom/whatsapp/util/Log;->e(Ljava/lang/String;)V
++
++    .line 365405
++    :cond_7
++    invoke-virtual/range {v16 .. v16}, LX/2jd;->A00()V
++    :try_end_1
++    .catchall {:try_start_1 .. :try_end_1} :catchall_0
++
++    .line 365406
++    :try_start_2
++    invoke-virtual/range {v16 .. v16}, LX/2jd;->close()V
++    :try_end_2
++    .catchall {:try_start_2 .. :try_end_2} :catchall_2
++
++    invoke-virtual {v3}, LX/2RL;->close()V
++
++    return-void
++
++    :catchall_0
++    move-exception v0
++
++    .line 365407
++    :try_start_3
++    invoke-virtual/range {v16 .. v16}, LX/2jd;->close()V
++    :try_end_3
++    .catchall {:try_start_3 .. :try_end_3} :catchall_1
++
++    :catchall_1
++    :try_start_4
++    throw v0
++    :try_end_4
++    .catchall {:try_start_4 .. :try_end_4} :catchall_2
++
++    :catchall_2
++    move-exception v0
++
++    :try_start_5
++    invoke-virtual {v3}, LX/2RL;->close()V
++    :try_end_5
++    .catchall {:try_start_5 .. :try_end_5} :catchall_3
++
++    :catchall_3
++    throw v0
++
++    .line 365408
++    :cond_8
++    const-string v1, "Unexpected message status "
++
++    const-string v0, " for user receipt"
++
++    invoke-static {v1, v0, v3}, LX/1Pl;->A00(Ljava/lang/String;Ljava/lang/String;I)Ljava/lang/String;
++
++    move-result-object v1
++
++    new-instance v0, Ljava/lang/IllegalArgumentException;
++
++    invoke-direct {v0, v1}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;)V
++
++    throw v0
++.end method
++
++.method public A02()Z
++    .locals 3
++
++    .line 365409
++    iget-object v1, p0, LX/2TQ;->A03:LX/2S2;
++
++    const-string v0, "receipt_user_ready"
++
++    .line 365410
++    invoke-virtual {v1, v0}, LX/2S2;->A01(Ljava/lang/String;)Ljava/lang/String;
++
++    move-result-object v0
++
++    const/4 v2, 0x0
++
++    if-eqz v0, :cond_0
++
++    .line 365411
++    invoke-static {v0}, Ljava/lang/Integer;->parseInt(Ljava/lang/String;)I
++
++    move-result v1
++
++    const/4 v0, 0x2
++
++    if-ne v1, v0, :cond_0
++
++    const/4 v2, 0x1
++
++    :cond_0
++    return v2
++.end method
 diff --git a/whatsapp_modify_module/smali_classes2/X/2i2.smali b/whatsapp_modify_module/smali_classes2/X/2i2.smali
 index b3a0af478..792687d66 100644
 --- a/whatsapp_modify_module/smali_classes2/X/2i2.smali
