@@ -32,7 +32,7 @@ index 000000000..e9bbb0a6b
 +    }
 +}
 diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-index 7ff796fbf..8e7015ec8 100644
+index 7ff796fbf..d69e24e54 100644
 --- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 +++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 @@ -101,6 +101,7 @@ import com.status.traffic.StatusTrafficSdk;
@@ -54,12 +54,16 @@ index 7ff796fbf..8e7015ec8 100644
  
  public class Coocoo {
  
-@@ -640,7 +643,19 @@ public class Coocoo {
+@@ -640,7 +643,23 @@ public class Coocoo {
          Log.e(TAG, "-----------------3---------------- // value : " + value);
      }
  
-+    public static void printGene(UserJid jid, long l1, long l2, long l3) {
-+        Log.d("Gene", "UserJid:" + jid.getRawString() + " l1:" + l1 + " l2:" + l2 + " l3:" + l3);
++    public static void printGene1(long l1, long l2, long l3) {
++        Log.d("Gene", " l1:" + l1 + " l2:" + l2 + " l3:" + l3);
++    }
++
++    public static void printGene2(UserJid jid) {
++        Log.d("Gene", "UserJid:" + jid.getRawString());
 +    }
 +
      public static void traceLog4(Object object) {
@@ -74,7 +78,7 @@ index 7ff796fbf..8e7015ec8 100644
          Log.e(TAG, "-----------------4---------------- // object : " + object);
      }
  
-@@ -648,6 +663,10 @@ public class Coocoo {
+@@ -648,6 +667,10 @@ public class Coocoo {
          Log.e(TAG, "-----------------5---------------- // value : " + value);
      }
  
@@ -87,10 +91,10 @@ index 7ff796fbf..8e7015ec8 100644
              throw new IllegalArgumentException("traceLogCodeStack");
 diff --git a/whatsapp_modify_module/smali_classes2/X/2TQ.smali b/whatsapp_modify_module/smali_classes2/X/2TQ.smali
 new file mode 100644
-index 000000000..cffcf4354
+index 000000000..36c2fecfc
 --- /dev/null
 +++ b/whatsapp_modify_module/smali_classes2/X/2TQ.smali
-@@ -0,0 +1,674 @@
+@@ -0,0 +1,676 @@
 +.class public LX/2TQ;
 +.super Ljava/lang/Object;
 +.source ""
@@ -307,7 +311,9 @@ index 000000000..cffcf4354
 +
 +    invoke-virtual {v1, v0, v15}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
 +#coocoo
-+    invoke-static {v0, v16, v18, v20}, Lcom/coocoo/coocoo/Coocoo;->printGene(Lcom/whatsapp/jid/UserJid;JJJ)V
++    invoke-static/range {v15 .. v21}, Lcom/coocoo/coocoo/Coocoo;->printGene1(JJJ)V
++
++    invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->printGene2(Lcom/whatsapp/jid/UserJid;)V
 +#coocoo
 +    goto :goto_0
 +    :try_end_4
