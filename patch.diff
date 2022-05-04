@@ -91,10 +91,10 @@ index 7ff796fbf..d69e24e54 100644
              throw new IllegalArgumentException("traceLogCodeStack");
 diff --git a/whatsapp_modify_module/smali_classes2/X/2TQ.smali b/whatsapp_modify_module/smali_classes2/X/2TQ.smali
 new file mode 100644
-index 000000000..36c2fecfc
+index 000000000..77677b863
 --- /dev/null
 +++ b/whatsapp_modify_module/smali_classes2/X/2TQ.smali
-@@ -0,0 +1,676 @@
+@@ -0,0 +1,674 @@
 +.class public LX/2TQ;
 +.super Ljava/lang/Object;
 +.source ""
@@ -311,8 +311,6 @@ index 000000000..36c2fecfc
 +
 +    invoke-virtual {v1, v0, v15}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
 +#coocoo
-+    invoke-static/range {v15 .. v21}, Lcom/coocoo/coocoo/Coocoo;->printGene1(JJJ)V
-+
 +    invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->printGene2(Lcom/whatsapp/jid/UserJid;)V
 +#coocoo
 +    goto :goto_0
