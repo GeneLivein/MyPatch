@@ -1,185 +1,102 @@
-diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
-index bcfb4d5e0..ead5e3eb2 100644
---- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
-+++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryActivity.kt
-@@ -78,18 +78,6 @@ class MyStatusHistoryActivity : CCBaseActivity(), AdapterView.OnItemClickListene
+diff --git a/app/src/main/java/com/coocoo/db/room/mystatus/dao/MyStatusHistoryDao.kt b/app/src/main/java/com/coocoo/db/room/mystatus/dao/MyStatusHistoryDao.kt
+index dd25d9292..19b82d513 100644
+--- a/app/src/main/java/com/coocoo/db/room/mystatus/dao/MyStatusHistoryDao.kt
++++ b/app/src/main/java/com/coocoo/db/room/mystatus/dao/MyStatusHistoryDao.kt
+@@ -2,6 +2,7 @@ package com.coocoo.db.room.mystatus.dao
+ 
+ import androidx.room.*
+ import com.coocoo.db.room.mystatus.entity.MyStatusHistoryEntity
++import kotlinx.coroutines.flow.Flow
+ 
+ @Dao
+ interface MyStatusHistoryDao {
+@@ -10,7 +11,7 @@ interface MyStatusHistoryDao {
+     fun insertMyStatusHistory(vararg myStatusHistoryEntity: MyStatusHistoryEntity)
+ 
+     @Query("SELECT * FROM my_status_history")
+-    suspend fun getMyStatusHistoryEntitiesSuspend(): List<MyStatusHistoryEntity>
++    fun getMyStatusHistoryEntities(): Flow<List<MyStatusHistoryEntity>>
+ 
+     @Query("DELETE FROM my_status_history WHERE message_row_id = :messageRowId")
+     suspend fun deleteMyStatusHistorySuspend(messageRowId: Long)
+diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
+index 5b8aed18a..468739b9a 100644
+--- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
++++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
+@@ -20,6 +20,9 @@ import com.coocoo.utils.FileUtil
+ import com.coocoo.utils.Resource
+ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.GlobalScope
++import kotlinx.coroutines.flow.Flow
++import kotlinx.coroutines.flow.flow
++import kotlinx.coroutines.flow.map
+ import kotlinx.coroutines.launch
+ import java.io.File
+ import java.lang.Exception
+@@ -40,16 +43,10 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
+         const val MY_STATUS_ONLINE_TIME_LIMIT = 24
+     }
+ 
+-    private val _statusList: CCMutableLiveData<List<MyStatusHistoryEntity>> by lazy {
+-        CCMutableLiveData<List<MyStatusHistoryEntity>>().also {
+-            GlobalScope.launch(Dispatchers.Main) {
+-                updateMyStatusHistoryInfoList(it)
+-            }
+-        }
+-    }
++    private val _statusList: Flow<List<MyStatusHistoryEntity>> = database.getMyStatusHistoryDao().getMyStatusHistoryEntities()
+ 
+-    fun getMyStatusHistoryInfoList(): CCLiveData<List<MyStatusHistoryInfo>> {
+-        return CCTransformations.map(_statusList) { list ->
++    fun getMyStatusHistoryInfoList(): Flow<List<MyStatusHistoryInfo>> {
++        return _statusList.map { list ->
+             list.map { myStatusHistoryEntity ->
+                 MyStatusHistoryInfo(
+                     myStatusHistoryEntity.messageRowId,
+@@ -61,15 +58,10 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
          }
      }
  
--    private fun getTintDrawable(drawableId: Int, colorInt: Int): Drawable? {
--       return ResourcesCompat.getDrawable(
--            Coocoo.getAppContext().resources,
--            ResMgr.getDrawableId(CC_MY_STATUS_MENU_HISTORY_ICON),
--            null
--       )?.let { d ->
--           val wrappedDrawable = DrawableCompat.wrap(d)
--           DrawableCompat.setTint(wrappedDrawable, colorInt)
--           wrappedDrawable
--       }
+-    private suspend fun updateMyStatusHistoryInfoList(liveData: CCMutableLiveData<List<MyStatusHistoryEntity>>) {
+-        liveData.value = database.getMyStatusHistoryDao().getMyStatusHistoryEntitiesSuspend()
 -    }
 -
-     class StatusGridAdapter(context: Context) : ArrayAdapter<MyStatusHistoryInfo>(context, ResMgr.getLayoutId("")) {
+     suspend fun deleteStatus(messageRowId: Long): Resource<Unit> {
+         return try {
+             database.getMyStatusHistoryDao().deleteMyStatusHistorySuspend(messageRowId)
+             database.getMyStatusHistoryReceiptUserDao().deleteReceiptUsersSuspend(messageRowId)
+-            updateMyStatusHistoryInfoList(_statusList)
+             Resource.SUCCESS
+         } catch (e: Exception) {
+             Resource.ERROR
+diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt
+index c45aa55a5..ae05bd1bb 100644
+--- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt
++++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt
+@@ -2,10 +2,12 @@ package com.coocoo.statuses.myhistory
  
-         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-index 1298485d8..d39f7130d 100644
---- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-+++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-@@ -15,10 +15,12 @@ import com.coocoo.db.room.mystatus.entity.MyStatusHistoryReceiptUserEntity
- import com.coocoo.fm.yo
- import com.coocoo.utils.Constant
- import com.coocoo.utils.FileUtil
-+import com.coocoo.utils.Resource
- import kotlinx.coroutines.Dispatchers
- import kotlinx.coroutines.GlobalScope
- import kotlinx.coroutines.launch
- import java.io.File
-+import java.lang.Exception
- 
- class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
- 
-@@ -60,10 +62,15 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
-         liveData.value = database.getMyStatusHistoryDao().getMyStatusHistoryEntities()
-     }
- 
--    suspend fun deleteStatus(messageRowId: Long) {
--        database.getMyStatusHistoryDao().deleteMyStatusHistory(messageRowId)
--        database.getMyStatusHistoryReceiptUserDao().deleteReceiptUsers(messageRowId)
--        updateMyStatusHistoryInfoList(_statusList)
-+    suspend fun deleteStatus(messageRowId: Long): Resource<Unit> {
-+        return try {
-+            database.getMyStatusHistoryDao().deleteMyStatusHistory(messageRowId)
-+            database.getMyStatusHistoryReceiptUserDao().deleteReceiptUsers(messageRowId)
-+            updateMyStatusHistoryInfoList(_statusList)
-+            Resource.SUCCESS
-+        } catch (e: Exception) {
-+            Resource.ERROR
-+        }
-     }
- 
-     @SmaliInject
-diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt
-index 0f0e512d4..fb47ce79f 100644
---- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt
-+++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt
-@@ -1,21 +1,23 @@
- package com.coocoo.statuses.myhistory
- 
- import X.c1_2Ql
--import X.cc_2Qk
--import android.content.Intent
--import android.net.Uri
-+import android.widget.Toast
-+import androidx.lifecycle.Observer
- import com.coocoowhatsapp.status.playback.StatusPlaybackActivity
--import com.coocoo.utils.ActivityUtil
- import com.coocoo.utils.ResMgr
- import com.coocoo.utils.safelyShow
- import com.coocoo.widget.CoocooAlertDialog
--import com.whatsapp.mediacomposer.MediaComposerActivity
- import java.util.ArrayList
- 
- class MyStatusHistoryPlaybackActivity : StatusPlaybackActivity() {
- 
-     val viewModel: MyStatusHistoryPlaybackViewModel = MyStatusHistoryPlaybackViewModel()
- 
-+    private val toastObserver: Observer<String> = Observer { str ->
-+        Toast.makeText(this, ResMgr.getString(str), Toast.LENGTH_SHORT).show()
-+        finish()
-+    }
-+
-     val myStatusHistoryInfoList: ArrayList<MyStatusHistoryInfo>
-         get() = intent.getParcelableArrayListExtra(MyStatusHistoryActivity.KEY_MY_STATUS_HISTORY_INFO_LIST)
- 
-@@ -28,9 +30,21 @@ class MyStatusHistoryPlaybackActivity : StatusPlaybackActivity() {
-             message = ResMgr.getString("cc_my_status_delete_now_message"),
-             onConfirmClicked = {
-                 viewModel.deleteStatus(c12Ql)
--                finish()
-             },
-             onCancelClicked = {}
-         ).safelyShow()
-     }
-+
-+    init {
-+        bindData()
-+    }
-+
-+    private fun bindData() {
-+        viewModel.toast.observeForever(toastObserver)
-+    }
-+
-+    override fun onDestroy() {
-+        super.onDestroy()
-+        viewModel.toast.removeObserver(toastObserver)
-+    }
- }
-\ No newline at end of file
-diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackViewModel.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackViewModel.kt
-index a566a2ac1..73c5d8bc0 100644
---- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackViewModel.kt
-+++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackViewModel.kt
-@@ -1,7 +1,13 @@
- package com.coocoo.statuses.myhistory
- 
- import X.c1_2Ql
-+import androidx.lifecycle.LiveData
-+import androidx.lifecycle.MutableLiveData
+ import androidx.lifecycle.*
  import com.coocoo.coocoo.Coocoo
-+import com.coocoo.utils.Constants
-+import com.coocoo.utils.Constants.Res.String.MY_STATUS_DELETE_DONE
-+import com.coocoo.utils.Constants.Res.String.MY_STATUS_DELETE_FAIL
-+import com.coocoo.utils.Resource
- import kotlinx.coroutines.Dispatchers
- import kotlinx.coroutines.GlobalScope
- import kotlinx.coroutines.launch
-@@ -10,9 +16,16 @@ class MyStatusHistoryPlaybackViewModel(
-     private val repo: MyStatusHistoryListRepository = Coocoo.getRepoContainer().myStatusHistoryListRepo
- ) {
++import kotlinx.coroutines.flow.collect
++import kotlinx.coroutines.launch
  
-+    private val _toast: MutableLiveData<String> = MutableLiveData()
-+    val toast: LiveData<String> get() = _toast
-+
-     fun deleteStatus(c12Ql: c1_2Ql) {
-         GlobalScope.launch(Dispatchers.Main) {
--            repo.deleteStatus(c12Ql.A0y)
-+            val resource = repo.deleteStatus(c12Ql.A0y)
-+            _toast.value = when(resource) {
-+                is Resource.Success -> MY_STATUS_DELETE_DONE
-+                is Resource.Error -> MY_STATUS_DELETE_FAIL
+ class MyStatusHistoryViewModel(val repo: MyStatusHistoryListRepository) : CCViewModel() {
+ 
+-    private val _statusList: CCMediatorLiveData<List<MyStatusHistoryInfo>> = CCMediatorLiveData()
++    private val _statusList: CCMutableLiveData<List<MyStatusHistoryInfo>> = CCMutableLiveData()
+     val statusList: CCLiveData<List<MyStatusHistoryInfo>> get() = _statusList
+ 
+     val isShownEmptyView: CCLiveData<Boolean> get() = CCTransformations.map(_statusList) {
+@@ -13,8 +15,10 @@ class MyStatusHistoryViewModel(val repo: MyStatusHistoryListRepository) : CCView
+     }
+ 
+     init {
+-        _statusList.addSource(repo.getMyStatusHistoryInfoList()) {
+-            _statusList.value = it
++        viewModelScope.launch {
++            repo.getMyStatusHistoryInfoList().collect {
++                _statusList.value = it
 +            }
          }
      }
- }
-\ No newline at end of file
-diff --git a/app/src/main/java/com/coocoo/utils/Constants.kt b/app/src/main/java/com/coocoo/utils/Constants.kt
-index 01d4ee13d..873d288e8 100644
---- a/app/src/main/java/com/coocoo/utils/Constants.kt
-+++ b/app/src/main/java/com/coocoo/utils/Constants.kt
-@@ -680,6 +680,8 @@ object Constants {
-             // My Status History
-             const val CC_MY_STATUS_MENU_HISTORY_TITLE = "cc_my_status_menu_history_title"
-             const val CC_MY_STATUS_MENU_HISTORY_HINT_MSG = "cc_my_status_menu_history_hint_msg"
-+            const val MY_STATUS_DELETE_DONE = "cc_my_status_history_delete_done"
-+            const val MY_STATUS_DELETE_FAIL = "cc_my_status_history_delete_failed"
-         }
  
-         object Style {
-diff --git a/app/src/main/java/com/coocoo/utils/Resource.kt b/app/src/main/java/com/coocoo/utils/Resource.kt
-new file mode 100644
-index 000000000..a12d5069b
---- /dev/null
-+++ b/app/src/main/java/com/coocoo/utils/Resource.kt
-@@ -0,0 +1,11 @@
-+package com.coocoo.utils
-+
-+sealed class Resource<T> {
-+    data class Success<T>(val data: T) : Resource<T>()
-+    data class Error<T>(val errorMessage: String = "") : Resource<T>()
-+
-+    companion object {
-+        val SUCCESS = Success(Unit)
-+        val ERROR = Error<Unit>()
-+    }
-+}
-\ No newline at end of file
