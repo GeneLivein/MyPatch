@@ -59,10 +59,10 @@ index 1298485d8..d39f7130d 100644
  
      @SmaliInject
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt
-index 0f0e512d4..87d35fc88 100644
+index 0f0e512d4..fb47ce79f 100644
 --- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt
-@@ -1,21 +1,22 @@
+@@ -1,21 +1,23 @@
  package com.coocoo.statuses.myhistory
  
  import X.c1_2Ql
@@ -85,12 +85,18 @@ index 0f0e512d4..87d35fc88 100644
  
 +    private val toastObserver: Observer<String> = Observer { str ->
 +        Toast.makeText(this, ResMgr.getString(str), Toast.LENGTH_SHORT).show()
++        finish()
 +    }
 +
      val myStatusHistoryInfoList: ArrayList<MyStatusHistoryInfo>
          get() = intent.getParcelableArrayListExtra(MyStatusHistoryActivity.KEY_MY_STATUS_HISTORY_INFO_LIST)
  
-@@ -33,4 +34,17 @@ class MyStatusHistoryPlaybackActivity : StatusPlaybackActivity() {
+@@ -28,9 +30,21 @@ class MyStatusHistoryPlaybackActivity : StatusPlaybackActivity() {
+             message = ResMgr.getString("cc_my_status_delete_now_message"),
+             onConfirmClicked = {
+                 viewModel.deleteStatus(c12Ql)
+-                finish()
+             },
              onCancelClicked = {}
          ).safelyShow()
      }
