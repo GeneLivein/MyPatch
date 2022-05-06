@@ -59,7 +59,7 @@ index 1298485d8..d39f7130d 100644
  
      @SmaliInject
 diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt
-index 0f0e512d4..8ea7451bf 100644
+index 0f0e512d4..87d35fc88 100644
 --- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt
 +++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryPlaybackActivity.kt
 @@ -1,21 +1,22 @@
@@ -84,7 +84,7 @@ index 0f0e512d4..8ea7451bf 100644
      val viewModel: MyStatusHistoryPlaybackViewModel = MyStatusHistoryPlaybackViewModel()
  
 +    private val toastObserver: Observer<String> = Observer { str ->
-+        Toast.makeText(this, str, Toast.LENGTH_SHORT).show()
++        Toast.makeText(this, ResMgr.getString(str), Toast.LENGTH_SHORT).show()
 +    }
 +
      val myStatusHistoryInfoList: ArrayList<MyStatusHistoryInfo>
