@@ -1,3 +1,36 @@
+diff --git a/app/src/main/res/drawable/bg_rounded_rect_20.xml b/app/src/main/res/drawable/cc_bg_rounded_rect_20.xml
+similarity index 100%
+rename from app/src/main/res/drawable/bg_rounded_rect_20.xml
+rename to app/src/main/res/drawable/cc_bg_rounded_rect_20.xml
+diff --git a/app/src/main/res/layout/cc_voip_color_phone_call_view.xml b/app/src/main/res/layout/cc_voip_color_phone_call_view.xml
+index 41340b6e0..ad8a69f62 100644
+--- a/app/src/main/res/layout/cc_voip_color_phone_call_view.xml
++++ b/app/src/main/res/layout/cc_voip_color_phone_call_view.xml
+@@ -103,7 +103,7 @@
+             android:text="@string/cc_caller_id_identified"
+             android:textColor="#f3f3f3"
+             android:textSize="14sp"
+-            android:background="@drawable/bg_rounded_rect_20"
++            android:background="@drawable/cc_bg_rounded_rect_20"
+             android:layout_marginTop="28dp"
+             android:gravity="center_horizontal"
+             android:paddingStart="18dp"
+diff --git a/whatsapp_modify_module/res/layout/call_details_layout.xml b/whatsapp_modify_module/res/layout/call_details_layout.xml
+index 4dd2a7faf..5881032bd 100644
+--- a/whatsapp_modify_module/res/layout/call_details_layout.xml
++++ b/whatsapp_modify_module/res/layout/call_details_layout.xml
+@@ -12,9 +12,9 @@
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="@string/cc_caller_id_identified"
+-        android:textColor="@color/white_f3"
++        android:textColor="#f3f3f3"
+         android:textSize="14sp"
+-        android:background="@drawable/bg_rounded_rect_20"
++        android:background="@drawable/cc_bg_rounded_rect_20"
+         android:layout_marginTop="28dp"
+         android:gravity="center_horizontal"
+         android:paddingStart="18dp"
 diff --git a/whatsapp_modify_module/smali_classes2/X/3eQ.2.smali b/whatsapp_modify_module/smali_classes2/X/3eQ.2.smali
 index 1d3e5c2c5..20d0da629 100644
 --- a/whatsapp_modify_module/smali_classes2/X/3eQ.2.smali
