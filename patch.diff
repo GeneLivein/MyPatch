@@ -1,102 +1,13 @@
-diff --git a/app/src/main/java/com/coocoo/db/room/mystatus/dao/MyStatusHistoryDao.kt b/app/src/main/java/com/coocoo/db/room/mystatus/dao/MyStatusHistoryDao.kt
-index dd25d9292..19b82d513 100644
---- a/app/src/main/java/com/coocoo/db/room/mystatus/dao/MyStatusHistoryDao.kt
-+++ b/app/src/main/java/com/coocoo/db/room/mystatus/dao/MyStatusHistoryDao.kt
-@@ -2,6 +2,7 @@ package com.coocoo.db.room.mystatus.dao
+diff --git a/whatsapp_modify_module/smali_classes2/X/3eQ.2.smali b/whatsapp_modify_module/smali_classes2/X/3eQ.2.smali
+index 1d3e5c2c5..20d0da629 100644
+--- a/whatsapp_modify_module/smali_classes2/X/3eQ.2.smali
++++ b/whatsapp_modify_module/smali_classes2/X/3eQ.2.smali
+@@ -159,6 +159,8 @@
  
- import androidx.room.*
- import com.coocoo.db.room.mystatus.entity.MyStatusHistoryEntity
-+import kotlinx.coroutines.flow.Flow
+     const/4 v4, 0x0
  
- @Dao
- interface MyStatusHistoryDao {
-@@ -10,7 +11,7 @@ interface MyStatusHistoryDao {
-     fun insertMyStatusHistory(vararg myStatusHistoryEntity: MyStatusHistoryEntity)
++    invoke-static {v7}, Lcom/coocoo/coocoo/Coocoo;->traceLog5(I)V
++
+     move-object/from16 v6, p3
  
-     @Query("SELECT * FROM my_status_history")
--    suspend fun getMyStatusHistoryEntitiesSuspend(): List<MyStatusHistoryEntity>
-+    fun getMyStatusHistoryEntities(): Flow<List<MyStatusHistoryEntity>>
- 
-     @Query("DELETE FROM my_status_history WHERE message_row_id = :messageRowId")
-     suspend fun deleteMyStatusHistorySuspend(messageRowId: Long)
-diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-index 5b8aed18a..468739b9a 100644
---- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-+++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryListRepository.kt
-@@ -20,6 +20,9 @@ import com.coocoo.utils.FileUtil
- import com.coocoo.utils.Resource
- import kotlinx.coroutines.Dispatchers
- import kotlinx.coroutines.GlobalScope
-+import kotlinx.coroutines.flow.Flow
-+import kotlinx.coroutines.flow.flow
-+import kotlinx.coroutines.flow.map
- import kotlinx.coroutines.launch
- import java.io.File
- import java.lang.Exception
-@@ -40,16 +43,10 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
-         const val MY_STATUS_ONLINE_TIME_LIMIT = 24
-     }
- 
--    private val _statusList: CCMutableLiveData<List<MyStatusHistoryEntity>> by lazy {
--        CCMutableLiveData<List<MyStatusHistoryEntity>>().also {
--            GlobalScope.launch(Dispatchers.Main) {
--                updateMyStatusHistoryInfoList(it)
--            }
--        }
--    }
-+    private val _statusList: Flow<List<MyStatusHistoryEntity>> = database.getMyStatusHistoryDao().getMyStatusHistoryEntities()
- 
--    fun getMyStatusHistoryInfoList(): CCLiveData<List<MyStatusHistoryInfo>> {
--        return CCTransformations.map(_statusList) { list ->
-+    fun getMyStatusHistoryInfoList(): Flow<List<MyStatusHistoryInfo>> {
-+        return _statusList.map { list ->
-             list.map { myStatusHistoryEntity ->
-                 MyStatusHistoryInfo(
-                     myStatusHistoryEntity.messageRowId,
-@@ -61,15 +58,10 @@ class MyStatusHistoryListRepository(private val database: MyStatusDatabase) {
-         }
-     }
- 
--    private suspend fun updateMyStatusHistoryInfoList(liveData: CCMutableLiveData<List<MyStatusHistoryEntity>>) {
--        liveData.value = database.getMyStatusHistoryDao().getMyStatusHistoryEntitiesSuspend()
--    }
--
-     suspend fun deleteStatus(messageRowId: Long): Resource<Unit> {
-         return try {
-             database.getMyStatusHistoryDao().deleteMyStatusHistorySuspend(messageRowId)
-             database.getMyStatusHistoryReceiptUserDao().deleteReceiptUsersSuspend(messageRowId)
--            updateMyStatusHistoryInfoList(_statusList)
-             Resource.SUCCESS
-         } catch (e: Exception) {
-             Resource.ERROR
-diff --git a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt
-index c45aa55a5..ae05bd1bb 100644
---- a/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt
-+++ b/app/src/main/java/com/coocoo/statuses/myhistory/MyStatusHistoryViewModel.kt
-@@ -2,10 +2,12 @@ package com.coocoo.statuses.myhistory
- 
- import androidx.lifecycle.*
- import com.coocoo.coocoo.Coocoo
-+import kotlinx.coroutines.flow.collect
-+import kotlinx.coroutines.launch
- 
- class MyStatusHistoryViewModel(val repo: MyStatusHistoryListRepository) : CCViewModel() {
- 
--    private val _statusList: CCMediatorLiveData<List<MyStatusHistoryInfo>> = CCMediatorLiveData()
-+    private val _statusList: CCMutableLiveData<List<MyStatusHistoryInfo>> = CCMutableLiveData()
-     val statusList: CCLiveData<List<MyStatusHistoryInfo>> get() = _statusList
- 
-     val isShownEmptyView: CCLiveData<Boolean> get() = CCTransformations.map(_statusList) {
-@@ -13,8 +15,10 @@ class MyStatusHistoryViewModel(val repo: MyStatusHistoryListRepository) : CCView
-     }
- 
-     init {
--        _statusList.addSource(repo.getMyStatusHistoryInfoList()) {
--            _statusList.value = it
-+        viewModelScope.launch {
-+            repo.getMyStatusHistoryInfoList().collect {
-+                _statusList.value = it
-+            }
-         }
-     }
- 
+     if-eqz v7, :cond_7
