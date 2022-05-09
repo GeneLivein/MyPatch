@@ -12,7 +12,7 @@ index 06f76d131..6149a3df1 100644
              LogUtil.d("click block");
          });
 diff --git a/whatsapp_modify_module/res/layout/calls_row_legacy.xml b/whatsapp_modify_module/res/layout/calls_row_legacy.xml
-index 49da95e3a..286fa327b 100644
+index 49da95e3a..ea7fa76ad 100644
 --- a/whatsapp_modify_module/res/layout/calls_row_legacy.xml
 +++ b/whatsapp_modify_module/res/layout/calls_row_legacy.xml
 @@ -15,7 +15,7 @@
@@ -20,7 +20,7 @@ index 49da95e3a..286fa327b 100644
      </LinearLayout>
  <!--#coocoo-->
 -    <com.coocoowhatsapp.WaImageView android:id="@id/btn_block" android:layout_width="48dp" android:layout_height="48dp" android:src="@drawable/cc_ic_block" android:scaleType="center" android:layout_alignParentRight="true"/>
-+    <com.coocoowhatsapp.WaImageView android:id="@id/cc_btn_block" android:layout_width="48dp" android:layout_height="48dp" android:src="@drawable/cc_ic_block" android:scaleType="center" android:layout_alignParentRight="true"/>
++    <com.coocoowhatsapp.WaImageView android:id="@+id/cc_btn_block" android:layout_width="48dp" android:layout_height="48dp" android:src="@drawable/cc_ic_block" android:scaleType="center" android:layout_alignParentRight="true"/>
  <!--#coocoo-->
      <LinearLayout android:orientation="horizontal" android:id="@id/call_btns_container" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_alignParentRight="true">
          <com.coocoowhatsapp.WaImageView android:gravity="center" android:id="@id/voice_call" android:background="@drawable/selector_orange_gradient" android:layout_width="@dimen/call_icon_width" android:layout_height="@dimen/conversations_row_height" android:src="@drawable/ic_action_call" android:scaleType="center" android:contentDescription="@string/audio_call" whatsapp:tint="@color/icon_color" />
