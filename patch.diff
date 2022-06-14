@@ -53,7 +53,7 @@ index b45ffb2ee..f01ce4b32 100644
  
      .line 270328
 diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
-index 681c0ed30..bd5e903ef 100644
+index 681c0ed30..511880757 100644
 --- a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
 +++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
 @@ -6207,6 +6207,10 @@
@@ -77,7 +77,22 @@ index 681c0ed30..bd5e903ef 100644
  
      const v13, 0x7f100006
  
-@@ -7642,6 +7649,10 @@
+@@ -7611,6 +7618,14 @@
+ 
+     const/4 v4, 0x5
+ 
++#coocoo
++    const-string v14, "multicast_limit_global"
++
++    invoke-static {v4}, Lcom/coocoo/manager/TweakWaFeatureManager;->getIntTweakedValue(Ljava/lang/String;I)I
++
++    move-result v4
++#coocoo
++
+     if-eqz v3, :cond_e
+ 
+     :cond_13
+@@ -7642,6 +7657,10 @@
  
      move-result-object v2
  
@@ -88,7 +103,7 @@ index 681c0ed30..bd5e903ef 100644
      .line 117533
      iget-object v1, v11, LX/0UM;->A00:LX/0BR;
  
-@@ -8206,6 +8217,10 @@
+@@ -8206,6 +8225,10 @@
  
      move-result-object v1
  
