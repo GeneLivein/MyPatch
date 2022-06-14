@@ -53,10 +53,21 @@ index b45ffb2ee..f01ce4b32 100644
  
      .line 270328
 diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
-index 681c0ed30..fa82c49b8 100644
+index 681c0ed30..bd5e903ef 100644
 --- a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
 +++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
-@@ -7539,6 +7539,9 @@
+@@ -6207,6 +6207,10 @@
+ 
+     move-result-object v1
+ 
++#coocoo
++    invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
++#coocoo
++
+     goto :goto_0
+ .end method
+ 
+@@ -7539,6 +7543,9 @@
      invoke-static {v8, v3}, Ljava/lang/Math;->min(II)I
  
      move-result v4
@@ -66,7 +77,18 @@ index 681c0ed30..fa82c49b8 100644
  
      const v13, 0x7f100006
  
-@@ -8206,6 +8209,10 @@
+@@ -7642,6 +7649,10 @@
+ 
+     move-result-object v2
+ 
++#coocoo
++    invoke-static {v2}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
++#coocoo
++
+     .line 117533
+     iget-object v1, v11, LX/0UM;->A00:LX/0BR;
+ 
+@@ -8206,6 +8217,10 @@
  
      move-result-object v1
  
