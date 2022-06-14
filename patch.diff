@@ -1,3 +1,18 @@
+diff --git a/whatsapp_modify_module/smali/X/1qC.2.smali b/whatsapp_modify_module/smali/X/1qC.2.smali
+index b45ffb2ee..2c8d84b93 100644
+--- a/whatsapp_modify_module/smali/X/1qC.2.smali
++++ b/whatsapp_modify_module/smali/X/1qC.2.smali
+@@ -336,6 +336,10 @@
+ 
+     move-result v0
+ 
++#coocoo
++    invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog5(I)V
++#coocoo
++
+     if-le v0, v2, :cond_8
+ 
+     .line 270328
 diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
 index 681c0ed30..5564ca38a 100644
 --- a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
