@@ -1,3 +1,18 @@
+diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
+index 77bd78c7b..682221cb4 100644
+--- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
++++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
+@@ -656,6 +656,10 @@ public class Coocoo {
+         Log.e(TAG, "-----------------5---------------- // value : " + value);
+     }
+ 
++    public static void traceLog6(boolean value) {
++        Log.e(TAG, "-----------------5---------------- // value : " + value);
++    }
++
+     public static void traceLogCodeStack() {
+         try {
+             throw new IllegalArgumentException("traceLogCodeStack");
 diff --git a/whatsapp_modify_module/smali/X/1qC.2.smali b/whatsapp_modify_module/smali/X/1qC.2.smali
 index b45ffb2ee..f01ce4b32 100644
 --- a/whatsapp_modify_module/smali/X/1qC.2.smali
@@ -38,7 +53,7 @@ index b45ffb2ee..f01ce4b32 100644
  
      .line 270328
 diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
-index 681c0ed30..5564ca38a 100644
+index 681c0ed30..de1481349 100644
 --- a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
 +++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
 @@ -7539,6 +7539,9 @@
@@ -51,3 +66,33 @@ index 681c0ed30..5564ca38a 100644
  
      const v13, 0x7f100006
  
+@@ -7574,10 +7577,18 @@
+     :cond_f
+     iget-boolean v3, v0, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A24:Z
+ 
++#coocoo
++    invoke-static {v3}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(Z)V
++#coocoo
++
+     if-eqz v3, :cond_10
+ 
+     iget-boolean v3, v0, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A23:Z
+ 
++#coocoo
++    invoke-static {v3}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(Z)V
++#coocoo
++
+     if-eqz v3, :cond_10
+ 
+     .line 117528
+@@ -7585,6 +7596,10 @@
+ 
+     move-result v3
+ 
++#coocoo
++    invoke-static {v3}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(Z)V
++#coocoo
++
+     if-eqz v3, :cond_10
+ 
+     iget-boolean v3, v0, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A20:Z
