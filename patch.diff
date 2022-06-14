@@ -1,39 +1,27 @@
-diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/CallsFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/CallsFragmentDelegate.java
-index 06f76d131..6149a3df1 100644
---- a/app/src/main/java/com/coocoo/whatsappdelegate/CallsFragmentDelegate.java
-+++ b/app/src/main/java/com/coocoo/whatsappdelegate/CallsFragmentDelegate.java
-@@ -61,7 +61,7 @@ public class CallsFragmentDelegate extends FragmentDelegate<CallsFragmentThemeMa
-     @SmaliInject
-     public void onBindCallsRowLegacy(cc_3X1 cc3X1, Jid jid) {
-         LogUtil.d("Jid:" + jid.user);
--        View btnBlock = cc3X1.A01.findViewById(ResMgr.getId("btn_block"));
-+        View btnBlock = cc3X1.A01.findViewById(ResMgr.getId("cc_btn_block"));
-         btnBlock.setOnClickListener((view) -> {
-             LogUtil.d("click block");
-         });
-diff --git a/whatsapp_modify_module/res/layout/calls_row_legacy.xml b/whatsapp_modify_module/res/layout/calls_row_legacy.xml
-index 49da95e3a..2ad828d21 100644
---- a/whatsapp_modify_module/res/layout/calls_row_legacy.xml
-+++ b/whatsapp_modify_module/res/layout/calls_row_legacy.xml
-@@ -15,7 +15,7 @@
-         </LinearLayout>
-     </LinearLayout>
- <!--#coocoo-->
--    <com.coocoowhatsapp.WaImageView android:id="@id/btn_block" android:layout_width="48dp" android:layout_height="48dp" android:src="@drawable/cc_ic_block" android:scaleType="center" android:layout_alignParentRight="true"/>
-+    <com.coocoowhatsapp.WaImageView android:id="@+id/cc_btn_block" android:layout_width="48dp" android:layout_height="fill_parent" android:src="@drawable/cc_ic_block" android:scaleType="center" android:layout_toLeftOf="@+id/call_btns_container" android:background="@drawable/selector_orange_gradient" />
- <!--#coocoo-->
-     <LinearLayout android:orientation="horizontal" android:id="@id/call_btns_container" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_alignParentRight="true">
-         <com.coocoowhatsapp.WaImageView android:gravity="center" android:id="@id/voice_call" android:background="@drawable/selector_orange_gradient" android:layout_width="@dimen/call_icon_width" android:layout_height="@dimen/conversations_row_height" android:src="@drawable/ic_action_call" android:scaleType="center" android:contentDescription="@string/audio_call" whatsapp:tint="@color/icon_color" />
-diff --git a/whatsapp_modify_module/smali_classes2/X/3eQ.2.smali b/whatsapp_modify_module/smali_classes2/X/3eQ.2.smali
-index 1d3e5c2c5..20d0da629 100644
---- a/whatsapp_modify_module/smali_classes2/X/3eQ.2.smali
-+++ b/whatsapp_modify_module/smali_classes2/X/3eQ.2.smali
-@@ -159,6 +159,8 @@
+diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
+index 681c0ed30..2b555d4a1 100644
+--- a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
++++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
+@@ -7539,6 +7539,9 @@
+     invoke-static {v8, v3}, Ljava/lang/Math;->min(II)I
  
-     const/4 v4, 0x0
+     move-result v4
++#coocoo
++    invoke-static {v4}, Lcom/coocoo/coocoo/Coocoo;->traceLog5(I)V
++#coocoo
  
-+    invoke-static {v7}, Lcom/coocoo/coocoo/Coocoo;->traceLog5(I)V
+     const v13, 0x7f100006
+ 
+@@ -10078,6 +10081,12 @@
+ 
+     move-result v0
+ 
++#coocoo
++    invoke-static {v1, v0}, Lcom/coocoo/manager/TweakWaFeatureManager;->getIntTweakedValue(Ljava/lang/String;I)I
 +
-     move-object/from16 v6, p3
++    move-result v0
++#coocoo
++
+     if-eqz v0, :cond_1
  
-     if-eqz v7, :cond_7
+     .line 117834
