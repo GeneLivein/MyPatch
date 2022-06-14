@@ -53,7 +53,7 @@ index b45ffb2ee..f01ce4b32 100644
  
      .line 270328
 diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
-index 681c0ed30..de1481349 100644
+index 681c0ed30..fa82c49b8 100644
 --- a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
 +++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
 @@ -7539,6 +7539,9 @@
@@ -66,33 +66,14 @@ index 681c0ed30..de1481349 100644
  
      const v13, 0x7f100006
  
-@@ -7574,10 +7577,18 @@
-     :cond_f
-     iget-boolean v3, v0, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A24:Z
+@@ -8206,6 +8209,10 @@
+ 
+     move-result-object v1
  
 +#coocoo
-+    invoke-static {v3}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(Z)V
-+#coocoo
-+
-     if-eqz v3, :cond_10
- 
-     iget-boolean v3, v0, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A23:Z
- 
-+#coocoo
-+    invoke-static {v3}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(Z)V
++    invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
 +#coocoo
 +
-     if-eqz v3, :cond_10
+     .line 117599
+     invoke-virtual {v13, v1, v5}, LX/01s;->A0D(Ljava/lang/CharSequence;I)V
  
-     .line 117528
-@@ -7585,6 +7596,10 @@
- 
-     move-result v3
- 
-+#coocoo
-+    invoke-static {v3}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(Z)V
-+#coocoo
-+
-     if-eqz v3, :cond_10
- 
-     iget-boolean v3, v0, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A20:Z
