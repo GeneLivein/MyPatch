@@ -1,5 +1,5 @@
 diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
-index 681c0ed30..2b555d4a1 100644
+index 681c0ed30..5564ca38a 100644
 --- a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
 +++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
 @@ -7539,6 +7539,9 @@
@@ -12,16 +12,3 @@ index 681c0ed30..2b555d4a1 100644
  
      const v13, 0x7f100006
  
-@@ -10078,6 +10081,12 @@
- 
-     move-result v0
- 
-+#coocoo
-+    invoke-static {v1, v0}, Lcom/coocoo/manager/TweakWaFeatureManager;->getIntTweakedValue(Ljava/lang/String;I)I
-+
-+    move-result v0
-+#coocoo
-+
-     if-eqz v0, :cond_1
- 
-     .line 117834
