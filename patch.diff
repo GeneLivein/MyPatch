@@ -53,7 +53,7 @@ index b45ffb2ee..f01ce4b32 100644
  
      .line 270328
 diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
-index 681c0ed30..a4f84a708 100644
+index 681c0ed30..41954fc74 100644
 --- a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
 +++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
 @@ -6207,6 +6207,10 @@
@@ -82,7 +82,7 @@ index 681c0ed30..a4f84a708 100644
      const/4 v4, 0x5
  
 +#coocoo
-+    invoke-static {}, Lcom/coocoo/managerConversationScreenPreferenceManager;->getForwardLimit()I
++    invoke-static {}, Lcom/coocoo/manager/ConversationScreenPreferenceManager;->getForwardLimit()I
 +
 +    move-result v4
 +#coocoo
