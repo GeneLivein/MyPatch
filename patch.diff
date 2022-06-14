@@ -13,6 +13,26 @@ index 77bd78c7b..682221cb4 100644
      public static void traceLogCodeStack() {
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
+diff --git a/app/src/main/java/com/coocoo/manager/ConversationScreenPreferenceManager.kt b/app/src/main/java/com/coocoo/manager/ConversationScreenPreferenceManager.kt
+index ce3f9abc7..546869361 100644
+--- a/app/src/main/java/com/coocoo/manager/ConversationScreenPreferenceManager.kt
++++ b/app/src/main/java/com/coocoo/manager/ConversationScreenPreferenceManager.kt
+@@ -1,5 +1,6 @@
+ package com.coocoo.manager
+ 
++import com.coocoo.annotation.SmaliInject
+ import com.coocoo.coocoo.Coocoo
+ import com.coocoo.fm.shp
+ import com.coocoo.utils.Constants.CONVERSATION_SCREEN_SETTINGS_MULTICAST_LIMIT_GLOBAL_DEFAULT
+@@ -46,6 +47,8 @@ object ConversationScreenPreferenceManager {
+         commitIntsToWaSp(toWrite)
+     }
+ 
++    @SmaliInject
++    @JvmStatic
+     fun getForwardLimit(): Int {
+         return readIntFromWaSp(CONVERSATION_SCREEN_SETTINGS_SP_KEY_MULTICAST_LIMIT_GLOBAL,
+             CONVERSATION_SCREEN_SETTINGS_MULTICAST_LIMIT_GLOBAL_DEFAULT
 diff --git a/whatsapp_modify_module/smali/X/1qC.2.smali b/whatsapp_modify_module/smali/X/1qC.2.smali
 index b45ffb2ee..f01ce4b32 100644
 --- a/whatsapp_modify_module/smali/X/1qC.2.smali
