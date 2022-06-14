@@ -1,5 +1,5 @@
 diff --git a/whatsapp_modify_module/smali/X/1qC.2.smali b/whatsapp_modify_module/smali/X/1qC.2.smali
-index b45ffb2ee..dadfcb938 100644
+index b45ffb2ee..a2fde53c7 100644
 --- a/whatsapp_modify_module/smali/X/1qC.2.smali
 +++ b/whatsapp_modify_module/smali/X/1qC.2.smali
 @@ -32,6 +32,10 @@
@@ -8,7 +8,7 @@ index b45ffb2ee..dadfcb938 100644
  #coocoo
 +
 +#coocoo
-+    invoke-static {p3}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
++    invoke-static {p3}, Lcom/coocoo/coocoo/Coocoo;->traceLog5(I)V
 +#coocoo
      iget-object v5, p0, LX/1qC;->A00:Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;
  
