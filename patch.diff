@@ -14,10 +14,18 @@ index 77bd78c7b..cadd370b1 100644
  
      @SmaliInject
 diff --git a/app/src/main/java/com/coocoo/manager/PrivacyPreferenceManager.kt b/app/src/main/java/com/coocoo/manager/PrivacyPreferenceManager.kt
-index 75186152a..2e2740438 100644
+index 75186152a..8fb37e6ef 100644
 --- a/app/src/main/java/com/coocoo/manager/PrivacyPreferenceManager.kt
 +++ b/app/src/main/java/com/coocoo/manager/PrivacyPreferenceManager.kt
-@@ -235,9 +235,10 @@ class PrivacyPreferenceManager private constructor() {
+@@ -227,6 +227,7 @@ class PrivacyPreferenceManager private constructor() {
+             } else {
+                 // TODO broadcast case : receive Conversation, need to check
+                 val jid = obj.A0w.A00.toString()
++                LogUtil.d("Coocoo1", "jid:$jid")
+                 val post: String = when {
+                     PrivacyUtils.isConversationJid(jid) -> "C"
+                     PrivacyUtils.isBroadcastJid(jid) -> "B"
+@@ -235,9 +236,10 @@ class PrivacyPreferenceManager private constructor() {
                  }
  
                  val key = StringBuilder(KEY_PRIVACY_HIDE_RECEIPT).append(post).toString()
