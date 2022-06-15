@@ -1,134 +1,15 @@
 diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-index 77bd78c7b..682221cb4 100644
+index 77bd78c7b..bf93eb98e 100644
 --- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 +++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-@@ -656,6 +656,10 @@ public class Coocoo {
-         Log.e(TAG, "-----------------5---------------- // value : " + value);
+@@ -589,7 +589,9 @@ public class Coocoo {
+ 
+     @SmaliInject
+     public static boolean isHideReceipt(c1_2P6 param) {
+-        return PrivacyPreferenceManager.Companion.getInstance().isHideReceipt(param);
++        boolean rtn = PrivacyPreferenceManager.Companion.getInstance().isHideReceipt(param);
++        LogUtil.d("Coocoo", rtn);
++        return rtn;
      }
  
-+    public static void traceLog6(boolean value) {
-+        Log.e(TAG, "-----------------5---------------- // value : " + value);
-+    }
-+
-     public static void traceLogCodeStack() {
-         try {
-             throw new IllegalArgumentException("traceLogCodeStack");
-diff --git a/app/src/main/java/com/coocoo/manager/ConversationScreenPreferenceManager.kt b/app/src/main/java/com/coocoo/manager/ConversationScreenPreferenceManager.kt
-index ce3f9abc7..546869361 100644
---- a/app/src/main/java/com/coocoo/manager/ConversationScreenPreferenceManager.kt
-+++ b/app/src/main/java/com/coocoo/manager/ConversationScreenPreferenceManager.kt
-@@ -1,5 +1,6 @@
- package com.coocoo.manager
- 
-+import com.coocoo.annotation.SmaliInject
- import com.coocoo.coocoo.Coocoo
- import com.coocoo.fm.shp
- import com.coocoo.utils.Constants.CONVERSATION_SCREEN_SETTINGS_MULTICAST_LIMIT_GLOBAL_DEFAULT
-@@ -46,6 +47,8 @@ object ConversationScreenPreferenceManager {
-         commitIntsToWaSp(toWrite)
-     }
- 
-+    @SmaliInject
-+    @JvmStatic
-     fun getForwardLimit(): Int {
-         return readIntFromWaSp(CONVERSATION_SCREEN_SETTINGS_SP_KEY_MULTICAST_LIMIT_GLOBAL,
-             CONVERSATION_SCREEN_SETTINGS_MULTICAST_LIMIT_GLOBAL_DEFAULT
-diff --git a/whatsapp_modify_module/smali/X/1qC.2.smali b/whatsapp_modify_module/smali/X/1qC.2.smali
-index b45ffb2ee..f01ce4b32 100644
---- a/whatsapp_modify_module/smali/X/1qC.2.smali
-+++ b/whatsapp_modify_module/smali/X/1qC.2.smali
-@@ -32,6 +32,10 @@
-     #.locals 10
-     .locals 11
- #coocoo
-+
-+#coocoo
-+    invoke-static {p3}, Lcom/coocoo/coocoo/Coocoo;->traceLog5(I)V
-+#coocoo
-     iget-object v5, p0, LX/1qC;->A00:Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;
- 
-     iget-boolean v7, p0, LX/1qC;->A01:Z
-@@ -187,6 +191,12 @@
-     .line 270312
-     invoke-virtual {v1, v0, v4}, Landroidx/fragment/app/DialogFragment;->AX9(LX/01l;Ljava/lang/String;)V
- 
-+#coocoo
-+    const-string v0, "show Dialog"
-+
-+    invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
-+#coocoo
-+
-     .line 270313
-     :goto_0
-     if-eqz v7, :cond_4
-@@ -336,6 +346,10 @@
- 
-     move-result v0
- 
-+#coocoo
-+    invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog5(I)V
-+#coocoo
-+
-     if-le v0, v2, :cond_8
- 
-     .line 270328
-diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
-index 681c0ed30..41954fc74 100644
---- a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
-+++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
-@@ -6207,6 +6207,10 @@
- 
-     move-result-object v1
- 
-+#coocoo
-+    invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
-+#coocoo
-+
-     goto :goto_0
- .end method
- 
-@@ -7539,6 +7543,9 @@
-     invoke-static {v8, v3}, Ljava/lang/Math;->min(II)I
- 
-     move-result v4
-+#coocoo
-+    invoke-static {v4}, Lcom/coocoo/coocoo/Coocoo;->traceLog5(I)V
-+#coocoo
- 
-     const v13, 0x7f100006
- 
-@@ -7611,6 +7618,12 @@
- 
-     const/4 v4, 0x5
- 
-+#coocoo
-+    invoke-static {}, Lcom/coocoo/manager/ConversationScreenPreferenceManager;->getForwardLimit()I
-+
-+    move-result v4
-+#coocoo
-+
-     if-eqz v3, :cond_e
- 
-     :cond_13
-@@ -7642,6 +7655,10 @@
- 
-     move-result-object v2
- 
-+#coocoo
-+    invoke-static {v2}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
-+#coocoo
-+
-     .line 117533
-     iget-object v1, v11, LX/0UM;->A00:LX/0BR;
- 
-@@ -8206,6 +8223,10 @@
- 
-     move-result-object v1
- 
-+#coocoo
-+    invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
-+#coocoo
-+
-     .line 117599
-     invoke-virtual {v13, v1, v5}, LX/01s;->A0D(Ljava/lang/CharSequence;I)V
- 
+     @SmaliInject
