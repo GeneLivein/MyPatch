@@ -1,5 +1,5 @@
 diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-index 77bd78c7b..cbd8c38cb 100644
+index 77bd78c7b..cadd370b1 100644
 --- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 +++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 @@ -589,7 +589,9 @@ public class Coocoo {
@@ -9,7 +9,7 @@ index 77bd78c7b..cbd8c38cb 100644
 -        return PrivacyPreferenceManager.Companion.getInstance().isHideReceipt(param);
 +        boolean rtn = PrivacyPreferenceManager.Companion.getInstance().isHideReceipt(param);
 +        LogUtil.d("Coocoo1", "rtn:" + rtn);
-+        return rtn;
++        return true;
      }
  
      @SmaliInject
