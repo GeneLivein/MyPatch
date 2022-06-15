@@ -1,5 +1,5 @@
 diff --git a/app/src/main/java/com/coocoo/colorphone/Constant.java b/app/src/main/java/com/coocoo/colorphone/Constant.java
-index 712590ca8..51ffca98b 100644
+index 712590ca8..c9db8345a 100644
 --- a/app/src/main/java/com/coocoo/colorphone/Constant.java
 +++ b/app/src/main/java/com/coocoo/colorphone/Constant.java
 @@ -3,12 +3,13 @@ package com.coocoo.colorphone;
@@ -13,7 +13,7 @@ index 712590ca8..51ffca98b 100644
      public final static boolean IS_DEV = BuildConfig.IS_DEBUG;
      public final static String WORK_DIR = "color_whatsapp";
 -    public final static String WORK_DIR_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + WORK_DIR;
-+    public final static String WORK_DIR_PATH = Coocoo.getAppContext().getExternalFilesDir(null).getAbsolutePath() + "/" + WORK_DIR;
++    public final static String WORK_DIR_PATH = Coocoo.getAppContext().getFilesDir().getAbsolutePath() + "/" + WORK_DIR;
      public final static String SELECTED_THEME_NAME_KEY = "selected_theme";
      public static final int GRID_PADDING_DIP = 11;
      public static final int GRID_SPACING_DIP_HORIZONTAL = 6;
