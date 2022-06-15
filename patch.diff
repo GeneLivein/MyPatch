@@ -1,5 +1,5 @@
 diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-index 77bd78c7b..bf93eb98e 100644
+index 77bd78c7b..cbd8c38cb 100644
 --- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 +++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 @@ -589,7 +589,9 @@ public class Coocoo {
@@ -8,8 +8,24 @@ index 77bd78c7b..bf93eb98e 100644
      public static boolean isHideReceipt(c1_2P6 param) {
 -        return PrivacyPreferenceManager.Companion.getInstance().isHideReceipt(param);
 +        boolean rtn = PrivacyPreferenceManager.Companion.getInstance().isHideReceipt(param);
-+        LogUtil.d("Coocoo", rtn);
++        LogUtil.d("Coocoo1", "rtn:" + rtn);
 +        return rtn;
      }
  
      @SmaliInject
+diff --git a/app/src/main/java/com/coocoo/manager/PrivacyPreferenceManager.kt b/app/src/main/java/com/coocoo/manager/PrivacyPreferenceManager.kt
+index 75186152a..2e2740438 100644
+--- a/app/src/main/java/com/coocoo/manager/PrivacyPreferenceManager.kt
++++ b/app/src/main/java/com/coocoo/manager/PrivacyPreferenceManager.kt
+@@ -235,9 +235,10 @@ class PrivacyPreferenceManager private constructor() {
+                 }
+ 
+                 val key = StringBuilder(KEY_PRIVACY_HIDE_RECEIPT).append(post).toString()
++                LogUtil.d("Coocoo1", "key:$key")
+                 return shp.getBooleanPriv(key)
+             }
+-        }
++        } ?: LogUtil.d("Coocoo1", "obj is null")
+         return false
+     }
+ 
