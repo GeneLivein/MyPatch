@@ -1,157 +1,19 @@
-diff --git a/app/src/main/java/com/coocoo/callerid/CallerIdRepository.kt b/app/src/main/java/com/coocoo/callerid/CallerIdRepository.kt
-index 409afd8ab..41fdb5c6d 100644
---- a/app/src/main/java/com/coocoo/callerid/CallerIdRepository.kt
-+++ b/app/src/main/java/com/coocoo/callerid/CallerIdRepository.kt
-@@ -46,7 +46,7 @@ class CallerIdRepository(
-     companion object {
-         private val TAG = CallerIdRepository::class.java.simpleName
+diff --git a/app/src/main/java/com/coocoo/colorphone/Constant.java b/app/src/main/java/com/coocoo/colorphone/Constant.java
+index 712590ca8..51ffca98b 100644
+--- a/app/src/main/java/com/coocoo/colorphone/Constant.java
++++ b/app/src/main/java/com/coocoo/colorphone/Constant.java
+@@ -3,12 +3,13 @@ package com.coocoo.colorphone;
+ import android.os.Environment;
  
--        private const val KEY_CALLER_ID_DB_VERSION = "caller_id_db_version"
-+        const val KEY_CALLER_ID_DB_VERSION = "caller_id_db_version"
-         private const val KEY_UPDATE_DB_TIMESTAMP = "update_db_timestamp"
- 
-         private const val DEFAULT_UPDATE_DB_INTERVAL = 3 // day
-diff --git a/app/src/main/java/com/coocoo/report/Report.java b/app/src/main/java/com/coocoo/report/Report.java
-index 03f3503b7..39cfcc185 100644
---- a/app/src/main/java/com/coocoo/report/Report.java
-+++ b/app/src/main/java/com/coocoo/report/Report.java
-@@ -1038,12 +1038,12 @@ public class Report {
-         ReportCore.reportReportCaller(ReportConstant.ACTION_REPORT, is_block);
-     }
- 
--    public static void reportLabCallerIncomingCall(String hasDb) {
--        ReportCore.reportLabCaller(ReportConstant.VALUE_CALLER, hasDb);
-+    public static void reportLabCallerIncomingCall(String hasDb, String dbVersion) {
-+        ReportCore.reportLabCaller(ReportConstant.VALUE_CALLER, hasDb, dbVersion);
-     }
- 
--    public static void reportLabCallerMsg() {
--        ReportCore.reportLabCaller(ReportConstant.VALUE_MSG);
-+    public static void reportLabCallerMsg(String dbVersion) {
-+        ReportCore.reportLabCaller(ReportConstant.VALUE_MSG, dbVersion);
-     }
- 
-     public static void reportCloseFriends(boolean enable) {
-diff --git a/app/src/main/java/com/coocoo/report/ReportConstant.java b/app/src/main/java/com/coocoo/report/ReportConstant.java
-index b37efe6df..6f4449f62 100644
---- a/app/src/main/java/com/coocoo/report/ReportConstant.java
-+++ b/app/src/main/java/com/coocoo/report/ReportConstant.java
-@@ -883,6 +883,7 @@ public interface ReportConstant {
-     String EVENT_LAB_CALLER = "lab_caller";
-     String EVENT_IS_BLOCK = "is_block";
-     String KEY_HAS_DB = "has_db";
-+    String KEY_DB_VER = "db_ver";
-     String VALUE_CALLER = "caller";
-     String VALUE_MSG = "msg";
-     String VALUE_UNKNOWN_ID = "0";
-diff --git a/app/src/main/java/com/coocoo/report/ReportCore.java b/app/src/main/java/com/coocoo/report/ReportCore.java
-index 7cc2f8367..206cf0b5e 100644
---- a/app/src/main/java/com/coocoo/report/ReportCore.java
-+++ b/app/src/main/java/com/coocoo/report/ReportCore.java
-@@ -1664,16 +1664,18 @@ class ReportCore implements ReportConstant {
-         report(ReportConstant.EVENT_REPORT_CALLER, params);
-     }
- 
--    public static void reportLabCaller(String type) {
-+    public static void reportLabCaller(String type, String dbVersion) {
-         Map<String, String> params = new HashMap<>();
-         params.put(ReportConstant.KEY_TYPE, type);
-+        params.put(ReportConstant.KEY_DB_VER, dbVersion);
-         report(ReportConstant.EVENT_LAB_CALLER, params);
-     }
- 
--    public static void reportLabCaller(String type, String hasDb) {
-+    public static void reportLabCaller(String type, String hasDb, String dbVersion) {
-         Map<String, String> params = new HashMap<>();
-         params.put(ReportConstant.KEY_TYPE, type);
-         params.put(ReportConstant.KEY_HAS_DB, hasDb);
-+        params.put(ReportConstant.KEY_DB_VER, dbVersion);
-         report(ReportConstant.EVENT_LAB_CALLER, params);
-     }
- 
-diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationBlockAddFooterDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationBlockAddFooterDelegate.kt
-index 7ac86f1a8..0ffb805ff 100644
---- a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationBlockAddFooterDelegate.kt
-+++ b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationBlockAddFooterDelegate.kt
-@@ -1,13 +1,16 @@
- package com.coocoo.whatsappdelegate
- 
- import X.c1_2Ob
--import X.cc_3X0
- import X.c1_4M4
-+import X.cc_3X0
- import android.view.Gravity
- import android.view.View
- import com.coocoo.annotation.SmaliInject
- import com.coocoo.callerid.CallerIdMocker
-+import com.coocoo.callerid.CallerIdRepository
-+import com.coocoo.callerid.CallerIdRepository.Companion.KEY_CALLER_ID_DB_VERSION
- import com.coocoo.coocoo.Coocoo
-+import com.coocoo.coocoosp.SPDelegate
- import com.coocoo.presenter.ConversationBlockAddFooterPresenter
- import com.coocoo.presenter.IConversationBlockAddFooterPresenter
- import com.coocoo.report.Report
-@@ -61,7 +64,7 @@ class ConversationBlockAddFooterDelegate(val itemView: cc_3X0): IConversationBlo
-             compoundDrawablePadding = 14.toPx()
-             setCompoundDrawablesRelativeWithIntrinsicBounds(ResMgr.getDrawable(Constants.Res.Drawable.IC_CONVERSATION_SPAM), null, null, null)
-         }
--
--        Report.reportLabCallerMsg()
-+        val dbVersion = SPDelegate.getInstance().getStringValue(KEY_CALLER_ID_DB_VERSION)
-+        Report.reportLabCallerMsg(dbVersion)
-     }
- }
-\ No newline at end of file
-diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/VoipActivityV2Delegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/VoipActivityV2Delegate.java
-index 3899c3f5c..aadc3638f 100644
---- a/app/src/main/java/com/coocoo/whatsappdelegate/VoipActivityV2Delegate.java
-+++ b/app/src/main/java/com/coocoo/whatsappdelegate/VoipActivityV2Delegate.java
-@@ -1,6 +1,7 @@
- package com.coocoo.whatsappdelegate;
+ import com.coocoo.config.BuildConfig;
++import com.coocoo.coocoo.Coocoo;
  
  
-+import static com.coocoo.callerid.CallerIdRepository.KEY_CALLER_ID_DB_VERSION;
- import static com.coocoo.report.ReportConstant.VALUE_CONTACTOR;
- import static com.coocoo.report.ReportConstant.VALUE_KNOWN_ID;
- import static com.coocoo.report.ReportConstant.VALUE_UNKNOWN_ID;
-@@ -25,6 +26,7 @@ import com.coocoo.colorphone.OnAcceptUnLockListener;
- import com.coocoo.colorphone.OnDeclineUnLockListener;
- import com.coocoo.colorphone.ReplyOnClickListener;
- import com.coocoo.coocoo.Coocoo;
-+import com.coocoo.coocoosp.SPDelegate;
- import com.coocoo.player.OnWindowDetachedListener;
- import com.coocoo.player.ResourcesManager;
- import com.coocoo.player.VideoView;
-@@ -569,12 +571,13 @@ public class VoipActivityV2Delegate extends ActivityDelegate
- 
-     @Override
-     public void setCallerId(@NonNull IVoipActivityPresenter.CallerId callerId) {
-+        String dbVersion = SPDelegate.getInstance().getStringValue(KEY_CALLER_ID_DB_VERSION);
-         if (callerId instanceof IVoipActivityPresenter.CallerId.Contactor) {
-             mIvIcon.setImageResource(ResMgr.getDrawableId("cc_ic_location_on"));
-             mWaIvIcon.setImageResource(ResMgr.getDrawableId("cc_ic_location_on"));
-             mTvCallerId.setText(callerId.getLocation());
-             mWaTvCallerId.setText(callerId.getLocation());
--            Report.reportLabCallerIncomingCall(VALUE_CONTACTOR);
-+            Report.reportLabCallerIncomingCall(VALUE_CONTACTOR, dbVersion);
-         } else if (callerId instanceof SpamCall) {
-             SpamCall spamCall = (SpamCall) callerId;
-             mIvIcon.setImageResource(ResMgr.getDrawableId("cc_ic_caller_id_warning"));
-@@ -583,7 +586,7 @@ public class VoipActivityV2Delegate extends ActivityDelegate
-             mWaTvCallerId.setText(spamCall.getCallerId());
-             mTvLocation.setText(spamCall.getLocation());
-             mWaTvLocation.setText(spamCall.getLocation());
--            Report.reportLabCallerIncomingCall(VALUE_KNOWN_ID);
-+            Report.reportLabCallerIncomingCall(VALUE_KNOWN_ID, dbVersion);
-         } else {
-             mIvIcon.setImageResource(ResMgr.getDrawableId("cc_ic_caller_id_warning_white"));
-             mWaIvIcon.setImageResource(ResMgr.getDrawableId("cc_ic_caller_id_warning_white"));
-@@ -591,7 +594,7 @@ public class VoipActivityV2Delegate extends ActivityDelegate
-             mWaTvCallerId.setText(ResMgr.getString("cc_caller_id_unknown"));
-             mTvLocation.setText(callerId.getLocation());
-             mWaTvLocation.setText(callerId.getLocation());
--            Report.reportLabCallerIncomingCall(VALUE_UNKNOWN_ID);
-+            Report.reportLabCallerIncomingCall(VALUE_UNKNOWN_ID, dbVersion);
-         }
-     }
- }
+ public class Constant {
+     public final static boolean IS_DEV = BuildConfig.IS_DEBUG;
+     public final static String WORK_DIR = "color_whatsapp";
+-    public final static String WORK_DIR_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + WORK_DIR;
++    public final static String WORK_DIR_PATH = Coocoo.getAppContext().getExternalFilesDir(null).getAbsolutePath() + "/" + WORK_DIR;
+     public final static String SELECTED_THEME_NAME_KEY = "selected_theme";
+     public static final int GRID_PADDING_DIP = 11;
+     public static final int GRID_SPACING_DIP_HORIZONTAL = 6;
