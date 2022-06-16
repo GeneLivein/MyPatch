@@ -41,7 +41,7 @@ index 6425827aa..c2b36f8f5 100644
      private DownloadConfig(Builder builder) {
          if (builder.downloadThreadNumber > MAX_THREAD_NUMBER) {
 diff --git a/app/src/main/java/com/coocoo/downloader/Downloader.java b/app/src/main/java/com/coocoo/downloader/Downloader.java
-index 463f46b50..2312641ca 100644
+index 463f46b50..2efae0783 100644
 --- a/app/src/main/java/com/coocoo/downloader/Downloader.java
 +++ b/app/src/main/java/com/coocoo/downloader/Downloader.java
 @@ -10,6 +10,7 @@ import com.coocoo.downloader.model.DownloadData;
@@ -65,11 +65,16 @@ index 463f46b50..2312641ca 100644
          if (mInit) {
              return true;
          }
-@@ -84,7 +85,9 @@ public class Downloader implements IDownloader {
+@@ -84,7 +85,14 @@ public class Downloader implements IDownloader {
          if (TextUtils.isEmpty(url)) {
              return false;
          }
 -        return mRepoManager.isDownload(url);
++        try {
++            throw new Exception("");
++        } catch (Exception e) {
++            e.printStackTrace();
++        }
 +        boolean isD = mRepoManager.isDownload(url);
 +        LogUtil.d("Coocoo1", url + " isDownload:" + isD);
 +        return isD;
