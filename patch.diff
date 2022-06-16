@@ -109,6 +109,18 @@ index 89c22da6a..0b538878d 100644
          FileUtil.deleteDir(dirPath, true);
      }
  
+diff --git a/app/src/main/java/com/coocoo/newtheme/store/ThemeDownloadManager.java b/app/src/main/java/com/coocoo/newtheme/store/ThemeDownloadManager.java
+index c7df65ef7..3b864bf9c 100644
+--- a/app/src/main/java/com/coocoo/newtheme/store/ThemeDownloadManager.java
++++ b/app/src/main/java/com/coocoo/newtheme/store/ThemeDownloadManager.java
+@@ -81,6 +81,7 @@ public class ThemeDownloadManager {
+ 
+                 @Override
+                 public void onFailed(String error) {
++                    LogUtil.d(error);
+                     DownloadThemeInterface callback = callbackRef.get();
+                     if (callback != null) {
+                         callback.onFailed();
 diff --git a/app/src/main/java/com/coocoo/theme/diy/DiyThemePreviewActivity.java b/app/src/main/java/com/coocoo/theme/diy/DiyThemePreviewActivity.java
 index 04eb4737d..c11aee63b 100644
 --- a/app/src/main/java/com/coocoo/theme/diy/DiyThemePreviewActivity.java
