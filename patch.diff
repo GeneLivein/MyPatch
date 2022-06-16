@@ -1,13 +1,9 @@
 diff --git a/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt b/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
-index af6e3674d..32e57f844 100644
+index af6e3674d..dc39a4a9c 100644
 --- a/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
 +++ b/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
-@@ -151,15 +151,15 @@ class CoocooBackupRestorePrefFragment
-             preference.onPreferenceChangeListener = this@CoocooBackupRestorePrefFragment
-             preference.isEnabled = false
-             val strCalculating = ResMgr.getString(Constants.Res.String.CLEAR_BACKUP_DATA_CALCULATING)
--            preference.summary = ResMgr.getString(Constants.Res.String.CLEAR_BACKUP_DATA_CONTENT, strCalculating)
-+//            preference.summary = ResMgr.getString(Constants.Res.String.CLEAR_BACKUP_DATA_CONTENT, strCalculating)
+@@ -154,12 +154,12 @@ class CoocooBackupRestorePrefFragment
+             preference.summary = ResMgr.getString(Constants.Res.String.CLEAR_BACKUP_DATA_CONTENT, strCalculating)
              prefFragmentScope.launch {
                  val size = getFormattedBackUpFileSize()
 -                preference.summary = if (size > 0) {
@@ -26,27 +22,9 @@ index af6e3674d..32e57f844 100644
          }
  
 diff --git a/app/src/main/res/values-ar/cc_strings.xml b/app/src/main/res/values-ar/cc_strings.xml
-index 610740890..a71d9d635 100644
+index 610740890..740dec293 100644
 --- a/app/src/main/res/values-ar/cc_strings.xml
 +++ b/app/src/main/res/values-ar/cc_strings.xml
-@@ -161,12 +161,12 @@ Voip -->
-     <string name="cc_backup_whatsapp_data_desc">بيانات واتساب الاحتياطية ، بما في ذلك الدردشات والوسائط.</string>
-     <string name="cc_restore_whatsApp_data_title">استعادة بيانات واتساب</string>
-     <string name="cc_restore_whatsApp_data_desc">استعادة البيانات من واتساب أو تعديلات أخرى بنفس رقم الهاتف.</string>
--    <string name="cc_backup_restore_cloud_title"> %1$s إعدادات</string>
--    <string name="cc_backup_restore_cloud_account">%1$s حساب</string>
--    <string name="cc_backup_restore_cloud_backup_to">%1$s نسخ احتياطي إلى</string>
--    <string name="cc_backup_restore_cloud_restore_from">%1$sاستعادة من</string>
-+    <string name="cc_backup_restore_cloud_title"> \u200F%1$s إعدادات</string>
-+    <string name="cc_backup_restore_cloud_account">\u200F%1$s حساب</string>
-+    <string name="cc_backup_restore_cloud_backup_to">\u200F%1$s نسخ احتياطي إلى</string>
-+    <string name="cc_backup_restore_cloud_restore_from">\u200F%1$sاستعادة من</string>
-     <string name="cc_backup_restore_cloud_settings_user_trigger">فقط عندما أنقر على“النسخ احتياطي”</string>
--    <string name="cc_backup_restore_cloud_settings_restore_content">%1$s استعادة كافة الدردشات / ميديا / البيانات من</string>
-+    <string name="cc_backup_restore_cloud_settings_restore_content">\u200F%1$s استعادة كافة الدردشات / ميديا / البيانات من</string>
-     <string name="cc_none">لا شيء</string>
-     <string name="cc_logout">تسجيل الخروج</string>
-     <string name="cc_activity_backup_item_list_title">اختر ملف النسخ الاحتياطي</string>
 @@ -1115,8 +1115,8 @@ Voip -->
      <string name="cc_requested">مطلوب</string>
  
