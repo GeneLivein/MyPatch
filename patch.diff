@@ -1,29 +1,33 @@
 diff --git a/app/src/main/res/values-ar/cc_strings.xml b/app/src/main/res/values-ar/cc_strings.xml
-index 610740890..53e2bbe48 100644
+index 610740890..a71d9d635 100644
 --- a/app/src/main/res/values-ar/cc_strings.xml
 +++ b/app/src/main/res/values-ar/cc_strings.xml
-@@ -23,15 +23,15 @@
-     <string name="cc_BackupFail">فشل النسخ الاحتياطي !</string>
-     <string name="cc_Restore">استعادة بيانات واتساب</string>
-     <string name="cc_RestoreTitle">استعادة</string>
--    <string name="cc_RestoreMsg">استعادة البيانات…</string>
--    <string name="cc_RestoreDone">انتهاء الاستعادة!</string>
--    <string name="cc_RestoreFail">فشل الاستعادة</string>
--    <string name="cc_RestoreSum">استعادة أحدث نسخة احتياطية</string>
--    <string name="cc_copyWA">نسخ بيانات واتساب</string>
--    <string name="cc_wa_moved">تم نسخ بيانات واتساب بنجاح ، يمكنك الآن إكمال الخطوات!</string>
--    <string name="cc_no_backup_found">لا يوجد نسخة احتياطية</string>
--    <string name="cc_upgrade_found">ثم العثور على تحديث جديد !!</string>
--    <string name="cc_upgrade_found_subtitle">%1$s ما الجديد في</string>
-+    <string name="cc_RestoreMsg">1</string>
-+    <string name="cc_RestoreDone">1</string>
-+    <string name="cc_RestoreFail">1</string>
-+    <string name="cc_RestoreSum">1</string>
-+    <string name="cc_copyWA">1</string>
-+    <string name="cc_wa_moved">1</string>
-+    <string name="cc_no_backup_found">1</string>
-+    <string name="cc_upgrade_found">1</string>
-+    <string name="cc_upgrade_found_subtitle">\u200e%1$s ما الجديد في</string>
+@@ -161,12 +161,12 @@ Voip -->
+     <string name="cc_backup_whatsapp_data_desc">بيانات واتساب الاحتياطية ، بما في ذلك الدردشات والوسائط.</string>
+     <string name="cc_restore_whatsApp_data_title">استعادة بيانات واتساب</string>
+     <string name="cc_restore_whatsApp_data_desc">استعادة البيانات من واتساب أو تعديلات أخرى بنفس رقم الهاتف.</string>
+-    <string name="cc_backup_restore_cloud_title"> %1$s إعدادات</string>
+-    <string name="cc_backup_restore_cloud_account">%1$s حساب</string>
+-    <string name="cc_backup_restore_cloud_backup_to">%1$s نسخ احتياطي إلى</string>
+-    <string name="cc_backup_restore_cloud_restore_from">%1$sاستعادة من</string>
++    <string name="cc_backup_restore_cloud_title"> \u200F%1$s إعدادات</string>
++    <string name="cc_backup_restore_cloud_account">\u200F%1$s حساب</string>
++    <string name="cc_backup_restore_cloud_backup_to">\u200F%1$s نسخ احتياطي إلى</string>
++    <string name="cc_backup_restore_cloud_restore_from">\u200F%1$sاستعادة من</string>
+     <string name="cc_backup_restore_cloud_settings_user_trigger">فقط عندما أنقر على“النسخ احتياطي”</string>
+-    <string name="cc_backup_restore_cloud_settings_restore_content">%1$s استعادة كافة الدردشات / ميديا / البيانات من</string>
++    <string name="cc_backup_restore_cloud_settings_restore_content">\u200F%1$s استعادة كافة الدردشات / ميديا / البيانات من</string>
+     <string name="cc_none">لا شيء</string>
+     <string name="cc_logout">تسجيل الخروج</string>
+     <string name="cc_activity_backup_item_list_title">اختر ملف النسخ الاحتياطي</string>
+@@ -1115,8 +1115,8 @@ Voip -->
+     <string name="cc_requested">مطلوب</string>
  
-     <!-- GBSetting -->
-     <string name="cc_setting_setting"> إعداد GB</string>
+     <string name="cc_backup_whatsapp_data_clear_backup_title">مسح النسخ الاحتياطي</string>
+-    <string name="cc_backup_whatsapp_data_clear_backup_content">الحجم: s\n% يحذف خيار مسح النسخ الاحتياطي كافة بيانات النسخ الاحتياطي القديمة. توفير مساحة أكبر.</string>
+-    <string name="cc_backup_whatsapp_data_clear_backup_calculating">حساب&amp;#8320؛</string>
++    <string name="cc_backup_whatsapp_data_clear_backup_content">الحجم: s\n%\u200F يحذف خيار مسح النسخ الاحتياطي كافة بيانات النسخ الاحتياطي القديمة. توفير مساحة أكبر.</string>
++    <string name="cc_backup_whatsapp_data_clear_backup_calculating">1</string>
+     <string name="cc_backup_whatsapp_data_clear_backup_dialog_deleting_title">جارٍ حذف ملفات النسخ الاحتياطي ...</string>
+     <string name="cc_backup_whatsapp_data_clear_backup_toast_done">تم</string>
+     <string name="cc_backup_whatsapp_data_clear_backup_toast_fail">فشل الحذف</string>
