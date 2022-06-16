@@ -1,5 +1,5 @@
 diff --git a/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt b/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
-index af6e3674d..91b5d53f2 100644
+index af6e3674d..a0ff65b54 100644
 --- a/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
 +++ b/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
 @@ -151,12 +151,12 @@ class CoocooBackupRestorePrefFragment
@@ -13,7 +13,7 @@ index af6e3674d..91b5d53f2 100644
                  preference.summary = if (size > 0) {
                      preference.isEnabled = true
 -                    ResMgr.getString(Constants.Res.String.CLEAR_BACKUP_DATA_CONTENT, "%.2f MB".format(size))
-+                    ResMgr.getString(Constants.Res.String.CLEAR_BACKUP_DATA_CONTENT, "BM f2.%".format(size))
++                    ResMgr.getString(Constants.Res.String.CLEAR_BACKUP_DATA_CONTENT, "10")
                  } else {
                      ResMgr.getString(Constants.Res.String.CLEAR_BACKUP_DATA_CONTENT, "0 MB")
                  }
