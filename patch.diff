@@ -1,8 +1,8 @@
 diff --git a/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt b/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
-index af6e3674d..6e64f86d3 100644
+index af6e3674d..08c4039a7 100644
 --- a/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
 +++ b/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
-@@ -151,12 +151,12 @@ class CoocooBackupRestorePrefFragment
+@@ -151,7 +151,7 @@ class CoocooBackupRestorePrefFragment
              preference.onPreferenceChangeListener = this@CoocooBackupRestorePrefFragment
              preference.isEnabled = false
              val strCalculating = ResMgr.getString(Constants.Res.String.CLEAR_BACKUP_DATA_CALCULATING)
@@ -11,24 +11,16 @@ index af6e3674d..6e64f86d3 100644
              prefFragmentScope.launch {
                  val size = getFormattedBackUpFileSize()
                  preference.summary = if (size > 0) {
-                     preference.isEnabled = true
--                    ResMgr.getString(Constants.Res.String.CLEAR_BACKUP_DATA_CONTENT, "%.2f MB".format(size))
-+                    ResMgr.getString(Constants.Res.String.CLEAR_BACKUP_DATA_CONTENT, "\\u200F%.2f MB".format(size))
-                 } else {
-                     ResMgr.getString(Constants.Res.String.CLEAR_BACKUP_DATA_CONTENT, "0 MB")
-                 }
 diff --git a/app/src/main/res/values-ar/cc_strings.xml b/app/src/main/res/values-ar/cc_strings.xml
-index 610740890..740dec293 100644
+index 610740890..33c8e7c21 100644
 --- a/app/src/main/res/values-ar/cc_strings.xml
 +++ b/app/src/main/res/values-ar/cc_strings.xml
-@@ -1115,8 +1115,8 @@ Voip -->
+@@ -1115,7 +1115,7 @@ Voip -->
      <string name="cc_requested">مطلوب</string>
  
      <string name="cc_backup_whatsapp_data_clear_backup_title">مسح النسخ الاحتياطي</string>
 -    <string name="cc_backup_whatsapp_data_clear_backup_content">الحجم: s\n% يحذف خيار مسح النسخ الاحتياطي كافة بيانات النسخ الاحتياطي القديمة. توفير مساحة أكبر.</string>
--    <string name="cc_backup_whatsapp_data_clear_backup_calculating">حساب&amp;#8320؛</string>
-+    <string name="cc_backup_whatsapp_data_clear_backup_content">الحجم: s\n%\u200F يحذف خيار مسح النسخ الاحتياطي كافة بيانات النسخ الاحتياطي القديمة. توفير مساحة أكبر.</string>
-+    <string name="cc_backup_whatsapp_data_clear_backup_calculating">1</string>
++    <string name="cc_backup_whatsapp_data_clear_backup_content">الحجم: s%\n يحذف خيار مسح النسخ الاحتياطي كافة بيانات النسخ الاحتياطي القديمة. توفير مساحة أكبر.</string>
+     <string name="cc_backup_whatsapp_data_clear_backup_calculating">حساب&amp;#8320؛</string>
      <string name="cc_backup_whatsapp_data_clear_backup_dialog_deleting_title">جارٍ حذف ملفات النسخ الاحتياطي ...</string>
      <string name="cc_backup_whatsapp_data_clear_backup_toast_done">تم</string>
-     <string name="cc_backup_whatsapp_data_clear_backup_toast_fail">فشل الحذف</string>
