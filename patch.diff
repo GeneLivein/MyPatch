@@ -1,29 +1,29 @@
 diff --git a/app/src/main/res/values-ar/cc_strings.xml b/app/src/main/res/values-ar/cc_strings.xml
-index 610740890..6dc62836e 100644
+index 610740890..53e2bbe48 100644
 --- a/app/src/main/res/values-ar/cc_strings.xml
 +++ b/app/src/main/res/values-ar/cc_strings.xml
-@@ -14,15 +14,15 @@
-     <string name="downloading_loading">% تحميل…</string>
+@@ -23,15 +23,15 @@
+     <string name="cc_BackupFail">فشل النسخ الاحتياطي !</string>
+     <string name="cc_Restore">استعادة بيانات واتساب</string>
+     <string name="cc_RestoreTitle">استعادة</string>
+-    <string name="cc_RestoreMsg">استعادة البيانات…</string>
+-    <string name="cc_RestoreDone">انتهاء الاستعادة!</string>
+-    <string name="cc_RestoreFail">فشل الاستعادة</string>
+-    <string name="cc_RestoreSum">استعادة أحدث نسخة احتياطية</string>
+-    <string name="cc_copyWA">نسخ بيانات واتساب</string>
+-    <string name="cc_wa_moved">تم نسخ بيانات واتساب بنجاح ، يمكنك الآن إكمال الخطوات!</string>
+-    <string name="cc_no_backup_found">لا يوجد نسخة احتياطية</string>
+-    <string name="cc_upgrade_found">ثم العثور على تحديث جديد !!</string>
+-    <string name="cc_upgrade_found_subtitle">%1$s ما الجديد في</string>
++    <string name="cc_RestoreMsg">1</string>
++    <string name="cc_RestoreDone">1</string>
++    <string name="cc_RestoreFail">1</string>
++    <string name="cc_RestoreSum">1</string>
++    <string name="cc_copyWA">1</string>
++    <string name="cc_wa_moved">1</string>
++    <string name="cc_no_backup_found">1</string>
++    <string name="cc_upgrade_found">1</string>
++    <string name="cc_upgrade_found_subtitle">\u200e%1$s ما الجديد في</string>
  
-     <!-- Backup Restore -->
--    <string name="cc_Backup">النسخ الاحتياطي لبيانات واتساب</string>
--    <string name="cc_BackupRestore">النسخ الاحتياطي واستعادة</string>
--    <string name="cc_BackupTitle">النسخ الاحتياطي</string>
--    <string name="cc_BackupMsg">النسخ الاحتياطي للبيانات…</string>
--    <string name="cc_BackupSum">إنشاء نسخة احتياطية للواتساب ( النسخ الاحتياطي للتيتانيوم مثل النسخ الاحتياطي للبيانات)</string>
--    <string name="cc_BackupDone">إنتهاء النسخ الاحتياطي!</string>
--    <string name="cc_BackupFail">فشل النسخ الاحتياطي !</string>
--    <string name="cc_Restore">استعادة بيانات واتساب</string>
--    <string name="cc_RestoreTitle">استعادة</string>
-+    <string name="cc_Backup">1</string>
-+    <string name="cc_BackupRestore">1</string>
-+    <string name="cc_BackupTitle">1</string>
-+    <string name="cc_BackupMsg">1</string>
-+    <string name="cc_BackupSum">1</string>
-+    <string name="cc_BackupDone">1</string>
-+    <string name="cc_BackupFail">ف1</string>
-+    <string name="cc_Restore">1</string>
-+    <string name="cc_RestoreTitle">ا1</string>
-     <string name="cc_RestoreMsg">استعادة البيانات…</string>
-     <string name="cc_RestoreDone">انتهاء الاستعادة!</string>
-     <string name="cc_RestoreFail">فشل الاستعادة</string>
+     <!-- GBSetting -->
+     <string name="cc_setting_setting"> إعداد GB</string>
