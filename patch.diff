@@ -19,6 +19,23 @@ index 712590ca8..b7c7ec433 100644
      public final static String SELECTED_THEME_NAME_KEY = "selected_theme";
      public static final int GRID_PADDING_DIP = 11;
      public static final int GRID_SPACING_DIP_HORIZONTAL = 6;
+diff --git a/app/src/main/java/com/coocoo/downloader/Downloader.java b/app/src/main/java/com/coocoo/downloader/Downloader.java
+index 463f46b50..efe6a1c0b 100644
+--- a/app/src/main/java/com/coocoo/downloader/Downloader.java
++++ b/app/src/main/java/com/coocoo/downloader/Downloader.java
+@@ -31,9 +31,9 @@ public class Downloader implements IDownloader {
+     }
+ 
+     public synchronized boolean init() {
+-        if (!PermissionManager.getInstance().isStorageGranted()) {
+-            return false;
+-        }
++//        if (!PermissionManager.getInstance().isStorageGranted()) {
++//            return false;
++//        }
+         if (mInit) {
+             return true;
+         }
 diff --git a/app/src/main/java/com/coocoo/newtheme/ThemeManager.java b/app/src/main/java/com/coocoo/newtheme/ThemeManager.java
 index 4107d4129..70044fd51 100644
 --- a/app/src/main/java/com/coocoo/newtheme/ThemeManager.java
