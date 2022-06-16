@@ -1,3 +1,30 @@
+diff --git a/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt b/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
+index af6e3674d..32e57f844 100644
+--- a/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
++++ b/app/src/main/java/com/coocoo/preference/CoocooBackupRestorePrefFragment.kt
+@@ -151,15 +151,15 @@ class CoocooBackupRestorePrefFragment
+             preference.onPreferenceChangeListener = this@CoocooBackupRestorePrefFragment
+             preference.isEnabled = false
+             val strCalculating = ResMgr.getString(Constants.Res.String.CLEAR_BACKUP_DATA_CALCULATING)
+-            preference.summary = ResMgr.getString(Constants.Res.String.CLEAR_BACKUP_DATA_CONTENT, strCalculating)
++//            preference.summary = ResMgr.getString(Constants.Res.String.CLEAR_BACKUP_DATA_CONTENT, strCalculating)
+             prefFragmentScope.launch {
+                 val size = getFormattedBackUpFileSize()
+-                preference.summary = if (size > 0) {
+-                    preference.isEnabled = true
+-                    ResMgr.getString(Constants.Res.String.CLEAR_BACKUP_DATA_CONTENT, "%.2f MB".format(size))
+-                } else {
+-                    ResMgr.getString(Constants.Res.String.CLEAR_BACKUP_DATA_CONTENT, "0 MB")
+-                }
++//                preference.summary = if (size > 0) {
++//                    preference.isEnabled = true
++//                    ResMgr.getString(Constants.Res.String.CLEAR_BACKUP_DATA_CONTENT, "%.2f MB".format(size))
++//                } else {
++//                    ResMgr.getString(Constants.Res.String.CLEAR_BACKUP_DATA_CONTENT, "0 MB")
++//                }
+             }
+         }
+ 
 diff --git a/app/src/main/res/values-ar/cc_strings.xml b/app/src/main/res/values-ar/cc_strings.xml
 index 610740890..a71d9d635 100644
 --- a/app/src/main/res/values-ar/cc_strings.xml
