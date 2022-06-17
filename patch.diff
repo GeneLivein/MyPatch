@@ -128,6 +128,19 @@ index 3f77532de..08bf81aaa 100644
          val isFavorite: Boolean = arguments?.getBoolean(EXTRA_IS_FAVORITE) ?: false
          viewModel = if (isFavorite) {
              CCViewModelProvider(viewModelStore, FavoriteStatusPlaybackPageViewModelFactory(statusFeedRepo, statusId))[FavoriteStatusPlaybackPageViewModel::class.java]
+diff --git a/app/src/main/java/com/coocoo/utils/StatusUtil.kt b/app/src/main/java/com/coocoo/utils/StatusUtil.kt
+index 4b2424d78..0ccb519ea 100644
+--- a/app/src/main/java/com/coocoo/utils/StatusUtil.kt
++++ b/app/src/main/java/com/coocoo/utils/StatusUtil.kt
+@@ -46,7 +46,7 @@ object StatusUtil {
+         data?.run {
+             container?.let {
+                 it.findViewById<View>(ResMgr.getId("cc_download_status_btn"))?.let { btn ->
+-                    val activity: Activity = statusPlaybackContactFragment.A09()
++                    val activity: Activity? = statusPlaybackContactFragment.A09()
+                     val clickListener =
+                     if (activity is MyStatusHistoryPlaybackActivity) {
+                         MyStatusHistoryDownloadStatusListener()
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
 new file mode 100644
 index 000000000..a9bed3c87
