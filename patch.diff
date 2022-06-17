@@ -59,26 +59,10 @@ index 000000000..29329e41f
 +}
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/newtheme/ThemeManager.java b/app/src/main/java/com/coocoo/newtheme/ThemeManager.java
-index 70044fd51..9b38a5d50 100644
+index 70044fd51..802cc3b43 100644
 --- a/app/src/main/java/com/coocoo/newtheme/ThemeManager.java
 +++ b/app/src/main/java/com/coocoo/newtheme/ThemeManager.java
-@@ -5,7 +5,6 @@ import android.text.TextUtils;
- import com.coocoo.CooCooApp;
- import com.coocoo.android.support.annotation.NonNull;
- import com.coocoo.android.support.annotation.Nullable;
--import com.coocoo.coocoo.Coocoo;
- import com.coocoo.coocoosp.SPDelegate;
- import com.coocoo.db.ThemeMessageManager;
- import com.coocoo.db.conversation.ThemeMessage;
-@@ -26,7 +25,6 @@ import com.coocoo.utils.SystemUtil;
- import org.json.JSONArray;
- import org.json.JSONObject;
- 
--import java.io.File;
- import java.util.ArrayList;
- import java.util.List;
- import java.util.concurrent.atomic.AtomicBoolean;
-@@ -35,15 +33,15 @@ import static com.coocoo.newtheme.model.ThemeConstants.ID_DEFAULT;
+@@ -35,6 +35,7 @@ import static com.coocoo.newtheme.model.ThemeConstants.ID_DEFAULT;
  import static com.coocoo.newtheme.model.ThemeConstants.ID_MIN_BUILDIN;
  import static com.coocoo.newtheme.model.ThemeConstants.ID_MIN_CUSTOM;
  import static com.coocoo.newtheme.model.ThemeConstants.ID_MIN_IMPORT;
@@ -86,18 +70,7 @@ index 70044fd51..9b38a5d50 100644
  import static com.coocoo.utils.Constants.FILE_EXTENSION_MP4;
  import static com.coocoo.utils.Constants.OFFICIAL_THEME_HOME_VIDEO_URL;
  
- public class ThemeManager {
-     private static final String TAG = "ThemeManager";
-     public static int VERSION = 2;
--    public static String THEMES_PATH = Coocoo.getAppContext().getFilesDir() + File.separator + "Themes";
--    public static String EXPORT_DIR_PATH = THEMES_PATH + File.separator +  "export";
--    public static String IMPORT_DIR_PATH = THEMES_PATH + File.separator + "import";
-+    public static String EXPORT_DIR_PATH = FileUtil.concatPaths(PATH_SDCARD_THEME, "export");
-+    public static String IMPORT_DIR_PATH = FileUtil.concatPaths(PATH_SDCARD_THEME, "import");
-     public static int IMPORT_COUNT_LIMIT = 50;
-     public static int IMPORT_COUNT_SHOW = 100;
-     public static int CREATE_THEME_COUNT_LIMIT = 50;
-@@ -92,6 +90,10 @@ public class ThemeManager {
+@@ -92,6 +93,10 @@ public class ThemeManager {
          return themeId;
      }
  
@@ -108,26 +81,8 @@ index 70044fd51..9b38a5d50 100644
      /**
       * 按id获取一个主题
       * @param id
-@@ -506,7 +508,7 @@ public class ThemeManager {
-     }
- 
-     private synchronized ThemeInfo migrateDiy() {
--        String dirPath = FileUtil.concatPaths(THEMES_PATH, "diy");
-+        String dirPath = FileUtil.concatPaths(PATH_SDCARD_THEME, "diy");
-         if (!FileUtil.isDirExists(dirPath, false)) {
-             return null;
-         }
-@@ -521,7 +523,7 @@ public class ThemeManager {
-     private synchronized ThemeInfo migrateOffical(String themeName) {
-         String url = "https://static.cdn.wamodshost.com/coocoo/config/images/wallpaper/" + themeName + ".zip";
-         String dirName = MD5Util.getMD5(url);
--        String dirPath = FileUtil.concatPaths(THEMES_PATH, dirName);
-+        String dirPath = FileUtil.concatPaths(PATH_SDCARD_THEME, dirName);
-         if (!FileUtil.isDirExists(dirPath, false)) {
-             return null;
-         }
 diff --git a/app/src/main/java/com/coocoo/newtheme/store/ThemeRepo.java b/app/src/main/java/com/coocoo/newtheme/store/ThemeRepo.java
-index 8b0ea1e37..a7b543e41 100644
+index 8b0ea1e37..be92b13e1 100644
 --- a/app/src/main/java/com/coocoo/newtheme/store/ThemeRepo.java
 +++ b/app/src/main/java/com/coocoo/newtheme/store/ThemeRepo.java
 @@ -1,6 +1,7 @@
@@ -138,15 +93,7 @@ index 8b0ea1e37..a7b543e41 100644
  import android.text.TextUtils;
  
  import androidx.lifecycle.CCLiveData;
-@@ -8,6 +9,7 @@ import androidx.lifecycle.CCMutableLiveData;
- 
- import com.coocoo.android.support.annotation.Nullable;
- import com.coocoo.colorphone.ColorPhoneThemeData;
-+import com.coocoo.colorphone.Constant;
- import com.coocoo.config.BuildConfig;
- import com.coocoo.firebase.remoteConfig.RemoteConfig;
- import com.coocoo.manager.DownloadHelper;
-@@ -44,6 +46,7 @@ import java.util.Map;
+@@ -44,6 +45,7 @@ import java.util.Map;
  import java.util.concurrent.ExecutorService;
  import java.util.concurrent.Executors;
  
@@ -154,7 +101,7 @@ index 8b0ea1e37..a7b543e41 100644
  import static com.coocoo.utils.Constants.ERROR_HOT_THEME_UNSUPPORTED_MSG;
  import static com.coocoo.utils.Constants.FILE_EXTENSION_MP4;
  
-@@ -73,6 +76,11 @@ public class ThemeRepo {
+@@ -73,6 +75,11 @@ public class ThemeRepo {
          void onFailure(Throwable throwable);
      }
  
