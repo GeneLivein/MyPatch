@@ -1,136 +1,54 @@
-diff --git a/app/src/main/java/com/coocoo/downloader/Downloader.java b/app/src/main/java/com/coocoo/downloader/Downloader.java
-index 1280545b0..d73f109d7 100644
---- a/app/src/main/java/com/coocoo/downloader/Downloader.java
-+++ b/app/src/main/java/com/coocoo/downloader/Downloader.java
-@@ -1,5 +1,6 @@
- package com.coocoo.downloader;
- 
-+import android.os.Environment;
- import android.os.Handler;
- import android.os.Looper;
- import android.os.Message;
-@@ -8,6 +9,7 @@ import android.text.TextUtils;
- import com.coocoo.CooCooApp;
- import com.coocoo.downloader.model.DownloadData;
- import com.coocoo.downloader.net.NetworkManager;
-+import com.coocoo.utils.AppUtil;
- import com.coocoo.utils.FileUtil;
- 
- import java.io.File;
-@@ -29,6 +31,11 @@ public class Downloader implements IDownloader {
-         return InstanceHolder.INSTANCE;
+diff --git a/app/src/main/java/com/coocoo/statuses/feed/fragment/StatusHeaderViewHolder.kt b/app/src/main/java/com/coocoo/statuses/feed/fragment/StatusHeaderViewHolder.kt
+index 24fc257db..4f1b8349d 100644
+--- a/app/src/main/java/com/coocoo/statuses/feed/fragment/StatusHeaderViewHolder.kt
++++ b/app/src/main/java/com/coocoo/statuses/feed/fragment/StatusHeaderViewHolder.kt
+@@ -114,6 +114,7 @@ class StatusHeaderViewHolder(
+             A0R = arrayListOf(1)
+             A00()
+         }
++        intent.putExtra(IS_FROM_STATUS_FEED, true)
+         fragment.startActivityForResult(intent, REQUEST_CODE)
      }
  
-+    public static void deleteExternalDownloadDir() {
-+        String mDownloadRootPath = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), AppUtil.getAppName() + "/download/").getAbsolutePath();
-+        FileUtil.deleteDir(mDownloadRootPath);
-+    }
-+
-     public synchronized boolean init() {
-         if (mInit) {
-             return true;
-diff --git a/app/src/main/java/com/coocoo/newtheme/ExternalThemeDeleter.kt b/app/src/main/java/com/coocoo/newtheme/ExternalThemeDeleter.kt
+@@ -131,5 +132,6 @@ class StatusHeaderViewHolder(
+ 
+     companion object {
+         private const val REQUEST_CODE = 0x2
++        const val IS_FROM_STATUS_FEED = "is_from_status_feed"
+     }
+ }
+\ No newline at end of file
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
 new file mode 100644
-index 000000000..29329e41f
+index 000000000..0dcf692db
 --- /dev/null
-+++ b/app/src/main/java/com/coocoo/newtheme/ExternalThemeDeleter.kt
-@@ -0,0 +1,22 @@
-+package com.coocoo.newtheme
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
+@@ -0,0 +1,13 @@
++package com.coocoo.whatsappdelegate
 +
-+import com.coocoo.downloader.Downloader
-+import com.coocoo.newtheme.store.ThemeRepo
-+import com.coocoo.permission.PermissionManager
-+import kotlinx.coroutines.Dispatchers
-+import kotlinx.coroutines.GlobalScope
-+import kotlinx.coroutines.launch
++import com.coocoo.annotation.SmaliInject
++import com.coocoo.utils.LogUtil
++import com.coocoowhatsapp.contact.picker.ContactPickerFragment
 +
-+object ExternalThemeDeleter {
-+
++object ContactPickerSendBtnDelegate {
++    @SmaliInject
 +    @JvmStatic
-+    fun delete() {
-+        if (PermissionManager.getInstance().isStorageGranted) {
-+            GlobalScope.launch(Dispatchers.IO) {
-+                ThemeManager.deleteExternalThemeDir()
-+                ThemeRepo.deleteExternalColorPhoneDir()
-+                Downloader.deleteExternalDownloadDir()
-+            }
-+        }
++    fun onSendBtnClick(fragment: ContactPickerFragment) {
++        LogUtil.d("onSendBtnClick")
 +    }
 +}
 \ No newline at end of file
-diff --git a/app/src/main/java/com/coocoo/newtheme/ThemeManager.java b/app/src/main/java/com/coocoo/newtheme/ThemeManager.java
-index 70044fd51..802cc3b43 100644
---- a/app/src/main/java/com/coocoo/newtheme/ThemeManager.java
-+++ b/app/src/main/java/com/coocoo/newtheme/ThemeManager.java
-@@ -35,6 +35,7 @@ import static com.coocoo.newtheme.model.ThemeConstants.ID_DEFAULT;
- import static com.coocoo.newtheme.model.ThemeConstants.ID_MIN_BUILDIN;
- import static com.coocoo.newtheme.model.ThemeConstants.ID_MIN_CUSTOM;
- import static com.coocoo.newtheme.model.ThemeConstants.ID_MIN_IMPORT;
-+import static com.coocoo.utils.Constant.PATH_SDCARD_THEME;
- import static com.coocoo.utils.Constants.FILE_EXTENSION_MP4;
- import static com.coocoo.utils.Constants.OFFICIAL_THEME_HOME_VIDEO_URL;
+diff --git a/whatsapp_modify_module/smali/X/1Fe.1.smali b/whatsapp_modify_module/smali/X/1Fe.1.smali
+index eea1a1953..1285e4c48 100644
+--- a/whatsapp_modify_module/smali/X/1Fe.1.smali
++++ b/whatsapp_modify_module/smali/X/1Fe.1.smali
+@@ -26,6 +26,9 @@
  
-@@ -92,6 +93,10 @@ public class ThemeManager {
-         return themeId;
-     }
+     .line 220959
+     iget-object v4, p0, LX/1Fe;->A00:Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;
++#coocoo
++    invoke-static {v4}, com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;->onSendBtnClick(Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;)V
++#coocoo
  
-+    public static void deleteExternalThemeDir() {
-+        FileUtil.deleteDir(PATH_SDCARD_THEME);
-+    }
-+
-     /**
-      * 按id获取一个主题
-      * @param id
-diff --git a/app/src/main/java/com/coocoo/newtheme/store/ThemeRepo.java b/app/src/main/java/com/coocoo/newtheme/store/ThemeRepo.java
-index 8b0ea1e37..be92b13e1 100644
---- a/app/src/main/java/com/coocoo/newtheme/store/ThemeRepo.java
-+++ b/app/src/main/java/com/coocoo/newtheme/store/ThemeRepo.java
-@@ -1,6 +1,7 @@
- package com.coocoo.newtheme.store;
- 
- import android.content.Context;
-+import android.os.Environment;
- import android.text.TextUtils;
- 
- import androidx.lifecycle.CCLiveData;
-@@ -44,6 +45,7 @@ import java.util.Map;
- import java.util.concurrent.ExecutorService;
- import java.util.concurrent.Executors;
- 
-+import static com.coocoo.colorphone.Constant.WORK_DIR;
- import static com.coocoo.utils.Constants.ERROR_HOT_THEME_UNSUPPORTED_MSG;
- import static com.coocoo.utils.Constants.FILE_EXTENSION_MP4;
- 
-@@ -73,6 +75,11 @@ public class ThemeRepo {
-         void onFailure(Throwable throwable);
-     }
- 
-+    public static void deleteExternalColorPhoneDir() {
-+        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + WORK_DIR;
-+        FileUtil.deleteDir(dirPath);
-+    }
-+
-     public ThemeRepo(Context applicationContext) {
-         this.appContext = applicationContext;
-         executorService = Executors.newFixedThreadPool(5);
-diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
-index bfcb9f0cb..ec3644976 100644
---- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
-+++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
-@@ -128,6 +128,7 @@ import com.coocoo.manager.RoutingManager;
- import com.coocoo.manager.StatusesItemTypeManager;
- import com.coocoo.manager.WhatstallerPreDownloader;
- import com.coocoo.masssender.MassMessageSenderListActivity;
-+import com.coocoo.newtheme.ExternalThemeDeleter;
- import com.coocoo.newtheme.TabConstant;
- import com.coocoo.newtheme.ThemeManager;
- import com.coocoo.newtheme.importthemes.model.CooThemes;
-@@ -765,6 +766,8 @@ public class HomeActivityDelegate extends ActivityDelegate<HomeActivityThemeMana
-         LivePicAppWidget.resolveIntent(mHomeActivity.getIntent());
- 
-         setUpLivePicWidget();
-+
-+        ExternalThemeDeleter.delete();
-     }
- 
-     private void initStatusTrafficSdk() {
+ #coocoo
+     invoke-virtual {v4}, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A0A()LX/01K;
