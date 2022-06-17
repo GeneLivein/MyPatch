@@ -1,3 +1,24 @@
+diff --git a/app/src/main/java/X/c1_017.java b/app/src/main/java/X/c1_017.java
+index dc95e1c32..f987a3470 100644
+--- a/app/src/main/java/X/c1_017.java
++++ b/app/src/main/java/X/c1_017.java
+@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
+ import android.view.View;
+ import android.view.ViewGroup;
+ 
++import androidx.annotation.Nullable;
++
+ /**
+  * Fragment.
+  */
+@@ -72,6 +74,7 @@ public class c1_017 {
+     }
+ 
+     // getActivity() LX/0LX
++    @Nullable
+     public cc_01K A09() {
+         // do nothing
+         return null;
 diff --git a/app/src/main/java/com/coocoo/report/Report.java b/app/src/main/java/com/coocoo/report/Report.java
 index 03f3503b7..ccc9b74dc 100644
 --- a/app/src/main/java/com/coocoo/report/Report.java
@@ -109,7 +130,7 @@ index 3f77532de..08bf81aaa 100644
              CCViewModelProvider(viewModelStore, FavoriteStatusPlaybackPageViewModelFactory(statusFeedRepo, statusId))[FavoriteStatusPlaybackPageViewModel::class.java]
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
 new file mode 100644
-index 000000000..248c8dceb
+index 000000000..a9bed3c87
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
 @@ -0,0 +1,18 @@
@@ -125,7 +146,7 @@ index 000000000..248c8dceb
 +    @SmaliInject
 +    @JvmStatic
 +    fun onSendBtnClick(fragment: ContactPickerFragment) {
-+        val statusId = fragment.A0A().intent.getStringExtra(StatusHeaderViewHolder.BUNDLE_KEY_STATUS_ID)
++        val statusId = fragment.A09()?.intent?.getStringExtra(StatusHeaderViewHolder.BUNDLE_KEY_STATUS_ID)
 +        if (statusId.isNullOrEmpty().not()) {
 +            reportStatusFeedShareDone(statusId)
 +        }
