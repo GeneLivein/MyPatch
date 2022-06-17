@@ -20,13 +20,14 @@ index 24fc257db..4f1b8349d 100644
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
 new file mode 100644
-index 000000000..0dcf692db
+index 000000000..661bc4a80
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
-@@ -0,0 +1,13 @@
+@@ -0,0 +1,15 @@
 +package com.coocoo.whatsappdelegate
 +
 +import com.coocoo.annotation.SmaliInject
++import com.coocoo.statuses.feed.fragment.StatusHeaderViewHolder
 +import com.coocoo.utils.LogUtil
 +import com.coocoowhatsapp.contact.picker.ContactPickerFragment
 +
@@ -34,10 +35,27 @@ index 000000000..0dcf692db
 +    @SmaliInject
 +    @JvmStatic
 +    fun onSendBtnClick(fragment: ContactPickerFragment) {
-+        LogUtil.d("onSendBtnClick")
++        val isFromStatus = fragment.A0A().intent.getBooleanExtra(StatusHeaderViewHolder.IS_FROM_STATUS_FEED, false)
++        LogUtil.d("onSendBtnClick $isFromStatus")
 +    }
 +}
 \ No newline at end of file
+diff --git a/app/src/main/java/com/coocoowhatsapp/contact/picker/ContactPickerFragment.java b/app/src/main/java/com/coocoowhatsapp/contact/picker/ContactPickerFragment.java
+index 95d2d775a..9682c2023 100644
+--- a/app/src/main/java/com/coocoowhatsapp/contact/picker/ContactPickerFragment.java
++++ b/app/src/main/java/com/coocoowhatsapp/contact/picker/ContactPickerFragment.java
+@@ -4,9 +4,10 @@ import android.os.Bundle;
+ 
+ import java.util.Map;
+ 
++import X.c1_017;
+ import X.c1_0HQ;
+ 
+-public class ContactPickerFragment {
++public class ContactPickerFragment extends c1_017 {
+ 
+     /**
+      * 当前选择的用户数量
 diff --git a/whatsapp_modify_module/smali/X/1Fe.1.smali b/whatsapp_modify_module/smali/X/1Fe.1.smali
 index eea1a1953..37372812c 100644
 --- a/whatsapp_modify_module/smali/X/1Fe.1.smali
