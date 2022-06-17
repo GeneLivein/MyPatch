@@ -41,46 +41,27 @@ index 6425827aa..c2b36f8f5 100644
      private DownloadConfig(Builder builder) {
          if (builder.downloadThreadNumber > MAX_THREAD_NUMBER) {
 diff --git a/app/src/main/java/com/coocoo/downloader/Downloader.java b/app/src/main/java/com/coocoo/downloader/Downloader.java
-index 463f46b50..2efae0783 100644
+index 463f46b50..1280545b0 100644
 --- a/app/src/main/java/com/coocoo/downloader/Downloader.java
 +++ b/app/src/main/java/com/coocoo/downloader/Downloader.java
-@@ -10,6 +10,7 @@ import com.coocoo.downloader.model.DownloadData;
+@@ -8,7 +8,6 @@ import android.text.TextUtils;
+ import com.coocoo.CooCooApp;
+ import com.coocoo.downloader.model.DownloadData;
  import com.coocoo.downloader.net.NetworkManager;
- import com.coocoo.permission.PermissionManager;
+-import com.coocoo.permission.PermissionManager;
  import com.coocoo.utils.FileUtil;
-+import com.coocoo.utils.LogUtil;
  
  import java.io.File;
- import java.util.List;
-@@ -31,9 +32,9 @@ public class Downloader implements IDownloader {
+@@ -31,9 +30,6 @@ public class Downloader implements IDownloader {
      }
  
      public synchronized boolean init() {
 -        if (!PermissionManager.getInstance().isStorageGranted()) {
 -            return false;
 -        }
-+//        if (!PermissionManager.getInstance().isStorageGranted()) {
-+//            return false;
-+//        }
          if (mInit) {
              return true;
          }
-@@ -84,7 +85,14 @@ public class Downloader implements IDownloader {
-         if (TextUtils.isEmpty(url)) {
-             return false;
-         }
--        return mRepoManager.isDownload(url);
-+        try {
-+            throw new Exception("");
-+        } catch (Exception e) {
-+            e.printStackTrace();
-+        }
-+        boolean isD = mRepoManager.isDownload(url);
-+        LogUtil.d("Coocoo1", url + " isDownload:" + isD);
-+        return isD;
-     }
- 
-     public String getLocalUrl(String url) {
 diff --git a/app/src/main/java/com/coocoo/newtheme/ThemeManager.java b/app/src/main/java/com/coocoo/newtheme/ThemeManager.java
 index 4107d4129..70044fd51 100644
 --- a/app/src/main/java/com/coocoo/newtheme/ThemeManager.java
@@ -171,18 +152,6 @@ index 89c22da6a..0b538878d 100644
          FileUtil.deleteDir(dirPath, true);
      }
  
-diff --git a/app/src/main/java/com/coocoo/newtheme/store/ThemeDownloadManager.java b/app/src/main/java/com/coocoo/newtheme/store/ThemeDownloadManager.java
-index c7df65ef7..3b864bf9c 100644
---- a/app/src/main/java/com/coocoo/newtheme/store/ThemeDownloadManager.java
-+++ b/app/src/main/java/com/coocoo/newtheme/store/ThemeDownloadManager.java
-@@ -81,6 +81,7 @@ public class ThemeDownloadManager {
- 
-                 @Override
-                 public void onFailed(String error) {
-+                    LogUtil.d(error);
-                     DownloadThemeInterface callback = callbackRef.get();
-                     if (callback != null) {
-                         callback.onFailed();
 diff --git a/app/src/main/java/com/coocoo/theme/diy/DiyThemePreviewActivity.java b/app/src/main/java/com/coocoo/theme/diy/DiyThemePreviewActivity.java
 index 04eb4737d..c11aee63b 100644
 --- a/app/src/main/java/com/coocoo/theme/diy/DiyThemePreviewActivity.java
