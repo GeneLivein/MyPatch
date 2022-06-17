@@ -39,7 +39,7 @@ index 000000000..0dcf692db
 +}
 \ No newline at end of file
 diff --git a/whatsapp_modify_module/smali/X/1Fe.1.smali b/whatsapp_modify_module/smali/X/1Fe.1.smali
-index eea1a1953..1285e4c48 100644
+index eea1a1953..37372812c 100644
 --- a/whatsapp_modify_module/smali/X/1Fe.1.smali
 +++ b/whatsapp_modify_module/smali/X/1Fe.1.smali
 @@ -26,6 +26,9 @@
@@ -47,7 +47,7 @@ index eea1a1953..1285e4c48 100644
      .line 220959
      iget-object v4, p0, LX/1Fe;->A00:Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;
 +#coocoo
-+    invoke-static {v4}, com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;->onSendBtnClick(Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;)V
++    invoke-static {v4}, Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;->onSendBtnClick(Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;)V
 +#coocoo
  
  #coocoo
