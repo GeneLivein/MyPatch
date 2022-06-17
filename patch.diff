@@ -19,48 +19,6 @@ index dc95e1c32..f987a3470 100644
      public cc_01K A09() {
          // do nothing
          return null;
-diff --git a/app/src/main/java/com/coocoo/report/Report.java b/app/src/main/java/com/coocoo/report/Report.java
-index 03f3503b7..ccc9b74dc 100644
---- a/app/src/main/java/com/coocoo/report/Report.java
-+++ b/app/src/main/java/com/coocoo/report/Report.java
-@@ -1108,4 +1108,8 @@ public class Report {
-                                                           int feedVideoCount, int exitIndex) {
-         ReportCore.reportStatusFeedPlaybackActionBack(feedImgCount, feedVideoCount, exitIndex);
-     }
-+
-+    public static void reportStatusFeedShareDone(String statusId) {
-+        ReportCore.reportStatusFeedShareDone(statusId);
-+    }
- }
-diff --git a/app/src/main/java/com/coocoo/report/ReportConstant.java b/app/src/main/java/com/coocoo/report/ReportConstant.java
-index b37efe6df..37afe5971 100644
---- a/app/src/main/java/com/coocoo/report/ReportConstant.java
-+++ b/app/src/main/java/com/coocoo/report/ReportConstant.java
-@@ -946,6 +946,8 @@ public interface ReportConstant {
-     String KEY_FEED_IMAGE = "feed_img";
-     String KEY_FEED_VIDEO = "feed_vid";
-     String KEY_EXIT_INDEX = "exit_index";
-+    String KEY_STATUS_ID = "status_id";
-     String ACTION_ENTRY_SHOW = "entry_show";
-     String ACTION_BACK = "back";
-+    String ACTION_SHARE_DONE = "share_done";
- }
-diff --git a/app/src/main/java/com/coocoo/report/ReportCore.java b/app/src/main/java/com/coocoo/report/ReportCore.java
-index 7cc2f8367..48cb3012a 100644
---- a/app/src/main/java/com/coocoo/report/ReportCore.java
-+++ b/app/src/main/java/com/coocoo/report/ReportCore.java
-@@ -1762,4 +1762,11 @@ class ReportCore implements ReportConstant {
-         params.put(ReportConstant.KEY_EXIT_INDEX, String.valueOf(exitIndex));
-         report(ReportConstant.EVENT_STATUS_FEED, params);
-     }
-+
-+    public static void reportStatusFeedShareDone(String statusId) {
-+        Map<String, String> params = new HashMap<>();
-+        params.put(ReportConstant.KEY_ACTION, ACTION_SHARE_DONE);
-+        params.put(ReportConstant.KEY_STATUS_ID, statusId);
-+        report(ReportConstant.EVENT_STATUS_FEED, params);
-+    }
- }
 diff --git a/app/src/main/java/com/coocoo/statuses/feed/fragment/StatusHeaderViewHolder.kt b/app/src/main/java/com/coocoo/statuses/feed/fragment/StatusHeaderViewHolder.kt
 index 24fc257db..32f6cdfa3 100644
 --- a/app/src/main/java/com/coocoo/statuses/feed/fragment/StatusHeaderViewHolder.kt
@@ -143,14 +101,14 @@ index 4b2424d78..0ccb519ea 100644
                          MyStatusHistoryDownloadStatusListener()
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
 new file mode 100644
-index 000000000..a9bed3c87
+index 000000000..1921a4d47
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
 @@ -0,0 +1,18 @@
 +package com.coocoo.whatsappdelegate
 +
 +import com.coocoo.annotation.SmaliInject
-+import com.coocoo.report.Report.reportStatusFeedShareDone
++import com.coocoo.report.Report
 +import com.coocoo.statuses.feed.fragment.StatusHeaderViewHolder
 +import com.coocoo.utils.LogUtil
 +import com.coocoowhatsapp.contact.picker.ContactPickerFragment
@@ -161,7 +119,7 @@ index 000000000..a9bed3c87
 +    fun onSendBtnClick(fragment: ContactPickerFragment) {
 +        val statusId = fragment.A09()?.intent?.getStringExtra(StatusHeaderViewHolder.BUNDLE_KEY_STATUS_ID)
 +        if (statusId.isNullOrEmpty().not()) {
-+            reportStatusFeedShareDone(statusId)
++            Report.reportFavoriteStatusFeedPlaybackShareDone(statusId)
 +        }
 +    }
 +}
