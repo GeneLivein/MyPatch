@@ -69,7 +69,7 @@ index 24fc257db..32f6cdfa3 100644
  }
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/statuses/feed/fragment/StatusPlaybackFragment.kt b/app/src/main/java/com/coocoo/statuses/feed/fragment/StatusPlaybackFragment.kt
-index 3f77532de..a6eaf38ff 100644
+index 3f77532de..08bf81aaa 100644
 --- a/app/src/main/java/com/coocoo/statuses/feed/fragment/StatusPlaybackFragment.kt
 +++ b/app/src/main/java/com/coocoo/statuses/feed/fragment/StatusPlaybackFragment.kt
 @@ -9,7 +9,6 @@ import android.content.Intent
@@ -89,21 +89,21 @@ index 3f77532de..a6eaf38ff 100644
      override fun onActivityCreated(savedInstanceState: Bundle?) {
          super.onActivityCreated(savedInstanceState)
          activityCreated = true
-@@ -57,7 +58,7 @@ abstract class StatusPlaybackFragment : CCBaseFragment() {
+@@ -57,7 +58,8 @@ abstract class StatusPlaybackFragment : CCBaseFragment() {
  
      override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
          super.onViewCreated(view, savedInstanceState)
 -        headerViewHolder = StatusHeaderViewHolder(view, this, ::sendFile)
++        statusId = arguments?.getString(EXTRA_STATUS_ID, "") ?: ""
 +        headerViewHolder = StatusHeaderViewHolder(view, statusId, this, ::sendFile)
          ivDownload = ResMgr.findViewById<ImageView>(Constants.Res.Id.STATUS_FEED_PLAYBACK_DOWNLOAD, view).apply {
              setOnClickListener {
                  // TODO
-@@ -88,7 +89,7 @@ abstract class StatusPlaybackFragment : CCBaseFragment() {
+@@ -88,7 +90,6 @@ abstract class StatusPlaybackFragment : CCBaseFragment() {
          motionViewModel = CCViewModelProvider(activity.viewModelStore, StatusPlaybackMotionViewModelFactory())[StatusPlaybackMotionViewModel::class.java]
  
          val statusFeedRepo = Coocoo.getRepoContainer().statusFeedRepo
 -        val statusId: String = arguments?.getString(EXTRA_STATUS_ID, "") ?: ""
-+        statusId = arguments?.getString(EXTRA_STATUS_ID, "") ?: ""
          val isFavorite: Boolean = arguments?.getBoolean(EXTRA_IS_FAVORITE) ?: false
          viewModel = if (isFavorite) {
              CCViewModelProvider(viewModelStore, FavoriteStatusPlaybackPageViewModelFactory(statusFeedRepo, statusId))[FavoriteStatusPlaybackPageViewModel::class.java]
