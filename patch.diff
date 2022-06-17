@@ -1,127 +1,127 @@
 diff --git a/app/src/main/java/com/coocoo/colorphone/Constant.java b/app/src/main/java/com/coocoo/colorphone/Constant.java
-index 712590ca8..b7c7ec433 100644
+index b7c7ec433..712590ca8 100644
 --- a/app/src/main/java/com/coocoo/colorphone/Constant.java
 +++ b/app/src/main/java/com/coocoo/colorphone/Constant.java
 @@ -1,14 +1,14 @@
  package com.coocoo.colorphone;
  
--import android.os.Environment;
++import android.os.Environment;
  
  import com.coocoo.config.BuildConfig;
-+import com.coocoo.coocoo.Coocoo;
+-import com.coocoo.coocoo.Coocoo;
  
  
  public class Constant {
      public final static boolean IS_DEV = BuildConfig.IS_DEBUG;
      public final static String WORK_DIR = "color_whatsapp";
--    public final static String WORK_DIR_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + WORK_DIR;
-+    public final static String WORK_DIR_PATH = Coocoo.getAppContext().getFilesDir().getAbsolutePath() + "/" + WORK_DIR;
+-    public final static String WORK_DIR_PATH = Coocoo.getAppContext().getFilesDir().getAbsolutePath() + "/" + WORK_DIR;
++    public final static String WORK_DIR_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + WORK_DIR;
      public final static String SELECTED_THEME_NAME_KEY = "selected_theme";
      public static final int GRID_PADDING_DIP = 11;
      public static final int GRID_SPACING_DIP_HORIZONTAL = 6;
 diff --git a/app/src/main/java/com/coocoo/downloader/DownloadConfig.java b/app/src/main/java/com/coocoo/downloader/DownloadConfig.java
-index 6425827aa..c2b36f8f5 100644
+index c2b36f8f5..6425827aa 100644
 --- a/app/src/main/java/com/coocoo/downloader/DownloadConfig.java
 +++ b/app/src/main/java/com/coocoo/downloader/DownloadConfig.java
-@@ -3,6 +3,7 @@ package com.coocoo.downloader;
+@@ -3,7 +3,6 @@ package com.coocoo.downloader;
  import android.os.Environment;
  import android.text.TextUtils;
  
-+import com.coocoo.coocoo.Coocoo;
+-import com.coocoo.coocoo.Coocoo;
  import com.coocoo.utils.AppUtil;
  
  import java.io.File;
-@@ -16,7 +17,7 @@ public class DownloadConfig {
+@@ -17,7 +16,7 @@ public class DownloadConfig {
      static final int DEFAULT_THREAD_NUMBER = 1;
  
      int mDownloadThreadNumber = DEFAULT_THREAD_NUMBER;
--    String mDownloadRootPath = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), AppUtil.getAppName() + "/download/").getAbsolutePath();
-+    String mDownloadRootPath = Coocoo.getAppContext().getFilesDir() + File.separator + "download";
+-    String mDownloadRootPath = Coocoo.getAppContext().getFilesDir() + File.separator + "download";
++    String mDownloadRootPath = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), AppUtil.getAppName() + "/download/").getAbsolutePath();
  
      private DownloadConfig(Builder builder) {
          if (builder.downloadThreadNumber > MAX_THREAD_NUMBER) {
 diff --git a/app/src/main/java/com/coocoo/downloader/Downloader.java b/app/src/main/java/com/coocoo/downloader/Downloader.java
-index 463f46b50..1280545b0 100644
+index 1280545b0..463f46b50 100644
 --- a/app/src/main/java/com/coocoo/downloader/Downloader.java
 +++ b/app/src/main/java/com/coocoo/downloader/Downloader.java
-@@ -8,7 +8,6 @@ import android.text.TextUtils;
+@@ -8,6 +8,7 @@ import android.text.TextUtils;
  import com.coocoo.CooCooApp;
  import com.coocoo.downloader.model.DownloadData;
  import com.coocoo.downloader.net.NetworkManager;
--import com.coocoo.permission.PermissionManager;
++import com.coocoo.permission.PermissionManager;
  import com.coocoo.utils.FileUtil;
  
  import java.io.File;
-@@ -31,9 +30,6 @@ public class Downloader implements IDownloader {
+@@ -30,6 +31,9 @@ public class Downloader implements IDownloader {
      }
  
      public synchronized boolean init() {
--        if (!PermissionManager.getInstance().isStorageGranted()) {
--            return false;
--        }
++        if (!PermissionManager.getInstance().isStorageGranted()) {
++            return false;
++        }
          if (mInit) {
              return true;
          }
 diff --git a/app/src/main/java/com/coocoo/newtheme/ThemeManager.java b/app/src/main/java/com/coocoo/newtheme/ThemeManager.java
-index 4107d4129..70044fd51 100644
+index 70044fd51..4107d4129 100644
 --- a/app/src/main/java/com/coocoo/newtheme/ThemeManager.java
 +++ b/app/src/main/java/com/coocoo/newtheme/ThemeManager.java
-@@ -5,6 +5,7 @@ import android.text.TextUtils;
+@@ -5,7 +5,6 @@ import android.text.TextUtils;
  import com.coocoo.CooCooApp;
  import com.coocoo.android.support.annotation.NonNull;
  import com.coocoo.android.support.annotation.Nullable;
-+import com.coocoo.coocoo.Coocoo;
+-import com.coocoo.coocoo.Coocoo;
  import com.coocoo.coocoosp.SPDelegate;
  import com.coocoo.db.ThemeMessageManager;
  import com.coocoo.db.conversation.ThemeMessage;
-@@ -25,6 +26,7 @@ import com.coocoo.utils.SystemUtil;
+@@ -26,7 +25,6 @@ import com.coocoo.utils.SystemUtil;
  import org.json.JSONArray;
  import org.json.JSONObject;
  
-+import java.io.File;
+-import java.io.File;
  import java.util.ArrayList;
  import java.util.List;
  import java.util.concurrent.atomic.AtomicBoolean;
-@@ -39,8 +41,9 @@ import static com.coocoo.utils.Constants.OFFICIAL_THEME_HOME_VIDEO_URL;
+@@ -41,9 +39,8 @@ import static com.coocoo.utils.Constants.OFFICIAL_THEME_HOME_VIDEO_URL;
  public class ThemeManager {
      private static final String TAG = "ThemeManager";
      public static int VERSION = 2;
--    public static String EXPORT_DIR_PATH = FileUtil.concatPaths(Constant.PATH_SDCARD_THEME, "export");
--    public static String IMPORT_DIR_PATH = FileUtil.concatPaths(Constant.PATH_SDCARD_THEME, "import");
-+    public static String THEMES_PATH = Coocoo.getAppContext().getFilesDir() + File.separator + "Themes";
-+    public static String EXPORT_DIR_PATH = THEMES_PATH + File.separator +  "export";
-+    public static String IMPORT_DIR_PATH = THEMES_PATH + File.separator + "import";
+-    public static String THEMES_PATH = Coocoo.getAppContext().getFilesDir() + File.separator + "Themes";
+-    public static String EXPORT_DIR_PATH = THEMES_PATH + File.separator +  "export";
+-    public static String IMPORT_DIR_PATH = THEMES_PATH + File.separator + "import";
++    public static String EXPORT_DIR_PATH = FileUtil.concatPaths(Constant.PATH_SDCARD_THEME, "export");
++    public static String IMPORT_DIR_PATH = FileUtil.concatPaths(Constant.PATH_SDCARD_THEME, "import");
      public static int IMPORT_COUNT_LIMIT = 50;
      public static int IMPORT_COUNT_SHOW = 100;
      public static int CREATE_THEME_COUNT_LIMIT = 50;
-@@ -503,7 +506,7 @@ public class ThemeManager {
+@@ -506,7 +503,7 @@ public class ThemeManager {
      }
  
      private synchronized ThemeInfo migrateDiy() {
--        String dirPath = FileUtil.concatPaths(Constant.PATH_SDCARD_THEME, "diy");
-+        String dirPath = FileUtil.concatPaths(THEMES_PATH, "diy");
+-        String dirPath = FileUtil.concatPaths(THEMES_PATH, "diy");
++        String dirPath = FileUtil.concatPaths(Constant.PATH_SDCARD_THEME, "diy");
          if (!FileUtil.isDirExists(dirPath, false)) {
              return null;
          }
-@@ -518,7 +521,7 @@ public class ThemeManager {
+@@ -521,7 +518,7 @@ public class ThemeManager {
      private synchronized ThemeInfo migrateOffical(String themeName) {
          String url = "https://static.cdn.wamodshost.com/coocoo/config/images/wallpaper/" + themeName + ".zip";
          String dirName = MD5Util.getMD5(url);
--        String dirPath = FileUtil.concatPaths(Constant.PATH_SDCARD_THEME, dirName);
-+        String dirPath = FileUtil.concatPaths(THEMES_PATH, dirName);
+-        String dirPath = FileUtil.concatPaths(THEMES_PATH, dirName);
++        String dirPath = FileUtil.concatPaths(Constant.PATH_SDCARD_THEME, dirName);
          if (!FileUtil.isDirExists(dirPath, false)) {
              return null;
          }
 diff --git a/app/src/main/java/com/coocoo/newtheme/model/ThemeInfo.java b/app/src/main/java/com/coocoo/newtheme/model/ThemeInfo.java
-index 89c22da6a..0b538878d 100644
+index 0b538878d..89c22da6a 100644
 --- a/app/src/main/java/com/coocoo/newtheme/model/ThemeInfo.java
 +++ b/app/src/main/java/com/coocoo/newtheme/model/ThemeInfo.java
 @@ -149,7 +149,7 @@ public class ThemeInfo implements Serializable {
          if (forceUseAssetsPath || type == THEME_TYPE_DEFAULT) {
              return FileUtil.concatPaths("theme", String.valueOf(id));
          } else if (type == THEME_TYPE_DEPRECATED) {
--            return FileUtil.concatPaths(Constant.PATH_SDCARD_THEME, name);
-+            return FileUtil.concatPaths(ThemeManager.THEMES_PATH, name);
+-            return FileUtil.concatPaths(ThemeManager.THEMES_PATH, name);
++            return FileUtil.concatPaths(Constant.PATH_SDCARD_THEME, name);
          } else if (type == THEME_TYPE_TEMP) {
              File externalCacheDir = Coocoo.getAppContext().getExternalCacheDir();
              if (externalCacheDir != null) {
@@ -129,8 +129,8 @@ index 89c22da6a..0b538878d 100644
          } else if (isFromConversation) {
              return mThemeFolderPath;
          } else {
--            return FileUtil.concatPaths(Constant.PATH_SDCARD_THEME, String.valueOf(id));
-+            return FileUtil.concatPaths(ThemeManager.THEMES_PATH, String.valueOf(id));
+-            return FileUtil.concatPaths(ThemeManager.THEMES_PATH, String.valueOf(id));
++            return FileUtil.concatPaths(Constant.PATH_SDCARD_THEME, String.valueOf(id));
          }
      }
  
@@ -138,8 +138,8 @@ index 89c22da6a..0b538878d 100644
       * @param srcDirPath
       */
      public void copyThemeFilesFrom(String srcDirPath) {
--        String toDirPath = FileUtil.concatPaths(Constant.PATH_SDCARD_THEME, String.valueOf(id));
-+        String toDirPath = FileUtil.concatPaths(ThemeManager.THEMES_PATH, String.valueOf(id));
+-        String toDirPath = FileUtil.concatPaths(ThemeManager.THEMES_PATH, String.valueOf(id));
++        String toDirPath = FileUtil.concatPaths(Constant.PATH_SDCARD_THEME, String.valueOf(id));
          cleanFiles2();
          FileUtil.copyDirToDir(srcDirPath, toDirPath, false, false);
      }
@@ -147,88 +147,88 @@ index 89c22da6a..0b538878d 100644
       * 只用于点击Conversation中的.cctheme使用
       */
      public void cleanFiles2() {
--        String dirPath = FileUtil.concatPaths(Constant.PATH_SDCARD_THEME, String.valueOf(id));
-+        String dirPath = FileUtil.concatPaths(ThemeManager.THEMES_PATH, String.valueOf(id));
+-        String dirPath = FileUtil.concatPaths(ThemeManager.THEMES_PATH, String.valueOf(id));
++        String dirPath = FileUtil.concatPaths(Constant.PATH_SDCARD_THEME, String.valueOf(id));
          FileUtil.deleteDir(dirPath, true);
      }
  
 diff --git a/app/src/main/java/com/coocoo/theme/diy/DiyThemePreviewActivity.java b/app/src/main/java/com/coocoo/theme/diy/DiyThemePreviewActivity.java
-index 04eb4737d..c11aee63b 100644
+index c11aee63b..04eb4737d 100644
 --- a/app/src/main/java/com/coocoo/theme/diy/DiyThemePreviewActivity.java
 +++ b/app/src/main/java/com/coocoo/theme/diy/DiyThemePreviewActivity.java
 @@ -116,7 +116,7 @@ public class DiyThemePreviewActivity extends FragmentActivity {
              Report.themeApplyButtonClick(themeInfo.type, themeInfo.name);
          }
  
--        ThemePreviewCaptureHelper.capture(getThemePreviewView(), FileUtil.concatPaths(Constant.PATH_SDCARD_THEME, String.valueOf(themeInfo.id)));
-+        ThemePreviewCaptureHelper.capture(getThemePreviewView(), FileUtil.concatPaths(ThemeManager.THEMES_PATH, String.valueOf(themeInfo.id)));
+-        ThemePreviewCaptureHelper.capture(getThemePreviewView(), FileUtil.concatPaths(ThemeManager.THEMES_PATH, String.valueOf(themeInfo.id)));
++        ThemePreviewCaptureHelper.capture(getThemePreviewView(), FileUtil.concatPaths(Constant.PATH_SDCARD_THEME, String.valueOf(themeInfo.id)));
  
          Intent intent = new Intent(DiyThemePreviewActivity.this, HomeActivity.class);
          intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationActivityDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationActivityDelegate.java
-index 58463356f..8663c2314 100644
+index 8663c2314..58463356f 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationActivityDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationActivityDelegate.java
-@@ -183,6 +183,9 @@ public class ConversationActivityDelegate extends ActivityDelegate<ConversationA
+@@ -183,9 +183,6 @@ public class ConversationActivityDelegate extends ActivityDelegate<ConversationA
      private static final String RES_STRING_MENU_PROMOTE_GROUP = "cc_menu_promote_group";
      private static final String RES_STRING_MENU_START_PARTY = "cc_menu_start_party";
  
-+    private static final String THEME_ZIP_FILE_PATH_FROM_CONVERSATION = FileUtil.concatPaths(ThemeManager.THEMES_PATH, "themeZip.zip");
-+    private static final String THEME_ZIP_PATH_FROM_CONVERSATION = FileUtil.concatPaths(ThemeManager.THEMES_PATH, "themeZip");
-+
+-    private static final String THEME_ZIP_FILE_PATH_FROM_CONVERSATION = FileUtil.concatPaths(ThemeManager.THEMES_PATH, "themeZip.zip");
+-    private static final String THEME_ZIP_PATH_FROM_CONVERSATION = FileUtil.concatPaths(ThemeManager.THEMES_PATH, "themeZip");
+-
      public com.coocoowhatsapp.Conversation conversation;
  
      private EditText entry;
-@@ -257,10 +260,10 @@ public class ConversationActivityDelegate extends ActivityDelegate<ConversationA
+@@ -260,10 +257,10 @@ public class ConversationActivityDelegate extends ActivityDelegate<ConversationA
              if (!TextUtils.isEmpty(displayName) && displayName.endsWith(".cctheme")) {
                  Uri uri = intent.getData();
                  InputStream inputStream = context.getContentResolver().openInputStream(uri);
--                FileUtil.copyFile(inputStream, Constant.THEME_ZIP_FILE_PATH_FROM_CONVERSATION);
--                FileUtil.deleteDir(Constant.THEME_ZIP_PATH_FROM_CONVERSATION);
--                CoocooThemeZipUtil.parseCoocooTheme(Constant.THEME_ZIP_FILE_PATH_FROM_CONVERSATION, Constant.PATH_SDCARD_THEME);
--                ThemeInfo themeInfo = ThemeManager.getInstance().formalizeTheme(uri.toString(), Constant.THEME_ZIP_PATH_FROM_CONVERSATION);
-+                FileUtil.copyFile(inputStream, THEME_ZIP_FILE_PATH_FROM_CONVERSATION);
-+                FileUtil.deleteDir(THEME_ZIP_PATH_FROM_CONVERSATION);
-+                CoocooThemeZipUtil.parseCoocooTheme(THEME_ZIP_FILE_PATH_FROM_CONVERSATION, ThemeManager.THEMES_PATH);
-+                ThemeInfo themeInfo = ThemeManager.getInstance().formalizeTheme(uri.toString(), THEME_ZIP_PATH_FROM_CONVERSATION);
+-                FileUtil.copyFile(inputStream, THEME_ZIP_FILE_PATH_FROM_CONVERSATION);
+-                FileUtil.deleteDir(THEME_ZIP_PATH_FROM_CONVERSATION);
+-                CoocooThemeZipUtil.parseCoocooTheme(THEME_ZIP_FILE_PATH_FROM_CONVERSATION, ThemeManager.THEMES_PATH);
+-                ThemeInfo themeInfo = ThemeManager.getInstance().formalizeTheme(uri.toString(), THEME_ZIP_PATH_FROM_CONVERSATION);
++                FileUtil.copyFile(inputStream, Constant.THEME_ZIP_FILE_PATH_FROM_CONVERSATION);
++                FileUtil.deleteDir(Constant.THEME_ZIP_PATH_FROM_CONVERSATION);
++                CoocooThemeZipUtil.parseCoocooTheme(Constant.THEME_ZIP_FILE_PATH_FROM_CONVERSATION, Constant.PATH_SDCARD_THEME);
++                ThemeInfo themeInfo = ThemeManager.getInstance().formalizeTheme(uri.toString(), Constant.THEME_ZIP_PATH_FROM_CONVERSATION);
                  if (themeInfo != null) {
                      intent = ThemePreviewActivity.newIntent(context, themeInfo);
                      intent.putExtra(ThemePreviewActivity.THEME_URI, uri.toString());
 diff --git a/app/src/main/java/com/demo/VideoViewActivity.java b/app/src/main/java/com/demo/VideoViewActivity.java
-index 4fa29bb2d..1f26ef393 100644
+index 1f26ef393..4fa29bb2d 100644
 --- a/app/src/main/java/com/demo/VideoViewActivity.java
 +++ b/app/src/main/java/com/demo/VideoViewActivity.java
-@@ -24,6 +24,7 @@ import com.coocoo.exoplayer2.ui.PlayerView;
+@@ -24,7 +24,6 @@ import com.coocoo.exoplayer2.ui.PlayerView;
  import com.coocoo.exoplayer2.upstream.DataSource;
  import com.coocoo.exoplayer2.upstream.DataSpec;
  import com.coocoo.exoplayer2.upstream.FileDataSource;
-+import com.coocoo.newtheme.ThemeManager;
+-import com.coocoo.newtheme.ThemeManager;
  import com.coocoo.utils.Constant;
  import com.coocoo.utils.DeviceUtil;
  import com.coocoo.utils.FileUtil;
-@@ -55,10 +56,10 @@ public class VideoViewActivity extends Activity {
+@@ -56,10 +55,10 @@ public class VideoViewActivity extends Activity {
  //            e.printStackTrace();
  //        }
  
--        String filePath = Constant.PATH_SDCARD_THEME + "/diy/coocoo_video10.mp4";
-+        String filePath = ThemeManager.THEMES_PATH + "/diy/coocoo_video10.mp4";
+-        String filePath = ThemeManager.THEMES_PATH + "/diy/coocoo_video10.mp4";
++        String filePath = Constant.PATH_SDCARD_THEME + "/diy/coocoo_video10.mp4";
  
          Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(filePath, MediaStore.Images.Thumbnails.FULL_SCREEN_KIND);
--        String path = Constant.PATH_SDCARD_THEME + "/diy/coocoo_video10.jpg";
-+        String path = ThemeManager.THEMES_PATH + "/diy/coocoo_video10.jpg";
+-        String path = ThemeManager.THEMES_PATH + "/diy/coocoo_video10.jpg";
++        String path = Constant.PATH_SDCARD_THEME + "/diy/coocoo_video10.jpg";
          ImageUtil.saveBitmap(bitmap, path);
          player = ExoPlayerFactory.newSimpleInstance(this,
                  new DefaultRenderersFactory(this),
 diff --git a/common-module/src/main/java/com/coocoo/utils/Constant.java b/common-module/src/main/java/com/coocoo/utils/Constant.java
-index cea5a7b12..da163018e 100644
+index da163018e..cea5a7b12 100644
 --- a/common-module/src/main/java/com/coocoo/utils/Constant.java
 +++ b/common-module/src/main/java/com/coocoo/utils/Constant.java
-@@ -18,8 +18,6 @@ public class Constant {
+@@ -18,6 +18,8 @@ public class Constant {
      public static final String PATH_SDCARD_WALLPAPER_LIBRARY = FileUtil.concatPaths(PATH_SDCARD_COOCOO_DATA_PATH, "wallpaperLibrary");
      public static final String PATH_SDCARD_VIDEO_STICKER = FileUtil.concatPaths(PATH_SDCARD_COOCOO_DATA_PATH, "VideoStickers");
  
--    public static final String THEME_ZIP_FILE_PATH_FROM_CONVERSATION = FileUtil.concatPaths(Constant.PATH_SDCARD_THEME, "themeZip.zip");
--    public static final String THEME_ZIP_PATH_FROM_CONVERSATION = FileUtil.concatPaths(Constant.PATH_SDCARD_THEME, "themeZip");
++    public static final String THEME_ZIP_FILE_PATH_FROM_CONVERSATION = FileUtil.concatPaths(Constant.PATH_SDCARD_THEME, "themeZip.zip");
++    public static final String THEME_ZIP_PATH_FROM_CONVERSATION = FileUtil.concatPaths(Constant.PATH_SDCARD_THEME, "themeZip");
  
      //public final static String THEME_ZIP_XML_FILE_PATH_FROM_CONVERSATION = FileUtil.concatPaths(Constant.THEME_ZIP_PATH_FROM_CONVERSATION, "theme.xml");
  
