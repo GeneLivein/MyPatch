@@ -1,156 +1,112 @@
-diff --git a/app/src/main/java/X/c1_017.java b/app/src/main/java/X/c1_017.java
-index dc95e1c32..f987a3470 100644
---- a/app/src/main/java/X/c1_017.java
-+++ b/app/src/main/java/X/c1_017.java
-@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
- import android.view.View;
- import android.view.ViewGroup;
- 
-+import androidx.annotation.Nullable;
-+
- /**
-  * Fragment.
-  */
-@@ -72,6 +74,7 @@ public class c1_017 {
-     }
- 
-     // getActivity() LX/0LX
-+    @Nullable
-     public cc_01K A09() {
-         // do nothing
-         return null;
 diff --git a/app/src/main/java/com/coocoo/statuses/feed/fragment/StatusHeaderViewHolder.kt b/app/src/main/java/com/coocoo/statuses/feed/fragment/StatusHeaderViewHolder.kt
-index 24fc257db..32f6cdfa3 100644
+index e66a27fd8..6eedd02b1 100644
 --- a/app/src/main/java/com/coocoo/statuses/feed/fragment/StatusHeaderViewHolder.kt
 +++ b/app/src/main/java/com/coocoo/statuses/feed/fragment/StatusHeaderViewHolder.kt
-@@ -37,6 +37,7 @@ import com.coocoowhatsapp.Conversation
+@@ -18,7 +18,6 @@ import com.bumptech.glide.Glide
+ import com.bumptech.glide.request.target.BitmapImageViewTarget
+ import com.coocoo.android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
+ import com.coocoo.base.CCBaseFragment
+-import com.coocoo.report.Report
+ import com.coocoo.statuses.feed.data.StatusFeedPlaybackInfo
+ import com.coocoo.utils.*
+ import com.coocoo.utils.Constants.Res.Color.PROGRESS_DIALOG_ACCENT
+@@ -33,13 +32,16 @@ import com.coocoo.utils.Constants.Res.String.SENDING_MESSAGES
+ import com.coocoo.utils.Constants.Res.String.STATUS_FEED_FAILED_TO_SHARE
+ import com.coocoo.utils.Constants.Res.String.STATUS_FEED_SENDING_MESSAGE_AND_UPDATE_STATUS
+ import com.coocoo.utils.PrivacyUtils.Companion.POSTFIX_STATUS_BROADCAST_MSG
+-import com.coocoo.whatsappdelegate.ContactPickerSendBtnDelegate.BUNDLE_KEY_STATUS_ID
++import com.coocoo.whatsappdelegate.ContactPickerSendBtnDelegate
++import com.coocoo.whatsappdelegate.ContactPickerSendBtnDelegate.BUNDLE_KEY_STATUS_FEED_FAV_ID
++import com.coocoo.whatsappdelegate.ContactPickerSendBtnDelegate.BUNDLE_KEY_STATUS_FEED_ID
+ import com.coocoowhatsapp.Conversation
  
  class StatusHeaderViewHolder(
      view: View,
-+    private val statusId: String,
+     private val statusId: String,
      private val fragment: CCBaseFragment,
++    private val isFavorite: Boolean,
      private val onSendFile: (to: List<c1_2Ob>, filePath: String) -> Boolean
  ) {
-@@ -114,6 +115,7 @@ class StatusHeaderViewHolder(
+     private val context: Context? get() = fragment.context
+@@ -115,7 +117,11 @@ class StatusHeaderViewHolder(
              A0R = arrayListOf(1)
              A00()
          }
-+        intent.putExtra(BUNDLE_KEY_STATUS_ID, statusId)
+-        intent.putExtra(BUNDLE_KEY_STATUS_ID, statusId)
++        if (isFavorite) {
++            intent.putExtra(BUNDLE_KEY_STATUS_FEED_FAV_ID, statusId)
++        } else {
++            intent.putExtra(BUNDLE_KEY_STATUS_FEED_ID, statusId)
++        }
          fragment.startActivityForResult(intent, REQUEST_CODE)
      }
  
-@@ -131,5 +133,6 @@ class StatusHeaderViewHolder(
- 
-     companion object {
-         private const val REQUEST_CODE = 0x2
-+        const val BUNDLE_KEY_STATUS_ID = "bundle_key_status_id"
-     }
- }
-\ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/statuses/feed/fragment/StatusPlaybackFragment.kt b/app/src/main/java/com/coocoo/statuses/feed/fragment/StatusPlaybackFragment.kt
-index 3f77532de..08bf81aaa 100644
+index 08bf81aaa..af09dc7fb 100644
 --- a/app/src/main/java/com/coocoo/statuses/feed/fragment/StatusPlaybackFragment.kt
 +++ b/app/src/main/java/com/coocoo/statuses/feed/fragment/StatusPlaybackFragment.kt
-@@ -9,7 +9,6 @@ import android.content.Intent
- import android.os.Bundle
- import android.view.View
- import android.widget.ImageView
--import android.widget.Toast
- import androidx.lifecycle.CCObserver
- import androidx.lifecycle.CCViewModelProvider
- import com.coocoo.base.CCBaseActivity
-@@ -49,6 +48,8 @@ abstract class StatusPlaybackFragment : CCBaseFragment() {
-     protected lateinit var ivLike: ImageView
+@@ -21,6 +21,7 @@ import com.coocoo.utils.Constants
+ import com.coocoo.utils.LogUtil
+ import com.coocoo.utils.ResMgr
+ import com.coocoo.utils.ToastUtil
++import kotlin.properties.Delegates
+ 
+ abstract class StatusPlaybackFragment : CCBaseFragment() {
+ 
+@@ -49,6 +50,7 @@ abstract class StatusPlaybackFragment : CCBaseFragment() {
      protected lateinit var headerViewHolder: StatusHeaderViewHolder
  
-+    private lateinit var statusId: String
-+
+     private lateinit var statusId: String
++    private var isFavorite: Boolean by Delegates.notNull()
+ 
      override fun onActivityCreated(savedInstanceState: Bundle?) {
          super.onActivityCreated(savedInstanceState)
-         activityCreated = true
-@@ -57,7 +58,8 @@ abstract class StatusPlaybackFragment : CCBaseFragment() {
- 
+@@ -59,7 +61,8 @@ abstract class StatusPlaybackFragment : CCBaseFragment() {
      override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
          super.onViewCreated(view, savedInstanceState)
--        headerViewHolder = StatusHeaderViewHolder(view, this, ::sendFile)
-+        statusId = arguments?.getString(EXTRA_STATUS_ID, "") ?: ""
-+        headerViewHolder = StatusHeaderViewHolder(view, statusId, this, ::sendFile)
+         statusId = arguments?.getString(EXTRA_STATUS_ID, "") ?: ""
+-        headerViewHolder = StatusHeaderViewHolder(view, statusId, this, ::sendFile)
++        isFavorite = arguments?.getBoolean(EXTRA_IS_FAVORITE) ?: false
++        headerViewHolder = StatusHeaderViewHolder(view, statusId, this, isFavorite, ::sendFile)
          ivDownload = ResMgr.findViewById<ImageView>(Constants.Res.Id.STATUS_FEED_PLAYBACK_DOWNLOAD, view).apply {
              setOnClickListener {
                  // TODO
-@@ -88,7 +90,6 @@ abstract class StatusPlaybackFragment : CCBaseFragment() {
+@@ -90,7 +93,6 @@ abstract class StatusPlaybackFragment : CCBaseFragment() {
          motionViewModel = CCViewModelProvider(activity.viewModelStore, StatusPlaybackMotionViewModelFactory())[StatusPlaybackMotionViewModel::class.java]
  
          val statusFeedRepo = Coocoo.getRepoContainer().statusFeedRepo
--        val statusId: String = arguments?.getString(EXTRA_STATUS_ID, "") ?: ""
-         val isFavorite: Boolean = arguments?.getBoolean(EXTRA_IS_FAVORITE) ?: false
+-        val isFavorite: Boolean = arguments?.getBoolean(EXTRA_IS_FAVORITE) ?: false
          viewModel = if (isFavorite) {
              CCViewModelProvider(viewModelStore, FavoriteStatusPlaybackPageViewModelFactory(statusFeedRepo, statusId))[FavoriteStatusPlaybackPageViewModel::class.java]
-diff --git a/app/src/main/java/com/coocoo/utils/StatusUtil.kt b/app/src/main/java/com/coocoo/utils/StatusUtil.kt
-index 4b2424d78..0ccb519ea 100644
---- a/app/src/main/java/com/coocoo/utils/StatusUtil.kt
-+++ b/app/src/main/java/com/coocoo/utils/StatusUtil.kt
-@@ -46,7 +46,7 @@ object StatusUtil {
-         data?.run {
-             container?.let {
-                 it.findViewById<View>(ResMgr.getId("cc_download_status_btn"))?.let { btn ->
--                    val activity: Activity = statusPlaybackContactFragment.A09()
-+                    val activity: Activity? = statusPlaybackContactFragment.A09()
-                     val clickListener =
-                     if (activity is MyStatusHistoryPlaybackActivity) {
-                         MyStatusHistoryDownloadStatusListener()
+         } else {
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
-new file mode 100644
-index 000000000..1921a4d47
---- /dev/null
+index e34f96b4b..a42ff3bbe 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
-@@ -0,0 +1,18 @@
-+package com.coocoo.whatsappdelegate
-+
-+import com.coocoo.annotation.SmaliInject
-+import com.coocoo.report.Report
-+import com.coocoo.statuses.feed.fragment.StatusHeaderViewHolder
-+import com.coocoo.utils.LogUtil
-+import com.coocoowhatsapp.contact.picker.ContactPickerFragment
-+
-+object ContactPickerSendBtnDelegate {
-+    @SmaliInject
-+    @JvmStatic
-+    fun onSendBtnClick(fragment: ContactPickerFragment) {
-+        val statusId = fragment.A09()?.intent?.getStringExtra(StatusHeaderViewHolder.BUNDLE_KEY_STATUS_ID)
-+        if (statusId.isNullOrEmpty().not()) {
-+            Report.reportFavoriteStatusFeedPlaybackShareDone(statusId)
+@@ -6,14 +6,21 @@ import com.coocoowhatsapp.contact.picker.ContactPickerFragment
+ 
+ object ContactPickerSendBtnDelegate {
+ 
+-    const val BUNDLE_KEY_STATUS_ID = "bundle_key_status_id"
++    const val BUNDLE_KEY_STATUS_FEED_ID = "bundle_key_status_feed_id"
++    const val BUNDLE_KEY_STATUS_FEED_FAV_ID = "bundle_key_status_feed_fav_id"
+ 
+     @SmaliInject
+     @JvmStatic
+     fun onSendBtnClick(fragment: ContactPickerFragment) {
+-        val statusId = fragment.A09()?.intent?.getStringExtra(BUNDLE_KEY_STATUS_ID)
+-        if (statusId.isNullOrEmpty().not()) {
+-            Report.reportFavoriteStatusFeedPlaybackShareDone(statusId)
++        fragment.A09()?.intent?.getStringExtra(BUNDLE_KEY_STATUS_FEED_ID)?.let { statusId ->
++            if (statusId.isNotEmpty()) {
++                Report.reportStatusFeedPlaybackShareDone(statusId)
++            }
 +        }
-+    }
-+}
++        fragment.A09()?.intent?.getStringExtra(BUNDLE_KEY_STATUS_FEED_FAV_ID)?.let { statusId ->
++            if (statusId.isNotEmpty()) {
++                Report.reportFavoriteStatusFeedPlaybackShareDone(statusId)
++            }
+         }
+     }
+ }
 \ No newline at end of file
-diff --git a/app/src/main/java/com/coocoowhatsapp/contact/picker/ContactPickerFragment.java b/app/src/main/java/com/coocoowhatsapp/contact/picker/ContactPickerFragment.java
-index 95d2d775a..9682c2023 100644
---- a/app/src/main/java/com/coocoowhatsapp/contact/picker/ContactPickerFragment.java
-+++ b/app/src/main/java/com/coocoowhatsapp/contact/picker/ContactPickerFragment.java
-@@ -4,9 +4,10 @@ import android.os.Bundle;
- 
- import java.util.Map;
- 
-+import X.c1_017;
- import X.c1_0HQ;
- 
--public class ContactPickerFragment {
-+public class ContactPickerFragment extends c1_017 {
- 
-     /**
-      * 当前选择的用户数量
-diff --git a/whatsapp_modify_module/smali/X/1Fe.1.smali b/whatsapp_modify_module/smali/X/1Fe.1.smali
-index eea1a1953..37372812c 100644
---- a/whatsapp_modify_module/smali/X/1Fe.1.smali
-+++ b/whatsapp_modify_module/smali/X/1Fe.1.smali
-@@ -26,6 +26,9 @@
- 
-     .line 220959
-     iget-object v4, p0, LX/1Fe;->A00:Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;
-+#coocoo
-+    invoke-static {v4}, Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;->onSendBtnClick(Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;)V
-+#coocoo
- 
- #coocoo
-     invoke-virtual {v4}, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A0A()LX/01K;
