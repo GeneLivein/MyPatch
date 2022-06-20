@@ -1,15 +1,44 @@
-diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
-index b0b4e5301..47bdb7155 100644
---- a/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
-+++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
-@@ -6514,6 +6514,10 @@
+diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
+index 77bd78c7b..a6d43ad0f 100644
+--- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
++++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
+@@ -655,6 +655,9 @@ public class Coocoo {
+     public static void traceLog5(int value) {
+         Log.e(TAG, "-----------------5---------------- // value : " + value);
+     }
++    public static void traceLog6(long value) {
++        Log.e(TAG, "-----------------6---------------- // value : " + value);
++    }
  
-     move-result-object v3
+     public static void traceLogCodeStack() {
+         try {
+diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/Conversation.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/Conversation.smali
+index 48345e8a0..46575a937 100644
+--- a/whatsapp_modify_module/smali/com/coocoowhatsapp/Conversation.smali
++++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/Conversation.smali
+@@ -14725,6 +14725,10 @@
+ .method public AJu(J)V
+     .locals 1
  
 +#coocoo
-+    invoke-static {v3}, Lcom/coocoo/coocoo/Coocoo;->traceLog4(Ljava/lang/Object;)V
++    invoke-static {p1}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(J)V
 +#coocoo
 +
-     const-string v2, ""
+     const/4 v0, 0x1
  
-     .line 488186
+     .line 95575
+diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
+index b0b4e5301..ecd1aafb6 100644
+--- a/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
++++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
+@@ -6506,6 +6506,10 @@
+ .method public AJu(J)V
+     .locals 4
+ 
++#coocoo
++    invoke-static {p1}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(J)V
++#coocoo
++
+     .line 488184
+     iget-object v0, p0, Lcom/coocoowhatsapp/conversationslist/ConversationsFragment;->A0d:LX/034;
+ 
