@@ -1,3 +1,24 @@
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
+index 7cf765c7e..1ab8d8b7d 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
+@@ -68,11 +68,11 @@ public class ContactPickerFragmentDelegate {
+                 }
+             }
+ 
+-            LogUtil.d(TAG, "insertBroadcastConversations - list2bn.size: " + list2bn.size());
+-            if (list2bn.size() > 0) {
+-                existingFilteredList.add(new cc_25n(ResMgr.getString("system_status_broadcast_feature")));
+-                existingFilteredList.addAll(list2bn);
+-            }
++//            LogUtil.d(TAG, "insertBroadcastConversations - list2bn.size: " + list2bn.size());
++//            if (list2bn.size() > 0) {
++//                existingFilteredList.add(new cc_25n(ResMgr.getString("system_status_broadcast_feature")));
++//                existingFilteredList.addAll(list2bn);
++//            }
+         }
+     }
+ 
 diff --git a/whatsapp_modify_module/smali/X/1Da.1.smali b/whatsapp_modify_module/smali/X/1Da.1.smali
 new file mode 100644
 index 000000000..741833cfc
