@@ -1,7 +1,16 @@
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-index 7cf765c7e..1ab8d8b7d 100644
+index 7cf765c7e..f0f3687b0 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
+@@ -34,7 +34,7 @@ public class ContactPickerFragmentDelegate {
+ 
+     @SmaliInject
+     public static void insertBroadcastConversations(@Nullable ContactPickerFragment pickerFragment, @Nullable List existingFilteredList) {
+-        LogUtil.d(TAG, "insertBroadcastConversations");
++        LogUtil.d(TAG, "insertBroadcastConversations" + existingFilteredList);
+         if (pickerFragment == null || existingFilteredList == null) {
+             return;
+         }
 @@ -68,11 +68,11 @@ public class ContactPickerFragmentDelegate {
                  }
              }
