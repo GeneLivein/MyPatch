@@ -2598,16 +2598,3 @@ index 000000000..184976fa6
 +
 +    throw v0
 +.end method
-diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/Conversation.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/Conversation.smali
-index 48345e8a0..393365255 100644
---- a/whatsapp_modify_module/smali/com/coocoowhatsapp/Conversation.smali
-+++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/Conversation.smali
-@@ -14719,7 +14719,7 @@
-     .line 95574
-     invoke-virtual {p0, v0}, LX/01X;->A1i(I)V
- 
--    return-void
-+    return-voidＣ
- .end method
- 
- .method public AJu(J)V
