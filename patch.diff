@@ -1,12 +1,12 @@
 diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-index 77bd78c7b..c5dcb1bc1 100644
+index 77bd78c7b..4b643bd14 100644
 --- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 +++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 @@ -656,6 +656,11 @@ public class Coocoo {
          Log.e(TAG, "-----------------5---------------- // value : " + value);
      }
  
-+    // invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(J)V
++    // invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(Z)V
 +    public static void traceLog6(boolean value) {
 +        Log.e(TAG, "-----------------6---------------- // value : " + value);
 +    }
@@ -46,7 +46,7 @@ index 7cf765c7e..f0f3687b0 100644
  
 diff --git a/whatsapp_modify_module/smali/X/1Da.1.smali b/whatsapp_modify_module/smali/X/1Da.1.smali
 new file mode 100644
-index 000000000..3df7f9d35
+index 000000000..c8e405ea5
 --- /dev/null
 +++ b/whatsapp_modify_module/smali/X/1Da.1.smali
 @@ -0,0 +1,2600 @@
@@ -703,7 +703,7 @@ index 000000000..3df7f9d35
 +    move-result v1
 +
 +#coocoo
-+    invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(J)V
++    invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(Z)V
 +#coocoo
 +
 +    if-nez v1, :cond_3a
