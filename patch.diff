@@ -1,3 +1,19 @@
+diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
+index 77bd78c7b..c5dcb1bc1 100644
+--- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
++++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
+@@ -656,6 +656,11 @@ public class Coocoo {
+         Log.e(TAG, "-----------------5---------------- // value : " + value);
+     }
+ 
++    // invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(J)V
++    public static void traceLog6(boolean value) {
++        Log.e(TAG, "-----------------6---------------- // value : " + value);
++    }
++
+     public static void traceLogCodeStack() {
+         try {
+             throw new IllegalArgumentException("traceLogCodeStack");
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 index 7cf765c7e..f0f3687b0 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
@@ -30,10 +46,10 @@ index 7cf765c7e..f0f3687b0 100644
  
 diff --git a/whatsapp_modify_module/smali/X/1Da.1.smali b/whatsapp_modify_module/smali/X/1Da.1.smali
 new file mode 100644
-index 000000000..741833cfc
+index 000000000..3df7f9d35
 --- /dev/null
 +++ b/whatsapp_modify_module/smali/X/1Da.1.smali
-@@ -0,0 +1,2596 @@
+@@ -0,0 +1,2600 @@
 +.class public LX/1Da;
 +.super LX/0n7;
 +.source ""
@@ -685,6 +701,10 @@ index 000000000..741833cfc
 +    invoke-static {v4}, LX/2Ov;->A0U(Lcom/whatsapp/jid/Jid;)Z
 +
 +    move-result v1
++
++#coocoo
++    invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(J)V
++#coocoo
 +
 +    if-nez v1, :cond_3a
 +
