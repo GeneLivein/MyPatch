@@ -1,44 +1,2613 @@
-diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-index 77bd78c7b..a6d43ad0f 100644
---- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-+++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-@@ -655,6 +655,9 @@ public class Coocoo {
-     public static void traceLog5(int value) {
-         Log.e(TAG, "-----------------5---------------- // value : " + value);
-     }
-+    public static void traceLog6(long value) {
-+        Log.e(TAG, "-----------------6---------------- // value : " + value);
-+    }
- 
-     public static void traceLogCodeStack() {
-         try {
+diff --git a/whatsapp_modify_module/smali/X/1Da.1.smali b/whatsapp_modify_module/smali/X/1Da.1.smali
+new file mode 100644
+index 000000000..184976fa6
+--- /dev/null
++++ b/whatsapp_modify_module/smali/X/1Da.1.smali
+@@ -0,0 +1,2594 @@
++.class public LX/1Da;
++.super LX/0n7;
++.source ""
++
++
++# instance fields
++.field public A00:LX/0VY;
++
++.field public A01:LX/0VY;
++
++.field public A02:Ljava/util/List;
++
++.field public final A03:Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;
++
++
++# direct methods
++.method public constructor <init>(Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;)V
++    .locals 1
++
++    .line 218505
++    invoke-direct {p0}, LX/0n7;-><init>()V
++
++    .line 218506
++    new-instance v0, Ljava/util/ArrayList;
++
++    invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
++
++    iput-object v0, p0, LX/1Da;->A02:Ljava/util/List;
++
++    .line 218507
++    iput-object p1, p0, LX/1Da;->A03:Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;
++
++    return-void
++.end method
++
++
++# virtual methods
++.method public getCount()I
++    .locals 1
++
++    .line 218508
++    iget-object v0, p0, LX/1Da;->A02:Ljava/util/List;
++
++    invoke-interface {v0}, Ljava/util/List;->size()I
++
++    move-result v0
++
++    return v0
++.end method
++
++.method public getItem(I)Ljava/lang/Object;
++    .locals 1
++
++    .line 218509
++    iget-object v0, p0, LX/1Da;->A02:Ljava/util/List;
++
++    invoke-interface {v0, p1}, Ljava/util/List;->get(I)Ljava/lang/Object;
++
++    move-result-object v0
++
++    return-object v0
++.end method
++
++.method public getView(ILandroid/view/View;Landroid/view/ViewGroup;)Landroid/view/View;
++    .locals 35
++
++    move-object/from16 v13, p2
++
++    .line 218510
++    move-object/from16 v12, p0
++
++    iget-object v0, v12, LX/1Da;->A02:Ljava/util/List;
++
++    move/from16 v1, p1
++
++    invoke-interface {v0, v1}, Ljava/util/List;->get(I)Ljava/lang/Object;
++
++    move-result-object v14
++
++    check-cast v14, LX/0iL;
++
++    .line 218511
++    instance-of v0, v14, LX/25n;
++
++    const/4 v2, 0x2
++
++    const/4 v3, 0x0
++
++    move-object/from16 v4, p3
++
++    if-eqz v0, :cond_1
++
++    if-nez p2, :cond_0
++
++    .line 218512
++    iget-object v0, v12, LX/1Da;->A03:Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;
++
++    .line 218513
++    invoke-virtual {v0}, LX/017;->A04()Landroid/view/LayoutInflater;
++
++    move-result-object v1
++
++    const v0, 0x7f0d02f1
++
++    invoke-virtual {v1, v0, v4, v3}, Landroid/view/LayoutInflater;->inflate(ILandroid/view/ViewGroup;Z)Landroid/view/View;
++
++    move-result-object v13
++
++    .line 218514
++    invoke-static {v13, v2}, LX/01r;->A0S(Landroid/view/View;I)V
++
++    :cond_0
++    const v0, 0x7f0a1088
++
++    .line 218515
++    invoke-virtual {v13, v0}, Landroid/view/View;->findViewById(I)Landroid/view/View;
++
++    move-result-object v1
++
++    check-cast v1, Landroid/widget/TextView;
++
++    .line 218516
++    invoke-static {v1}, LX/0AT;->A06(Landroid/widget/TextView;)V
++
++    .line 218517
++    check-cast v14, LX/25n;
++
++    .line 218518
++    iget-object v0, v14, LX/25n;->A00:Ljava/lang/String;
++
++    .line 218519
++    invoke-virtual {v1, v0}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
++#coocoo
++    invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
++#coocoo
++    return-object v13
++
++    .line 218520
++    :cond_1
++    iget-object v11, v12, LX/1Da;->A03:Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;
++
++    .line 218521
++    iget-boolean v0, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A2G:Z
++
++    if-eqz v0, :cond_2
++
++    .line 218522
++    iget-object v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A1G:LX/2Q2;
++
++    const/16 v0, 0x2b3
++
++    .line 218523
++    invoke-virtual {v1, v0}, LX/2Q2;->A05(I)Z
++
++    move-result v0
++
++    const/16 v19, 0x1
++
++    if-nez v0, :cond_3
++
++    :cond_2
++    const/16 v19, 0x0
++
++    :cond_3
++    if-nez p2, :cond_3b
++
++    .line 218524
++    invoke-virtual {v11}, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A1h()Z
++
++    move-result v2
++
++    .line 218525
++    invoke-virtual {v11}, LX/017;->A04()Landroid/view/LayoutInflater;
++
++    move-result-object v1
++
++    const v0, 0x7f0d0104
++
++    if-eqz v2, :cond_4
++
++    .line 218526
++    const v0, 0x7f0d0105
++
++    .line 218527
++    :cond_4
++    invoke-virtual {v1, v0, v4, v3}, Landroid/view/LayoutInflater;->inflate(ILandroid/view/ViewGroup;Z)Landroid/view/View;
++
++    move-result-object v13
++
++    .line 218528
++    const v0, 0x7f0a03b9
++
++    .line 218529
++    invoke-static {v13, v0}, LX/01r;->A09(Landroid/view/View;I)Landroid/view/View;
++
++    move-result-object v10
++
++    check-cast v10, Landroid/widget/ImageView;
++
++    const v0, 0x7f0a03b6
++
++    .line 218530
++    invoke-static {v13, v0}, LX/01r;->A09(Landroid/view/View;I)Landroid/view/View;
++
++    move-result-object v17
++
++    move-object/from16 v0, v17
++
++    check-cast v0, Landroid/widget/ImageView;
++
++    move-object/from16 v17, v0
++
++    const v0, 0x7f0a03a7
++
++    .line 218531
++    invoke-static {v13, v0}, LX/01r;->A09(Landroid/view/View;I)Landroid/view/View;
++
++    move-result-object v21
++
++    iget-object v2, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A0e:LX/035;
++
++    const v1, 0x7f0a03b7
++
++    new-instance v16, LX/1eh;
++
++    move-object/from16 v0, v16
++
++    invoke-direct {v0, v13, v2, v1}, LX/1eh;-><init>(Landroid/view/View;LX/035;I)V
++
++    const v0, 0x7f0a03ba
++
++    .line 218532
++    invoke-static {v13, v0}, LX/01r;->A09(Landroid/view/View;I)Landroid/view/View;
++
++    move-result-object v15
++
++    check-cast v15, Lcom/coocoowhatsapp/TextEmojiLabel;
++
++    const v0, 0x7f0a03b8
++
++    .line 218533
++    invoke-static {v13, v0}, LX/01r;->A09(Landroid/view/View;I)Landroid/view/View;
++
++    move-result-object v9
++
++    check-cast v9, Landroid/widget/TextView;
++
++    const v0, 0x7f0a03b4
++
++    .line 218534
++    invoke-static {v13, v0}, LX/01r;->A09(Landroid/view/View;I)Landroid/view/View;
++
++    move-result-object v8
++
++    check-cast v8, Landroid/widget/ImageView;
++
++    const v0, 0x7f0a03b5
++
++    .line 218535
++    invoke-static {v13, v0}, LX/01r;->A09(Landroid/view/View;I)Landroid/view/View;
++
++    move-result-object v7
++
++    check-cast v7, Landroid/widget/ImageView;
++
++    const v0, 0x7f0a00bb
++
++    .line 218536
++    invoke-static {v13, v0}, LX/01r;->A09(Landroid/view/View;I)Landroid/view/View;
++
++    move-result-object v6
++
++    check-cast v6, Landroid/widget/TextView;
++
++    const v0, 0x7f0a0e9a
++
++    .line 218537
++    invoke-static {v13, v0}, LX/01r;->A09(Landroid/view/View;I)Landroid/view/View;
++
++    move-result-object v5
++
++    check-cast v5, Lcom/coocoowhatsapp/components/SelectionCheckView;
++
++    const v0, 0x7f0a0277
++
++    .line 218538
++    invoke-static {v13, v0}, LX/01r;->A09(Landroid/view/View;I)Landroid/view/View;
++
++    move-result-object v4
++
++    check-cast v4, Landroid/widget/TextView;
++
++    const v0, 0x7f0a0230
++
++    .line 218539
++    invoke-static {v13, v0}, LX/01r;->A09(Landroid/view/View;I)Landroid/view/View;
++
++    move-result-object v3
++
++    check-cast v3, Landroid/widget/LinearLayout;
++
++    const v0, 0x7f0a07d0
++
++    if-eqz v19, :cond_5
++
++    const v0, 0x7f0a07d1
++
++    .line 218540
++    :cond_5
++    invoke-static {v13, v0}, LX/01r;->A09(Landroid/view/View;I)Landroid/view/View;
++
++    move-result-object v2
++
++    check-cast v2, Landroid/widget/TextView;
++
++    const v0, 0x7f0a079d
++
++    .line 218541
++    invoke-static {v13, v0}, LX/01r;->A09(Landroid/view/View;I)Landroid/view/View;
++
++    move-result-object v1
++
++    check-cast v1, Landroid/widget/ImageView;
++
++    new-instance v0, LX/1Us;
++
++    move-object/from16 v20, v0
++
++    move-object/from16 v22, v10
++
++    move-object/from16 v23, v17
++
++    move-object/from16 v24, v8
++
++    move-object/from16 v25, v7
++
++    move-object/from16 v26, v1
++
++    move-object/from16 v27, v3
++
++    move-object/from16 v28, v9
++
++    move-object/from16 v29, v6
++
++    move-object/from16 v30, v4
++
++    move-object/from16 v31, v2
++
++    move-object/from16 v32, v15
++
++    move-object/from16 v33, v16
++
++    move-object/from16 v34, v5
++
++    invoke-direct/range {v20 .. v34}, LX/1Us;-><init>(Landroid/view/View;Landroid/widget/ImageView;Landroid/widget/ImageView;Landroid/widget/ImageView;Landroid/widget/ImageView;Landroid/widget/ImageView;Landroid/widget/LinearLayout;Landroid/widget/TextView;Landroid/widget/TextView;Landroid/widget/TextView;Landroid/widget/TextView;Lcom/coocoowhatsapp/TextEmojiLabel;LX/1eh;Lcom/coocoowhatsapp/components/SelectionCheckView;)V
++
++    .line 218542
++    invoke-virtual {v13, v0}, Landroid/view/View;->setTag(Ljava/lang/Object;)V
++
++    .line 218543
++    iget-boolean v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A29:Z
++
++    if-eqz v1, :cond_6
++
++    .line 218544
++    iget-object v4, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A10:LX/01y;
++
++    .line 218545
++    const v1, 0x7f0a0230
++
++    invoke-virtual {v13, v1}, Landroid/view/View;->findViewById(I)Landroid/view/View;
++
++    move-result-object v3
++
++    .line 218546
++    invoke-virtual {v11}, LX/017;->A01()Landroid/content/Context;
++
++    move-result-object v1
++
++    invoke-virtual {v1}, Landroid/content/Context;->getResources()Landroid/content/res/Resources;
++
++    move-result-object v2
++
++    .line 218547
++    const v1, 0x7f070186
++
++    .line 218548
++    invoke-virtual {v2, v1}, Landroid/content/res/Resources;->getDimensionPixelSize(I)I
++
++    move-result v2
++
++    const/4 v1, 0x0
++
++    .line 218549
++    invoke-static {v3, v4, v1, v2}, LX/0Pe;->A08(Landroid/view/View;LX/01y;II)V
++
++    .line 218550
++    invoke-virtual {v7}, Landroid/view/View;->getLayoutParams()Landroid/view/ViewGroup$LayoutParams;
++
++    move-result-object v2
++
++    .line 218551
++    invoke-virtual {v11}, LX/017;->A01()Landroid/content/Context;
++
++    move-result-object v1
++
++    invoke-virtual {v1}, Landroid/content/Context;->getResources()Landroid/content/res/Resources;
++
++    move-result-object v1
++
++    .line 218552
++    const v3, 0x7f07018e
++
++    .line 218553
++    invoke-virtual {v1, v3}, Landroid/content/res/Resources;->getDimensionPixelSize(I)I
++
++    move-result v1
++
++    iput v1, v2, Landroid/view/ViewGroup$LayoutParams;->width:I
++
++    .line 218554
++    invoke-virtual {v7, v2}, Landroid/view/View;->setLayoutParams(Landroid/view/ViewGroup$LayoutParams;)V
++
++    .line 218555
++    invoke-virtual {v8}, Landroid/view/View;->getLayoutParams()Landroid/view/ViewGroup$LayoutParams;
++
++    move-result-object v2
++
++    .line 218556
++    invoke-virtual {v11}, LX/017;->A01()Landroid/content/Context;
++
++    move-result-object v1
++
++    invoke-virtual {v1}, Landroid/content/Context;->getResources()Landroid/content/res/Resources;
++
++    move-result-object v1
++
++    .line 218557
++    invoke-virtual {v1, v3}, Landroid/content/res/Resources;->getDimensionPixelSize(I)I
++
++    move-result v1
++
++    iput v1, v2, Landroid/view/ViewGroup$LayoutParams;->width:I
++
++    .line 218558
++    invoke-virtual {v8, v2}, Landroid/view/View;->setLayoutParams(Landroid/view/ViewGroup$LayoutParams;)V
++
++    :cond_6
++    const v1, 0x7f120035
++
++    .line 218559
++    invoke-static {v10, v1}, LX/0Rn;->A03(Landroid/view/View;I)V
++
++    .line 218560
++    :goto_0
++    const/4 v3, 0x0
++
++    .line 218561
++    invoke-virtual {v13, v3}, Landroid/view/View;->setClickable(Z)V
++
++    .line 218562
++    invoke-virtual {v13, v3}, Landroid/view/View;->setLongClickable(Z)V
++
++    .line 218563
++    iget-object v1, v0, LX/1Us;->A03:Landroid/widget/ImageView;
++
++    move-object/from16 v21, v1
++
++    const/16 v4, 0x8
++
++    invoke-virtual {v1, v4}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218564
++    instance-of v1, v14, LX/0iK;
++
++    const/4 v2, 0x0
++
++    if-eqz v1, :cond_8
++
++    .line 218565
++    check-cast v14, LX/0iK;
++
++    const/4 v1, 0x2
++
++    .line 218566
++    invoke-static {v13, v1}, LX/01r;->A0S(Landroid/view/View;I)V
++
++    .line 218567
++    invoke-virtual {v13, v3}, Landroid/view/View;->setBackgroundResource(I)V
++
++    .line 218568
++    iget-object v1, v0, LX/1Us;->A08:Landroid/widget/TextView;
++
++    invoke-virtual {v1, v4}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218569
++    iget-object v1, v0, LX/1Us;->A0A:Landroid/widget/TextView;
++
++    invoke-virtual {v1, v4}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218570
++    iget-object v1, v0, LX/1Us;->A0B:Lcom/coocoowhatsapp/TextEmojiLabel;
++
++    invoke-virtual {v1, v4}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218571
++    iget-object v5, v0, LX/1Us;->A04:Landroid/widget/ImageView;
++
++    const/4 v1, 0x4
++
++    invoke-virtual {v5, v1}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218572
++    iget-object v1, v0, LX/1Us;->A0C:LX/1eh;
++
++    .line 218573
++    iget-object v6, v1, LX/1eh;->A01:Lcom/coocoowhatsapp/TextEmojiLabel;
++
++    invoke-virtual {v6, v2, v3}, Landroid/widget/TextView;->setTypeface(Landroid/graphics/Typeface;I)V
++
++    .line 218574
++    iget-object v1, v14, LX/0iK;->A00:Ljava/lang/String;
++
++    .line 218575
++    invoke-virtual {v6, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
++
++    .line 218576
++    invoke-virtual {v11}, LX/017;->A0m()Landroid/content/Context;
++
++    move-result-object v3
++
++    const v1, 0x7f06045d
++
++    invoke-static {v3, v1}, LX/00x;->A00(Landroid/content/Context;I)I
++
++    move-result v1
++
++    .line 218577
++    invoke-virtual {v6, v1}, Landroid/widget/TextView;->setTextColor(I)V
++
++    .line 218578
++    iget-object v1, v0, LX/1Us;->A0D:Lcom/coocoowhatsapp/components/SelectionCheckView;
++
++    const/4 v3, 0x0
++
++    invoke-virtual {v1, v3, v3}, Lcom/coocoowhatsapp/components/SelectionCheckView;->A03(ZZ)V
++
++    .line 218579
++    iget-object v1, v0, LX/1Us;->A05:Landroid/widget/ImageView;
++
++    invoke-virtual {v1, v4}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218580
++    iget-object v1, v0, LX/1Us;->A07:Landroid/widget/TextView;
++
++    invoke-virtual {v1, v4}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218581
++    iget-object v1, v0, LX/1Us;->A01:Landroid/widget/ImageView;
++
++    invoke-virtual {v1, v4}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218582
++    iget-object v1, v0, LX/1Us;->A09:Landroid/widget/TextView;
++
++    invoke-virtual {v1, v4}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218583
++    iget-object v0, v0, LX/1Us;->A00:Landroid/view/View;
++
++    invoke-virtual {v0, v2}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    .line 218584
++    invoke-virtual {v5, v2}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    .line 218585
++    invoke-virtual {v0, v3}, Landroid/view/View;->setClickable(Z)V
++
++    .line 218586
++    invoke-virtual {v5, v3}, Landroid/view/View;->setClickable(Z)V
++
++    .line 218587
++    :cond_7
++    :goto_1
++    invoke-static {v13, v2}, LX/01r;->A0W(Landroid/view/View;LX/0VY;)V
++
++    return-object v13
++
++    .line 218588
++    :cond_8
++    const/4 v1, 0x1
++
++    .line 218589
++    invoke-static {v13, v1}, LX/01r;->A0S(Landroid/view/View;I)V
++
++    .line 218590
++    invoke-virtual {v11}, LX/017;->A09()LX/01K;
++
++    move-result-object v8
++
++    .line 218591
++    invoke-interface {v14}, LX/0iL;->A8Y()LX/2Ot;
++
++    move-result-object v7
++
++    .line 218592
++    iget-object v6, v0, LX/1Us;->A04:Landroid/widget/ImageView;
++
++    invoke-virtual {v6, v3}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218593
++    invoke-virtual {v6, v1}, Landroid/view/View;->setEnabled(Z)V
++
++    .line 218594
++    iget-object v1, v0, LX/1Us;->A0C:LX/1eh;
++
++    move-object/from16 v20, v1
++
++    const v1, 0x7f0602b7
++
++    .line 218595
++    invoke-static {v8, v1}, LX/00x;->A00(Landroid/content/Context;I)I
++
++    move-result v3
++
++    .line 218596
++    move-object/from16 v1, v20
++
++    iget-object v1, v1, LX/1eh;->A01:Lcom/coocoowhatsapp/TextEmojiLabel;
++
++    move-object/from16 v25, v1
++
++    invoke-virtual {v1, v3}, Landroid/widget/TextView;->setTextColor(I)V
++
++    .line 218597
++    iget-object v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A0F:LX/0VK;
++
++    const-string v18, ""
++
++    if-nez v1, :cond_3a
++
++    .line 218598
++    invoke-virtual {v7}, LX/2Ot;->A05()Lcom/whatsapp/jid/Jid;
++
++    move-result-object v4
++
++    invoke-static {v4}, LX/2Ov;->A0U(Lcom/whatsapp/jid/Jid;)Z
++
++    move-result v1
++
++    if-nez v1, :cond_3a
++
++    .line 218599
++    iget-boolean v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A2G:Z
++
++    if-nez v1, :cond_9
++
++    .line 218600
++    iget-boolean v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A29:Z
++
++    if-eqz v1, :cond_3a
++
++    .line 218601
++    :cond_9
++    new-instance v3, Ljava/lang/StringBuilder;
++
++    invoke-direct {v3}, Ljava/lang/StringBuilder;-><init>()V
++
++    const-class v1, Lcom/coocoowhatsapp/contact/picker/ContactPicker;
++
++    .line 218602
++    invoke-virtual {v1}, Ljava/lang/Class;->getName()Ljava/lang/String;
++
++    move-result-object v1
++
++    invoke-virtual {v3, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
++
++    .line 218603
++    move-object/from16 v1, v18
++
++    invoke-static {v4, v1}, LX/008;->A06(Ljava/lang/Object;Ljava/lang/String;)V
++
++    .line 218604
++    invoke-virtual {v4}, Lcom/whatsapp/jid/Jid;->getRawString()Ljava/lang/String;
++
++    move-result-object v1
++
++    invoke-virtual {v3, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
++
++    invoke-virtual {v3}, Ljava/lang/Object;->toString()Ljava/lang/String;
++
++    move-result-object v9
++
++    .line 218605
++    invoke-static {v6, v9}, LX/01r;->A0Z(Landroid/view/View;Ljava/lang/String;)V
++
++    .line 218606
++    invoke-virtual {v11}, LX/017;->A09()LX/01K;
++
++    move-result-object v5
++
++    const-class v1, LX/2Ob;
++
++    .line 218607
++    invoke-virtual {v7, v1}, LX/2Ot;->A06(Ljava/lang/Class;)Lcom/whatsapp/jid/Jid;
++
++    move-result-object v4
++
++    check-cast v4, LX/2Ob;
++
++    .line 218608
++    move-object/from16 v1, v18
++
++    invoke-static {v4, v1}, LX/008;->A06(Ljava/lang/Object;Ljava/lang/String;)V
++
++    .line 218609
++    iget-object v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A1G:LX/2Q2;
++
++    new-instance v3, LX/48Q;
++
++    invoke-direct {v3, v5, v1, v4, v9}, LX/48Q;-><init>(Landroid/app/Activity;LX/2Q2;LX/2Ob;Ljava/lang/String;)V
++
++    .line 218610
++    iget-object v1, v0, LX/1Us;->A00:Landroid/view/View;
++
++    move-object/from16 v17, v1
++
++    invoke-virtual {v1, v3}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    .line 218611
++    invoke-virtual {v6, v3}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    .line 218612
++    iget-object v5, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A0e:LX/035;
++
++    const/4 v4, 0x1
++
++    const/4 v3, 0x0
++
++    .line 218613
++    const/4 v1, -0x1
++
++    invoke-virtual {v5, v7, v1, v3, v4}, LX/035;->A0E(LX/2Ot;IZZ)Ljava/lang/String;
++
++    move-result-object v1
++
++    .line 218614
++    invoke-virtual {v6, v1}, Landroid/view/View;->setContentDescription(Ljava/lang/CharSequence;)V
++
++    .line 218615
++    :goto_2
++    instance-of v1, v14, LX/1DW;
++
++    move/from16 v16, v1
++
++    const v3, 0x7f060159
++
++    if-eqz v1, :cond_34
++
++    .line 218616
++    check-cast v14, LX/1DW;
++
++    .line 218617
++    iget-object v1, v14, LX/1DW;->A00:Ljava/util/List;
++
++    move-object v15, v1
++
++    invoke-interface {v1}, Ljava/util/List;->size()I
++
++    move-result v4
++
++    const/4 v1, 0x1
++
++    if-le v4, v1, :cond_33
++
++    .line 218618
++    iget-object v5, v0, LX/1Us;->A08:Landroid/widget/TextView;
++
++    .line 218619
++    invoke-virtual {v11}, LX/017;->A0m()Landroid/content/Context;
++
++    move-result-object v4
++
++    iget-object v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A10:LX/01y;
++
++    .line 218620
++    invoke-static {v4, v1, v7}, LX/035;->A00(Landroid/content/Context;LX/01y;LX/2Ot;)Ljava/lang/CharSequence;
++
++    move-result-object v1
++
++    .line 218621
++    invoke-virtual {v5, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
++
++    .line 218622
++    invoke-static {v8, v3}, LX/00x;->A00(Landroid/content/Context;I)I
++
++    move-result v1
++
++    .line 218623
++    invoke-virtual {v5, v1}, Landroid/widget/TextView;->setTextColor(I)V
++
++    .line 218624
++    const/4 v4, 0x0
++
++    invoke-virtual {v5, v4}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218625
++    :goto_3
++    const/16 v9, 0x8
++
++    .line 218626
++    iget-object v1, v0, LX/1Us;->A06:Landroid/widget/LinearLayout;
++
++    invoke-virtual {v1, v4}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218627
++    iget-object v3, v0, LX/1Us;->A09:Landroid/widget/TextView;
++
++    invoke-virtual {v3, v4}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218628
++    invoke-virtual {v3, v4}, Landroid/view/View;->setClickable(Z)V
++
++    .line 218629
++    invoke-virtual {v3, v4}, Landroid/view/View;->setFocusable(Z)V
++
++    .line 218630
++    iget-object v10, v0, LX/1Us;->A05:Landroid/widget/ImageView;
++
++    invoke-virtual {v10, v9}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218631
++    iget-object v1, v0, LX/1Us;->A01:Landroid/widget/ImageView;
++
++    invoke-virtual {v1, v9}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218632
++    iget-object v4, v0, LX/1Us;->A0B:Lcom/coocoowhatsapp/TextEmojiLabel;
++
++    if-eqz v19, :cond_32
++
++    .line 218633
++    invoke-virtual {v4, v9}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218634
++    invoke-virtual {v5, v9}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218635
++    invoke-interface {v15}, Ljava/util/List;->size()I
++
++    move-result v1
++
++    const/4 v9, 0x1
++
++    if-le v1, v9, :cond_31
++
++    .line 218636
++    new-instance v1, LX/0GG;
++
++    invoke-direct {v1, v12, v14, v7}, LX/0GG;-><init>(LX/1Da;LX/1DW;LX/2Ot;)V
++
++    invoke-virtual {v3, v1}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    .line 218637
++    :goto_4
++    iget-object v9, v0, LX/1Us;->A0A:Landroid/widget/TextView;
++
++    const/16 v1, 0x8
++
++    invoke-virtual {v9, v1}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218638
++    invoke-static {v3}, LX/0AT;->A06(Landroid/widget/TextView;)V
++
++    .line 218639
++    :goto_5
++    move-object v3, v2
++
++    .line 218640
++    :goto_6
++    invoke-static/range {v25 .. v25}, LX/0AT;->A06(Landroid/widget/TextView;)V
++
++    .line 218641
++    iget-object v14, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A0f:LX/0HQ;
++
++    if-eqz v14, :cond_a
++
++    .line 218642
++    const/4 v1, 0x0
++
++    invoke-virtual {v14, v6, v7, v1}, LX/0HQ;->A07(Landroid/widget/ImageView;LX/2Ot;Z)V
++
++    .line 218643
++    :cond_a
++    invoke-virtual {v7}, LX/2Ot;->A05()Lcom/whatsapp/jid/Jid;
++
++    move-result-object v1
++
++    invoke-virtual {v4, v1}, Landroid/view/View;->setTag(Ljava/lang/Object;)V
++
++    .line 218644
++    invoke-virtual {v7}, LX/2Ot;->A05()Lcom/whatsapp/jid/Jid;
++
++    move-result-object v1
++
++    invoke-static {v1}, LX/2Ov;->A0U(Lcom/whatsapp/jid/Jid;)Z
++
++    move-result v1
++
++    if-eqz v1, :cond_15
++
++    .line 218645
++    move-object/from16 v1, v20
++
++    iget-object v14, v1, LX/1eh;->A00:Landroid/content/Context;
++
++    const v1, 0x7f120c23
++
++    invoke-virtual {v14, v1}, Landroid/content/Context;->getString(I)Ljava/lang/String;
++
++    move-result-object v14
++
++    move-object/from16 v1, v25
++
++    invoke-virtual {v1, v14}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
++
++    .line 218646
++    invoke-virtual {v1, v2, v2, v2, v2}, Landroid/widget/TextView;->setCompoundDrawables(Landroid/graphics/drawable/Drawable;Landroid/graphics/drawable/Drawable;Landroid/graphics/drawable/Drawable;Landroid/graphics/drawable/Drawable;)V
++
++    .line 218647
++    move-object/from16 v1, v18
++
++    invoke-virtual {v9, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
++
++    .line 218648
++    const/4 v1, 0x0
++
++    invoke-virtual {v10, v1}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218649
++    iget-boolean v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A25:Z
++
++    if-eqz v1, :cond_14
++
++    const v1, 0x7f0804b1
++
++    .line 218650
++    invoke-static {v8, v1}, LX/00x;->A03(Landroid/content/Context;I)Landroid/graphics/drawable/Drawable;
++
++    move-result-object v1
++
++    invoke-static {v1}, LX/0a5;->A01(Landroid/graphics/drawable/Drawable;)Landroid/graphics/drawable/Drawable;
++
++    move-result-object v2
++
++    const v1, 0x7f0603fc
++
++    .line 218651
++    invoke-static {v8, v1}, LX/00x;->A00(Landroid/content/Context;I)I
++
++    move-result v1
++
++    invoke-static {v2, v1}, LX/0a5;->A07(Landroid/graphics/drawable/Drawable;I)V
++
++    .line 218652
++    invoke-virtual {v10, v2}, Landroid/widget/ImageView;->setImageDrawable(Landroid/graphics/drawable/Drawable;)V
++
++    .line 218653
++    :goto_7
++    const v1, 0x7f120b70
++
++    .line 218654
++    invoke-virtual {v11, v1}, LX/017;->A0G(I)Ljava/lang/String;
++
++    move-result-object v1
++
++    .line 218655
++    invoke-virtual {v10, v1}, Landroid/view/View;->setContentDescription(Ljava/lang/CharSequence;)V
++
++    new-instance v1, LX/0dB;
++
++    invoke-direct {v1, v12}, LX/0dB;-><init>(LX/1Da;)V
++
++    invoke-virtual {v10, v1}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    .line 218656
++    const/4 v1, 0x0
++
++    invoke-virtual {v10, v1}, Landroid/view/View;->setFocusable(Z)V
++
++    .line 218657
++    iget-object v12, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A1B:LX/352;
++
++    .line 218658
++    iget v10, v12, LX/352;->A00:I
++
++    const v2, 0x7f1213d3
++
++    if-eqz v10, :cond_13
++
++    const/4 v1, 0x1
++
++    if-eq v10, v1, :cond_11
++
++    const/4 v1, 0x2
++
++    if-ne v10, v1, :cond_3c
++
++    .line 218659
++    iget-object v1, v12, LX/352;->A02:Ljava/util/List;
++
++    invoke-interface {v1}, Ljava/util/List;->size()I
++
++    move-result v10
++
++    if-eqz v10, :cond_13
++
++    .line 218660
++    iget-object v15, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A10:LX/01y;
++
++    const v14, 0x7f1000e5
++
++    :goto_8
++    int-to-long v1, v10
++
++    const/4 v12, 0x1
++
++    new-array v12, v12, [Ljava/lang/Object;
++
++    .line 218661
++    invoke-static {v10}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
++
++    move-result-object v16
++
++    const/4 v10, 0x0
++
++    aput-object v16, v12, v10
++
++    .line 218662
++    invoke-virtual {v15, v12, v14, v1, v2}, LX/01y;->A0F([Ljava/lang/Object;IJ)Ljava/lang/String;
++
++    move-result-object v1
++
++    .line 218663
++    :goto_9
++    invoke-virtual {v4, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
++
++    .line 218664
++    invoke-virtual {v11}, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A1h()Z
++
++    move-result v1
++
++    if-nez v1, :cond_b
++
++    .line 218665
++    const/4 v1, 0x0
++
++    invoke-virtual {v13, v1, v1, v1, v1}, Landroid/view/View;->setPadding(IIII)V
++
++    .line 218666
++    :cond_b
++    :goto_a
++    move-object v2, v3
++
++    .line 218667
++    iget-object v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A2Q:Ljava/util/Map;
++
++    invoke-static {v1}, Ljava/util/Collections;->unmodifiableMap(Ljava/util/Map;)Ljava/util/Map;
++
++    move-result-object v3
++
++    .line 218668
++    const-class v10, LX/2Ob;
++
++    invoke-virtual {v7, v10}, LX/2Ot;->A06(Ljava/lang/Class;)Lcom/whatsapp/jid/Jid;
++
++    move-result-object v1
++
++    invoke-interface {v3, v1}, Ljava/util/Map;->containsKey(Ljava/lang/Object;)Z
++
++    move-result v12
++
++    const/4 v1, 0x0
++
++    if-eqz v12, :cond_c
++
++    const v1, 0x7f06027b
++
++    .line 218669
++    :cond_c
++    invoke-virtual {v13, v1}, Landroid/view/View;->setBackgroundResource(I)V
++
++    .line 218670
++    iget-object v3, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A2S:Ljava/util/Set;
++
++    .line 218671
++    invoke-virtual {v7, v10}, LX/2Ot;->A06(Ljava/lang/Class;)Lcom/whatsapp/jid/Jid;
++
++    move-result-object v1
++
++    invoke-interface {v3, v1}, Ljava/util/Set;->remove(Ljava/lang/Object;)Z
++
++    move-result v1
++
++    .line 218672
++    iget-object v3, v0, LX/1Us;->A0D:Lcom/coocoowhatsapp/components/SelectionCheckView;
++
++    if-eqz v1, :cond_10
++
++    .line 218673
++    invoke-virtual {v3}, Landroid/view/View;->getViewTreeObserver()Landroid/view/ViewTreeObserver;
++
++    move-result-object v3
++
++    new-instance v1, LX/1pe;
++
++    invoke-direct {v1, v0, v12}, LX/1pe;-><init>(LX/1Us;Z)V
++
++    .line 218674
++    invoke-virtual {v3, v1}, Landroid/view/ViewTreeObserver;->addOnPreDrawListener(Landroid/view/ViewTreeObserver$OnPreDrawListener;)V
++
++    .line 218675
++    :goto_b
++    iget-boolean v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A2C:Z
++
++    if-eqz v1, :cond_f
++
++    .line 218676
++    iget-object v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A2R:Ljava/util/Set;
++
++    invoke-static {v1}, Ljava/util/Collections;->unmodifiableSet(Ljava/util/Set;)Ljava/util/Set;
++
++    move-result-object v3
++
++    .line 218677
++    invoke-virtual {v7, v10}, LX/2Ot;->A06(Ljava/lang/Class;)Lcom/whatsapp/jid/Jid;
++
++    move-result-object v1
++
++    invoke-interface {v3, v1}, Ljava/util/Set;->contains(Ljava/lang/Object;)Z
++
++    move-result v1
++
++    if-eqz v1, :cond_f
++
++    .line 218678
++    iget-object v3, v0, LX/1Us;->A06:Landroid/widget/LinearLayout;
++
++    const/16 v1, 0x8
++
++    invoke-virtual {v3, v1}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218679
++    invoke-virtual {v5, v1}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218680
++    const/4 v5, 0x0
++
++    invoke-virtual {v4, v5}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218681
++    const v1, 0x7f120465
++
++    invoke-virtual {v4, v1}, Landroid/widget/TextView;->setText(I)V
++
++    .line 218682
++    invoke-virtual {v6, v5}, Landroid/view/View;->setEnabled(Z)V
++
++    const/4 v1, 0x1
++
++    .line 218683
++    invoke-virtual {v13, v1}, Landroid/view/View;->setClickable(Z)V
++
++    .line 218684
++    invoke-virtual {v13, v1}, Landroid/view/View;->setLongClickable(Z)V
++
++    .line 218685
++    const/4 v3, 0x0
++
++    const/4 v1, 0x2
++
++    invoke-virtual {v4, v3, v1}, Landroid/widget/TextView;->setTypeface(Landroid/graphics/Typeface;I)V
++
++    const v1, 0x7f0602b1
++
++    .line 218686
++    invoke-static {v8, v1}, LX/00x;->A00(Landroid/content/Context;I)I
++
++    move-result v3
++
++    .line 218687
++    invoke-virtual {v4, v3}, Landroid/widget/TextView;->setTextColor(I)V
++
++    .line 218688
++    move-object/from16 v1, v25
++
++    invoke-virtual {v1, v3}, Landroid/widget/TextView;->setTextColor(I)V
++
++    .line 218689
++    invoke-virtual {v9, v3}, Landroid/widget/TextView;->setTextColor(I)V
++
++    .line 218690
++    :goto_c
++    iget-boolean v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A2D:Z
++
++    if-nez v1, :cond_d
++
++    .line 218691
++    iget-boolean v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A2J:Z
++
++    if-nez v1, :cond_d
++
++    .line 218692
++    iget-boolean v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A2L:Z
++
++    if-eqz v1, :cond_7
++
++    .line 218693
++    :cond_d
++    iget-object v4, v0, LX/1Us;->A02:Landroid/widget/ImageView;
++
++    if-eqz v4, :cond_7
++
++    .line 218694
++    iget-object v3, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A15:LX/2Sa;
++
++    iget-object v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A0Z:LX/034;
++
++    .line 218695
++    invoke-virtual {v7, v10}, LX/2Ot;->A06(Ljava/lang/Class;)Lcom/whatsapp/jid/Jid;
++
++    move-result-object v0
++
++    check-cast v0, LX/2Ob;
++
++    .line 218696
++    invoke-static {v1, v3, v0}, LX/32H;->A09(LX/034;LX/2Sa;LX/2Ob;)I
++
++    move-result v1
++
++    .line 218697
++    if-gtz v1, :cond_e
++
++    const/16 v5, 0x8
++
++    :cond_e
++    invoke-virtual {v4, v5}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218698
++    iget-object v0, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A10:LX/01y;
++
++    .line 218699
++    invoke-static {v0, v1}, LX/32H;->A0C(LX/01y;I)Ljava/lang/String;
++
++    move-result-object v0
++
++    .line 218700
++    invoke-virtual {v4, v0}, Landroid/view/View;->setContentDescription(Ljava/lang/CharSequence;)V
++
++    .line 218701
++    const v0, 0x7f08040a
++
++    invoke-virtual {v4, v0}, Landroid/widget/ImageView;->setImageResource(I)V
++
++    goto/16 :goto_1
++
++    .line 218702
++    :cond_f
++    const/4 v5, 0x0
++
++    goto :goto_c
++
++    .line 218703
++    :cond_10
++    const/4 v1, 0x0
++
++    invoke-virtual {v3, v12, v1}, Lcom/coocoowhatsapp/components/SelectionCheckView;->A03(ZZ)V
++
++    goto/16 :goto_b
++
++    .line 218704
++    :cond_11
++    iget-object v1, v12, LX/352;->A01:Ljava/util/List;
++
++    invoke-interface {v1}, Ljava/util/List;->size()I
++
++    move-result v10
++
++    if-nez v10, :cond_12
++
++    .line 218705
++    const v1, 0x7f120c6c
++
++    invoke-virtual {v11, v1}, LX/017;->A0G(I)Ljava/lang/String;
++
++    move-result-object v1
++
++    goto/16 :goto_9
++
++    .line 218706
++    :cond_12
++    iget-object v15, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A10:LX/01y;
++
++    const v14, 0x7f1000e6
++
++    goto/16 :goto_8
++
++    .line 218707
++    :cond_13
++    invoke-virtual {v11, v2}, LX/017;->A0G(I)Ljava/lang/String;
++
++    move-result-object v1
++
++    goto/16 :goto_9
++
++    .line 218708
++    :cond_14
++    const v1, 0x7f0803a9
++
++    invoke-virtual {v10, v1}, Landroid/widget/ImageView;->setImageResource(I)V
++
++    goto/16 :goto_7
++
++    .line 218709
++    :cond_15
++    const/4 v10, 0x0
++
++    .line 218710
++    invoke-virtual {v11}, LX/017;->A01()Landroid/content/Context;
++
++    move-result-object v1
++
++    invoke-virtual {v1}, Landroid/content/Context;->getResources()Landroid/content/res/Resources;
++
++    move-result-object v1
++
++    .line 218711
++    const v14, 0x7f0703c3
++
++    .line 218712
++    invoke-virtual {v1, v14}, Landroid/content/res/Resources;->getDimensionPixelSize(I)I
++
++    move-result v1
++
++    .line 218713
++    invoke-virtual {v13, v10, v10, v1, v10}, Landroid/view/View;->setPadding(IIII)V
++
++    .line 218714
++    iget-object v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A1o:Ljava/util/ArrayList;
++
++    if-nez v1, :cond_19
++
++    move-object v14, v2
++
++    .line 218715
++    :goto_d
++    const/4 v1, -0x1
++
++    move-object v15, v14
++
++    move-object/from16 v14, v20
++
++    invoke-virtual {v14, v7, v15, v1}, LX/1eh;->A03(LX/2Ot;Ljava/util/List;I)V
++
++    .line 218716
++    invoke-virtual {v7}, LX/2Ot;->A0H()Z
++
++    move-result v1
++
++    if-nez v1, :cond_16
++
++    .line 218717
++    invoke-virtual {v7}, LX/2Ot;->A0I()Z
++
++    move-result v1
++
++    if-nez v1, :cond_16
++
++    .line 218718
++    iget-boolean v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A2F:Z
++
++    if-eqz v1, :cond_26
++
++    .line 218719
++    invoke-virtual {v7}, LX/2Ot;->A0G()Z
++
++    move-result v1
++
++    if-eqz v1, :cond_26
++
++    .line 218720
++    :cond_16
++    iget-boolean v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A2F:Z
++
++    if-eqz v1, :cond_1a
++
++    .line 218721
++    invoke-virtual {v7}, LX/2Ot;->A0G()Z
++
++    move-result v1
++
++    if-nez v1, :cond_24
++
++    invoke-virtual {v7}, LX/2Ot;->A0I()Z
++
++    move-result v1
++
++    if-nez v1, :cond_24
++
++    .line 218722
++    const-class v14, LX/2Ow;
++
++    .line 218723
++    invoke-virtual {v7, v14}, LX/2Ot;->A06(Ljava/lang/Class;)Lcom/whatsapp/jid/Jid;
++
++    move-result-object v10
++
++    check-cast v10, LX/2Ow;
++
++    .line 218724
++    move-object/from16 v1, v18
++
++    invoke-static {v10, v1}, LX/008;->A06(Ljava/lang/Object;Ljava/lang/String;)V
++
++    .line 218725
++    iget-object v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A18:LX/2Oz;
++
++    move-object/from16 v20, v1
++
++    iget-object v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A1J:LX/2SL;
++
++    move-object/from16 v22, v1
++
++    iget-object v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A15:LX/2Sa;
++
++    move-object/from16 v19, v1
++
++    iget-object v15, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A0d:LX/053;
++
++    .line 218726
++    move-object/from16 v1, v20
++
++    invoke-virtual {v1, v10}, LX/2Oz;->A02(LX/2Oy;)LX/0EN;
++
++    move-result-object v1
++
++    .line 218727
++    invoke-virtual {v1}, LX/0EN;->A06()LX/30N;
++
++    move-result-object v1
++
++    .line 218728
++    invoke-virtual {v1}, LX/30N;->iterator()Ljava/util/Iterator;
++
++    move-result-object v17
++
++    const/16 v24, 0x0
++
++    :goto_e
++    move-object/from16 v1, v17
++
++    check-cast v1, LX/30n;
++
++    invoke-virtual {v1}, LX/30n;->hasNext()Z
++
++    move-result v2
++
++    if-eqz v2, :cond_23
++
++    invoke-virtual {v1}, LX/30n;->next()Ljava/lang/Object;
++
++    move-result-object v2
++
++    check-cast v2, LX/0JM;
++
++    .line 218729
++    iget-object v1, v2, LX/0JM;->A03:Lcom/whatsapp/jid/UserJid;
++
++    .line 218730
++    invoke-virtual {v15, v1}, LX/053;->A03(Lcom/whatsapp/jid/UserJid;)Z
++
++    move-result v1
++
++    if-eqz v1, :cond_17
++
++    .line 218731
++    iget v2, v2, LX/0JM;->A01:I
++
++    const/4 v1, 0x2
++
++    const/16 v16, 0x1
++
++    if-eq v2, v1, :cond_18
++
++    .line 218732
++    :cond_17
++    const/16 v16, 0x0
++
++    :cond_18
++    or-int v24, v24, v16
++
++    goto :goto_e
++
++    .line 218733
++    :cond_19
++    invoke-static {v1}, Ljava/util/Collections;->unmodifiableList(Ljava/util/List;)Ljava/util/List;
++
++    move-result-object v14
++
++    goto :goto_d
++
++    .line 218734
++    :cond_1a
++    iget-boolean v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A2L:Z
++
++    if-nez v1, :cond_1b
++
++    .line 218735
++    iget-boolean v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A2D:Z
++
++    if-nez v1, :cond_1b
++
++    .line 218736
++    iget-boolean v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A2J:Z
++
++    if-nez v1, :cond_1b
++
++    .line 218737
++    iget-boolean v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A2K:Z
++
++    if-eqz v1, :cond_20
++
++    .line 218738
++    :cond_1b
++    invoke-virtual {v7}, LX/2Ot;->A0H()Z
++
++    move-result v1
++
++    if-eqz v1, :cond_20
++
++    iget-object v2, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A18:LX/2Oz;
++
++    const-class v10, Lcom/whatsapp/jid/GroupJid;
++
++    .line 218739
++    invoke-virtual {v7, v10}, LX/2Ot;->A06(Ljava/lang/Class;)Lcom/whatsapp/jid/Jid;
++
++    move-result-object v1
++
++    check-cast v1, Lcom/whatsapp/jid/GroupJid;
++
++    invoke-virtual {v2, v1}, LX/2Oz;->A0A(Lcom/whatsapp/jid/GroupJid;)Z
++
++    move-result v1
++
++    if-eqz v1, :cond_1c
++
++    iget-object v14, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A1J:LX/2SL;
++
++    const-class v1, LX/2Ow;
++
++    .line 218740
++    invoke-virtual {v7, v1}, LX/2Ot;->A06(Ljava/lang/Class;)Lcom/whatsapp/jid/Jid;
++
++    move-result-object v2
++
++    check-cast v2, LX/2Ob;
++
++    .line 218741
++    move-object/from16 v1, v18
++
++    invoke-static {v2, v1}, LX/008;->A06(Ljava/lang/Object;Ljava/lang/String;)V
++
++    .line 218742
++    invoke-virtual {v14, v7, v2}, LX/2SL;->A0V(LX/2Ot;LX/2Ob;)Z
++
++    move-result v1
++
++    if-nez v1, :cond_1c
++
++    iget-object v2, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A0N:LX/02y;
++
++    sget-object v1, LX/02z;->A0S:LX/030;
++
++    .line 218743
++    invoke-virtual {v2, v1}, LX/02z;->A06(LX/030;)Z
++
++    move-result v1
++
++    if-eqz v1, :cond_20
++
++    .line 218744
++    iget-boolean v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A1z:Z
++
++    if-eqz v1, :cond_20
++
++    .line 218745
++    iget-boolean v1, v7, LX/2Ot;->A0c:Z
++
++    if-eqz v1, :cond_20
++
++    .line 218746
++    :cond_1c
++    iget-object v2, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A18:LX/2Oz;
++
++    invoke-virtual {v7, v10}, LX/2Ot;->A06(Ljava/lang/Class;)Lcom/whatsapp/jid/Jid;
++
++    move-result-object v1
++
++    check-cast v1, Lcom/whatsapp/jid/GroupJid;
++
++    invoke-virtual {v2, v1}, LX/2Oz;->A0A(Lcom/whatsapp/jid/GroupJid;)Z
++
++    move-result v1
++
++    if-nez v1, :cond_1e
++
++    .line 218747
++    iget-boolean v1, v7, LX/2Ot;->A0V:Z
++
++    const v2, 0x7f120c9a
++
++    if-eqz v1, :cond_1d
++
++    const v2, 0x7f1202e4
++
++    .line 218748
++    :cond_1d
++    :goto_f
++    const/4 v1, 0x0
++
++    invoke-virtual {v6, v1}, Landroid/view/View;->setEnabled(Z)V
++
++    const/4 v1, 0x1
++
++    .line 218749
++    invoke-virtual {v13, v1}, Landroid/view/View;->setClickable(Z)V
++
++    .line 218750
++    invoke-virtual {v13, v1}, Landroid/view/View;->setLongClickable(Z)V
++
++    .line 218751
++    invoke-virtual {v4, v2}, Landroid/widget/TextView;->setText(I)V
++
++    .line 218752
++    const/4 v2, 0x0
++
++    const/4 v1, 0x2
++
++    invoke-virtual {v4, v2, v1}, Landroid/widget/TextView;->setTypeface(Landroid/graphics/Typeface;I)V
++
++    .line 218753
++    const v2, 0x7f0602b1
++
++    .line 218754
++    invoke-static {v8, v2}, LX/00x;->A00(Landroid/content/Context;I)I
++
++    move-result v1
++
++    .line 218755
++    invoke-virtual {v4, v1}, Landroid/widget/TextView;->setTextColor(I)V
++
++    goto/16 :goto_11
++
++    .line 218756
++    :cond_1e
++    iget-boolean v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A1z:Z
++
++    if-eqz v1, :cond_1f
++
++    .line 218757
++    iget-boolean v1, v7, LX/2Ot;->A0c:Z
++
++    if-eqz v1, :cond_1f
++
++    iget-object v2, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A0N:LX/02y;
++
++    sget-object v1, LX/02z;->A0S:LX/030;
++
++    .line 218758
++    invoke-virtual {v2, v1}, LX/02z;->A06(LX/030;)Z
++
++    move-result v1
++
++    if-eqz v1, :cond_1f
++
++    const v2, 0x7f120c73
++
++    goto :goto_f
++
++    .line 218759
++    :cond_1f
++    iget-object v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A1J:LX/2SL;
++
++    invoke-virtual {v1, v7}, LX/2SL;->A0T(LX/2Ot;)Z
++
++    move-result v1
++
++    const v2, 0x7f120e33
++
++    if-eqz v1, :cond_1d
++
++    const v2, 0x7f1215df
++
++    goto :goto_f
++
++    .line 218760
++    :cond_20
++    iget-object v10, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A0e:LX/035;
++
++    const-class v1, LX/2Oy;
++
++    .line 218761
++    invoke-virtual {v7, v1}, LX/2Ot;->A06(Ljava/lang/Class;)Lcom/whatsapp/jid/Jid;
++
++    move-result-object v2
++
++    .line 218762
++    iget-object v1, v10, LX/035;->A09:Ljava/util/concurrent/ConcurrentHashMap;
++
++    invoke-virtual {v1, v2}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
++
++    move-result-object v2
++
++    check-cast v2, Ljava/lang/String;
++
++    .line 218763
++    invoke-static {v2}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
++
++    move-result v1
++
++    if-nez v1, :cond_22
++
++    .line 218764
++    invoke-virtual {v7}, LX/2Ot;->A0I()Z
++
++    move-result v1
++
++    if-eqz v1, :cond_21
++
++    iget-object v1, v7, LX/2Ot;->A0I:Ljava/lang/String;
++
++    invoke-static {v1}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
++
++    move-result v1
++
++    if-eqz v1, :cond_21
++
++    .line 218765
++    iget-object v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A1o:Ljava/util/ArrayList;
++
++    if-eqz v1, :cond_21
++
++    invoke-static {v1}, Ljava/util/Collections;->unmodifiableList(Ljava/util/List;)Ljava/util/List;
++
++    move-result-object v1
++
++    :goto_10
++    const/4 v10, 0x0
++
++    .line 218766
++    invoke-virtual {v4, v2, v1, v10, v10}, Lcom/coocoowhatsapp/TextEmojiLabel;->A08(Ljava/lang/CharSequence;Ljava/util/List;IZ)V
++
++    goto :goto_12
++
++    .line 218767
++    :cond_21
++    const/4 v1, 0x0
++
++    goto :goto_10
++
++    .line 218768
++    :cond_22
++    const/4 v10, 0x0
++
++    .line 218769
++    move-object/from16 v1, v18
++
++    invoke-virtual {v4, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
++
++    .line 218770
++    iget-object v12, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A1Z:LX/2OU;
++
++    iget-object v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A0e:LX/035;
++
++    new-instance v2, LX/1GT;
++
++    invoke-direct {v2, v4, v1, v7}, LX/1GT;-><init>(Lcom/coocoowhatsapp/TextEmojiLabel;LX/035;LX/2Ot;)V
++
++    new-array v1, v10, [Ljava/lang/Void;
++
++    invoke-interface {v12, v2, v1}, LX/2OU;->AUm(LX/2OT;[Ljava/lang/Object;)V
++
++    goto :goto_12
++
++    .line 218771
++    :cond_23
++    move-object/from16 v21, v7
++
++    move-object/from16 v23, v10
++
++    invoke-static/range {v19 .. v24}, LX/0PU;->A05(LX/2Sa;LX/2Oz;LX/2Ot;LX/2SL;LX/2Ow;Z)Z
++
++    move-result v1
++
++    xor-int/lit8 v16, v1, 0x1
++
++    .line 218772
++    iget-object v2, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A18:LX/2Oz;
++
++    const-class v1, Lcom/whatsapp/jid/GroupJid;
++
++    .line 218773
++    invoke-virtual {v7, v1}, LX/2Ot;->A06(Ljava/lang/Class;)Lcom/whatsapp/jid/Jid;
++
++    move-result-object v1
++
++    check-cast v1, Lcom/whatsapp/jid/GroupJid;
++
++    invoke-virtual {v2, v1}, LX/2Oz;->A0A(Lcom/whatsapp/jid/GroupJid;)Z
++
++    move-result v1
++
++    xor-int/lit8 v15, v1, 0x1
++
++    .line 218774
++    iget-object v10, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A1J:LX/2SL;
++
++    .line 218775
++    invoke-virtual {v7, v14}, LX/2Ot;->A06(Ljava/lang/Class;)Lcom/whatsapp/jid/Jid;
++
++    move-result-object v2
++
++    check-cast v2, LX/2Ob;
++
++    .line 218776
++    move-object/from16 v1, v18
++
++    invoke-static {v2, v1}, LX/008;->A06(Ljava/lang/Object;Ljava/lang/String;)V
++
++    .line 218777
++    invoke-virtual {v10, v7, v2}, LX/2SL;->A0V(LX/2Ot;LX/2Ob;)Z
++
++    move-result v2
++
++    .line 218778
++    invoke-virtual {v7}, LX/2Ot;->A0H()Z
++
++    move-result v1
++
++    if-eqz v1, :cond_1a
++
++    if-nez v16, :cond_24
++
++    if-nez v15, :cond_24
++
++    if-eqz v2, :cond_1a
++
++    :cond_24
++    const v2, 0x7f120548
++
++    .line 218779
++    const/4 v1, 0x0
++
++    invoke-virtual {v6, v1}, Landroid/view/View;->setEnabled(Z)V
++
++    const/4 v1, 0x1
++
++    .line 218780
++    invoke-virtual {v13, v1}, Landroid/view/View;->setClickable(Z)V
++
++    .line 218781
++    invoke-virtual {v13, v1}, Landroid/view/View;->setLongClickable(Z)V
++
++    .line 218782
++    invoke-virtual {v4, v2}, Landroid/widget/TextView;->setText(I)V
++
++    .line 218783
++    const/4 v2, 0x0
++
++    const/4 v1, 0x2
++
++    invoke-virtual {v4, v2, v1}, Landroid/widget/TextView;->setTypeface(Landroid/graphics/Typeface;I)V
++
++    .line 218784
++    const v2, 0x7f0602b1
++
++    .line 218785
++    :goto_11
++    invoke-static {v8, v2}, LX/00x;->A00(Landroid/content/Context;I)I
++
++    move-result v2
++
++    .line 218786
++    move-object/from16 v1, v25
++
++    invoke-virtual {v1, v2}, Landroid/widget/TextView;->setTextColor(I)V
++
++    .line 218787
++    iget-object v3, v12, LX/1Da;->A00:LX/0VY;
++
++    if-nez v3, :cond_25
++
++    .line 218788
++    new-instance v3, LX/0q0;
++
++    invoke-direct {v3}, LX/0q0;-><init>()V
++
++    iput-object v3, v12, LX/1Da;->A00:LX/0VY;
++
++    .line 218789
++    :cond_25
++    const/4 v10, 0x0
++
++    .line 218790
++    :goto_12
++    move-object/from16 v1, v18
++
++    invoke-virtual {v9, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
++
++    .line 218791
++    invoke-virtual {v13, v10}, Landroid/view/View;->setLongClickable(Z)V
++
++    goto/16 :goto_a
++
++    .line 218792
++    :cond_26
++    if-eqz v16, :cond_27
++
++    .line 218793
++    invoke-static {v7}, LX/09t;->A01(LX/2Ot;)Ljava/lang/String;
++
++    move-result-object v1
++
++    invoke-virtual {v4, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
++
++    .line 218794
++    invoke-virtual {v13, v10}, Landroid/view/View;->setLongClickable(Z)V
++
++    .line 218795
++    invoke-virtual {v13, v10}, Landroid/view/View;->setClickable(Z)V
++
++    goto/16 :goto_a
++
++    .line 218796
++    :cond_27
++    iget-object v14, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A0T:LX/05I;
++
++    const-class v1, Lcom/whatsapp/jid/UserJid;
++
++    invoke-virtual {v7, v1}, LX/2Ot;->A06(Ljava/lang/Class;)Lcom/whatsapp/jid/Jid;
++
++    move-result-object v1
++
++    check-cast v1, Lcom/whatsapp/jid/UserJid;
++
++    invoke-virtual {v14, v1}, LX/05I;->A0L(Lcom/whatsapp/jid/UserJid;)Z
++
++    move-result v1
++
++    if-eqz v1, :cond_29
++
++    .line 218797
++    invoke-virtual {v4, v10}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218798
++    const v1, 0x7f0602b1
++
++    invoke-static {v8, v1}, LX/00x;->A00(Landroid/content/Context;I)I
++
++    move-result v3
++
++    .line 218799
++    const v1, 0x7f12163b
++
++    invoke-virtual {v4, v1}, Landroid/widget/TextView;->setText(I)V
++
++    .line 218800
++    invoke-virtual {v4, v3}, Landroid/widget/TextView;->setTextColor(I)V
++
++    .line 218801
++    const/4 v1, 0x2
++
++    invoke-virtual {v4, v2, v1}, Landroid/widget/TextView;->setTypeface(Landroid/graphics/Typeface;I)V
++
++    .line 218802
++    move-object/from16 v1, v25
++
++    invoke-virtual {v1, v3}, Landroid/widget/TextView;->setTextColor(I)V
++
++    .line 218803
++    const/high16 v1, 0x3f000000    # 0.5f
++
++    invoke-virtual {v6, v1}, Landroid/view/View;->setAlpha(F)V
++
++    .line 218804
++    move-object/from16 v1, v17
++
++    invoke-virtual {v1, v2}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    .line 218805
++    invoke-virtual {v6, v2}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    .line 218806
++    invoke-virtual {v1, v10}, Landroid/view/View;->setClickable(Z)V
++
++    .line 218807
++    invoke-virtual {v6, v10}, Landroid/view/View;->setClickable(Z)V
++
++    .line 218808
++    iget-object v3, v12, LX/1Da;->A01:LX/0VY;
++
++    if-nez v3, :cond_28
++
++    .line 218809
++    new-instance v3, LX/0pz;
++
++    invoke-direct {v3}, LX/0pz;-><init>()V
++
++    iput-object v3, v12, LX/1Da;->A01:LX/0VY;
++
++    .line 218810
++    :cond_28
++    :goto_13
++    invoke-virtual {v11}, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A1d()Z
++
++    move-result v1
++
++    if-nez v1, :cond_b
++
++    .line 218811
++    invoke-virtual {v11}, LX/017;->A0m()Landroid/content/Context;
++
++    move-result-object v2
++
++    iget-object v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A10:LX/01y;
++
++    .line 218812
++    invoke-static {v2, v1, v7}, LX/035;->A00(Landroid/content/Context;LX/01y;LX/2Ot;)Ljava/lang/CharSequence;
++
++    move-result-object v1
++
++    if-eqz v1, :cond_b
++
++    .line 218813
++    invoke-virtual {v9, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
++
++    goto/16 :goto_a
++
++    .line 218814
++    :cond_29
++    invoke-virtual {v11, v7}, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A13(LX/2Ot;)Ljava/lang/String;
++
++    move-result-object v1
++
++    invoke-static {v1}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
++
++    move-result v1
++
++    const/high16 v14, 0x3f800000    # 1.0f
++
++    if-nez v1, :cond_2a
++
++    .line 218815
++    invoke-virtual {v11, v7}, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A13(LX/2Ot;)Ljava/lang/String;
++
++    move-result-object v1
++
++    invoke-virtual {v4, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
++
++    .line 218816
++    invoke-virtual {v4, v10}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218817
++    const v1, 0x7f0602b1
++
++    invoke-static {v8, v1}, LX/00x;->A00(Landroid/content/Context;I)I
++
++    move-result v2
++
++    .line 218818
++    move-object/from16 v1, v25
++
++    invoke-virtual {v1, v2}, Landroid/widget/TextView;->setTextColor(I)V
++
++    .line 218819
++    invoke-virtual {v6, v14}, Landroid/view/View;->setAlpha(F)V
++
++    .line 218820
++    invoke-virtual {v13, v10}, Landroid/view/View;->setLongClickable(Z)V
++
++    .line 218821
++    iget-object v3, v12, LX/1Da;->A00:LX/0VY;
++
++    if-nez v3, :cond_28
++
++    .line 218822
++    new-instance v3, LX/0q0;
++
++    invoke-direct {v3}, LX/0q0;-><init>()V
++
++    iput-object v3, v12, LX/1Da;->A00:LX/0VY;
++
++    goto :goto_13
++
++    .line 218823
++    :cond_2a
++    invoke-virtual {v6, v14}, Landroid/view/View;->setAlpha(F)V
++
++    .line 218824
++    invoke-virtual {v11}, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A1Y()Z
++
++    move-result v1
++
++    if-nez v1, :cond_2b
++
++    invoke-virtual {v11}, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A1Z()Z
++
++    move-result v1
++
++    if-nez v1, :cond_2b
++
++    iget-boolean v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A28:Z
++
++    if-eqz v1, :cond_2d
++
++    .line 218825
++    :cond_2b
++    iget-object v1, v7, LX/2Ot;->A0O:Ljava/lang/String;
++
++    .line 218826
++    invoke-static {v1}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
++
++    move-result v1
++
++    if-eqz v1, :cond_2d
++
++    .line 218827
++    :goto_14
++    const/16 v2, 0x8
++
++    .line 218828
++    :cond_2c
++    invoke-virtual {v4, v2}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218829
++    :goto_15
++    invoke-virtual {v13, v10}, Landroid/view/View;->setLongClickable(Z)V
++
++    goto :goto_13
++
++    .line 218830
++    :cond_2d
++    const/16 v2, 0x8
++
++    .line 218831
++    invoke-virtual {v11, v7}, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A1k(LX/2Ot;)Z
++
++    move-result v1
++
++    if-eqz v1, :cond_2e
++
++    .line 218832
++    invoke-virtual {v4, v2}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218833
++    invoke-virtual {v9, v2}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218834
++    move-object/from16 v1, v21
++
++    invoke-virtual {v1, v10}, Landroid/view/View;->setVisibility(I)V
++
++    goto :goto_15
++
++    .line 218835
++    :cond_2e
++    invoke-virtual {v11}, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A1f()Z
++
++    move-result v1
++
++    if-eqz v1, :cond_2f
++
++    .line 218836
++    invoke-virtual {v11, v7}, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A14(LX/2Ot;)Ljava/lang/String;
++
++    move-result-object v1
++
++    .line 218837
++    invoke-virtual {v4, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
++
++    .line 218838
++    invoke-static {v1}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
++
++    move-result v1
++
++    const/4 v2, 0x0
++
++    if-eqz v1, :cond_2c
++
++    goto :goto_14
++
++    .line 218839
++    :cond_2f
++    iget-object v12, v7, LX/2Ot;->A0O:Ljava/lang/String;
++
++    const-string v2, "  "
++
++    if-eqz v12, :cond_30
++
++    new-instance v1, Ljava/lang/StringBuilder;
++
++    invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
++
++    invoke-static {v12, v2, v1}, LX/00F;->A00(Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
++
++    move-result-object v2
++
++    .line 218840
++    :cond_30
++    invoke-virtual {v4, v2}, Lcom/coocoowhatsapp/TextEmojiLabel;->A07(Ljava/lang/CharSequence;)V
++
++    .line 218841
++    invoke-virtual {v4, v10}, Landroid/view/View;->setVisibility(I)V
++
++    goto :goto_15
++
++    .line 218842
++    :cond_31
++    new-instance v1, LX/3of;
++
++    invoke-direct {v1, v12, v7}, LX/3of;-><init>(LX/1Da;LX/2Ot;)V
++
++    invoke-virtual {v3, v1}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    goto/16 :goto_4
++
++    .line 218843
++    :cond_32
++    const/4 v1, 0x0
++
++    invoke-virtual {v4, v1}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218844
++    new-instance v1, LX/3og;
++
++    invoke-direct {v1, v12, v7}, LX/3og;-><init>(LX/1Da;LX/2Ot;)V
++
++    invoke-virtual {v3, v1}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    goto/16 :goto_4
++
++    .line 218845
++    :cond_33
++    const/4 v4, 0x0
++
++    .line 218846
++    iget-object v5, v0, LX/1Us;->A08:Landroid/widget/TextView;
++
++    const/16 v1, 0x8
++
++    invoke-virtual {v5, v1}, Landroid/view/View;->setVisibility(I)V
++
++    goto/16 :goto_3
++
++    .line 218847
++    :cond_34
++    const/16 v14, 0x8
++
++    .line 218848
++    iget-boolean v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A29:Z
++
++    const v10, 0x7f0602b5
++
++    if-eqz v1, :cond_37
++
++    .line 218849
++    iget-object v9, v0, LX/1Us;->A0A:Landroid/widget/TextView;
++
++    invoke-virtual {v9, v14}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218850
++    iget-object v1, v0, LX/1Us;->A09:Landroid/widget/TextView;
++
++    invoke-virtual {v1, v14}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218851
++    iget-object v4, v0, LX/1Us;->A0B:Lcom/coocoowhatsapp/TextEmojiLabel;
++
++    const/4 v1, 0x0
++
++    invoke-virtual {v4, v2, v1}, Landroid/widget/TextView;->setTypeface(Landroid/graphics/Typeface;I)V
++
++    .line 218852
++    invoke-static {v8, v10}, LX/00x;->A00(Landroid/content/Context;I)I
++
++    move-result v1
++
++    .line 218853
++    invoke-virtual {v4, v1}, Landroid/widget/TextView;->setTextColor(I)V
++
++    .line 218854
++    iget-object v3, v12, LX/1Da;->A00:LX/0VY;
++
++    if-nez v3, :cond_35
++
++    .line 218855
++    new-instance v3, LX/0q0;
++
++    invoke-direct {v3}, LX/0q0;-><init>()V
++
++    iput-object v3, v12, LX/1Da;->A00:LX/0VY;
++
++    .line 218856
++    :cond_35
++    iget-object v5, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A0T:LX/05I;
++
++    const-class v1, Lcom/whatsapp/jid/UserJid;
++
++    invoke-virtual {v7, v1}, LX/2Ot;->A06(Ljava/lang/Class;)Lcom/whatsapp/jid/Jid;
++
++    move-result-object v1
++
++    check-cast v1, Lcom/whatsapp/jid/UserJid;
++
++    invoke-virtual {v5, v1}, LX/05I;->A0L(Lcom/whatsapp/jid/UserJid;)Z
++
++    move-result v1
++
++    if-eqz v1, :cond_36
++
++    .line 218857
++    iget-object v5, v0, LX/1Us;->A08:Landroid/widget/TextView;
++
++    invoke-virtual {v5, v14}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218858
++    const/4 v1, 0x0
++
++    invoke-virtual {v4, v1}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218859
++    iget-object v10, v0, LX/1Us;->A05:Landroid/widget/ImageView;
++
++    invoke-virtual {v10, v14}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218860
++    invoke-virtual {v10, v2}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    .line 218861
++    iget-object v1, v0, LX/1Us;->A01:Landroid/widget/ImageView;
++
++    invoke-virtual {v1, v14}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218862
++    invoke-virtual {v1, v2}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    goto/16 :goto_6
++
++    :cond_36
++    const/4 v14, 0x0
++
++    .line 218863
++    iget-object v10, v0, LX/1Us;->A05:Landroid/widget/ImageView;
++
++    invoke-virtual {v10, v14}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218864
++    new-instance v1, LX/0gB;
++
++    invoke-direct {v1, v12, v7}, LX/0gB;-><init>(LX/1Da;LX/2Ot;)V
++
++    invoke-virtual {v10, v1}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    .line 218865
++    iget-object v5, v0, LX/1Us;->A01:Landroid/widget/ImageView;
++
++    invoke-virtual {v5, v14}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218866
++    new-instance v1, LX/0hW;
++
++    invoke-direct {v1, v12, v7}, LX/0hW;-><init>(LX/1Da;LX/2Ot;)V
++
++    invoke-virtual {v5, v1}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    .line 218867
++    const/16 v1, 0x8
++
++    invoke-virtual {v4, v1}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218868
++    iget-object v5, v0, LX/1Us;->A08:Landroid/widget/TextView;
++
++    invoke-virtual {v5, v1}, Landroid/view/View;->setVisibility(I)V
++
++    goto/16 :goto_6
++
++    .line 218869
++    :cond_37
++    iget-boolean v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A2C:Z
++
++    if-eqz v1, :cond_38
++
++    .line 218870
++    iget-object v9, v0, LX/1Us;->A0A:Landroid/widget/TextView;
++
++    invoke-virtual {v9, v14}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218871
++    iget-object v3, v0, LX/1Us;->A06:Landroid/widget/LinearLayout;
++
++    const/4 v1, 0x0
++
++    invoke-virtual {v3, v1}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218872
++    iget-object v1, v0, LX/1Us;->A09:Landroid/widget/TextView;
++
++    invoke-virtual {v1, v14}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218873
++    iget-object v1, v0, LX/1Us;->A01:Landroid/widget/ImageView;
++
++    invoke-virtual {v1, v14}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218874
++    iget-object v10, v0, LX/1Us;->A05:Landroid/widget/ImageView;
++
++    invoke-virtual {v10, v14}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218875
++    invoke-virtual {v1, v14}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218876
++    iget-object v4, v0, LX/1Us;->A0B:Lcom/coocoowhatsapp/TextEmojiLabel;
++
++    invoke-virtual {v4, v14}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218877
++    iget-object v1, v0, LX/1Us;->A08:Landroid/widget/TextView;
++
++    move-object v5, v1
++
++    :goto_16
++    invoke-virtual {v1, v14}, Landroid/view/View;->setVisibility(I)V
++
++    goto/16 :goto_5
++
++    .line 218878
++    :cond_38
++    iget-boolean v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A2G:Z
++
++    .line 218879
++    iget-object v4, v0, LX/1Us;->A0B:Lcom/coocoowhatsapp/TextEmojiLabel;
++
++    if-eqz v1, :cond_39
++
++    .line 218880
++    const/4 v1, 0x0
++
++    invoke-virtual {v4, v1}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218881
++    invoke-virtual {v4, v2, v1}, Landroid/widget/TextView;->setTypeface(Landroid/graphics/Typeface;I)V
++
++    .line 218882
++    invoke-static {v8, v10}, LX/00x;->A00(Landroid/content/Context;I)I
++
++    move-result v1
++
++    .line 218883
++    invoke-virtual {v4, v1}, Landroid/widget/TextView;->setTextColor(I)V
++
++    .line 218884
++    iget-object v10, v0, LX/1Us;->A05:Landroid/widget/ImageView;
++
++    invoke-virtual {v10, v14}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218885
++    iget-object v1, v0, LX/1Us;->A01:Landroid/widget/ImageView;
++
++    invoke-virtual {v1, v14}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218886
++    iget-object v1, v0, LX/1Us;->A09:Landroid/widget/TextView;
++
++    invoke-virtual {v1, v14}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218887
++    iget-object v9, v0, LX/1Us;->A0A:Landroid/widget/TextView;
++
++    invoke-virtual {v9, v14}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218888
++    :goto_17
++    iget-object v5, v0, LX/1Us;->A08:Landroid/widget/TextView;
++
++    invoke-virtual {v5, v14}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218889
++    iget-object v1, v0, LX/1Us;->A07:Landroid/widget/TextView;
++
++    goto :goto_16
++
++    .line 218890
++    :cond_39
++    const/4 v5, 0x0
++
++    invoke-virtual {v4, v5}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218891
++    invoke-virtual {v4, v2, v5}, Landroid/widget/TextView;->setTypeface(Landroid/graphics/Typeface;I)V
++
++    .line 218892
++    invoke-static {v8, v10}, LX/00x;->A00(Landroid/content/Context;I)I
++
++    move-result v1
++
++    .line 218893
++    invoke-virtual {v4, v1}, Landroid/widget/TextView;->setTextColor(I)V
++
++    .line 218894
++    iget-object v10, v0, LX/1Us;->A05:Landroid/widget/ImageView;
++
++    invoke-virtual {v10, v14}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218895
++    iget-object v1, v0, LX/1Us;->A01:Landroid/widget/ImageView;
++
++    invoke-virtual {v1, v14}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218896
++    iget-object v1, v0, LX/1Us;->A09:Landroid/widget/TextView;
++
++    invoke-virtual {v1, v14}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218897
++    iget-object v9, v0, LX/1Us;->A0A:Landroid/widget/TextView;
++
++    invoke-virtual {v9, v5}, Landroid/view/View;->setVisibility(I)V
++
++    .line 218898
++    invoke-static {v8, v3}, LX/00x;->A00(Landroid/content/Context;I)I
++
++    move-result v1
++
++    .line 218899
++    invoke-virtual {v9, v1}, Landroid/widget/TextView;->setTextColor(I)V
++
++    goto :goto_17
++
++    .line 218900
++    :cond_3a
++    const/4 v3, 0x0
++
++    .line 218901
++    iget-object v1, v0, LX/1Us;->A00:Landroid/view/View;
++
++    move-object/from16 v17, v1
++
++    invoke-virtual {v1, v2}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    .line 218902
++    invoke-virtual {v6, v2}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    .line 218903
++    invoke-virtual {v1, v3}, Landroid/view/View;->setClickable(Z)V
++
++    .line 218904
++    invoke-virtual {v6, v3}, Landroid/view/View;->setClickable(Z)V
++
++    goto/16 :goto_2
++
++    .line 218905
++    :cond_3b
++    invoke-virtual {v13}, Landroid/view/View;->getTag()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/1Us;
++
++    goto/16 :goto_0
++
++    .line 218906
++    :cond_3c
++    const-string v1, "unknown status distribution mode"
++
++    new-instance v0, Ljava/lang/IllegalStateException;
++
++    invoke-direct {v0, v1}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
++
++    throw v0
++.end method
 diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/Conversation.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/Conversation.smali
-index 48345e8a0..46575a937 100644
+index 48345e8a0..393365255 100644
 --- a/whatsapp_modify_module/smali/com/coocoowhatsapp/Conversation.smali
 +++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/Conversation.smali
-@@ -14725,6 +14725,10 @@
+@@ -14719,7 +14719,7 @@
+     .line 95574
+     invoke-virtual {p0, v0}, LX/01X;->A1i(I)V
+ 
+-    return-void
++    return-voidＣ
+ .end method
+ 
  .method public AJu(J)V
-     .locals 1
- 
-+#coocoo
-+    invoke-static {p1}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(J)V
-+#coocoo
-+
-     const/4 v0, 0x1
- 
-     .line 95575
-diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
-index b0b4e5301..ecd1aafb6 100644
---- a/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
-+++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
-@@ -6506,6 +6506,10 @@
- .method public AJu(J)V
-     .locals 4
- 
-+#coocoo
-+    invoke-static {p1}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(J)V
-+#coocoo
-+
-     .line 488184
-     iget-object v0, p0, Lcom/coocoowhatsapp/conversationslist/ConversationsFragment;->A0d:LX/034;
- 
