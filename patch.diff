@@ -1,8 +1,8 @@
 diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-index 77bd78c7b..8545aaa3d 100644
+index 77bd78c7b..7c865620e 100644
 --- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 +++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-@@ -656,6 +656,16 @@ public class Coocoo {
+@@ -656,6 +656,21 @@ public class Coocoo {
          Log.e(TAG, "-----------------5---------------- // value : " + value);
      }
  
@@ -14,6 +14,11 @@ index 77bd78c7b..8545aaa3d 100644
 +    // invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog7(Ljava/lang/CharSequence;)V
 +    public static void traceLog7(CharSequence value) {
 +        Log.e(TAG, "-----------------7---------------- // value : " + value);
++    }
++
++    // invoke-static {}, Lcom/coocoo/coocoo/Coocoo;->stackTrace()V
++    public static void stackTrace() throws Exception {
++        throw new Exception("Debug");
 +    }
 +
      public static void traceLogCodeStack() {
@@ -42,10 +47,10 @@ index 7cf765c7e..fd51ed2dc 100644
      @SmaliInject
 diff --git a/whatsapp_modify_module/smali/X/1Da.1.smali b/whatsapp_modify_module/smali/X/1Da.1.smali
 new file mode 100644
-index 000000000..600091b0d
+index 000000000..7b7bb41de
 --- /dev/null
 +++ b/whatsapp_modify_module/smali/X/1Da.1.smali
-@@ -0,0 +1,2610 @@
+@@ -0,0 +1,2611 @@
 +.class public LX/1Da;
 +.super LX/0n7;
 +.source ""
@@ -569,7 +574,8 @@ index 000000000..600091b0d
 +    .line 218574
 +    iget-object v1, v14, LX/0iK;->A00:Ljava/lang/String;
 +#coocoo
-+    invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
++    invoke-static {}, Lcom/coocoo/coocoo/Coocoo;->stackTrace()V
++    #invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
 +#coocoo
 +    .line 218575
 +    invoke-virtual {v6, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
