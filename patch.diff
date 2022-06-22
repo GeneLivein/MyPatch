@@ -56,7 +56,7 @@ index 77bd78c7b..67ef80950 100644
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
 diff --git a/app/src/main/java/com/coocoo/privacy/VoipController.kt b/app/src/main/java/com/coocoo/privacy/VoipController.kt
-index 322afda83..7e7dc8cf6 100644
+index 322afda83..1a33aadde 100644
 --- a/app/src/main/java/com/coocoo/privacy/VoipController.kt
 +++ b/app/src/main/java/com/coocoo/privacy/VoipController.kt
 @@ -11,6 +11,7 @@ import com.coocoo.privacy.CallsPrivacySettingActivity.Companion.ALL_CONTACTS_KEY
@@ -67,15 +67,18 @@ index 322afda83..7e7dc8cf6 100644
  import com.whatsapp.voipcalling.CallInfo
  import com.whatsapp.voipcalling.VoiceFGService
  import com.whatsapp.voipcalling.Voip
-@@ -34,6 +35,7 @@ class VoipController {
+@@ -33,6 +34,10 @@ class VoipController {
+                     return false
                  }
  
++                if (obj.callState == Voip.CallState.NONE) {
++                    return true
++                }
++
                  obj.getPeerJid()?.run {
-+                    LogUtil.d("Coocoo1", "callState:" + obj.callState)
                      if (canConnectCall("+$user")) {
                          val retVal = voiceService?.mod_handler_callback?.run {
-                             mod_version_handleMessage(message)
-@@ -114,6 +116,8 @@ class VoipController {
+@@ -114,6 +119,8 @@ class VoipController {
                  else -> {
                      true
                  }
