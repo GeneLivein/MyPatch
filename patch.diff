@@ -1,8 +1,28 @@
 diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-index 77bd78c7b..7c865620e 100644
+index 77bd78c7b..67ef80950 100644
 --- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 +++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-@@ -656,6 +656,21 @@ public class Coocoo {
+@@ -116,6 +116,7 @@ import javax.crypto.SecretKey;
+ 
+ import X.c1_01f;
+ import X.c1_2Oc;
++import X.c1_2Ot;
+ import X.c1_3Ul;
+ import X.c1_2P6;
+ import X.c1_2ua;
+@@ -648,7 +649,11 @@ public class Coocoo {
+         Log.e(TAG, "-----------------3---------------- // value : " + value);
+     }
+ 
++    // invoke-static {vx}, Lcom/coocoo/coocoo/Coocoo;->traceLog4(Ljava/lang/Object;)V
+     public static void traceLog4(Object object) {
++        if (object instanceof c1_2Ot) {
++            Log.e(TAG, "-----------------4---------------- // object : " + object);
++        }
+         Log.e(TAG, "-----------------4---------------- // object : " + object);
+     }
+ 
+@@ -656,6 +661,21 @@ public class Coocoo {
          Log.e(TAG, "-----------------5---------------- // value : " + value);
      }
  
@@ -47,10 +67,10 @@ index 7cf765c7e..fd51ed2dc 100644
      @SmaliInject
 diff --git a/whatsapp_modify_module/smali/X/1Da.1.smali b/whatsapp_modify_module/smali/X/1Da.1.smali
 new file mode 100644
-index 000000000..7b7bb41de
+index 000000000..c11f05f67
 --- /dev/null
 +++ b/whatsapp_modify_module/smali/X/1Da.1.smali
-@@ -0,0 +1,2611 @@
+@@ -0,0 +1,2613 @@
 +.class public LX/1Da;
 +.super LX/0n7;
 +.source ""
@@ -1423,7 +1443,9 @@ index 000000000..7b7bb41de
 +    move-object v15, v14
 +
 +    move-object/from16 v14, v20
-+
++#coocoo
++    invoke-static {v7}, Lcom/coocoo/coocoo/Coocoo;->traceLog4(Ljava/lang/Object;)V
++#coocoo
 +    invoke-virtual {v14, v7, v15, v1}, LX/1eh;->A03(LX/2Ot;Ljava/util/List;I)V
 +
 +    .line 218716
