@@ -55,6 +55,48 @@ index 77bd78c7b..67ef80950 100644
      public static void traceLogCodeStack() {
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
+diff --git a/app/src/main/java/com/coocoo/privacy/VoipController.kt b/app/src/main/java/com/coocoo/privacy/VoipController.kt
+index 322afda83..c34a33e85 100644
+--- a/app/src/main/java/com/coocoo/privacy/VoipController.kt
++++ b/app/src/main/java/com/coocoo/privacy/VoipController.kt
+@@ -11,6 +11,7 @@ import com.coocoo.privacy.CallsPrivacySettingActivity.Companion.ALL_CONTACTS_KEY
+ import com.coocoo.report.Report
+ import com.coocoo.utils.Constants.Res.Id.SP_KEY_NO_CALLS
+ import com.coocoo.utils.JidUtils
++import com.coocoo.utils.LogUtil
+ import com.whatsapp.voipcalling.CallInfo
+ import com.whatsapp.voipcalling.VoiceFGService
+ import com.whatsapp.voipcalling.Voip
+@@ -114,6 +115,8 @@ class VoipController {
+                 else -> {
+                     true
+                 }
++            }.also {
++                LogUtil.d("Coocoo1", it)
+             }
+         }
+ 
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/CallEventHandlerDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/CallEventHandlerDelegate.java
+index a879b1876..ac0d2eb60 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/CallEventHandlerDelegate.java
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/CallEventHandlerDelegate.java
+@@ -3,12 +3,15 @@ package com.coocoo.whatsappdelegate;
+ import android.os.Message;
+ 
+ import com.coocoo.privacy.VoipController;
++import com.coocoo.utils.LogUtil;
+ 
+ import X.cc_2kl;
+ 
+ public class CallEventHandlerDelegate {
+ 
+     public static boolean isEndCall(cc_2kl voiceService, Message message) {
+-        return VoipController.isEndCall(voiceService, message);
++        boolean isEnd = VoipController.isEndCall(voiceService, message);
++        LogUtil.d("Coocoo1", isEnd);
++        return isEnd;
+     }
+ }
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 index 7cf765c7e..ef0b2af16 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
