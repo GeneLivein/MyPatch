@@ -51,10 +51,10 @@ index 7cf765c7e..f0f3687b0 100644
  
 diff --git a/whatsapp_modify_module/smali/X/1Da.1.smali b/whatsapp_modify_module/smali/X/1Da.1.smali
 new file mode 100644
-index 000000000..11bc9ec59
+index 000000000..8e9d4005a
 --- /dev/null
 +++ b/whatsapp_modify_module/smali/X/1Da.1.smali
-@@ -0,0 +1,2604 @@
+@@ -0,0 +1,2606 @@
 +.class public LX/1Da;
 +.super LX/0n7;
 +.source ""
@@ -1998,7 +1998,9 @@ index 000000000..11bc9ec59
 +    invoke-static {v7}, LX/09t;->A01(LX/2Ot;)Ljava/lang/String;
 +
 +    move-result-object v1
-+
++#coocoo
++    invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
++#coocoo
 +    invoke-virtual {v4, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
 +
 +    .line 218794
