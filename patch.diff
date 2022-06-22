@@ -56,7 +56,7 @@ index 77bd78c7b..67ef80950 100644
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-index 7cf765c7e..42bec1a88 100644
+index 7cf765c7e..7e3f4a0eb 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 @@ -8,6 +8,7 @@ import android.os.Parcelable;
@@ -85,11 +85,18 @@ index 7cf765c7e..42bec1a88 100644
      @SmaliInject
      public static void insertBroadcastConversations(@Nullable ContactPickerFragment pickerFragment, @Nullable List existingFilteredList) {
 -        LogUtil.d(TAG, "insertBroadcastConversations");
-+        LogUtil.d(TAG, "insertBroadcastConversations" + existingFilteredList);
++//        LogUtil.d(TAG, "insertBroadcastConversations" + existingFilteredList);
          if (pickerFragment == null || existingFilteredList == null) {
              return;
          }
-@@ -74,6 +77,17 @@ public class ContactPickerFragmentDelegate {
+@@ -68,12 +71,23 @@ public class ContactPickerFragmentDelegate {
+                 }
+             }
+ 
+-            LogUtil.d(TAG, "insertBroadcastConversations - list2bn.size: " + list2bn.size());
++//            LogUtil.d(TAG, "insertBroadcastConversations - list2bn.size: " + list2bn.size());
+             if (list2bn.size() > 0) {
+                 existingFilteredList.add(new cc_25n(ResMgr.getString("system_status_broadcast_feature")));
                  existingFilteredList.addAll(list2bn);
              }
          }
@@ -101,7 +108,7 @@ index 7cf765c7e..42bec1a88 100644
 +            if (c12Ot == null) {
 +                LogUtil.d(TAG,((cc_25n) cc0iL).A00);
 +            } else {
-+                LogUtil.d(TAG, "c12Ot.A0I: " + c12Ot.A0I + "c12Ot.A0B" + c12Ot.A0B);
++                LogUtil.d(TAG, "c12Ot.A0I: " + c12Ot.A0I + " c12Ot.A0B: " + c12Ot.A0B + " c12Ot.user: " + c12Ot.A0B.user);
 +            }
 +        }
      }
