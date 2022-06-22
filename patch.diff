@@ -20,7 +20,7 @@ index 77bd78c7b..8545aaa3d 100644
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-index 7cf765c7e..f0f3687b0 100644
+index 7cf765c7e..fd51ed2dc 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 @@ -34,7 +34,7 @@ public class ContactPickerFragmentDelegate {
@@ -32,23 +32,14 @@ index 7cf765c7e..f0f3687b0 100644
          if (pickerFragment == null || existingFilteredList == null) {
              return;
          }
-@@ -68,11 +68,11 @@ public class ContactPickerFragmentDelegate {
-                 }
+@@ -74,6 +74,7 @@ public class ContactPickerFragmentDelegate {
+                 existingFilteredList.addAll(list2bn);
              }
- 
--            LogUtil.d(TAG, "insertBroadcastConversations - list2bn.size: " + list2bn.size());
--            if (list2bn.size() > 0) {
--                existingFilteredList.add(new cc_25n(ResMgr.getString("system_status_broadcast_feature")));
--                existingFilteredList.addAll(list2bn);
--            }
-+//            LogUtil.d(TAG, "insertBroadcastConversations - list2bn.size: " + list2bn.size());
-+//            if (list2bn.size() > 0) {
-+//                existingFilteredList.add(new cc_25n(ResMgr.getString("system_status_broadcast_feature")));
-+//                existingFilteredList.addAll(list2bn);
-+//            }
          }
++        LogUtil.d(TAG, "insertBroadcastConversations - End ");
      }
  
+     @SmaliInject
 diff --git a/whatsapp_modify_module/smali/X/1Da.1.smali b/whatsapp_modify_module/smali/X/1Da.1.smali
 new file mode 100644
 index 000000000..600091b0d
