@@ -56,7 +56,7 @@ index 77bd78c7b..67ef80950 100644
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-index 7cf765c7e..5656cd75d 100644
+index 7cf765c7e..54a961af7 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 @@ -8,6 +8,7 @@ import android.os.Parcelable;
@@ -108,10 +108,10 @@ index 7cf765c7e..5656cd75d 100644
 +            if (c12Ot == null) {
 +                LogUtil.d(TAG,((cc_25n) cc0iL).A00);
 +            } else {
++                if (c12Ot.A0B.user == ProfileManager.getJid()) {
++                    existingFilteredList.remove(cc0iL);
++                }
 +                LogUtil.d(TAG, "c12Ot.A0I: " + c12Ot.A0I + " c12Ot.A0B: " + c12Ot.A0B + " c12Ot.user: " + c12Ot.A0B.user);
-+            }
-+            if (c12Ot.A0B.user == ProfileManager.getJid()) {
-+                existingFilteredList.remove(cc0iL);
 +            }
 +        }
      }
