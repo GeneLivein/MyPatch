@@ -1,3 +1,14 @@
+diff --git a/app/src/main/java/X/cc_0iL.java b/app/src/main/java/X/cc_0iL.java
+new file mode 100644
+index 000000000..d7e6f7bf8
+--- /dev/null
++++ b/app/src/main/java/X/cc_0iL.java
+@@ -0,0 +1,5 @@
++package X;
++
++public interface cc_0iL {
++    c1_2Ot A8Y();
++}
 diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 index 77bd78c7b..67ef80950 100644
 --- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
@@ -45,10 +56,31 @@ index 77bd78c7b..67ef80950 100644
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-index 7cf765c7e..fd51ed2dc 100644
+index 7cf765c7e..47ba0e569 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-@@ -34,7 +34,7 @@ public class ContactPickerFragmentDelegate {
+@@ -8,6 +8,7 @@ import android.os.Parcelable;
+ import androidx.annotation.Nullable;
+ 
+ import com.coocoo.annotation.SmaliInject;
++import com.coocoo.profile.ProfileManager;
+ import com.coocoo.share.unlock.AbsUnlockManager;
+ import com.coocoo.utils.Constants;
+ import com.coocoo.utils.LogUtil;
+@@ -18,10 +19,12 @@ import com.coocoowhatsapp.contact.picker.ContactPickerFragment;
+ import java.io.Serializable;
+ import java.util.ArrayList;
+ import java.util.Collection;
++import java.util.Iterator;
+ import java.util.List;
+ import java.util.Map;
+ 
+ import X.c1_2Ot;
++import X.cc_0iL;
+ import X.cc_2xk;
+ import X.cc_25m;
+ import X.cc_25n;
+@@ -34,7 +37,7 @@ public class ContactPickerFragmentDelegate {
  
      @SmaliInject
      public static void insertBroadcastConversations(@Nullable ContactPickerFragment pickerFragment, @Nullable List existingFilteredList) {
@@ -57,20 +89,26 @@ index 7cf765c7e..fd51ed2dc 100644
          if (pickerFragment == null || existingFilteredList == null) {
              return;
          }
-@@ -74,6 +74,7 @@ public class ContactPickerFragmentDelegate {
+@@ -74,6 +77,13 @@ public class ContactPickerFragmentDelegate {
                  existingFilteredList.addAll(list2bn);
              }
          }
-+        LogUtil.d(TAG, "insertBroadcastConversations - End ");
++        LogUtil.d(TAG,"user: " + ProfileManager.getUserRawString() + " " + ProfileManager.getJid());
++        Iterator iterator = existingFilteredList.iterator();
++        while (iterator.hasNext()) {
++            cc_0iL cc0iL = (cc_0iL) iterator.next();
++            c1_2Ot c12Ot = cc0iL.A8Y();
++            LogUtil.d(TAG,"c12Ot.A0I: " + c12Ot.A0I + "c12Ot.A0B" + c12Ot.A0B);
++        }
      }
  
      @SmaliInject
 diff --git a/whatsapp_modify_module/smali/X/1Da.1.smali b/whatsapp_modify_module/smali/X/1Da.1.smali
 new file mode 100644
-index 000000000..c11f05f67
+index 000000000..b9a47de24
 --- /dev/null
 +++ b/whatsapp_modify_module/smali/X/1Da.1.smali
-@@ -0,0 +1,2613 @@
+@@ -0,0 +1,2594 @@
 +.class public LX/1Da;
 +.super LX/0n7;
 +.source ""
@@ -203,9 +241,7 @@ index 000000000..c11f05f67
 +
 +    .line 218519
 +    invoke-virtual {v1, v0}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
-+#coocoo
-+    invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
-+#coocoo
++
 +    return-object v13
 +
 +    .line 218520
@@ -593,10 +629,7 @@ index 000000000..c11f05f67
 +
 +    .line 218574
 +    iget-object v1, v14, LX/0iK;->A00:Ljava/lang/String;
-+#coocoo
-+    invoke-static {}, Lcom/coocoo/coocoo/Coocoo;->stackTrace()V
-+    #invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
-+#coocoo
++
 +    .line 218575
 +    invoke-virtual {v6, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
 +
@@ -723,10 +756,6 @@ index 000000000..c11f05f67
 +    invoke-static {v4}, LX/2Ov;->A0U(Lcom/whatsapp/jid/Jid;)Z
 +
 +    move-result v1
-+
-+#coocoo
-+    invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(Z)V
-+#coocoo
 +
 +    if-nez v1, :cond_3a
 +
@@ -867,10 +896,6 @@ index 000000000..c11f05f67
 +    invoke-static {v4, v1, v7}, LX/035;->A00(Landroid/content/Context;LX/01y;LX/2Ot;)Ljava/lang/CharSequence;
 +
 +    move-result-object v1
-+
-+#coocoo
-+    invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog7(Ljava/lang/CharSequence;)V
-+#coocoo
 +
 +    .line 218621
 +    invoke-virtual {v5, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
@@ -2017,9 +2042,7 @@ index 000000000..c11f05f67
 +    invoke-static {v7}, LX/09t;->A01(LX/2Ot;)Ljava/lang/String;
 +
 +    move-result-object v1
-+#coocoo
-+    invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
-+#coocoo
++
 +    invoke-virtual {v4, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
 +
 +    .line 218794
@@ -2273,10 +2296,6 @@ index 000000000..c11f05f67
 +    invoke-virtual {v11, v7}, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A14(LX/2Ot;)Ljava/lang/String;
 +
 +    move-result-object v1
-+
-+#coocoo
-+    invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
-+#coocoo
 +
 +    .line 218837
 +    invoke-virtual {v4, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
