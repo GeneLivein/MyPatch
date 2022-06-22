@@ -56,7 +56,7 @@ index 77bd78c7b..67ef80950 100644
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-index 7cf765c7e..47ba0e569 100644
+index 7cf765c7e..42bec1a88 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 @@ -8,6 +8,7 @@ import android.os.Parcelable;
@@ -89,7 +89,7 @@ index 7cf765c7e..47ba0e569 100644
          if (pickerFragment == null || existingFilteredList == null) {
              return;
          }
-@@ -74,6 +77,13 @@ public class ContactPickerFragmentDelegate {
+@@ -74,6 +77,17 @@ public class ContactPickerFragmentDelegate {
                  existingFilteredList.addAll(list2bn);
              }
          }
@@ -98,7 +98,11 @@ index 7cf765c7e..47ba0e569 100644
 +        while (iterator.hasNext()) {
 +            cc_0iL cc0iL = (cc_0iL) iterator.next();
 +            c1_2Ot c12Ot = cc0iL.A8Y();
-+            LogUtil.d(TAG,"c12Ot.A0I: " + c12Ot.A0I + "c12Ot.A0B" + c12Ot.A0B);
++            if (c12Ot == null) {
++                LogUtil.d(TAG,((cc_25n) cc0iL).A00);
++            } else {
++                LogUtil.d(TAG, "c12Ot.A0I: " + c12Ot.A0I + "c12Ot.A0B" + c12Ot.A0B);
++            }
 +        }
      }
  
