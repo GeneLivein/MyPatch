@@ -128,10 +128,10 @@ index eab7d80fa..f6460f295 100644
  </resources>
 diff --git a/whatsapp_modify_module/smali/X/1Da.1.smali b/whatsapp_modify_module/smali/X/1Da.1.smali
 new file mode 100644
-index 000000000..7261b5b2d
+index 000000000..631347fc1
 --- /dev/null
 +++ b/whatsapp_modify_module/smali/X/1Da.1.smali
-@@ -0,0 +1,2631 @@
+@@ -0,0 +1,2606 @@
 +.class public LX/1Da;
 +.super LX/0n7;
 +.source ""
@@ -585,9 +585,6 @@ index 000000000..7261b5b2d
 +
 +    .line 218560
 +    :goto_0
-+#coocoo
-+    #invoke-static {v13, v14}, Lcom/coocoo/whatsappdelegate/ContactPickerFragmentDelegate;->setContactPickerRowStatus(Landroid/view/View;LX/0iL;)V
-+#coocoo
 +    const/4 v3, 0x0
 +
 +    .line 218561
@@ -718,7 +715,6 @@ index 000000000..7261b5b2d
 +    :cond_7
 +    :goto_1
 +    invoke-static {v13, v2}, LX/01r;->A0W(Landroid/view/View;LX/0VY;)V
-+
 +#coocoo
 +    move-object/from16 v12, p0
 +
@@ -1193,9 +1189,6 @@ index 000000000..7261b5b2d
 +
 +    .line 218663
 +    :goto_9
-+#coocoo
-+    invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog7(Ljava/lang/CharSequence;)V
-+#coocoo
 +    invoke-virtual {v4, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
 +
 +    .line 218664
@@ -1512,9 +1505,7 @@ index 000000000..7261b5b2d
 +    move-object v15, v14
 +
 +    move-object/from16 v14, v20
-+#coocoo
-+    invoke-static {v7}, Lcom/coocoo/coocoo/Coocoo;->traceLog4(Ljava/lang/Object;)V
-+#coocoo
++
 +    invoke-virtual {v14, v7, v15, v1}, LX/1eh;->A03(LX/2Ot;Ljava/util/List;I)V
 +
 +    .line 218716
@@ -1913,10 +1904,6 @@ index 000000000..7261b5b2d
 +    :goto_10
 +    const/4 v10, 0x0
 +
-+#coocoo
-+    invoke-static {v2}, Lcom/coocoo/coocoo/Coocoo;->traceLog7(Ljava/lang/CharSequence;)V
-+#coocoo
-+
 +    .line 218766
 +    invoke-virtual {v4, v2, v1, v10, v10}, Lcom/coocoowhatsapp/TextEmojiLabel;->A08(Ljava/lang/CharSequence;Ljava/util/List;IZ)V
 +
@@ -1935,7 +1922,7 @@ index 000000000..7261b5b2d
 +    .line 218769
 +    move-object/from16 v1, v18
 +
-+    #invoke-virtual {v4, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
++    invoke-virtual {v4, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
 +
 +    .line 218770
 +    iget-object v12, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A1Z:LX/2OU;
@@ -2075,7 +2062,7 @@ index 000000000..7261b5b2d
 +    :goto_12
 +    move-object/from16 v1, v18
 +
-+    #invoke-virtual {v9, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
++    invoke-virtual {v9, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
 +
 +    .line 218791
 +    invoke-virtual {v13, v10}, Landroid/view/View;->setLongClickable(Z)V
@@ -2090,10 +2077,6 @@ index 000000000..7261b5b2d
 +    invoke-static {v7}, LX/09t;->A01(LX/2Ot;)Ljava/lang/String;
 +
 +    move-result-object v1
-+
-+#coocoo
-+    invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
-+#coocoo
 +
 +    invoke-virtual {v4, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
 +
@@ -2229,10 +2212,6 @@ index 000000000..7261b5b2d
 +
 +    move-result-object v1
 +
-+#coocoo
-+    invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog7(Ljava/lang/CharSequence;)V
-+#coocoo
-+
 +    invoke-virtual {v4, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
 +
 +    .line 218816
@@ -2352,10 +2331,6 @@ index 000000000..7261b5b2d
 +    invoke-virtual {v11, v7}, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A14(LX/2Ot;)Ljava/lang/String;
 +
 +    move-result-object v1
-+
-+#coocoo
-+    invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog7(Ljava/lang/CharSequence;)V
-+#coocoo
 +
 +    .line 218837
 +    invoke-virtual {v4, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
@@ -2762,211 +2737,4 @@ index 000000000..7261b5b2d
 +    invoke-direct {v0, v1}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
 +
 +    throw v0
-+.end method
-diff --git a/whatsapp_modify_module/smali/X/1eh.3.smali b/whatsapp_modify_module/smali/X/1eh.3.smali
-new file mode 100644
-index 000000000..e2dc71bbe
---- /dev/null
-+++ b/whatsapp_modify_module/smali/X/1eh.3.smali
-@@ -0,0 +1,201 @@
-+.class public LX/1eh;
-+.super Ljava/lang/Object;
-+.source ""
-+
-+
-+# instance fields
-+.field public final A00:Landroid/content/Context;
-+
-+.field public final A01:Lcom/coocoowhatsapp/TextEmojiLabel;
-+
-+.field public final A02:LX/035;
-+
-+
-+# direct methods
-+.method public constructor <init>(Landroid/content/Context;Lcom/coocoowhatsapp/TextEmojiLabel;LX/035;)V
-+    .locals 0
-+
-+    .line 243883
-+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
-+
-+    .line 243884
-+    iput-object p1, p0, LX/1eh;->A00:Landroid/content/Context;
-+
-+    .line 243885
-+    iput-object p2, p0, LX/1eh;->A01:Lcom/coocoowhatsapp/TextEmojiLabel;
-+
-+    .line 243886
-+    iput-object p3, p0, LX/1eh;->A02:LX/035;
-+
-+    return-void
-+.end method
-+
-+.method public constructor <init>(Landroid/view/View;LX/035;I)V
-+    .locals 2
-+
-+    .line 243887
-+    invoke-virtual {p1}, Landroid/view/View;->getContext()Landroid/content/Context;
-+
-+    move-result-object v1
-+
-+    invoke-virtual {p1, p3}, Landroid/view/View;->findViewById(I)Landroid/view/View;
-+
-+    move-result-object v0
-+
-+    check-cast v0, Lcom/coocoowhatsapp/TextEmojiLabel;
-+
-+    invoke-direct {p0, v1, v0, p2}, LX/1eh;-><init>(Landroid/content/Context;Lcom/coocoowhatsapp/TextEmojiLabel;LX/035;)V
-+
-+    return-void
-+.end method
-+
-+
-+# virtual methods
-+.method public A00()V
-+    .locals 3
-+
-+    .line 243888
-+    iget-object v2, p0, LX/1eh;->A01:Lcom/coocoowhatsapp/TextEmojiLabel;
-+
-+    iget-object v1, p0, LX/1eh;->A00:Landroid/content/Context;
-+
-+    const v0, 0x7f1219da
-+
-+    invoke-virtual {v1, v0}, Landroid/content/Context;->getString(I)Ljava/lang/String;
-+
-+    move-result-object v0
-+
-+    invoke-virtual {v2, v0}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
-+
-+    .line 243889
-+    const/4 v0, 0x0
-+
-+    .line 243890
-+    invoke-virtual {v2, v0, v0, v0, v0}, Landroid/widget/TextView;->setCompoundDrawables(Landroid/graphics/drawable/Drawable;Landroid/graphics/drawable/Drawable;Landroid/graphics/drawable/Drawable;Landroid/graphics/drawable/Drawable;)V
-+
-+    return-void
-+.end method
-+
-+.method public A01(I)V
-+    .locals 2
-+
-+    if-eqz p1, :cond_2
-+
-+    const/4 v0, 0x1
-+
-+    if-eq p1, v0, :cond_1
-+
-+    const/4 v0, 0x2
-+
-+    if-ne p1, v0, :cond_0
-+
-+    .line 243891
-+    iget-object v1, p0, LX/1eh;->A01:Lcom/coocoowhatsapp/TextEmojiLabel;
-+
-+    const v0, 0x7f080573
-+
-+    :goto_0
-+    invoke-virtual {v1, v0}, Lcom/coocoowhatsapp/TextEmojiLabel;->A04(I)V
-+
-+    .line 243892
-+    :cond_0
-+    return-void
-+
-+    .line 243893
-+    :cond_1
-+    iget-object v1, p0, LX/1eh;->A01:Lcom/coocoowhatsapp/TextEmojiLabel;
-+
-+    const v0, 0x7f080572
-+
-+    goto :goto_0
-+
-+    .line 243894
-+    :cond_2
-+    iget-object v1, p0, LX/1eh;->A01:Lcom/coocoowhatsapp/TextEmojiLabel;
-+
-+    const/4 v0, 0x0
-+
-+    .line 243895
-+    invoke-virtual {v1, v0, v0, v0, v0}, Landroid/widget/TextView;->setCompoundDrawables(Landroid/graphics/drawable/Drawable;Landroid/graphics/drawable/Drawable;Landroid/graphics/drawable/Drawable;Landroid/graphics/drawable/Drawable;)V
-+
-+    return-void
-+.end method
-+
-+.method public A02(LX/2Ot;)V
-+    .locals 2
-+
-+    const/4 v1, -0x1
-+
-+    const/4 v0, 0x0
-+
-+    .line 243896
-+    invoke-virtual {p0, p1, v0, v1}, LX/1eh;->A03(LX/2Ot;Ljava/util/List;I)V
-+
-+    return-void
-+.end method
-+
-+.method public A03(LX/2Ot;Ljava/util/List;I)V
-+    .locals 4
-+
-+    .line 243897
-+    invoke-virtual {p1}, LX/2Ot;->A0K()Z
-+
-+    move-result v0
-+
-+    const/4 v3, 0x0
-+
-+    if-eqz v0, :cond_0
-+
-+    .line 243898
-+    invoke-static {p1, v3}, LX/035;->A01(LX/2Ot;Z)Ljava/lang/String;
-+
-+    move-result-object v2
-+
-+    .line 243899
-+    :goto_0
-+    iget-object v1, p0, LX/1eh;->A01:Lcom/coocoowhatsapp/TextEmojiLabel;
-+
-+    const/16 v0, 0x100
-+
-+#coocoo
-+    invoke-static {v2}, Lcom/coocoo/coocoo/Coocoo;->traceLog7(Ljava/lang/CharSequence;)V
-+#coocoo
-+
-+    invoke-virtual {v1, v2, p2, v0, v3}, Lcom/coocoowhatsapp/TextEmojiLabel;->A08(Ljava/lang/CharSequence;Ljava/util/List;IZ)V
-+
-+    .line 243900
-+    invoke-virtual {p1}, LX/2Ot;->A0K()Z
-+
-+    move-result v0
-+
-+    .line 243901
-+    invoke-virtual {p0, v0}, LX/1eh;->A01(I)V
-+
-+    return-void
-+
-+    .line 243902
-+    :cond_0
-+    iget-object v1, p0, LX/1eh;->A02:LX/035;
-+
-+    const/4 v0, 0x1
-+
-+    .line 243903
-+    invoke-virtual {v1, p1, p3, v3, v0}, LX/035;->A0E(LX/2Ot;IZZ)Ljava/lang/String;
-+
-+    move-result-object v2
-+
-+    goto :goto_0
-+.end method
-+
-+.method public A04(Ljava/lang/CharSequence;Ljava/util/List;)V
-+    .locals 2
-+
-+    .line 243904
-+    iget-object v1, p0, LX/1eh;->A01:Lcom/coocoowhatsapp/TextEmojiLabel;
-+
-+    const/4 v0, 0x0
-+
-+    invoke-virtual {v1, p1, p2, v0, v0}, Lcom/coocoowhatsapp/TextEmojiLabel;->A08(Ljava/lang/CharSequence;Ljava/util/List;IZ)V
-+
-+    return-void
 +.end method
