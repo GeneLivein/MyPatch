@@ -93,7 +93,7 @@ index b0c4fbe38..b43dd0c74 100644
      @SmaliInject
 diff --git a/whatsapp_modify_module/smali/X/1Da.1.smali b/whatsapp_modify_module/smali/X/1Da.1.smali
 new file mode 100644
-index 000000000..03c340efc
+index 000000000..26905fa8c
 --- /dev/null
 +++ b/whatsapp_modify_module/smali/X/1Da.1.smali
 @@ -0,0 +1,2616 @@
@@ -2025,7 +2025,7 @@ index 000000000..03c340efc
 +    :goto_12
 +    move-object/from16 v1, v18
 +
-+    invoke-virtual {v9, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
++    #invoke-virtual {v9, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
 +
 +    .line 218791
 +    invoke-virtual {v13, v10}, Landroid/view/View;->setLongClickable(Z)V
