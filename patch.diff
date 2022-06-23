@@ -49,6 +49,28 @@ index 77bd78c7b..c86b220fd 100644
      public static void traceLogCodeStack() {
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
+index 977d6130a..90c15cdd4 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
+@@ -9,6 +9,7 @@ import android.content.Intent;
+ import android.os.Bundle;
+ import android.os.Parcelable;
+ import android.view.View;
++import android.widget.ImageView;
+ import android.widget.TextView;
+ 
+ import androidx.annotation.Nullable;
+@@ -105,7 +106,9 @@ public class ContactPickerFragmentDelegate {
+         String myMessage = ResMgr.getString(MY_MESSAGE_CONTACT_PICKER_NAME);
+         if (c12Ot != null && myMessage.equals(c12Ot.A0I)) {
+             TextView tv = view.findViewById(ResMgr.getId(TV_MY_MESSAGE_ROW_STATUS));
++            ImageView iv = view.findViewById(ResMgr.getId("contactpicker_row_photo"));
+             tv.setText(ResMgr.getString(MY_MESSAGE_CONTACT_PICKER_STATUS));
++            iv.setImageResource(ResMgr.getDrawableId("cc_ic_avarta_mymessage_contactpicker"));
+         }
+     }
+ 
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
 index a42ff3bbe..6d0a22336 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
@@ -84,6 +106,10 @@ index 2b8c43fa2..c058420b6 100644
 +        LogUtil.d("resolveIntent:" + data);
 +    }
  }
+diff --git a/app/src/main/res/drawable-xxhdpi/cc_ic_avarta_mymessage_contactpicker.webp b/app/src/main/res/drawable-xxhdpi/cc_ic_avarta_mymessage_contactpicker.webp
+new file mode 100644
+index 000000000..62024ea94
+Binary files /dev/null and b/app/src/main/res/drawable-xxhdpi/cc_ic_avarta_mymessage_contactpicker.webp differ
 diff --git a/whatsapp_modify_module/smali/X/1Fe.1.smali b/whatsapp_modify_module/smali/X/1Fe.1.smali
 index 37372812c..bbfc3eb23 100644
 --- a/whatsapp_modify_module/smali/X/1Fe.1.smali
