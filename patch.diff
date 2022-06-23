@@ -106,10 +106,6 @@ index 2b8c43fa2..c058420b6 100644
 +        LogUtil.d("resolveIntent:" + data);
 +    }
  }
-diff --git a/app/src/main/res/drawable-xxhdpi/cc_ic_avarta_mymessage_contactpicker.webp b/app/src/main/res/drawable-xxhdpi/cc_ic_avarta_mymessage_contactpicker.webp
-new file mode 100644
-index 000000000..62024ea94
-Binary files /dev/null and b/app/src/main/res/drawable-xxhdpi/cc_ic_avarta_mymessage_contactpicker.webp differ
 diff --git a/whatsapp_modify_module/smali/X/1Fe.1.smali b/whatsapp_modify_module/smali/X/1Fe.1.smali
 index 37372812c..bbfc3eb23 100644
 --- a/whatsapp_modify_module/smali/X/1Fe.1.smali
