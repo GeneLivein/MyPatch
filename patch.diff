@@ -45,10 +45,19 @@ index 77bd78c7b..67ef80950 100644
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-index b0c4fbe38..57d0f7900 100644
+index b0c4fbe38..adcfe0a20 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-@@ -77,6 +77,8 @@ public class ContactPickerFragmentDelegate {
+@@ -4,6 +4,8 @@ package com.coocoo.whatsappdelegate;
+ import android.content.Intent;
+ import android.os.Bundle;
+ import android.os.Parcelable;
++import android.view.View;
++import android.widget.TextView;
+ 
+ import androidx.annotation.Nullable;
+ 
+@@ -77,6 +79,8 @@ public class ContactPickerFragmentDelegate {
                  existingFilteredList.addAll(list2bn);
              }
          }
@@ -57,22 +66,31 @@ index b0c4fbe38..57d0f7900 100644
          Iterator iterator = existingFilteredList.iterator();
          while (iterator.hasNext()) {
              cc_0iL cc0iL = (cc_0iL) iterator.next();
-@@ -85,6 +87,9 @@ public class ContactPickerFragmentDelegate {
+@@ -85,6 +89,18 @@ public class ContactPickerFragmentDelegate {
                  iterator.remove();
              }
          }
 +        c1_2Ot c12Ot = new c1_2Ot(ProfileManager.getSelfJid());
 +        c12Ot.A0I = "My message";
 +        existingFilteredList.add(1, new cc_25m(c12Ot));
++    }
++
++    @SmaliInject
++    public static void setContactPickerRowStatus(View view, cc_0iL cc0iL) {
++        c1_2Ot c12Ot = cc0iL.A8Y();
++        if (c12Ot.A0I.equals("My message")) {
++            TextView tv = view.findViewById(ResMgr.getId("contactpicker_row_status"));
++            tv.setText("Forward to myself");
++        }
      }
  
      @SmaliInject
 diff --git a/whatsapp_modify_module/smali/X/1Da.1.smali b/whatsapp_modify_module/smali/X/1Da.1.smali
 new file mode 100644
-index 000000000..11af3ada8
+index 000000000..ad9c95bd2
 --- /dev/null
 +++ b/whatsapp_modify_module/smali/X/1Da.1.smali
-@@ -0,0 +1,2613 @@
+@@ -0,0 +1,2616 @@
 +.class public LX/1Da;
 +.super LX/0n7;
 +.source ""
@@ -526,6 +544,9 @@ index 000000000..11af3ada8
 +
 +    .line 218560
 +    :goto_0
++#coocoo
++    invoke-static {p2, v14}, Lcom/coocoo/whatsappdelegate/ContactPickerFragmentDelegate;->setContactPickerRowStatus(Landroid/view/View;Lx/0iL)V
++#coocoo
 +    const/4 v3, 0x0
 +
 +    .line 218561
