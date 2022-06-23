@@ -45,7 +45,7 @@ index 77bd78c7b..67ef80950 100644
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-index b0c4fbe38..2dc3f3bc0 100644
+index b0c4fbe38..ab1921955 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 @@ -4,6 +4,8 @@ package com.coocoo.whatsappdelegate;
@@ -79,7 +79,7 @@ index b0c4fbe38..2dc3f3bc0 100644
 +    public static void setContactPickerRowStatus(View view, cc_0iL cc0iL) {
 +        LogUtil.d("setContactPickerRowStatus");
 +        c1_2Ot c12Ot = cc0iL.A8Y();
-+        if (c12Ot != null && c12Ot.A0I.equals("My message")) {
++        if (c12Ot != null && "My message".equals(c12Ot.A0I)) {
 +            LogUtil.d("Forward to myself");
 +            TextView tv = view.findViewById(ResMgr.getId("contactpicker_row_status"));
 +            tv.setText("Forward to myself");
