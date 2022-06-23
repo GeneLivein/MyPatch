@@ -44,6 +44,26 @@ index 77bd78c7b..67ef80950 100644
      public static void traceLogCodeStack() {
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
+index a42ff3bbe..6d0a22336 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
+@@ -2,6 +2,7 @@ package com.coocoo.whatsappdelegate
+ 
+ import com.coocoo.annotation.SmaliInject
+ import com.coocoo.report.Report
++import com.coocoo.utils.LogUtil
+ import com.coocoowhatsapp.contact.picker.ContactPickerFragment
+ 
+ object ContactPickerSendBtnDelegate {
+@@ -12,6 +13,7 @@ object ContactPickerSendBtnDelegate {
+     @SmaliInject
+     @JvmStatic
+     fun onSendBtnClick(fragment: ContactPickerFragment) {
++        LogUtil.d("onSendBtnClick")
+         fragment.A09()?.intent?.getStringExtra(BUNDLE_KEY_STATUS_FEED_ID)?.let { statusId ->
+             if (statusId.isNotEmpty()) {
+                 Report.reportStatusFeedPlaybackShareDone(statusId)
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
 index 2b8c43fa2..c058420b6 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
@@ -59,19 +79,3 @@ index 2b8c43fa2..c058420b6 100644
 +        LogUtil.d("resolveIntent:" + data);
 +    }
  }
-diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
-index 897f1993f..2fa1130a3 100644
---- a/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
-+++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
-@@ -650,6 +650,11 @@
- 
- .method public A0e(IILandroid/content/Intent;)V
-     .locals 4
-+#coocoo
-+    iget-object v0, p0, Lcom/coocoowhatsapp/conversationslist/ConversationsFragment;->conversationsFragmentDelegate:Lcom/coocoo/whatsappdelegate/ConversationsFragmentDelegate;
-+
-+    invoke-virtual {v0, p3}, Lcom/coocoo/whatsappdelegate/ConversationsFragmentDelegate;->resolveIntent(Landroid/content/Intent;)V
-+#coocoo
- 
-     .line 487380
-     iget-object v0, p0, Lcom/coocoowhatsapp/conversationslist/ConversationsFragment;->A0u:LX/35c;
