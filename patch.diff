@@ -9,6 +9,26 @@ index 000000000..d7e6f7bf8
 +public interface cc_0iL {
 +    c1_2Ot A8Y();
 +}
+diff --git a/app/src/main/java/com/coocoo/conversation/repository/MyMessageRepository.kt b/app/src/main/java/com/coocoo/conversation/repository/MyMessageRepository.kt
+index 8cc71a365..85a1343a7 100644
+--- a/app/src/main/java/com/coocoo/conversation/repository/MyMessageRepository.kt
++++ b/app/src/main/java/com/coocoo/conversation/repository/MyMessageRepository.kt
+@@ -6,6 +6,7 @@ import X.c1_2PG
+ import android.text.TextUtils
+ import com.coocoo.coocoo.Coocoo
+ import com.coocoo.coocoosp.SPDelegate
++import com.coocoo.utils.LogUtil
+ import com.coocoo.utils.PrivacyUtils
+ import kotlinx.coroutines.CoroutineScope
+ 
+@@ -43,6 +44,7 @@ class MyMessageRepository(
+ 
+     fun isMyMessage(strippedJid: String): Boolean {
+         val registrationJid = waSpLite.A0Z()
++        LogUtil.d("strippedJid: $strippedJid, registrationJid: $registrationJidcd")
+         return registrationJid == strippedJid
+     }
+ 
 diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 index 77bd78c7b..67ef80950 100644
 --- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
@@ -55,43 +75,6 @@ index 77bd78c7b..67ef80950 100644
      public static void traceLogCodeStack() {
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
-diff --git a/app/src/main/java/com/coocoo/privacy/VoipController.kt b/app/src/main/java/com/coocoo/privacy/VoipController.kt
-index 322afda83..46e980345 100644
---- a/app/src/main/java/com/coocoo/privacy/VoipController.kt
-+++ b/app/src/main/java/com/coocoo/privacy/VoipController.kt
-@@ -11,6 +11,7 @@ import com.coocoo.privacy.CallsPrivacySettingActivity.Companion.ALL_CONTACTS_KEY
- import com.coocoo.report.Report
- import com.coocoo.utils.Constants.Res.Id.SP_KEY_NO_CALLS
- import com.coocoo.utils.JidUtils
-+import com.coocoo.utils.LogUtil
- import com.whatsapp.voipcalling.CallInfo
- import com.whatsapp.voipcalling.VoiceFGService
- import com.whatsapp.voipcalling.Voip
-@@ -32,9 +33,13 @@ class VoipController {
-                 if (handleNoCalls(obj, voiceService)) {
-                     return false
-                 }
--
-+//
-+//                if (obj.callState == Voip.CallState.NONE) {
-+//                    return true
-+//                }
-                 obj.getPeerJid()?.run {
--                    if (canConnectCall("+$user")) {
-+                    LogUtil.d("callState " + obj.callState)
-+                    if (canConnectCall("+$user") || obj.callState == Voip.CallState.NONE) {
-                         val retVal = voiceService?.mod_handler_callback?.run {
-                             mod_version_handleMessage(message)
-                         } ?: false
-@@ -114,6 +119,8 @@ class VoipController {
-                 else -> {
-                     true
-                 }
-+            }.also {
-+                LogUtil.d("Coocoo1", it)
-             }
-         }
- 
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/CallEventHandlerDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/CallEventHandlerDelegate.java
 index a879b1876..ac0d2eb60 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/CallEventHandlerDelegate.java
