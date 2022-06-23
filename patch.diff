@@ -69,10 +69,10 @@ index b0c4fbe38..57d0f7900 100644
      @SmaliInject
 diff --git a/whatsapp_modify_module/smali/X/1Da.1.smali b/whatsapp_modify_module/smali/X/1Da.1.smali
 new file mode 100644
-index 000000000..cdbfc1f72
+index 000000000..401a650c0
 --- /dev/null
 +++ b/whatsapp_modify_module/smali/X/1Da.1.smali
-@@ -0,0 +1,2598 @@
+@@ -0,0 +1,2602 @@
 +.class public LX/1Da;
 +.super LX/0n7;
 +.source ""
@@ -1832,6 +1832,10 @@ index 000000000..cdbfc1f72
 +
 +    :goto_10
 +    const/4 v10, 0x0
++
++#coocoo
++    invoke-static {v2}, Lcom/coocoo/coocoo/Coocoo;->traceLog7(Ljava/lang/CharSequence;)V
++#coocoo
 +
 +    .line 218766
 +    invoke-virtual {v4, v2, v1, v10, v10}, Lcom/coocoowhatsapp/TextEmojiLabel;->A08(Ljava/lang/CharSequence;Ljava/util/List;IZ)V
