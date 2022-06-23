@@ -93,10 +93,10 @@ index b0c4fbe38..b43dd0c74 100644
      @SmaliInject
 diff --git a/whatsapp_modify_module/smali/X/1Da.1.smali b/whatsapp_modify_module/smali/X/1Da.1.smali
 new file mode 100644
-index 000000000..26905fa8c
+index 000000000..a2ab903b4
 --- /dev/null
 +++ b/whatsapp_modify_module/smali/X/1Da.1.smali
-@@ -0,0 +1,2616 @@
+@@ -0,0 +1,2619 @@
 +.class public LX/1Da;
 +.super LX/0n7;
 +.source ""
@@ -551,7 +551,7 @@ index 000000000..26905fa8c
 +    .line 218560
 +    :goto_0
 +#coocoo
-+    invoke-static {v13, v14}, Lcom/coocoo/whatsappdelegate/ContactPickerFragmentDelegate;->setContactPickerRowStatus(Landroid/view/View;LX/0iL;)V
++    #invoke-static {v13, v14}, Lcom/coocoo/whatsappdelegate/ContactPickerFragmentDelegate;->setContactPickerRowStatus(Landroid/view/View;LX/0iL;)V
 +#coocoo
 +    const/4 v3, 0x0
 +
@@ -684,6 +684,9 @@ index 000000000..26905fa8c
 +    :goto_1
 +    invoke-static {v13, v2}, LX/01r;->A0W(Landroid/view/View;LX/0VY;)V
 +
++#coocoo
++    invoke-static {v13, v14}, Lcom/coocoo/whatsappdelegate/ContactPickerFragmentDelegate;->setContactPickerRowStatus(Landroid/view/View;LX/0iL;)V
++#coocoo
 +    return-object v13
 +
 +    .line 218588
