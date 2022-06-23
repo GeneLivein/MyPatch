@@ -97,7 +97,7 @@ index a879b1876..ac0d2eb60 100644
      }
  }
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-index 7cf765c7e..ef0b2af16 100644
+index 7cf765c7e..50eba53c9 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 @@ -8,6 +8,7 @@ import android.os.Parcelable;
@@ -157,15 +157,15 @@ index 7cf765c7e..ef0b2af16 100644
 +                LogUtil.d(TAG, "c12Ot.A0I: " + c12Ot.A0I + " c12Ot.A0B: " + c12Ot.A0B + " c12Ot.user: " + c12Ot.A0B.user);
 +            }
 +        }
-+        if (myMessage != null) {
-+            myMessage.A0I = "My message";
-+            existingFilteredList.add(1, new cc_25m(myMessage));
-+        }
-+        try {
-+            throw new Exception("Coocoo1");
-+        } catch (Exception e) {
-+            e.printStackTrace();
-+        }
++//        if (myMessage != null) {
++//            myMessage.A0I = "My message";
++//            existingFilteredList.add(1, new cc_25m(myMessage));
++//        }
++//        try {
++//            throw new Exception("Coocoo1");
++//        } catch (Exception e) {
++//            e.printStackTrace();
++//        }
      }
  
      @SmaliInject
