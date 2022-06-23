@@ -45,7 +45,7 @@ index 77bd78c7b..67ef80950 100644
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-index b0c4fbe38..423fa8d8c 100644
+index b0c4fbe38..57d0f7900 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 @@ -77,6 +77,8 @@ public class ContactPickerFragmentDelegate {
@@ -57,12 +57,13 @@ index b0c4fbe38..423fa8d8c 100644
          Iterator iterator = existingFilteredList.iterator();
          while (iterator.hasNext()) {
              cc_0iL cc0iL = (cc_0iL) iterator.next();
-@@ -85,6 +87,8 @@ public class ContactPickerFragmentDelegate {
+@@ -85,6 +87,9 @@ public class ContactPickerFragmentDelegate {
                  iterator.remove();
              }
          }
-+
-+        existingFilteredList.add(1, new cc_25m(new c1_2Ot(ProfileManager.getSelfJid())));
++        c1_2Ot c12Ot = new c1_2Ot(ProfileManager.getSelfJid());
++        c12Ot.A0I = "My message";
++        existingFilteredList.add(1, new cc_25m(c12Ot));
      }
  
      @SmaliInject
