@@ -44,11 +44,39 @@ index 77bd78c7b..67ef80950 100644
      public static void traceLogCodeStack() {
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
+diff --git a/app/src/main/java/com/coocoo/utils/Constants.kt b/app/src/main/java/com/coocoo/utils/Constants.kt
+index c1d29e7a0..912cdbb61 100644
+--- a/app/src/main/java/com/coocoo/utils/Constants.kt
++++ b/app/src/main/java/com/coocoo/utils/Constants.kt
+@@ -725,6 +725,8 @@ object Constants {
+             // My Message
+             const val MY_MESSAGE_DIALOG_TITLE = "cc_my_message_dialog_title"
+             const val MY_MESSAGE_DIALOG_MESSAGE = "cc_my_message_dialog_message"
++            const val MY_MESSAGE_CONTACT_PICKER_NAME = "cc_my_message_contactpicker_name"
++            const val MY_MESSAGE_CONTACT_PICKER_STATUS = "cc_my_message_contactpicker_status"
+         }
+ 
+         object Style {
+@@ -1103,6 +1105,7 @@ object Constants {
+ 
+             // My Message
+             const val IV_MY_MESSAGE = "cc_iv_my_message"
++            const val TV_MY_MESSAGE_ROW_STATUS = "contactpicker_row_status"
+         }
+     }
+ }
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-index b0c4fbe38..b43dd0c74 100644
+index b0c4fbe38..977d6130a 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-@@ -4,6 +4,8 @@ package com.coocoo.whatsappdelegate;
+@@ -1,9 +1,15 @@
+ package com.coocoo.whatsappdelegate;
+ 
+ 
++import static com.coocoo.utils.Constants.Res.Id.TV_MY_MESSAGE_ROW_STATUS;
++import static com.coocoo.utils.Constants.Res.String.MY_MESSAGE_CONTACT_PICKER_NAME;
++import static com.coocoo.utils.Constants.Res.String.MY_MESSAGE_CONTACT_PICKER_STATUS;
++
  import android.content.Intent;
  import android.os.Bundle;
  import android.os.Parcelable;
@@ -57,7 +85,7 @@ index b0c4fbe38..b43dd0c74 100644
  
  import androidx.annotation.Nullable;
  
-@@ -77,6 +79,8 @@ public class ContactPickerFragmentDelegate {
+@@ -77,6 +83,8 @@ public class ContactPickerFragmentDelegate {
                  existingFilteredList.addAll(list2bn);
              }
          }
@@ -66,31 +94,38 @@ index b0c4fbe38..b43dd0c74 100644
          Iterator iterator = existingFilteredList.iterator();
          while (iterator.hasNext()) {
              cc_0iL cc0iL = (cc_0iL) iterator.next();
-@@ -85,6 +89,24 @@ public class ContactPickerFragmentDelegate {
+@@ -85,6 +93,20 @@ public class ContactPickerFragmentDelegate {
                  iterator.remove();
              }
          }
++
 +        c1_2Ot c12Ot = new c1_2Ot(ProfileManager.getSelfJid());
-+        c12Ot.A0I = "My message";
++        c12Ot.A0I = ResMgr.getString(MY_MESSAGE_CONTACT_PICKER_NAME);
 +        existingFilteredList.add(1, new cc_25m(c12Ot));
 +    }
 +
 +    @SmaliInject
 +    public static void setContactPickerRowStatus(View view, cc_0iL cc0iL) {
 +        c1_2Ot c12Ot = cc0iL.A8Y();
-+        if (c12Ot != null && "My message".equals(c12Ot.A0I)) {
-+            LogUtil.d("Forward to myself");
-+            TextView tv = view.findViewById(ResMgr.getId("contactpicker_row_status"));
-+            tv.setText("Forward to myself");
-+        } else {
-+            if (c12Ot != null) {
-+                LogUtil.d("A0I " + c12Ot.A0I);
-+            }
-+            LogUtil.d("else " + c12Ot);
++        String myMessage = ResMgr.getString(MY_MESSAGE_CONTACT_PICKER_NAME);
++        if (c12Ot != null && myMessage.equals(c12Ot.A0I)) {
++            TextView tv = view.findViewById(ResMgr.getId(TV_MY_MESSAGE_ROW_STATUS));
++            tv.setText(ResMgr.getString(MY_MESSAGE_CONTACT_PICKER_STATUS));
 +        }
      }
  
      @SmaliInject
+diff --git a/app/src/main/res/values/cc_strings.xml b/app/src/main/res/values/cc_strings.xml
+index eab7d80fa..f6460f295 100644
+--- a/app/src/main/res/values/cc_strings.xml
++++ b/app/src/main/res/values/cc_strings.xml
+@@ -1326,4 +1326,6 @@ Our official Website: http://heymods.com"</string>
+     <string name="cc_menu_my_message">My Message</string>
+     <string name="cc_my_message_dialog_title">My Message</string>
+     <string name="cc_my_message_dialog_message">Send any messages, photos, videos and links you want to forward to yourself. Try this feature now!🎉</string>
++    <string name="cc_my_message_contactpicker_name">My Message</string>
++    <string name="cc_my_message_contactpicker_status">Forward to myself</string>
+ </resources>
 diff --git a/whatsapp_modify_module/smali/X/1Da.1.smali b/whatsapp_modify_module/smali/X/1Da.1.smali
 new file mode 100644
 index 000000000..7261b5b2d
