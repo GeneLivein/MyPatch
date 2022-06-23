@@ -45,7 +45,7 @@ index 77bd78c7b..67ef80950 100644
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-index b0c4fbe38..ab1921955 100644
+index b0c4fbe38..b43dd0c74 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 @@ -4,6 +4,8 @@ package com.coocoo.whatsappdelegate;
@@ -66,7 +66,7 @@ index b0c4fbe38..ab1921955 100644
          Iterator iterator = existingFilteredList.iterator();
          while (iterator.hasNext()) {
              cc_0iL cc0iL = (cc_0iL) iterator.next();
-@@ -85,6 +89,25 @@ public class ContactPickerFragmentDelegate {
+@@ -85,6 +89,24 @@ public class ContactPickerFragmentDelegate {
                  iterator.remove();
              }
          }
@@ -77,7 +77,6 @@ index b0c4fbe38..ab1921955 100644
 +
 +    @SmaliInject
 +    public static void setContactPickerRowStatus(View view, cc_0iL cc0iL) {
-+        LogUtil.d("setContactPickerRowStatus");
 +        c1_2Ot c12Ot = cc0iL.A8Y();
 +        if (c12Ot != null && "My message".equals(c12Ot.A0I)) {
 +            LogUtil.d("Forward to myself");
@@ -94,7 +93,7 @@ index b0c4fbe38..ab1921955 100644
      @SmaliInject
 diff --git a/whatsapp_modify_module/smali/X/1Da.1.smali b/whatsapp_modify_module/smali/X/1Da.1.smali
 new file mode 100644
-index 000000000..b5de6f817
+index 000000000..03c340efc
 --- /dev/null
 +++ b/whatsapp_modify_module/smali/X/1Da.1.smali
 @@ -0,0 +1,2616 @@
@@ -1886,7 +1885,7 @@ index 000000000..b5de6f817
 +    .line 218769
 +    move-object/from16 v1, v18
 +
-+    invoke-virtual {v4, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
++    #invoke-virtual {v4, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
 +
 +    .line 218770
 +    iget-object v12, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A1Z:LX/2OU;
