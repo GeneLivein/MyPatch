@@ -50,7 +50,7 @@ index 77bd78c7b..c86b220fd 100644
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-index 977d6130a..90c15cdd4 100644
+index 977d6130a..5e5f0c877 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 @@ -9,6 +9,7 @@ import android.content.Intent;
@@ -65,7 +65,7 @@ index 977d6130a..90c15cdd4 100644
          String myMessage = ResMgr.getString(MY_MESSAGE_CONTACT_PICKER_NAME);
          if (c12Ot != null && myMessage.equals(c12Ot.A0I)) {
              TextView tv = view.findViewById(ResMgr.getId(TV_MY_MESSAGE_ROW_STATUS));
-+            ImageView iv = view.findViewById(ResMgr.getId("contactpicker_row_photo"));
++            ImageView iv = view.findViewById(ResMgr.getId("contactpicker_row_ephemeral_status"));
              tv.setText(ResMgr.getString(MY_MESSAGE_CONTACT_PICKER_STATUS));
 +            iv.setImageResource(ResMgr.getDrawableId("cc_ic_avarta_mymessage_contactpicker"));
          }
