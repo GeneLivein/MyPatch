@@ -1,5 +1,5 @@
 diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-index 77bd78c7b..67ef80950 100644
+index 77bd78c7b..c86b220fd 100644
 --- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 +++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 @@ -116,6 +116,7 @@ import javax.crypto.SecretKey;
@@ -22,7 +22,7 @@ index 77bd78c7b..67ef80950 100644
          Log.e(TAG, "-----------------4---------------- // object : " + object);
      }
  
-@@ -656,6 +661,21 @@ public class Coocoo {
+@@ -656,6 +661,26 @@ public class Coocoo {
          Log.e(TAG, "-----------------5---------------- // value : " + value);
      }
  
@@ -34,6 +34,11 @@ index 77bd78c7b..67ef80950 100644
 +    // invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog7(Ljava/lang/CharSequence;)V
 +    public static void traceLog7(CharSequence value) {
 +        Log.e(TAG, "-----------------7---------------- // value : " + value);
++    }
++
++    // invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog8(Ljava/util/ArrayList;)V
++    public static void traceLog8(ArrayList value) {
++        Log.e(TAG, "-----------------8---------------- // value : " + value);
 +    }
 +
 +    // invoke-static {}, Lcom/coocoo/coocoo/Coocoo;->stackTrace()V
@@ -79,3 +84,18 @@ index 2b8c43fa2..c058420b6 100644
 +        LogUtil.d("resolveIntent:" + data);
 +    }
  }
+diff --git a/whatsapp_modify_module/smali/X/1Fe.1.smali b/whatsapp_modify_module/smali/X/1Fe.1.smali
+index 37372812c..bbfc3eb23 100644
+--- a/whatsapp_modify_module/smali/X/1Fe.1.smali
++++ b/whatsapp_modify_module/smali/X/1Fe.1.smali
+@@ -90,7 +90,9 @@
+     invoke-static {v0}, LX/2Ov;->A07(Ljava/util/Collection;)Ljava/util/ArrayList;
+ 
+     move-result-object v1
+-
++#coocoo
++    invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog8(Ljava/util/ArrayList;)V
++#coocoo
+     const-string v0, "jids"
+ 
+     .line 220968
