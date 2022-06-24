@@ -170,7 +170,7 @@ index 2d387b461..a59bab31c 100644
 +    }
  }
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
-index a42ff3bbe..bf0b57659 100644
+index a42ff3bbe..b55511eab 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
 @@ -1,17 +1,34 @@
@@ -223,7 +223,7 @@ index a42ff3bbe..bf0b57659 100644
 +            LogUtil.d(c12Ot.A0I)
 +            if (c12Ot.A0I == ResMgr.getString(MY_MESSAGE_CONTACT_PICKER_NAME)) {
 +                val repo = Coocoo.getRepoContainer().myMessageRepo
-+                if (repo.hasMyMessage()) {
++                if (!repo.hasMyMessage()) {
 +                    showMyMessageDialog(cc1Fe, view)
 +                    return true
 +                }
