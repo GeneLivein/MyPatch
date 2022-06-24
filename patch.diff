@@ -1,18 +1,3 @@
-diff --git a/app/src/main/java/X/cc_1Fe.java b/app/src/main/java/X/cc_1Fe.java
-new file mode 100644
-index 000000000..0aba2aa16
---- /dev/null
-+++ b/app/src/main/java/X/cc_1Fe.java
-@@ -0,0 +1,9 @@
-+package X;
-+
-+import android.view.View;
-+
-+public class cc_1Fe {
-+    public void A0F(View view) {
-+
-+    }
-+}
 diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 index 77bd78c7b..0752e5ab9 100644
 --- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
@@ -69,161 +54,18 @@ index 77bd78c7b..0752e5ab9 100644
      public static void traceLogCodeStack() {
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
-diff --git a/app/src/main/java/com/coocoo/statuses/feed/fragment/StatusHeaderViewHolder.kt b/app/src/main/java/com/coocoo/statuses/feed/fragment/StatusHeaderViewHolder.kt
-index 8513cd92b..518416d3d 100644
---- a/app/src/main/java/com/coocoo/statuses/feed/fragment/StatusHeaderViewHolder.kt
-+++ b/app/src/main/java/com/coocoo/statuses/feed/fragment/StatusHeaderViewHolder.kt
-@@ -32,8 +32,8 @@ import com.coocoo.utils.Constants.Res.String.SENDING_MESSAGES
- import com.coocoo.utils.Constants.Res.String.STATUS_FEED_FAILED_TO_SHARE
- import com.coocoo.utils.Constants.Res.String.STATUS_FEED_SENDING_MESSAGE_AND_UPDATE_STATUS
- import com.coocoo.utils.PrivacyUtils.Companion.POSTFIX_STATUS_BROADCAST_MSG
--import com.coocoo.whatsappdelegate.ContactPickerSendBtnDelegate.BUNDLE_KEY_STATUS_FEED_FAV_ID
--import com.coocoo.whatsappdelegate.ContactPickerSendBtnDelegate.BUNDLE_KEY_STATUS_FEED_ID
-+import com.coocoo.whatsappdelegate.ContactPickerSendBtnDelegate.Companion.BUNDLE_KEY_STATUS_FEED_FAV_ID
-+import com.coocoo.whatsappdelegate.ContactPickerSendBtnDelegate.Companion.BUNDLE_KEY_STATUS_FEED_ID
- import com.coocoowhatsapp.Conversation
+diff --git a/whatsapp_modify_module/smali/X/0HQ.smali b/whatsapp_modify_module/smali/X/0HQ.smali
+index 12bcbbc88..bbf2768db 100644
+--- a/whatsapp_modify_module/smali/X/0HQ.smali
++++ b/whatsapp_modify_module/smali/X/0HQ.smali
+@@ -706,6 +706,10 @@
  
- class StatusHeaderViewHolder(
-diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
-index a42ff3bbe..ceae975f1 100644
---- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
-+++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
-@@ -1,17 +1,33 @@
- package com.coocoo.whatsappdelegate
- 
-+import X.c1_2Ot
-+import X.cc_1Fe
-+import android.view.View
- import com.coocoo.annotation.SmaliInject
-+import com.coocoo.coocoo.Coocoo
- import com.coocoo.report.Report
-+import com.coocoo.utils.Constants.Res.String.MY_MESSAGE_CONTACT_PICKER_NAME
-+import com.coocoo.utils.Constants.Res.String.MY_MESSAGE_DIALOG_MESSAGE
-+import com.coocoo.utils.Constants.Res.String.MY_MESSAGE_DIALOG_TITLE
-+import com.coocoo.utils.Constants.Res.String.OK
-+import com.coocoo.utils.DialogUtils.showDialogSafely
-+import com.coocoo.utils.LogUtil
-+import com.coocoo.utils.ResMgr
-+import com.coocoo.widget.MyMessageDialog
- import com.coocoowhatsapp.contact.picker.ContactPickerFragment
- 
--object ContactPickerSendBtnDelegate {
-+class ContactPickerSendBtnDelegate(val fragment: ContactPickerFragment) {
-+    companion object {
-+        const val BUNDLE_KEY_STATUS_FEED_ID = "bundle_key_status_feed_id"
-+        const val BUNDLE_KEY_STATUS_FEED_FAV_ID = "bundle_key_status_feed_fav_id"
-+    }
- 
--    const val BUNDLE_KEY_STATUS_FEED_ID = "bundle_key_status_feed_id"
--    const val BUNDLE_KEY_STATUS_FEED_FAV_ID = "bundle_key_status_feed_fav_id"
-+    private var myMessageDialog: MyMessageDialog? = null
-+    private var isHandled: Boolean = false
- 
-     @SmaliInject
--    @JvmStatic
--    fun onSendBtnClick(fragment: ContactPickerFragment) {
-+    fun onSendBtnClick(cc1Fe: cc_1Fe, view: View): Boolean {
-+        if (isHandled) return false
-         fragment.A09()?.intent?.getStringExtra(BUNDLE_KEY_STATUS_FEED_ID)?.let { statusId ->
-             if (statusId.isNotEmpty()) {
-                 Report.reportStatusFeedPlaybackShareDone(statusId)
-@@ -22,5 +38,52 @@ object ContactPickerSendBtnDelegate {
-                 Report.reportFavoriteStatusFeedPlaybackShareDone(statusId)
-             }
-         }
-+
-+        for (value in fragment.A2Q.values) {
-+            val c12Ot = value as c1_2Ot
-+            LogUtil.d(c12Ot.A0I)
-+            if (c12Ot.A0I == ResMgr.getString(MY_MESSAGE_CONTACT_PICKER_NAME)) {
-+                val repo = Coocoo.getRepoContainer().myMessageRepo
-+                if (!repo.hasMyMessage()) {
-+                    showMyMessageDialog(cc1Fe, view)
-+                    return true
-+                }
-+            }
-+        }
-+        return false
-+    }
-+
-+    private fun showMyMessageDialog(cc1Fe: cc_1Fe, view: View) {
-+        myMessageDialog?.dismiss()
-+        val title = ResMgr.getString(MY_MESSAGE_DIALOG_TITLE)
-+        val message = ResMgr.getString(MY_MESSAGE_DIALOG_MESSAGE)
-+        val btn = ResMgr.getString(OK)
-+        myMessageDialog = MyMessageDialog(
-+            fragment.A0A(),
-+            title,
-+            message,
-+            btn,
-+            {
-+                isHandled = true
-+                cc1Fe.A0F(view)
-+                Report.reportMyMessageDialogOK(true)
-+            },
-+            true,
-+            true
-+        ).apply {
-+            setOnCancelListener {
-+                val iterator = fragment.A2Q.values.iterator()
-+                while (iterator.hasNext()) {
-+                    val c12Ot = iterator.next() as c1_2Ot
-+                    if (c12Ot.A0I == ResMgr.getString(MY_MESSAGE_CONTACT_PICKER_NAME)) {
-+                        iterator.remove()
-+                    }
-+                }
-+                isHandled = true
-+                cc1Fe.A0F(view)
-+            }
-+        }
-+
-+        showDialogSafely(fragment.A0A(), myMessageDialog)
-     }
- }
-\ No newline at end of file
-diff --git a/whatsapp_modify_module/smali/X/1Fe.1.smali b/whatsapp_modify_module/smali/X/1Fe.1.smali
-index 37372812c..b34f2c23f 100644
---- a/whatsapp_modify_module/smali/X/1Fe.1.smali
-+++ b/whatsapp_modify_module/smali/X/1Fe.1.smali
-@@ -6,14 +6,25 @@
- # instance fields
- .field public final synthetic A00:Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;
- 
+ .method public A07(Landroid/widget/ImageView;LX/2Ot;Z)V
+     .locals 4
 +#coocoo
-+.field public final delegate:Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;
-+#coocoo
-+
- 
- # direct methods
- .method public constructor <init>(Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;)V
--    .locals 0
-+#coocoo
-+    #.locals 0
-+    .locals 1
++    const-string v0, "0HQ.A07"
++    invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
 +#coocoo
  
-     .line 220958
-     iput-object p1, p0, LX/1Fe;->A00:Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;
--
-+#coocoo
-+    new-instance v0, Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;
-+    invoke-direct {v0, p1}, Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;-><init>(Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;)V
-+    iput-object v0, p0, LX/1Fe;->delegate:Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;
-+#coocoo
-     invoke-direct {p0}, LX/35W;-><init>()V
- 
-     return-void
-@@ -27,7 +38,12 @@
-     .line 220959
-     iget-object v4, p0, LX/1Fe;->A00:Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;
- #coocoo
--    invoke-static {v4}, Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;->onSendBtnClick(Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;)V
-+    iget-object v0, p0, LX/1Fe;->delegate:Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;
-+    invoke-virtual {v0, p0, p1}, Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;->onSendBtnClick(LX/1Fe;Landroid/view/View;)Z
-+    move-result v0
-+    if-eqz v0, :cond_conitnue
-+    return-void
-+    :cond_conitnue
- #coocoo
- 
- #coocoo
+     .line 84712
+     iget-object v0, p0, LX/0HQ;->A07:LX/06l;
