@@ -242,7 +242,7 @@ index 2b8c43fa2..c058420b6 100644
 +    }
  }
 diff --git a/whatsapp_modify_module/smali/X/1Fe.1.smali b/whatsapp_modify_module/smali/X/1Fe.1.smali
-index 37372812c..f47069fe3 100644
+index 37372812c..9145c872d 100644
 --- a/whatsapp_modify_module/smali/X/1Fe.1.smali
 +++ b/whatsapp_modify_module/smali/X/1Fe.1.smali
 @@ -6,6 +6,10 @@
@@ -262,9 +262,9 @@ index 37372812c..f47069fe3 100644
      iput-object p1, p0, LX/1Fe;->A00:Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;
 -
 +#coocoo
-+    new-instance v0, Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;
-+    invoke-direct {v0, p1}, Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;-><init>(Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;)V
-+    iput-object v0, p0, LX/1Fe;->delegate:Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;
++    #new-instance v0, Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;
++    #invoke-direct {v0, p1}, Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;-><init>(Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;)V
++    #iput-object v0, p0, LX/1Fe;->delegate:Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;
 +#coocoo
      invoke-direct {p0}, LX/35W;-><init>()V
  
@@ -274,8 +274,8 @@ index 37372812c..f47069fe3 100644
      iget-object v4, p0, LX/1Fe;->A00:Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;
  #coocoo
 -    invoke-static {v4}, Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;->onSendBtnClick(Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;)V
-+    iget-object v0, p0, LX/1Fe;->delegate:Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;
-+    invoke-virtual {v0}, Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;->onSendBtnClick()V
++    #iget-object v0, p0, LX/1Fe;->delegate:Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;
++    #invoke-virtual {v0}, Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;->onSendBtnClick()V
  #coocoo
  
  #coocoo
