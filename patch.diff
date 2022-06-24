@@ -170,7 +170,7 @@ index 2d387b461..a59bab31c 100644
 +    }
  }
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
-index a42ff3bbe..c91e06962 100644
+index a42ff3bbe..3ab854969 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
 @@ -1,17 +1,34 @@
@@ -193,7 +193,7 @@ index a42ff3bbe..c91e06962 100644
  import com.coocoowhatsapp.contact.picker.ContactPickerFragment
  
 -object ContactPickerSendBtnDelegate {
-+class ContactPickerSendBtnDelegate(private val cc1Fe: cc_1Fe, val fragment: ContactPickerFragment) {
++class ContactPickerSendBtnDelegate(val fragment: ContactPickerFragment) {
 +    companion object {
 +        const val BUNDLE_KEY_STATUS_FEED_ID = "bundle_key_status_feed_id"
 +        const val BUNDLE_KEY_STATUS_FEED_FAV_ID = "bundle_key_status_feed_fav_id"
@@ -207,7 +207,7 @@ index a42ff3bbe..c91e06962 100644
      @SmaliInject
 -    @JvmStatic
 -    fun onSendBtnClick(fragment: ContactPickerFragment) {
-+    fun onSendBtnClick(view: View): Boolean {
++    fun onSendBtnClick(cc1Fe: cc_1Fe, view: View): Boolean {
 +        if (isHandled) return false
 +        LogUtil.d("onSendBtnClick")
          fragment.A09()?.intent?.getStringExtra(BUNDLE_KEY_STATUS_FEED_ID)?.let { statusId ->
@@ -224,7 +224,7 @@ index a42ff3bbe..c91e06962 100644
 +            if (c12Ot.A0I == ResMgr.getString(MY_MESSAGE_CONTACT_PICKER_NAME)) {
 +                val repo = Coocoo.getRepoContainer().myMessageRepo
 +                if (repo.hasMyMessage()) {
-+                    showMyMessageDialog(view)
++                    showMyMessageDialog(cc1Fe, view)
 +                    return true
 +                }
 +            }
@@ -232,7 +232,7 @@ index a42ff3bbe..c91e06962 100644
 +        return false
 +    }
 +
-+    private fun showMyMessageDialog(view: View) {
++    private fun showMyMessageDialog(cc1Fe: cc_1Fe, view: View) {
 +        myMessageDialog?.dismiss()
 +        val title = ResMgr.getString(MY_MESSAGE_DIALOG_TITLE)
 +        val message = ResMgr.getString(MY_MESSAGE_DIALOG_MESSAGE)
@@ -284,7 +284,7 @@ index 631347fc1..379d88413 100644
      if-eqz v1, :cond_8
  
 diff --git a/whatsapp_modify_module/smali/X/1Fe.1.smali b/whatsapp_modify_module/smali/X/1Fe.1.smali
-index 37372812c..503ed6bea 100644
+index 37372812c..dd424ba48 100644
 --- a/whatsapp_modify_module/smali/X/1Fe.1.smali
 +++ b/whatsapp_modify_module/smali/X/1Fe.1.smali
 @@ -6,14 +6,25 @@
@@ -309,7 +309,7 @@ index 37372812c..503ed6bea 100644
 -
 +#coocoo
 +    new-instance v0, Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;
-+    invoke-direct {v0, p0, p1}, Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;-><init>(LX/1Fe;Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;)V
++    invoke-direct {v0, p1}, Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;-><init>(Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;)V
 +    iput-object v0, p0, LX/1Fe;->delegate:Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;
 +#coocoo
      invoke-direct {p0}, LX/35W;-><init>()V
@@ -321,7 +321,7 @@ index 37372812c..503ed6bea 100644
  #coocoo
 -    invoke-static {v4}, Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;->onSendBtnClick(Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;)V
 +    iget-object v0, p0, LX/1Fe;->delegate:Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;
-+    invoke-virtual {v0, p1}, Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;->onSendBtnClick(Landroid/view/View;)Z
++    invoke-virtual {v0, p0, p1}, Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;->onSendBtnClick(LX/1Fe;Landroid/view/View;)Z
 +    move-result v0
 +    if-eqz v0, :cond_conitnue
 +    return-void
