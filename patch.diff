@@ -150,7 +150,7 @@ index 2d387b461..a59bab31c 100644
 +    }
  }
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
-index a42ff3bbe..782c7232b 100644
+index a42ff3bbe..de8e9fa98 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
 @@ -1,17 +1,30 @@
@@ -171,7 +171,7 @@ index a42ff3bbe..782c7232b 100644
  import com.coocoowhatsapp.contact.picker.ContactPickerFragment
  
 -object ContactPickerSendBtnDelegate {
-+class ContactPickerSendBtnDelegate(private val fragment: ContactPickerFragment) {
++class ContactPickerSendBtnDelegate constructor(private val fragment: ContactPickerFragment) {
 +    companion object {
 +        const val BUNDLE_KEY_STATUS_FEED_ID = "bundle_key_status_feed_id"
 +        const val BUNDLE_KEY_STATUS_FEED_FAV_ID = "bundle_key_status_feed_fav_id"
@@ -242,7 +242,7 @@ index 2b8c43fa2..c058420b6 100644
 +    }
  }
 diff --git a/whatsapp_modify_module/smali/X/1Fe.1.smali b/whatsapp_modify_module/smali/X/1Fe.1.smali
-index 37372812c..ad50670ec 100644
+index 37372812c..f47069fe3 100644
 --- a/whatsapp_modify_module/smali/X/1Fe.1.smali
 +++ b/whatsapp_modify_module/smali/X/1Fe.1.smali
 @@ -6,6 +6,10 @@
@@ -250,25 +250,26 @@ index 37372812c..ad50670ec 100644
  .field public final synthetic A00:Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;
  
 +#coocoo
-+.field public final synthetic delegate:Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;
++.field public final delegate:Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;
 +#coocoo
 +
  
  # direct methods
  .method public constructor <init>(Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;)V
-@@ -15,6 +19,11 @@
-     iput-object p1, p0, LX/1Fe;->A00:Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;
+@@ -13,7 +17,11 @@
  
-     invoke-direct {p0}, LX/35W;-><init>()V
+     .line 220958
+     iput-object p1, p0, LX/1Fe;->A00:Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;
+-
 +#coocoo
 +    new-instance v0, Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;
 +    invoke-direct {v0, p1}, Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;-><init>(Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;)V
 +    iput-object v0, p0, LX/1Fe;->delegate:Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;
 +#coocoo
+     invoke-direct {p0}, LX/35W;-><init>()V
  
      return-void
- .end method
-@@ -27,7 +36,8 @@
+@@ -27,7 +35,8 @@
      .line 220959
      iget-object v4, p0, LX/1Fe;->A00:Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;
  #coocoo
@@ -278,7 +279,7 @@ index 37372812c..ad50670ec 100644
  #coocoo
  
  #coocoo
-@@ -90,7 +100,9 @@
+@@ -90,7 +99,9 @@
      invoke-static {v0}, LX/2Ov;->A07(Ljava/util/Collection;)Ljava/util/ArrayList;
  
      move-result-object v1
