@@ -69,3 +69,16 @@ index 12bcbbc88..bbf2768db 100644
  
      .line 84712
      iget-object v0, p0, LX/0HQ;->A07:LX/06l;
+diff --git a/whatsapp_modify_module/smali/X/1Da.1.smali b/whatsapp_modify_module/smali/X/1Da.1.smali
+index 631347fc1..2d8d72d08 100644
+--- a/whatsapp_modify_module/smali/X/1Da.1.smali
++++ b/whatsapp_modify_module/smali/X/1Da.1.smali
+@@ -900,7 +900,7 @@
+     .line 218642
+     const/4 v1, 0x0
+ 
+-    invoke-virtual {v14, v6, v7, v1}, LX/0HQ;->A07(Landroid/widget/ImageView;LX/2Ot;Z)V
++    #invoke-virtual {v14, v6, v7, v1}, LX/0HQ;->A07(Landroid/widget/ImageView;LX/2Ot;Z)V
+ 
+     .line 218643
+     :cond_a
