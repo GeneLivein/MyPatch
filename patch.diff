@@ -198,7 +198,7 @@ index 37372812c..bbfc3eb23 100644
  
      .line 220968
 diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
-index 53ec77c53..6697bc2db 100644
+index 53ec77c53..b6496f4b1 100644
 --- a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
 +++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
 @@ -314,6 +314,10 @@
@@ -218,7 +218,7 @@ index 53ec77c53..6697bc2db 100644
  
 +#coocoo
 +    new-instance v0, Lcom/coocoo/whatsappdelegate/ContactPickerFragmentDelegate;
-+    invoke-direct {v0}, Lcom/coocoo/whatsappdelegate/ContactPickerFragmentDelegate;-><init>(Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;)V
++    invoke-direct {v0, p0}, Lcom/coocoo/whatsappdelegate/ContactPickerFragmentDelegate;-><init>(Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;)V
 +    iput-object v0, p0, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->delegate:Lcom/coocoo/whatsappdelegate/ContactPickerFragmentDelegate;
 +#coocoo
 +
