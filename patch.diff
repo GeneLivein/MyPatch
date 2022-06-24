@@ -55,10 +55,18 @@ index 77bd78c7b..0752e5ab9 100644
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-index 9e41c9f92..89a820b77 100644
+index 9e41c9f92..0ea67aade 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-@@ -156,4 +156,9 @@ public class ContactPickerFragmentDelegate {
+@@ -111,6 +111,7 @@ public class ContactPickerFragmentDelegate {
+         if (c12Ot != null && myMessage.equals(c12Ot.A0I)) {
+             TextView tv = view.findViewById(ResMgr.getId(TV_MY_MESSAGE_ROW_STATUS));
+             ImageView iv = view.findViewById(ResMgr.getId(IV_MY_MESSAGE_ROW_PHOTO));
++            iv.setTag(myMessage);
+             tv.setText(ResMgr.getString(MY_MESSAGE_CONTACT_PICKER_STATUS));
+             iv.setImageResource(ResMgr.getDrawableId(MY_MESSAGE_CONTACTPICKER_AVATAR));
+         }
+@@ -156,4 +157,9 @@ public class ContactPickerFragmentDelegate {
          return fragmentBundle.getBoolean(EXTRA_SKIP_CHECK_TEXT);
      }
  
@@ -84,7 +92,7 @@ index 12bcbbc88..bbf2768db 100644
      .line 84712
      iget-object v0, p0, LX/0HQ;->A07:LX/06l;
 diff --git a/whatsapp_modify_module/smali/X/1Da.1.smali b/whatsapp_modify_module/smali/X/1Da.1.smali
-index 631347fc1..408a2a00e 100644
+index 631347fc1..102990bf5 100644
 --- a/whatsapp_modify_module/smali/X/1Da.1.smali
 +++ b/whatsapp_modify_module/smali/X/1Da.1.smali
 @@ -891,7 +891,11 @@
@@ -93,9 +101,9 @@ index 631347fc1..408a2a00e 100644
      invoke-static/range {v25 .. v25}, LX/0AT;->A06(Landroid/widget/TextView;)V
 -
 +#coocoo
-+    invoke-static {v7, v11}, Lcom/coocoo/whatsappdelegate/ContactPickerFragmentDelegate;->isMyMessage(LX/2Ot;Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;)Z
-+    move-result v14
-+    if-nez v14, :cond_a
++    #invoke-static {v7, v11}, Lcom/coocoo/whatsappdelegate/ContactPickerFragmentDelegate;->isMyMessage(LX/2Ot;Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;)Z
++    #move-result v14
++    #if-nez v14, :cond_a
 +#coocoo
      .line 218641
      iget-object v14, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A0f:LX/0HQ;
