@@ -55,56 +55,36 @@ index 77bd78c7b..0752e5ab9 100644
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-index 9e41c9f92..0ea67aade 100644
+index 88b17baa6..b4eefeb33 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-@@ -111,6 +111,7 @@ public class ContactPickerFragmentDelegate {
-         if (c12Ot != null && myMessage.equals(c12Ot.A0I)) {
+@@ -17,6 +17,7 @@ import android.widget.TextView;
+ import androidx.annotation.Nullable;
+ 
+ import com.coocoo.annotation.SmaliInject;
++import com.coocoo.coocoo.Coocoo;
+ import com.coocoo.profile.ProfileManager;
+ import com.coocoo.share.unlock.AbsUnlockManager;
+ import com.coocoo.utils.Constants;
+@@ -108,7 +109,7 @@ public class ContactPickerFragmentDelegate {
+     public static void setContactPickerRowStatus(View view, cc_0iL cc0iL) {
+         c1_2Ot c12Ot = cc0iL.A8Y();
+         String myMessage = ResMgr.getString(MY_MESSAGE_CONTACT_PICKER_NAME);
+-        if (c12Ot != null && myMessage.equals(c12Ot.A0I)) {
++        if (c12Ot != null && Coocoo.getRepoContainer().getMyMessageRepo().isMyMessage(c12Ot.A0B)) {
              TextView tv = view.findViewById(ResMgr.getId(TV_MY_MESSAGE_ROW_STATUS));
              ImageView iv = view.findViewById(ResMgr.getId(IV_MY_MESSAGE_ROW_PHOTO));
-+            iv.setTag(myMessage);
-             tv.setText(ResMgr.getString(MY_MESSAGE_CONTACT_PICKER_STATUS));
-             iv.setImageResource(ResMgr.getDrawableId(MY_MESSAGE_CONTACTPICKER_AVATAR));
-         }
-@@ -156,4 +157,9 @@ public class ContactPickerFragmentDelegate {
-         return fragmentBundle.getBoolean(EXTRA_SKIP_CHECK_TEXT);
-     }
- 
-+    @SmaliInject
-+    public static boolean isMyMessage(c1_2Ot c12Ot, ContactPickerFragment fragment) {
-+        LogUtil.d(fragment.A0A());
-+        return ResMgr.getString(MY_MESSAGE_CONTACT_PICKER_NAME).equals(c12Ot.A0I);
-+    }
- }
-diff --git a/whatsapp_modify_module/smali/X/0HQ.smali b/whatsapp_modify_module/smali/X/0HQ.smali
-index 12bcbbc88..bbf2768db 100644
---- a/whatsapp_modify_module/smali/X/0HQ.smali
-+++ b/whatsapp_modify_module/smali/X/0HQ.smali
-@@ -706,6 +706,10 @@
- 
- .method public A07(Landroid/widget/ImageView;LX/2Ot;Z)V
-     .locals 4
-+#coocoo
-+    const-string v0, "0HQ.A07"
-+    invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog3(Ljava/lang/String;)V
-+#coocoo
- 
-     .line 84712
-     iget-object v0, p0, LX/0HQ;->A07:LX/06l;
-diff --git a/whatsapp_modify_module/smali/X/1Da.1.smali b/whatsapp_modify_module/smali/X/1Da.1.smali
-index 631347fc1..102990bf5 100644
---- a/whatsapp_modify_module/smali/X/1Da.1.smali
-+++ b/whatsapp_modify_module/smali/X/1Da.1.smali
-@@ -891,7 +891,11 @@
-     .line 218640
-     :goto_6
-     invoke-static/range {v25 .. v25}, LX/0AT;->A06(Landroid/widget/TextView;)V
--
-+#coocoo
-+    #invoke-static {v7, v11}, Lcom/coocoo/whatsappdelegate/ContactPickerFragmentDelegate;->isMyMessage(LX/2Ot;Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;)Z
-+    #move-result v14
-+    #if-nez v14, :cond_a
-+#coocoo
-     .line 218641
-     iget-object v14, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A0f:LX/0HQ;
- 
+             iv.setTag(myMessage);
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
+index 00eca8bdb..c022b9895 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
+@@ -75,7 +75,7 @@ class ContactPickerSendBtnDelegate(val fragment: ContactPickerFragment) {
+                 val iterator = fragment.A2Q.values.iterator()
+                 while (iterator.hasNext()) {
+                     val c12Ot = iterator.next() as c1_2Ot
+-                    if (c12Ot.A0I == ResMgr.getString(MY_MESSAGE_CONTACT_PICKER_NAME)) {
++                    if (Coocoo.getRepoContainer().myMessageRepo.isMyMessage(c12Ot.A0B)) {
+                         iterator.remove()
+                     }
+                 }
