@@ -1,90 +1,2731 @@
+diff --git a/app/libs/sublive_modsdk.aar b/app/libs/sublive_modsdk.aar
+index c361142b1..0bfbf6d74 100644
+Binary files a/app/libs/sublive_modsdk.aar and b/app/libs/sublive_modsdk.aar differ
+diff --git a/app/src/main/java/com/coocoo/applets/AppletsHelper.java b/app/src/main/java/com/coocoo/applets/AppletsHelper.java
+index f83af388b..3ba7519e5 100644
+--- a/app/src/main/java/com/coocoo/applets/AppletsHelper.java
++++ b/app/src/main/java/com/coocoo/applets/AppletsHelper.java
+@@ -1,103 +1,44 @@
+ package com.coocoo.applets;
+ 
++import android.content.BroadcastReceiver;
+ import android.content.Context;
++import android.content.Intent;
++import android.content.IntentFilter;
++import android.database.Cursor;
++import android.database.sqlite.SQLiteDatabase;
+ import android.text.TextUtils;
+ 
+-import com.coocoo.applets.remote.AppletsClient;
+-import com.coocoo.applets.remote.AppletsInfo;
+-import com.coocoo.applets.ui.AppletsPageChangeListenerImpl;
+-import com.coocoo.config.BuildConfig;
++import com.coocoo.android.support.v4.content.LocalBroadcastManager;
+ import com.coocoo.conversation.item.AppletsConversationItem;
++import com.coocoo.coocoo.Coocoo;
+ import com.coocoo.coocoosp.SPDelegate;
+ import com.coocoo.firebase.remoteConfig.RemoteConfig;
+ import com.coocoo.manager.ConversationsItemTypeManager;
+-import com.coocoo.utils.LogUtil;
+ import com.coocoo.utils.SystemUtil;
++import com.coocoo.whatsappdelegate.MsgStoreDBHelperDelegate;
+ import com.google.gson.Gson;
+ import com.google.gson.reflect.TypeToken;
+ import com.sublive.mod.LarkSdk;
+-import com.sublive.mod.bean.AppletsLoadingData;
++import com.sublive.mod.applets.bean.AppletsNavData;
+ 
+ import java.util.ArrayList;
+-import java.util.Calendar;
+ 
+ public class AppletsHelper {
+ 
+-    private static AppletsInfo sInfo;
+-
+-    private static final String APPLETS_PUSH_MESSAGE = "applets_push_message";
+-    private static final String APPLETS_PUSH_MESSAGE_VERSION = "applets_push_message_version";
+-    private static final String APPLETS_PUSH_CLICK_TIME = "applets_push_message_click_time";
+-    private static final String APPLETS_PUSH_CONFIG_REQUEST_DAY = "applets_push_request_day";
+-    private static final String APPLETS_PUSH_SHOW_TIME = "applets_push_show_time";
+-    private static final String APPLETS_PUSH_SWITCH = "applets_push_message_switch";
+-
+-    public static AppletsInfo getsInfo() {
+-        return sInfo;
+-    }
+-
+-    public static boolean isAppletsPushMessageSwitch() {
+-        return SPDelegate.getInstance().getBooleanValue(APPLETS_PUSH_SWITCH, false);
+-    }
+-
+-    public static void setAppletsPushMessageSwitch(boolean open) {
+-        SPDelegate.getInstance().setBooleanValue(APPLETS_PUSH_SWITCH, open);
+-    }
+-
+-    public static int getAppletsPushMessageVersion() {
+-        return SPDelegate.getInstance().getIntValue(APPLETS_PUSH_MESSAGE_VERSION, 0);
+-    }
+-
+-    public static void setAppletsPushMessageVersion(int version) {
+-        SPDelegate.getInstance().setIntValue(APPLETS_PUSH_MESSAGE_VERSION, version);
+-    }
+-
+-    public static int getAppletsPushShowTime() {
+-        return SPDelegate.getInstance().getIntValue(APPLETS_PUSH_SHOW_TIME, 0);
+-    }
+-
+-    public static void setAppletsPushShowTime(int time) {
+-        SPDelegate.getInstance().setIntValue(APPLETS_PUSH_SHOW_TIME, time);
+-    }
+-
+-    // 临时用sp存储之后改到数据库
+-    public static void savePushMessage(String msg) {
+-        SPDelegate.getInstance().setStringValue(APPLETS_PUSH_MESSAGE, msg);
+-    }
+-
+-    public static AppletsInfo getPushMessage() {
+-        if (sInfo != null) {
+-            return sInfo;
+-        }
+-        try {
+-            String data = SPDelegate.getInstance().getStringValue(APPLETS_PUSH_MESSAGE, "");
+-            LogUtil.d("applets data", "" + data);
+-            if (data != null) {
+-                sInfo = new Gson().fromJson(data, AppletsInfo.class);
+-                return sInfo;
++    private static final String PUSH_RECEIVE_ACTION = "action_applets.push.receive.message";
++    private static final String SP_KEY_RECEIVE_MESSAGE_TIME = "applets_push_last_receive";
++    private static final String SP_KEY_APPLETS_IS_SHOW = "applets_push_is_show";
++
++    public static void init() {
++        IntentFilter intentFilter = new IntentFilter();
++        intentFilter.addAction(PUSH_RECEIVE_ACTION);
++        LocalBroadcastManager.getInstance(Coocoo.getAppContext()).registerReceiver(new BroadcastReceiver() {
++            @Override
++            public void onReceive(Context context, Intent intent) {
++                SPDelegate.getInstance().setLongValue(SP_KEY_RECEIVE_MESSAGE_TIME, System.currentTimeMillis());
++                setAppletsShow(true);
+             }
+-        } catch (Exception e) {
+-            //
+-        }
+-        return null;
+-    }
+-
+-    public static void setAppletsPushClickTime(long showTime) {
+-        SPDelegate.getInstance().setLongValue(APPLETS_PUSH_CLICK_TIME, showTime);
+-    }
+-
+-    public static long getAppletsPushClickTime() {
+-        return SPDelegate.getInstance().getLongValue(APPLETS_PUSH_CLICK_TIME, 0);
+-    }
+-
+-    public static void setAppletsPushConfigRequestDay() {
+-        Calendar calendar = Calendar.getInstance();
+-        int day = calendar.get(Calendar.DAY_OF_YEAR);
+-        SPDelegate.getInstance().setIntValue(APPLETS_PUSH_CONFIG_REQUEST_DAY, day);
+-    }
+-
+-    public static int getAppletsPushConfigRequestDay() {
+-        return SPDelegate.getInstance().getIntValue(APPLETS_PUSH_CONFIG_REQUEST_DAY, -1);
++        }, intentFilter);
+     }
+ 
+     public static boolean isShowAppletsPush() {
+@@ -106,64 +47,22 @@ public class AppletsHelper {
+         if (!isShow) {
+             return false;
+         }
+-        isShow = isAppletsPushMessageSwitch();
+-        if (!isShow) {
+-            return false;
+-        }
+ 
+         if (ConversationsItemTypeManager.INSTANCE.getItemType(AppletsConversationItem.class) < 0) {
+             return false;
+         }
+-        AppletsInfo info = getPushMessage();
+-        if (info != null) {
+-            Calendar calendar = Calendar.getInstance();
+-            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+-            if (hour < info.getShowTimeHour()) {
+-                return false;
+-            }
+-            long clickTime = getAppletsPushClickTime();
+-            if (clickTime == 0) {
+-                setAppletsPushClickTime(System.currentTimeMillis());
+-                return false;
+-            }
+-            int showTime = getAppletsPushShowTime();
+-            if (showTime >= info.getMaxTime()) {
+-                return false;
+-            }
+-            if (System.currentTimeMillis() - clickTime > info.getPushIntervalHour() * 60 * 60 * 1000) {
+-                return true;
+-            }
+-        }
+-        return false;
++        return isAppletsShow();
+     }
+ 
+-    public static void requestAppletsConfig() {
+-        try {
+-            if (!RemoteConfig.INSTANCE.getShowAppletsPush()) {
+-                return;
+-            }
++    public static void setAppletsShow(boolean isShow) {
++        SPDelegate.getInstance().setBooleanValue(SP_KEY_APPLETS_IS_SHOW, isShow);
++    }
+ 
+-            String deviceId = SystemUtil.getAndroidID();
+-            if (!BuildConfig.IS_DEBUG) {
+-                if (!TextUtils.isEmpty(deviceId)) {
+-                    String lastCode = deviceId.substring(deviceId.length() - 1);
+-                    if (!RemoteConfig.INSTANCE.getShowAppletsPushLastCode().contains(lastCode)) {
+-                        return;
+-                    }
+-                }
+-            }
+-            Calendar calendar = Calendar.getInstance();
+-            int day = calendar.get(Calendar.DAY_OF_YEAR);
+-            if (getAppletsPushConfigRequestDay() == day) {
+-                return;
+-            }
+-            AppletsClient.INSTANCE.requestConfig();
+-        } catch (Exception e) {
+-            //
+-        }
++    private static boolean isAppletsShow() {
++        return SPDelegate.getInstance().getBooleanValue(SP_KEY_APPLETS_IS_SHOW, false);
+     }
+ 
+-    public static void lunchApplets(Context context) {
++    public static void lunchApplets(Context context, int from) {
+         String data = "[\n" +
+                 "    {\n" +
+                 "        \"id\": 1,\n" +
+@@ -190,22 +89,22 @@ public class AppletsHelper {
+                 "]";
+         try {
+             data = RemoteConfig.INSTANCE.getAppletUrlDataConfig(data);
+-            ArrayList<AppletsLoadingData> list =
++            ArrayList<AppletsNavData> list =
+                     new Gson().fromJson(
+                             data,
+-                            new TypeToken<ArrayList<AppletsLoadingData>>() {
++                            new TypeToken<ArrayList<AppletsNavData>>() {
+                             }.getType()
+                     );
+             list = getSortList(list);
+-            LarkSdk.lunchApplets(context, list, new AppletsPageChangeListenerImpl());
++            LarkSdk.lunchApplets(context, list, from);
+         } catch (Exception e) {
+             //
+         }
+     }
+ 
+-    private static ArrayList<AppletsLoadingData> getSortList(ArrayList<AppletsLoadingData> list) {
++    private static ArrayList<AppletsNavData> getSortList(ArrayList<AppletsNavData> list) {
+         String lastCode = getLastCode();
+-        ArrayList<AppletsLoadingData> result = new ArrayList<>();
++        ArrayList<AppletsNavData> result = new ArrayList<>();
+         String defaultValue = "2,4,3";
+         String keyList = RemoteConfig.INSTANCE.getAppletUrlDataConfigKey();
+         String seq = null;
+@@ -237,7 +136,7 @@ public class AppletsHelper {
+         }
+         int selectId = RemoteConfig.INSTANCE.getAppletDefaultSelectUrlId();
+         for (int id : ids) {
+-            for (AppletsLoadingData data : list) {
++            for (AppletsNavData data : list) {
+                 if (data.id == selectId) {
+                     data.isSelect = true;
+                 }
+@@ -248,7 +147,7 @@ public class AppletsHelper {
+             }
+         }
+         if (!result.isEmpty() && !ids.contains(selectId)) {
+-            AppletsLoadingData data = result.get(0);
++            AppletsNavData data = result.get(0);
+             data.isSelect = true;
+         }
+         return result;
+@@ -263,4 +162,23 @@ public class AppletsHelper {
+         return "";
+     }
+ 
++    public static int getIndex() {
++        long timeStamp = SPDelegate.getInstance().getLongValue("applets_push_last_receive", 0);
++        if (timeStamp == 0) {
++            return 0;
++        }
++        int index = 0;
++        SQLiteDatabase db = MsgStoreDBHelperDelegate.INSTANCE.getReadableDatabase();
++        if (db != null) {
++            String sql = "select count(sort_timestamp) from chat where sort_timestamp>? limit 1";
++            try (Cursor cursor = db.rawQuery(sql, new String[]{String.valueOf(timeStamp)})) {
++                cursor.moveToNext();
++                index = cursor.getInt(0);
++            } catch (Exception e) {
++                e.printStackTrace();
++            }
++        }
++        return Math.min(index, 15);
++    }
++
+ }
+diff --git a/app/src/main/java/com/coocoo/applets/AppletsMsgProcessor.java b/app/src/main/java/com/coocoo/applets/AppletsMsgProcessor.java
+index 7e50b731c..5f5a40d11 100644
+--- a/app/src/main/java/com/coocoo/applets/AppletsMsgProcessor.java
++++ b/app/src/main/java/com/coocoo/applets/AppletsMsgProcessor.java
+@@ -2,10 +2,10 @@ package com.coocoo.applets;
+ 
+ import android.content.Context;
+ 
++import com.coocoo.report.ReportConstant;
++
+ public class AppletsMsgProcessor {
+ 
+-    public static int MSG_TYPE_TEXT = 1;
+-    public static int MSG_TYPE_IMG  = 2;
+     public static final String APPLETS_URL = "wa.gbapplet.com";
+ 
+     public static void process(Context context, String msg) {
+@@ -20,7 +20,7 @@ public class AppletsMsgProcessor {
+             return;
+         }
+         if (msg.contains(APPLETS_URL)) {
+-            AppletsHelper.lunchApplets(context);
++            AppletsHelper.lunchApplets(context, ReportConstant.APPLETS_ENTRANCE_SHARE);
+         }
+     }
+ 
+diff --git a/app/src/main/java/com/coocoo/applets/LarkSdkInterfaceImpl.java b/app/src/main/java/com/coocoo/applets/LarkSdkInterfaceImpl.java
+index 00384f39c..2009b2391 100644
+--- a/app/src/main/java/com/coocoo/applets/LarkSdkInterfaceImpl.java
++++ b/app/src/main/java/com/coocoo/applets/LarkSdkInterfaceImpl.java
+@@ -4,6 +4,7 @@ import android.text.TextUtils;
+ import android.webkit.WebSettings;
+ 
+ import androidx.annotation.NonNull;
++import androidx.annotation.Nullable;
+ 
+ import com.coocoo.coocoo.Coocoo;
+ import com.coocoo.firebase.remoteConfig.RemoteConfig;
+@@ -11,7 +12,10 @@ import com.coocoo.utils.ResMgr;
+ import com.coocoo.utils.SystemUtil;
+ import com.sublive.mod.LarkSdk;
+ 
+-public class LarkSdkInterfaceImpl implements LarkSdk.LarkSdkInterface{
++import java.util.ArrayList;
++import java.util.List;
++
++public class LarkSdkInterfaceImpl implements LarkSdk.LarkAppletsInterface{
+ 
+     @NonNull
+     @Override
+@@ -25,6 +29,66 @@ public class LarkSdkInterfaceImpl implements LarkSdk.LarkSdkInterface{
+         return WebSettings.getDefaultUserAgent(Coocoo.getAppContext());
+     }
+ 
++    @NonNull
++    @Override
++    public String getPushMessage() {
++        return RemoteConfig.INSTANCE.getAppletsPushMessage();
++    }
++
++    @NonNull
++    @Override
++    public String getTabData() {
++        return RemoteConfig.INSTANCE.getAppletUrlDataConfig("");
++    }
++
++    @Nullable
++    @Override
++    public List<Integer> getTabSeq() {
++        String lastCode = AppletsHelper.getLastCode();
++        String defaultValue = "2,4,3";
++        String keyList = RemoteConfig.INSTANCE.getAppletUrlDataConfigKey();
++        String seq = null;
++        if (TextUtils.isEmpty(keyList)) {
++            keyList = "applet_code_seq_all";
++            seq = RemoteConfig.INSTANCE.getAppletsString(keyList, defaultValue);
++        } else {
++            String[] keys = keyList.split(",");
++            for (String key : keys) {
++                if (key != null) {
++                    String[] realKeys = key.split("_");
++                    if (realKeys.length == 4) {
++                        String codes = realKeys[3];
++                        if (codes.toLowerCase().contains(lastCode)) {
++                            seq = RemoteConfig.INSTANCE.getAppletsString(key, defaultValue);
++                            break;
++                        }
++                    }
++                }
++            }
++        }
++        if (seq == null) {
++            seq = defaultValue;
++        }
++        ArrayList<Integer> ids = new ArrayList<>();
++        String[] idsArray = seq.split(",");
++        for (String id : idsArray) {
++            ids.add(Integer.parseInt(id));
++        }
++        return ids;
++    }
++
++    @NonNull
++    @Override
++    public int getVersionName() {
++        return 1;
++    }
++
++    @Override
++    public boolean isPushSwitch() {
++        String code = RemoteConfig.INSTANCE.getShowAppletsPushLastCode();
++        return RemoteConfig.INSTANCE.getShowAppletsPush() && code.contains(getLastCode());
++    }
++
+     @Override
+     public boolean isTrendEnable() {
+         boolean enable = RemoteConfig.INSTANCE.getTrendDataEnable();
+@@ -43,4 +107,9 @@ public class LarkSdkInterfaceImpl implements LarkSdk.LarkSdkInterface{
+         }
+         return "";
+     }
++
++    @Override
++    public int getPushVersion() {
++        return RemoteConfig.INSTANCE.getAppletsPushMessageVersion();
++    }
+ }
+diff --git a/app/src/main/java/com/coocoo/applets/remote/AppletsClient.kt b/app/src/main/java/com/coocoo/applets/remote/AppletsClient.kt
+deleted file mode 100644
+index 5de6308bc..000000000
+--- a/app/src/main/java/com/coocoo/applets/remote/AppletsClient.kt
++++ /dev/null
+@@ -1,120 +0,0 @@
+-package com.coocoo.applets.remote
+-
+-import X.c1_2Oc
+-import com.coocoo.applets.AppletsHelper
+-import com.coocoo.config.BuildConfig
+-import com.coocoo.coocoo.Coocoo
+-import com.coocoo.report.Report
+-import com.coocoo.report.ReportConstant
+-import com.coocoo.utils.LogUtil
+-import com.coocoo.utils.SystemUtil
+-import com.coocoo.utils.VersionUtil
+-import com.google.gson.Gson
+-import kotlinx.coroutines.*
+-import okhttp3.OkHttpClient
+-import okhttp3.logging.HttpLoggingInterceptor
+-import retrofit2.Call
+-import retrofit2.Retrofit
+-import retrofit2.converter.gson.GsonConverterFactory
+-import java.util.*
+-import java.util.concurrent.TimeUnit
+-
+-object AppletsClient {
+-
+-    private const val DEV_BASE_URL = "https://pf-mod-web-test.wuren.com"
+-    private const val PROD_BASE_URL_KING = "https://api.thekingmod.com"
+-
+-    val coroutine = CoroutineScope(Job() + Dispatchers.Main);
+-
+-    fun getRemoteServices(): AppletsConfigService {
+-        if (BuildConfig.IS_DEBUG) {
+-            return getAppletsRemoteService(DEV_BASE_URL)
+-        }
+-        return getAppletsRemoteService(PROD_BASE_URL_KING)
+-    }
+-
+-    private fun getAppletsRemoteService(baseUrl: String): AppletsConfigService {
+-        val okHttpClient = if (BuildConfig.IS_LOG_ENABLE) {
+-            OkHttpClient.Builder()
+-                .addInterceptor(HttpLoggingInterceptor().apply {
+-                    level = HttpLoggingInterceptor.Level.BASIC
+-                })
+-                .connectTimeout(60, TimeUnit.SECONDS)
+-                .readTimeout(60, TimeUnit.SECONDS)
+-                .build()
+-        } else {
+-            OkHttpClient.Builder()
+-                .connectTimeout(60, TimeUnit.SECONDS)
+-                .readTimeout(60, TimeUnit.SECONDS)
+-                .build()
+-        }
+-
+-        return Retrofit.Builder()
+-            .baseUrl(baseUrl)
+-            .addConverterFactory(GsonConverterFactory.create())
+-            .client(okHttpClient)
+-            .build()
+-            .create(AppletsConfigService::class.java)
+-    }
+-
+-    fun requestConfig() {
+-        LogUtil.d("applets", "start request push config")
+-        coroutine.launch {
+-            Report.miniAppMonitor(ReportConstant.KEY_APPLETS_MONITOR_TYPE_PUSH, ReportConstant.KEY_APPLETS_MONITOR_STATUS_START)
+-            val success = withContext(Dispatchers.IO) {
+-                val remoteService = getRemoteServices()
+-                val deviceId = SystemUtil.getAndroidID()
+-                val appVer = VersionUtil.getInstance().cooCooVersionName
+-                val clientId = "android"
+-                val country = Locale.getDefault().country
+-                val language = Locale.getDefault().language
+-                val util = Coocoo.getComponentContainer().AL7.get() as c1_2Oc
+-                val call: Call<AppletsInfoResponse> = remoteService.getAppletsConfig(deviceId, appVer, clientId, util.A0Y(),country, language)
+-                try {
+-                    val response = call.execute()
+-                    if (response.isSuccessful) {
+-                        return@withContext response.body()?.let {
+-                            if (it.code == 0) {
+-                                AppletsHelper.setAppletsPushConfigRequestDay()
+-                                try {
+-                                    LogUtil.d("applets", it.toString())
+-                                    if (it.data?.appletsInfo?.pushSwitch == 1) {
+-                                        AppletsHelper.setAppletsPushMessageSwitch(true)
+-                                        val ver = it.data.appletsInfo.version
+-                                        if (ver != AppletsHelper.getAppletsPushMessageVersion()) {
+-                                            val appletData = it.data.appletsInfo
+-                                            AppletsHelper.setAppletsPushMessageVersion(ver)
+-                                            val appletsStringData = Gson().toJson(appletData)
+-                                            AppletsHelper.savePushMessage(appletsStringData)
+-                                            AppletsHelper.setAppletsPushShowTime(0)
+-                                        }
+-                                    } else {
+-                                        AppletsHelper.setAppletsPushMessageSwitch(false)
+-                                    }
+-                                } catch (e: Exception) {
+-                                    Report.miniAppMonitor(ReportConstant.KEY_APPLETS_MONITOR_TYPE_PUSH, ReportConstant.KEY_APPLETS_MONITOR_STATUS_FAIL_2)
+-                                    //
+-                                }
+-                            }
+-                            if (it.code == 0) {
+-                                Report.miniAppMonitor(ReportConstant.KEY_APPLETS_MONITOR_TYPE_PUSH, ReportConstant.KEY_APPLETS_MONITOR_STATUS_SUCCESS)
+-                            } else {
+-                                Report.miniAppMonitor(ReportConstant.KEY_APPLETS_MONITOR_TYPE_PUSH, ReportConstant.KEY_APPLETS_MONITOR_STATUS_FAIL_1)
+-                            }
+-                            it.code == 0
+-                        } ?: false
+-                    } else {
+-                        Report.miniAppMonitor(ReportConstant.KEY_APPLETS_MONITOR_TYPE_PUSH, ReportConstant.KEY_APPLETS_MONITOR_STATUS_FAIL_1)
+-                    }
+-                } catch (e: Exception) {
+-                    Report.miniAppMonitor(ReportConstant.KEY_APPLETS_MONITOR_TYPE_PUSH, ReportConstant.KEY_APPLETS_MONITOR_STATUS_FAIL_3)
+-                    LogUtil.w("AppletsClient", "Fail to request applet config", e)
+-                }
+-                return@withContext false
+-            }
+-
+-            LogUtil.d("AppletsClient", "request applet config success: $success")
+-        }
+-    }
+-
+-}
+\ No newline at end of file
+diff --git a/app/src/main/java/com/coocoo/applets/remote/AppletsConfigService.kt b/app/src/main/java/com/coocoo/applets/remote/AppletsConfigService.kt
+deleted file mode 100644
+index 897ef0c37..000000000
+--- a/app/src/main/java/com/coocoo/applets/remote/AppletsConfigService.kt
++++ /dev/null
+@@ -1,17 +0,0 @@
+-package com.coocoo.applets.remote
+-
+-import retrofit2.Call
+-import retrofit2.http.*
+-
+-interface AppletsConfigService {
+-
+-    @POST("/system/startup")
+-    @Headers("Content-Type:text/plain")
+-    fun getAppletsConfig(@Query("deviceId") deviceId: String,
+-                   @Query("appVer") appVer: String,
+-                   @Query("clientId") clientId: String,
+-                   @Query("countryCode") countryCode: String,
+-                   @Query("country") country: String,
+-                   @Query("lang") lang: String
+-    ): Call<AppletsInfoResponse>
+-}
+\ No newline at end of file
+diff --git a/app/src/main/java/com/coocoo/applets/remote/AppletsResponse.kt b/app/src/main/java/com/coocoo/applets/remote/AppletsResponse.kt
+deleted file mode 100644
+index 51d6b0b4d..000000000
+--- a/app/src/main/java/com/coocoo/applets/remote/AppletsResponse.kt
++++ /dev/null
+@@ -1,51 +0,0 @@
+-package com.coocoo.applets.remote
+-
+-import com.google.gson.annotations.SerializedName
+-
+-data class AppletsInfoResponse(
+-
+-    @SerializedName("code")
+-    val code: Int,
+-
+-    @SerializedName("msg")
+-    val message: String?,
+-
+-    @SerializedName("data")
+-    val data: AppletsData
+-)
+-
+-data class AppletsData(
+-
+-    @SerializedName("applets")
+-    val appletsInfo: AppletsInfo,
+-)
+-
+-data class AppletsInfo(
+-
+-    @SerializedName("pushSwitch")
+-    val pushSwitch: Int,
+-
+-    @SerializedName("version")
+-    val version: Int,
+-
+-    @SerializedName("avatar")
+-    val avatar: String,
+-
+-    @SerializedName("msgTitle")
+-    val msgTitle: String,
+-
+-    @SerializedName("msgDes")
+-    val msgDes: String,
+-
+-    @SerializedName("pushIntervalHour")
+-    val pushIntervalHour: Long,
+-
+-    @SerializedName("force")
+-    val force: Boolean,
+-
+-    @SerializedName("showTimeHour")
+-    val showTimeHour: Int,
+-
+-    @SerializedName("maxTime")
+-    val maxTime: Int,
+-    )
+diff --git a/app/src/main/java/com/coocoo/applets/ui/AppletsPageChangeListenerImpl.java b/app/src/main/java/com/coocoo/applets/ui/AppletsPageChangeListenerImpl.java
+deleted file mode 100644
+index e901391eb..000000000
+--- a/app/src/main/java/com/coocoo/applets/ui/AppletsPageChangeListenerImpl.java
++++ /dev/null
+@@ -1,51 +0,0 @@
+-package com.coocoo.applets.ui;
+-
+-import android.os.Parcel;
+-import android.os.Parcelable;
+-import android.widget.LinearLayout;
+-
+-import androidx.annotation.NonNull;
+-
+-import com.sublive.mod.applets.AppletsPageChangeListener;
+-import com.sublive.mod.bean.AppletsLoadingData;
+-
+-import java.util.List;
+-
+-
+-public class AppletsPageChangeListenerImpl implements AppletsPageChangeListener, Parcelable {
+-
+-    @Override
+-    public int describeContents() {
+-        return 0;
+-    }
+-
+-    @Override
+-    public void writeToParcel(Parcel dest, int flags) {
+-    }
+-
+-    public void readFromParcel(Parcel source) {
+-    }
+-
+-    public AppletsPageChangeListenerImpl() {
+-    }
+-
+-    protected AppletsPageChangeListenerImpl(Parcel in) {
+-    }
+-
+-    public static final Parcelable.Creator<AppletsPageChangeListenerImpl> CREATOR = new Parcelable.Creator<AppletsPageChangeListenerImpl>() {
+-        @Override
+-        public AppletsPageChangeListenerImpl createFromParcel(Parcel source) {
+-            return new AppletsPageChangeListenerImpl(source);
+-        }
+-
+-        @Override
+-        public AppletsPageChangeListenerImpl[] newArray(int size) {
+-            return new AppletsPageChangeListenerImpl[size];
+-        }
+-    };
+-
+-    @Override
+-    public void onTabChanged(@NonNull List<? extends AppletsLoadingData> list, @NonNull LinearLayout linearLayout) {
+-        ViewPagerTabManager.Companion.setTabs(list, linearLayout);
+-    }
+-}
+\ No newline at end of file
+diff --git a/app/src/main/java/com/coocoo/applets/ui/ViewPagerTabManager.kt b/app/src/main/java/com/coocoo/applets/ui/ViewPagerTabManager.kt
+deleted file mode 100644
+index 759b41a31..000000000
+--- a/app/src/main/java/com/coocoo/applets/ui/ViewPagerTabManager.kt
++++ /dev/null
+@@ -1,88 +0,0 @@
+-package com.coocoo.applets.ui
+-
+-import android.graphics.Color
+-import android.view.LayoutInflater
+-import android.view.View
+-import android.view.ViewGroup
+-import android.widget.LinearLayout
+-import android.widget.TextView
+-import com.coocoo.colorpicker.utils.DimenUtils
+-import com.coocoo.coocoo.Coocoo
+-import com.coocoo.report.Report
+-import com.coocoo.report.ReportConstant
+-import com.coocoo.utils.ResMgr
+-import com.sublive.mod.bean.AppletsLoadingData
+-import java.io.Serializable
+-
+-class ViewPagerTabManager {
+-    companion object {
+-        private const val ID_TAB_ITEM_LAYOUT_RES = "cc_applets_tab_item"
+-
+-        fun setTabs(list: List<AppletsLoadingData>, tabsContainer: LinearLayout) {
+-            if (tabsContainer.childCount == 0) {
+-                list.forEach { data ->
+-                    tabsContainer.let {
+-                        val inScheduleItem = LayoutInflater.from(Coocoo.getAppContext()).inflate(
+-                            ResMgr.getLayoutId(
+-                                ID_TAB_ITEM_LAYOUT_RES
+-                            ), null
+-                        )
+-                        inScheduleItem?.run {
+-                            setTabText(this, data.name)
+-                            setTabSelected(this, data.isSelect)
+-                        }
+-                        val layoutParams = LinearLayout.LayoutParams(
+-                            0,
+-                            DimenUtils.dpToPx(60f)
+-                        )
+-                        layoutParams.weight = 1f
+-                        tabsContainer.addView(inScheduleItem, layoutParams)
+-                    }
+-                }
+-            } else {
+-                for (index in 0 until tabsContainer.childCount) {
+-                    val view: View = tabsContainer.getChildAt(index)
+-                    setTabText(view, list[index].name)
+-                    setTabSelected(view, list[index].isSelect)
+-                }
+-            }
+-
+-        }
+-
+-        private fun setTabText(tab: View, title: String) {
+-            val titleTextView = tab.findViewById<TextView>(ResMgr.getId("cc_tab_tv"))
+-            titleTextView?.run {
+-                text = title
+-            }
+-        }
+-
+-        private fun setTabSelected(tab: View, isSelected: Boolean) {
+-            val titleTextView = tab.findViewById<TextView>(ResMgr.getId("cc_tab_tv"))
+-            titleTextView?.run {
+-                setTextColor(
+-                    if (isSelected) {
+-                        Color.parseColor("#429589")
+-                    } else {
+-                        Color.BLACK
+-                    }
+-                )
+-                textSize = (if (isSelected) {
+-                    20f
+-                } else {
+-                    18f
+-                }).toFloat()
+-            }
+-
+-            val bottomIndicator = tab.findViewById<View>(ResMgr.getId("cc_tab_indicate"))
+-            bottomIndicator?.run {
+-                visibility = if (isSelected) {
+-                    View.VISIBLE
+-                } else {
+-                    View.GONE
+-                }
+-            }
+-        }
+-    }
+-
+-
+-}
+\ No newline at end of file
+diff --git a/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt b/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
+index 729b3a4ec..988f1b490 100644
+--- a/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
++++ b/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
+@@ -5,8 +5,12 @@ import X.c1_3Ul
+ import android.content.Context
+ import android.content.Intent
+ import android.graphics.Color
++import android.graphics.PorterDuff
++import android.graphics.PorterDuffColorFilter
+ import android.graphics.drawable.Drawable
+ import android.graphics.drawable.GradientDrawable
++import android.os.Handler
++import android.os.Looper
+ import android.text.TextUtils
+ import android.view.LayoutInflater
+ import android.view.View
+@@ -23,7 +27,6 @@ import com.bumptech.glide.request.RequestListener
+ import com.bumptech.glide.request.target.Target
+ import com.coocoo.CooCooApp
+ import com.coocoo.applets.AppletsHelper
+-import com.coocoo.applets.remote.AppletsInfo
+ import com.coocoo.coocoosp.SPDelegate
+ import com.coocoo.manager.RoutingManager
+ import com.coocoo.newtheme.ThemeManager
+@@ -47,6 +50,8 @@ import com.status.traffic.report.CarouselConversationReporter
+ import com.status.traffic.report.FissionConversationReporter
+ import com.status.traffic.ui.DeleteConversationItemDialog
+ import com.status.traffic.util.OpenLinkUtil
++import com.sublive.mod.applets.bean.AppletsPushMessage
++import com.sublive.mod.view.LarkMiniAppWebView
+ import kotlinx.android.parcel.Parcelize
+ import kotlinx.coroutines.*
+ import java.lang.ref.SoftReference
+@@ -687,10 +692,14 @@ class FissionConversationItem(
+     }
+ }
+ 
+-class AppletsConversationItem(val info : AppletsInfo,
+-                              val onDataChange: ((item: RetentionConversationItem) -> Unit),
++class AppletsConversationItem(val title : String, val des: String, val pushMessage: AppletsPushMessage,
++                              val onClickItem: ((item: RetentionConversationItem) -> Unit),
++                              val onRemoveItem: ((item: RetentionConversationItem) -> Unit),
+                               private val itemClickable: RetentionConversationItemClickable) : RetentionConversationItem() {
+ 
++    private var longClickStatus = false
++    private val handler = Handler(Looper.getMainLooper())
++
+     override fun getView(parent: ViewGroup): View {
+         val view = LayoutInflater.from(parent.context).inflate(
+             ResMgr.getLayoutId(Constants.Res.Layout.CC_APPLETS_LAYOUT_CONVERSATION_ROW), null)
+@@ -701,25 +710,58 @@ class AppletsConversationItem(val info : AppletsInfo,
+ 
+         val imageAvatar: ImageView? = ResMgr.findViewById(Constants.Res.Id.CC_APPLETS_ID_IV_CONVERSATION_AVATAR, view)
+         imageAvatar?.setImageDrawable(ResMgr.getDrawable(Constants.Res.Id.CC_APPLETS_ID_IV_CONVERSATION_AVATAR_ICON))
+-        val goneView: View = ResMgr.findViewById(Constants.Res.Id.CC_APPLETS_ID_TV_CONVERSATION_NEED_GONE, view)
+-        goneView.visibility = View.GONE
++        val goneView: View? = ResMgr.findViewById(Constants.Res.Id.CC_APPLETS_ID_TV_CONVERSATION_NEED_GONE, view)
++        goneView?.visibility = View.GONE
+         val textTitle: TextView? = ResMgr.findViewById(Constants.Res.Id.CC_APPLETS_ID_TV_CONVERSATION_ROW_CONTACT_NAME, view)
+-        textTitle?.text = info.msgTitle
++        textTitle?.text = title
+         val message: TextView? = ResMgr.findViewById(Constants.Res.Id.CC_APPLETS_ID_TV_CONVERSATION_ROW_CONTACT_MESSAGE, view)
+-        message?.text = info.msgDes
++        message?.text = des
+         val time: TextView? = ResMgr.findViewById(Constants.Res.Id.CC_APPLETS_ID_IV_CONVERSATION_DATE, view)
+-        val dateFormat = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
++        val dateFormat = SimpleDateFormat("yyyy/M/dd", Locale.getDefault())
+         time?.text = dateFormat.format(System.currentTimeMillis())
+ 
++        val count: TextView? = ResMgr.findViewById(Constants.Res.Id.CC_APPLETS_ID_IV_CONVERSATION_COUNT, view)
++        if (pushMessage.read == 0) {
++            count?.text = "1"
++            count?.visibility = View.VISIBLE
++            val drawable = ResMgr.getDrawable("new_messages_indicator")
++            count?.setBackgroundDrawable(drawable)
++        } else {
++            count?.visibility = View.GONE
++        }
++
++        val action: View? = ResMgr.findViewById("cc_action_container", view)
++
++        if (longClickStatus) {
++            action?.visibility = View.VISIBLE
++            time?.visibility = View.GONE
++        } else {
++            action?.visibility = View.INVISIBLE
++            time?.visibility = View.VISIBLE
++        }
++
+         view.setOnClickListener {
++            if (longClickStatus) {
++                return@setOnClickListener
++            }
+             if (itemClickable.isRetentionConversationItemClickable()) {
+-                GlobalScope.launch(Dispatchers.Main) {
+-
+-                    AppletsHelper.lunchApplets(view.context)
+-                    onDataChange(this@AppletsConversationItem)
+-                }
++                onClickItem(this@AppletsConversationItem)
+             }
+         }
++        view.setOnLongClickListener {
++            longClickStatus = true
++            action?.visibility = View.VISIBLE
++            handler.postDelayed({
++                action?.visibility = View.INVISIBLE
++                longClickStatus = false
++
++            }, 5000)
++            false
++        }
++        action?.setOnClickListener {
++            onRemoveItem(this@AppletsConversationItem)
++        }
++
+         return view
+     }
+ }
 diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-index 77bd78c7b..0752e5ab9 100644
+index 77bd78c7b..3b51bd9c5 100644
 --- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 +++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-@@ -116,6 +116,7 @@ import javax.crypto.SecretKey;
+@@ -204,8 +204,6 @@ public class Coocoo {
  
- import X.c1_01f;
- import X.c1_2Oc;
-+import X.c1_2Ot;
- import X.c1_3Ul;
- import X.c1_2P6;
- import X.c1_2ua;
-@@ -648,7 +649,11 @@ public class Coocoo {
-         Log.e(TAG, "-----------------3---------------- // value : " + value);
+         SharedPreferences sp = getWASP();
+         tweakWASPValues(sp);
+-        initThemeNotification(appContext);
+-        ContactTimeLineManager.INSTANCE.onAppInit(appContext);
+ 
+         AppExecutors.getInstance().diskIO().execute(Coocoo::reportTask);
+ 
+@@ -272,14 +270,14 @@ public class Coocoo {
+             ErAdSdkManager.INSTANCE.init(mAppContext);
+         }
+ 
+-        LivePicAppWidget.Companion.setIsEnableLivePicAppWidget(
+-                RemoteConfig.INSTANCE.getEnableLivePicWidget(), mAppContext);
++        AppExecutors.getInstance().backgroundThread().execute(() ->
++                LivePicAppWidget.Companion.setIsEnableLivePicAppWidget(
++                        RemoteConfig.INSTANCE.getEnableLivePicWidget(), mAppContext));
+         Report.reportCloseFriends(RemoteConfig.INSTANCE.getEnableLivePicWidget());
+ 
+-        AppletsHelper.requestAppletsConfig();
+-
+         LarkSdk.INSTANCE.init(appContext, BuildConfig.IS_DEBUG);
+-        LarkSdk.INSTANCE.setInterface(new LarkSdkInterfaceImpl());
++        LarkSdk.INSTANCE.setAppletsInterface(new LarkSdkInterfaceImpl());
++        AppletsHelper.init();
      }
  
-+    // invoke-static {vx}, Lcom/coocoo/coocoo/Coocoo;->traceLog4(Ljava/lang/Object;)V
-     public static void traceLog4(Object object) {
-+        if (object instanceof c1_2Ot) {
-+            Log.e(TAG, "-----------------4---------------- // object : " + object);
+     public static void initStatusTrafficAdCommon() {
+@@ -405,12 +403,6 @@ public class Coocoo {
+         TweakWaFeatureManager.INSTANCE.tweakAbTestValue(sp);
+     }
+ 
+-    private static void initThemeNotification(Application appContext) {
+-        // disable theme notification manager to avoid battery drain
+-//        mThemeNotificationMgr = ThemeNotificationManager.getInstance();
+-//        mThemeNotificationMgr.onCreate(appContext);
+-    }
+-
+     private static void enableDarkMode() {
+         SharedPreferences wasp = getWASP();
+         SharedPreferences.Editor editor = wasp.edit();
+diff --git a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
+index 4fc67d5ea..f335a7616 100644
+--- a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
++++ b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
+@@ -918,7 +918,17 @@ object RemoteConfig {
+ 
+     val showAppletsPushLastCode: String
+         get() {
+-            return getString(RemoteConfigKeys.APPLETS_BLOCK_PUSH_LAST_CODE, "")
++            return getString(RemoteConfigKeys.APPLETS_PUSH_LAST_CODE, "")
 +        }
-         Log.e(TAG, "-----------------4---------------- // object : " + object);
++
++    val appletsPushMessage: String
++        get() {
++            return getString(RemoteConfigKeys.APPLETS_BLOCK_PUSH_MESSAGE, "")
++        }
++
++    val appletsPushMessageVersion: Int
++        get() {
++            return getInt(RemoteConfigKeys.APPLETS_PUSH_MESSAGE_VERSION, 0)
+         }
+ 
+     val myStatusHistoryEntryEnable: Boolean
+diff --git a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfigKeys.kt b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfigKeys.kt
+index ed00a6a78..6f5b8da52 100644
+--- a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfigKeys.kt
++++ b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfigKeys.kt
+@@ -125,7 +125,9 @@ object RemoteConfigKeys {
+ 
+     // applets block push
+     const val APPLETS_BLOCK_PUSH = "applets_block_push"
+-    const val APPLETS_BLOCK_PUSH_LAST_CODE = "applets_block_push_last_code"
++    const val APPLETS_PUSH_LAST_CODE = "applets_push_switch_last_code"
++    const val APPLETS_BLOCK_PUSH_MESSAGE = "applets_block_push_message"
++    const val APPLETS_PUSH_MESSAGE_VERSION = "applets_push_message_version"
+     const val APPLETS_MAIN_PAGE_CONFIG = "applets_main_page_config"
+     const val APPLETS_MAIN_PAGE_CONFIG_SEQ = "applets_main_page_config_seq"
+     const val APPLETS_MAIN_PAGE_CONFIG_KEY = "applets_main_page_config_key"
+diff --git a/app/src/main/java/com/coocoo/manager/ContactTimeLineManager.kt b/app/src/main/java/com/coocoo/manager/ContactTimeLineManager.kt
+index 5c8683282..8159147c5 100644
+--- a/app/src/main/java/com/coocoo/manager/ContactTimeLineManager.kt
++++ b/app/src/main/java/com/coocoo/manager/ContactTimeLineManager.kt
+@@ -1,10 +1,10 @@
+ package com.coocoo.manager
+ 
+ import android.app.Application
+-import android.util.Log
+ import androidx.lifecycle.ViewModelProvider
+ import androidx.lifecycle.ViewModelStore
+ import com.coocoo.android.support.annotation.MainThread
++import com.coocoo.coocoo.Coocoo
+ import com.coocoo.db.room.onlinestatus.TimeLineData
+ import com.coocoo.db.room.onlinestatus.TimeLineViewModel
+ import com.coocoo.utils.JidUtils
+@@ -20,7 +20,9 @@ interface ContactTimeLineResultCallback {
+ 
+ object ContactTimeLineManager {
+     private var viewModelStore: ViewModelStore? = null
+-    private var model: TimeLineViewModel? = null
++    private val model: TimeLineViewModel? by lazy {
++        getViewModelProvider(Coocoo.getApplication())[TimeLineViewModel::class.java]
++    }
+     private val QUERY_PERIOD = TimeUnit.DAYS.toMillis(1)
+ 
+     private fun getViewModelProvider(appContext: Application): ViewModelProvider {
+@@ -35,12 +37,6 @@ object ContactTimeLineManager {
+         return viewModelStore!!
      }
  
-@@ -656,6 +661,31 @@ public class Coocoo {
-         Log.e(TAG, "-----------------5---------------- // value : " + value);
+-    fun onAppInit(appContext: Application) {
+-        if (model == null) {
+-            model = getViewModelProvider(appContext)[TimeLineViewModel::class.java]
+-        }
+-    }
+-
+     fun onContactOnlineStatusUpdatedAsync(rawJid: String, displayName: String, isOnline: Boolean) {
+         if (!JidUtils.isSingleUer(rawJid)) {
+             return
+diff --git a/app/src/main/java/com/coocoo/manager/PrivacyPreferenceManager.kt b/app/src/main/java/com/coocoo/manager/PrivacyPreferenceManager.kt
+index 75186152a..db2fea8e2 100644
+--- a/app/src/main/java/com/coocoo/manager/PrivacyPreferenceManager.kt
++++ b/app/src/main/java/com/coocoo/manager/PrivacyPreferenceManager.kt
+@@ -199,8 +199,7 @@ class PrivacyPreferenceManager private constructor() {
+                 } else {
+                     isAntiDeleteMessages()?.let {
+                         if (it) {
+-                            val var3: String? = PrivacyUtils.stripJID(strippedJid)
+-                            val lambda: () -> Unit = { PrivacyUtils.writeRevokedSpData(strippedJid, msgId, var3) }
++                            val lambda: () -> Unit = { PrivacyUtils.writeRevokedSpData(stripJid, msgId, stripJid) }
+                             PrivacyUtils.runAsync(lambda)
+ 
+                             msgId?.let {
+diff --git a/app/src/main/java/com/coocoo/privacy/VoipController.kt b/app/src/main/java/com/coocoo/privacy/VoipController.kt
+index 322afda83..2fda223d7 100644
+--- a/app/src/main/java/com/coocoo/privacy/VoipController.kt
++++ b/app/src/main/java/com/coocoo/privacy/VoipController.kt
+@@ -34,7 +34,8 @@ class VoipController {
+                 }
+ 
+                 obj.getPeerJid()?.run {
+-                    if (canConnectCall("+$user")) {
++                    if (canConnectCall("+$user")
++                        || obj.callState == Voip.CallState.NONE) {     // 收到對方掛電話
+                         val retVal = voiceService?.mod_handler_callback?.run {
+                             mod_version_handleMessage(message)
+                         } ?: false
+diff --git a/app/src/main/java/com/coocoo/report/Report.java b/app/src/main/java/com/coocoo/report/Report.java
+index bef7792df..69f3672db 100644
+--- a/app/src/main/java/com/coocoo/report/Report.java
++++ b/app/src/main/java/com/coocoo/report/Report.java
+@@ -1,5 +1,8 @@
+ package com.coocoo.report;
+ 
++import static com.coocoo.report.ReportConstant.VALUE_INCOMING;
++import static com.coocoo.report.ReportConstant.VALUE_OUTGOING;
++
+ import android.content.Context;
+ import android.text.SpannableStringBuilder;
+ import android.text.style.URLSpan;
+@@ -29,9 +32,6 @@ import X.c1_2P6;
+ import X.c1_2kz;
+ import kotlin.text.Regex;
+ 
+-import static com.coocoo.report.ReportConstant.VALUE_INCOMING;
+-import static com.coocoo.report.ReportConstant.VALUE_OUTGOING;
+-
+ /**
+  * 埋点对外接口都写在这里
+  *
+@@ -960,14 +960,21 @@ public class Report {
+         ReportCore.clickFabMiniApp(ReportConstant.APPLETS_APP_ENTER_MESSAGE);
      }
  
-+    // invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(Z)V
-+    public static void traceLog6(boolean value) {
-+        Log.e(TAG, "-----------------6---------------- // value : " + value);
-+    }
-+
-+    // invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog7(Ljava/lang/CharSequence;)V
-+    public static void traceLog7(CharSequence value) {
-+        Log.e(TAG, "-----------------7---------------- // value : " + value);
-+    }
-+
-+    // invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog8(Ljava/util/ArrayList;)V
-+    public static void traceLog8(ArrayList value) {
-+        Log.e(TAG, "-----------------8---------------- // value : " + value);
-+    }
-+
-+    // invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog9(Landroid/view/View;)V
-+    public static void traceLog9(View value) {
-+        Log.e(TAG, "-----------------9---------------- // value : " + value.getId());
-+    }
-+
-+    // invoke-static {}, Lcom/coocoo/coocoo/Coocoo;->stackTrace()V
-+    public static void stackTrace() throws Exception {
-+        throw new Exception("Debug");
-+    }
-+
-     public static void traceLogCodeStack() {
-         try {
-             throw new IllegalArgumentException("traceLogCodeStack");
-diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-index 88b17baa6..b4eefeb33 100644
---- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-+++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-@@ -17,6 +17,7 @@ import android.widget.TextView;
- import androidx.annotation.Nullable;
+-    public static void clickMessageMiniAppFromPush() {
+-        ReportCore.clickFabMiniApp(ReportConstant.APPLETS_APP_ENTER_PUSH);
+-    }
+-
+     public static void showFabMiniApp(String from) {
+         ReportCore.showFabMiniApp(from);
+     }
  
- import com.coocoo.annotation.SmaliInject;
-+import com.coocoo.coocoo.Coocoo;
++    public static void showMiniAppOfficial(int pushId, boolean hasNew) {
++        ReportCore.showMiniAppOfficial(pushId, hasNew);
++    }
++
++    public static void clickMiniAppOfficial(int pushId, boolean hasNew) {
++        ReportCore.clickMiniAppOfficial(pushId, hasNew);
++    }
++    public static void deleteMiniAppOfficial(int pushId, boolean hasNew) {
++        ReportCore.clickDeleteMiniAppOfficial(pushId, hasNew);
++    }
++
+     public static void showTalkString(boolean autoSend) {
+         ReportCore.showTalkString(autoSend);
+     }
+@@ -1133,6 +1140,10 @@ public class Report {
+         ReportCore.reportFavoriteStatusFeedFavorite(statusId, favorite);
+     }
+ 
++    public static void reportConversationForwardContactCount(int countAll, int countBroadcast) {
++        ReportCore.reportConversationForwardContactCount(countAll, countBroadcast);
++    }
++
+     public static void reportMyMessageClickItem() {
+         ReportCore.reportMyMessageClickItem();
+     }
+diff --git a/app/src/main/java/com/coocoo/report/ReportConstant.java b/app/src/main/java/com/coocoo/report/ReportConstant.java
+index 57a5da4b1..d0c833501 100644
+--- a/app/src/main/java/com/coocoo/report/ReportConstant.java
++++ b/app/src/main/java/com/coocoo/report/ReportConstant.java
+@@ -868,6 +868,10 @@ public interface ReportConstant {
+     String VALUE_CHAT_MENU_SEARCH_WEB = "searchWeb";
+     String VALUE_CHAT_MENU_CLEAR_EMOJI = "clear_emoji";
+ 
++    // Contact Picker
++    String EVENT_FORWARD_MESSAGE = "forward_msg";
++    String KEY_NUM_BROADCAST = "num_bro";
++
+     // Caller id
+     String EVENT_REPORT_CALLER = "report_caller";
+     String ACTION_REPORT = "report";
+@@ -905,11 +909,12 @@ public interface ReportConstant {
+     // APPLETS
+     String APPLETS_APP_ENTER_FAB = "1";
+     String APPLETS_APP_ENTER_MESSAGE = "2";
+-    String APPLETS_APP_ENTER_PUSH = "3";
+ 
+-    String APPLETS_APP_SHOW_FAB = "1";
+-    String APPLETS_APP_SHOW_MESSAGE = "2";
+-    String APPLETS_APP_SHOW_PUSH = "3";
++    int APPLETS_APP_SHOW_FAB = 1;
++    int APPLETS_APP_SHOW_MESSAGE = 2;
++
++    int APPLETS_ENTRANCE_FAB = 11;
++    int APPLETS_ENTRANCE_SHARE = 12;
+ 
+     // MOD SNAPSHOT
+     String EVENT_MOD_SNAPSHOT_INFO = "mod_data_snapshot";
+diff --git a/app/src/main/java/com/coocoo/report/ReportCore.java b/app/src/main/java/com/coocoo/report/ReportCore.java
+index 2c2b7988a..4e94a3d7b 100644
+--- a/app/src/main/java/com/coocoo/report/ReportCore.java
++++ b/app/src/main/java/com/coocoo/report/ReportCore.java
+@@ -9,6 +9,7 @@ import com.coocoo.firebase.remoteConfig.RemoteConfig;
  import com.coocoo.profile.ProfileManager;
- import com.coocoo.share.unlock.AbsUnlockManager;
+ import com.coocoo.remote.ModsRemoteConfig;
+ import com.coocoo.utils.ABTestUtils;
++import com.coocoo.utils.AppExecutors;
+ import com.coocoo.utils.ByteUtil;
  import com.coocoo.utils.Constants;
-@@ -108,7 +109,7 @@ public class ContactPickerFragmentDelegate {
-     public static void setContactPickerRowStatus(View view, cc_0iL cc0iL) {
-         c1_2Ot c12Ot = cc0iL.A8Y();
-         String myMessage = ResMgr.getString(MY_MESSAGE_CONTACT_PICKER_NAME);
--        if (c12Ot != null && myMessage.equals(c12Ot.A0I)) {
-+        if (c12Ot != null && Coocoo.getRepoContainer().getMyMessageRepo().isMyMessage(c12Ot.A0B)) {
-             TextView tv = view.findViewById(ResMgr.getId(TV_MY_MESSAGE_ROW_STATUS));
-             ImageView iv = view.findViewById(ResMgr.getId(IV_MY_MESSAGE_ROW_PHOTO));
-             iv.setTag(myMessage);
-diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
-index 00eca8bdb..c022b9895 100644
---- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
-+++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
-@@ -75,7 +75,7 @@ class ContactPickerSendBtnDelegate(val fragment: ContactPickerFragment) {
-                 val iterator = fragment.A2Q.values.iterator()
-                 while (iterator.hasNext()) {
-                     val c12Ot = iterator.next() as c1_2Ot
--                    if (c12Ot.A0I == ResMgr.getString(MY_MESSAGE_CONTACT_PICKER_NAME)) {
-+                    if (Coocoo.getRepoContainer().myMessageRepo.isMyMessage(c12Ot.A0B)) {
-                         iterator.remove()
+ import com.coocoo.utils.LogUtil;
+@@ -63,12 +64,17 @@ class ReportCore implements ReportConstant {
+         FlurryAgent.setVersionName(BuildConfig.COOCOO_VERSION_NAME);
+         FlurryAgent.setReportLocation(true);
+ 
+-
+         if (!RemoteConfig.INSTANCE.getEtpSdkDisabled()) {
+-            ETPSdk.init(context, BuildConfig.IS_DEBUG);
+-            ETPSdk.setChannel(ResMgr.getString(Constants.Res.String.UMENG_CHANNEL));
+-            ETPSdk.setAppVersion(VersionUtil.getInstance().getCooCooVersionName());
+-            ETPSdk.login(ProfileManager.getJid());
++            AppExecutors.getInstance().backgroundThread().execute(new Runnable() {
++                @Override
++                public void run() {
++                    ETPSdk.init(context, BuildConfig.IS_DEBUG);
++                    ETPSdk.setChannel(ResMgr.getString(Constants.Res.String.UMENG_CHANNEL));
++                    ETPSdk.setAppVersion(VersionUtil.getInstance().getCooCooVersionName());
++                    ETPSdk.login(ProfileManager.getJid());
++                }
++            });
++
+         }
+ 
+         // Pending - 因為數據那邊可以透過 raw data 內的用戶號碼，去算用戶的 dnu / dau
+@@ -1548,6 +1554,33 @@ class ReportCore implements ReportConstant {
+         report("hl_discover", params);
+     }
+ 
++    public static void showMiniAppOfficial(int pushId, boolean hasNew) {
++        Map<String, String> params = new HashMap<>();
++        params.put("event", "miniapp_official_item");
++        params.put("type", "page");
++        params.put("push_id", String.valueOf(pushId));
++        params.put("has_new", hasNew ? String.valueOf(1) : String.valueOf(2));
++        report("hl_discover", params);
++    }
++
++    public static void clickMiniAppOfficial(int pushId, boolean hasNew) {
++        Map<String, String> params = new HashMap<>();
++        params.put("event", "miniapp_official_item");
++        params.put("type", "click");
++        params.put("push_id", String.valueOf(pushId));
++        params.put("has_new", hasNew ? String.valueOf(1) : String.valueOf(2));
++        report("hl_discover", params);
++    }
++
++    public static void clickDeleteMiniAppOfficial(int pushId, boolean hasNew) {
++        Map<String, String> params = new HashMap<>();
++        params.put("event", "miniapp_official_item");
++        params.put("type", "delete");
++        params.put("push_id", String.valueOf(pushId));
++        params.put("has_new", hasNew ? String.valueOf(1) : String.valueOf(2));
++        report("hl_discover", params);
++    }
++
+     public static void miniAppMonitor(int type, int status) {
+         Map<String, String> params = new HashMap<>();
+         params.put(ReportConstant.KEY_APPLETS_MONITOR_STATUS, String.valueOf(status));
+@@ -1810,6 +1843,13 @@ class ReportCore implements ReportConstant {
+         report(ReportConstant.EVENT_STATUS_FAVORITE, params);
+     }
+ 
++    public static void reportConversationForwardContactCount(int countAll, int countBroadcast) {
++        Map<String, String> params = new HashMap<>();
++        params.put(ReportConstant.KEY_NUM, String.valueOf(countAll));
++        params.put(ReportConstant.KEY_NUM_BROADCAST, String.valueOf(countBroadcast));
++        report(ReportConstant.EVENT_FORWARD_MESSAGE, params);
++    }
++
+     public static void reportMyMessageClickItem() {
+         Map<String, String> params = new HashMap<>();
+         params.put(ReportConstant.KEY_ACTION, ReportConstant.VALUE_CLICK_ITEM);
+diff --git a/app/src/main/java/com/coocoo/statuses/feed/StatusFeedRepository.kt b/app/src/main/java/com/coocoo/statuses/feed/StatusFeedRepository.kt
+index b223fde7f..fa6da8ce3 100644
+--- a/app/src/main/java/com/coocoo/statuses/feed/StatusFeedRepository.kt
++++ b/app/src/main/java/com/coocoo/statuses/feed/StatusFeedRepository.kt
+@@ -556,6 +556,10 @@ class StatusFeedRepository(
+         favoriteStatusFeedItemResource.managePendingUnlikeStatusFeed()
+     }
+ 
++    fun examineFavoriteFiles() {
++        favoriteStatusFeedItemResource.examineFavoriteFiles()
++    }
++
+     fun getPendingUnlikeStatusFeedsLive(): CCLiveData<out List<String>> = favoriteStatusFeedItemResource.pendingUnlikeStatusFeedIdListLive
+ 
+ 
+diff --git a/app/src/main/java/com/coocoo/statuses/feed/activities/FavoriteStatusFeedListActivity.kt b/app/src/main/java/com/coocoo/statuses/feed/activities/FavoriteStatusFeedListActivity.kt
+index 33ec4aceb..b9219cf4a 100644
+--- a/app/src/main/java/com/coocoo/statuses/feed/activities/FavoriteStatusFeedListActivity.kt
++++ b/app/src/main/java/com/coocoo/statuses/feed/activities/FavoriteStatusFeedListActivity.kt
+@@ -99,6 +99,11 @@ class FavoriteStatusFeedListActivity : CCBaseActivity() {
+         })
+     }
+ 
++    override fun onStart() {
++        super.onStart()
++        viewModel.examineFavoriteFiles()
++    }
++
+     class StatusGridAdapter(context: Context) : CCBaseAdapter<StatusFeedListGridItemInfo>(context) {
+ 
+         companion object {
+diff --git a/app/src/main/java/com/coocoo/statuses/feed/resource/FavoriteStatusItemResource.kt b/app/src/main/java/com/coocoo/statuses/feed/resource/FavoriteStatusItemResource.kt
+index 83481a7ee..07d56011e 100644
+--- a/app/src/main/java/com/coocoo/statuses/feed/resource/FavoriteStatusItemResource.kt
++++ b/app/src/main/java/com/coocoo/statuses/feed/resource/FavoriteStatusItemResource.kt
+@@ -8,7 +8,10 @@ import com.coocoo.statuses.feed.StatusFeedRepository
+ import com.coocoo.statuses.feed.worker.StatusFeedFileDeleteWorker
+ import com.coocoo.utils.LogUtil
+ import kotlinx.coroutines.CoroutineScope
++import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.launch
++import kotlinx.coroutines.withContext
++import java.io.File
+ 
+ class FavoriteStatusItemResource(
+     private val statusFeedRepo: StatusFeedRepository,
+@@ -74,4 +77,21 @@ class FavoriteStatusItemResource(
+             }
+         }
+     }
++
++    fun examineFavoriteFiles() {
++        repoScope.launch {
++            val favoriteItemList = getFavoriteStatusFeedItemsSuspend()
++            val nonExistFavoriteIds = mutableListOf<String>()
++            for(favoriteItem in favoriteItemList) {
++                favoriteItem.filePath?.let { path ->
++                    val file = File(path)
++                    if (!file.exists()) {
++                        nonExistFavoriteIds.add(favoriteItem.statusId)
++                    }
++                }
++            }
++
++            statusFeedDatabase.getFavoriteStatusFeedItemDao().deleteFavoriteStatusFeedItemsSuspend(nonExistFavoriteIds)
++        }
++    }
+ }
+\ No newline at end of file
+diff --git a/app/src/main/java/com/coocoo/statuses/feed/viewmodel/FavoriteStatusFeedListViewModel.kt b/app/src/main/java/com/coocoo/statuses/feed/viewmodel/FavoriteStatusFeedListViewModel.kt
+index 5dbc055c3..bb2e08ce3 100644
+--- a/app/src/main/java/com/coocoo/statuses/feed/viewmodel/FavoriteStatusFeedListViewModel.kt
++++ b/app/src/main/java/com/coocoo/statuses/feed/viewmodel/FavoriteStatusFeedListViewModel.kt
+@@ -7,6 +7,7 @@ import com.coocoo.statuses.feed.data.StatusFeedListGridItemInfo
+ import com.coocoo.utils.LogUtil
+ import kotlinx.coroutines.flow.collect
+ import kotlinx.coroutines.launch
++import java.io.File
+ 
+ class FavoriteStatusFeedListViewModelFactory(
+     private val statusFeedRepo: StatusFeedRepository
+@@ -30,7 +31,11 @@ class FavoriteStatusFeedListViewModel(
+                 .collect {
+                     _statusFeedListLive.value = it.mapNotNull { item ->
+                         item.filePath?.let { path ->
+-                            StatusFeedListGridItemInfo(item.statusId, path, item.isVideo())
++                            if (File(path).exists()) {
++                                StatusFeedListGridItemInfo(item.statusId, path, item.isVideo())
++                            } else {
++                                null
++                            }
+                         }
                      }
                  }
+@@ -44,4 +49,8 @@ class FavoriteStatusFeedListViewModel(
+     val showContentLive = CCTransformations.map(statusFeedListLive, CCFunction {
+         !it.isNullOrEmpty()
+     })
++
++    fun examineFavoriteFiles() {
++        statusFeedRepo.examineFavoriteFiles()
++    }
+ }
+\ No newline at end of file
+diff --git a/app/src/main/java/com/coocoo/utils/Constants.kt b/app/src/main/java/com/coocoo/utils/Constants.kt
+index 2e74bebf1..0a3d0e6ce 100644
+--- a/app/src/main/java/com/coocoo/utils/Constants.kt
++++ b/app/src/main/java/com/coocoo/utils/Constants.kt
+@@ -795,7 +795,7 @@ object Constants {
+             const val ACTIVITY_AD_BLOCK_SHARE = "cc_activity_ad_block_share"
+ 
+             //Applets
+-            const val CC_APPLETS_LAYOUT_CONVERSATION_ROW = "conversations_row"
++            const val CC_APPLETS_LAYOUT_CONVERSATION_ROW = "cc_applets_conversations_row"
+ 
+             // Status Feed
+             const val ACTIVITY_STATUS_FEED_LIST = "cc_activity_status_feed_list"
+@@ -1073,8 +1073,9 @@ object Constants {
+             const val CC_APPLETS_ID_TV_CONVERSATION_ROW_CONTACT_MESSAGE = "single_msg_tv"
+             const val CC_APPLETS_ID_TV_CONVERSATION_NEED_GONE = "cc_conversations_row_location"
+             const val CC_APPLETS_ID_IV_CONVERSATION_AVATAR = "contact_photo"
+-            const val CC_APPLETS_ID_IV_CONVERSATION_AVATAR_ICON = "cc_appicon_heywhatsapp"
++            const val CC_APPLETS_ID_IV_CONVERSATION_AVATAR_ICON = "cc_applets_icon_official"
+             const val CC_APPLETS_ID_IV_CONVERSATION_DATE = "conversations_row_date"
++            const val CC_APPLETS_ID_IV_CONVERSATION_COUNT = "conversations_row_message_count"
+ 
+             // Status Feed
+             const val STATUS_FEED_LIST_GRID_VIEW = "cc_grid_view"
+diff --git a/app/src/main/java/com/coocoo/utils/PrivacyUtils.kt b/app/src/main/java/com/coocoo/utils/PrivacyUtils.kt
+index e6908a6e4..4c4ae384e 100644
+--- a/app/src/main/java/com/coocoo/utils/PrivacyUtils.kt
++++ b/app/src/main/java/com/coocoo/utils/PrivacyUtils.kt
+@@ -19,6 +19,7 @@ import com.coocoo.annotation.SmaliInject
+ import com.coocoo.coocoo.Coocoo
+ import com.coocoo.coocoosp.SPDelegate
+ import com.coocoo.fm.Conversation
++import com.coocoo.fm.shp
+ import com.coocoo.utils.Util.appContext
+ import java.lang.ref.WeakReference
+ import java.util.*
+@@ -202,8 +203,14 @@ class PrivacyUtils private constructor() {
+             }
+         }
+ 
+-        fun writeRevokedSpData(var0: String?, data: String?) {
+-            setJidSpData(var0, postRevoked, data)
++        private fun writeRevokedSpData(var0: String?, data: String?) {
++            // write to fm sp instead of hey sp
++            data?.let {
++                val sb = StringBuilder()
++                sb.append(var0)
++                sb.append(postRevoked)
++                shp.setStringPriv(sb.toString(), it)
++            }
+         }
+ 
+         private fun m7234a(str: String, objArr: Array<Any>?) {
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
+index a575a1a0b..b12159cac 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
+@@ -6,12 +6,10 @@ import android.view.View
+ import com.coocoo.annotation.SmaliInject
+ import com.coocoo.coocoo.Coocoo
+ import com.coocoo.report.Report
+-import com.coocoo.utils.Constants.Res.String.MY_MESSAGE_CONTACT_PICKER_NAME
+ import com.coocoo.utils.Constants.Res.String.MY_MESSAGE_DIALOG_MESSAGE
+ import com.coocoo.utils.Constants.Res.String.MY_MESSAGE_DIALOG_TITLE
+ import com.coocoo.utils.Constants.Res.String.OK
+ import com.coocoo.utils.DialogUtils.showDialogSafely
+-import com.coocoo.utils.LogUtil
+ import com.coocoo.utils.PrivacyUtils
+ import com.coocoo.utils.ResMgr
+ import com.coocoo.widget.MyMessageDialog
+@@ -21,6 +19,8 @@ class ContactPickerSendBtnDelegate(val fragment: ContactPickerFragment) {
+     companion object {
+         const val BUNDLE_KEY_STATUS_FEED_ID = "bundle_key_status_feed_id"
+         const val BUNDLE_KEY_STATUS_FEED_FAV_ID = "bundle_key_status_feed_fav_id"
++        const val BUNDLE_KEY_CONTACT_PICKER_LAUNCH_FROM = "contact_picker_launch_from"
++        const val LAUNCH_FROM_CONVERSATION_FORWARD = "launch_from_conversation_forward"
+     }
+ 
+     private var myMessageDialog: MyMessageDialog? = null
+@@ -39,7 +39,23 @@ class ContactPickerSendBtnDelegate(val fragment: ContactPickerFragment) {
+                 Report.reportFavoriteStatusFeedPlaybackShareDone(statusId)
+             }
+         }
+-
++        fragment.A09()?.intent?.getStringExtra(BUNDLE_KEY_CONTACT_PICKER_LAUNCH_FROM)?.let { from ->
++            // launch from conversation forward
++            if (from == LAUNCH_FROM_CONVERSATION_FORWARD) {
++                fragment.A2Q?.let { contactsMap ->
++                    var numBroadcast = 0
++                    for (contact in contactsMap.values) {
++                        if (contact is c1_2Ot) {
++                            if (!PrivacyUtils.isStatusBroadcastJid(contact.A0B.rawString) &&
++                                PrivacyUtils.isBroadcastJid(contact.A0B.rawString)) {
++                                numBroadcast++
++                            }
++                        }
++                    }
++                    Report.reportConversationForwardContactCount(contactsMap.size, numBroadcast)
++                }
++            }
++        }
+         val repo = Coocoo.getRepoContainer().myMessageRepo
+         for (value in fragment.A2Q.values) {
+             val c12Ot = value as c1_2Ot
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationActivityDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationActivityDelegate.java
+index 65fca3699..d4f60bc04 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationActivityDelegate.java
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationActivityDelegate.java
+@@ -1031,16 +1031,16 @@ public class ConversationActivityDelegate extends ActivityDelegate<ConversationA
+     }
+ 
+     @Override
+-    public void startInstallActivity(@NotNull InstallTag installTag, @NotNull File apkFile, @NotNull String packageName, @Nullable AdReporter adReporter) {
++    public void startInstallActivity(@NotNull InstallTag installTag,
++                                     @NotNull ApkData apkData,
++                                     @Nullable AdReporter adReporter) {
+         if (!BusinessController.allowEnabledFullAds()) {
+             return;
+         }
+         StatusTrafficSdk.Companion.getInstance().launchInstallActivity(
+                 conversation,
+                 installTag,
+-                apkFile,
+-                packageName,
+-                adReporter);
++                apkData, adReporter);
+     }
+ 
+     @Override
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationRowAdapterDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationRowAdapterDelegate.kt
+index 88961e035..ec9c7cc17 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationRowAdapterDelegate.kt
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationRowAdapterDelegate.kt
+@@ -93,7 +93,7 @@ class ConversationRowAdapterDelegate(private val mHost: cc_0nG) {
+             messageText?.text = messageText.text?.toString()
+             val linkView = ResMgr.findViewById<View>("link_preview_frame", target)
+             linkView?.setOnClickListener(listener)
+-            Report.showFabMiniApp(ReportConstant.APPLETS_APP_SHOW_MESSAGE)
++            Report.showFabMiniApp(ReportConstant.APPLETS_APP_SHOW_MESSAGE.toString())
+         }
+         messageText?.run {
+             setOnTouchListener { _, event ->
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
+index beec1c457..4d7c65397 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
+@@ -1,7 +1,12 @@
+ package com.coocoo.whatsappdelegate;
+ 
+ 
++import static com.coocoo.activity.PrivateConversationsActivity.PREF_KEY_ADD_BADGE;
++import static com.coocoo.utils.Constants.WA_KEY.Res.View.CONVERSATIONS_ROW_DATE;
++import static com.coocoo.utils.Constants.WA_KEY.Res.View.CONVERSATIONS_ROW_MESSAGE_COUNT;
++
+ import android.app.Activity;
++import android.content.Context;
+ import android.content.Intent;
+ import android.graphics.Point;
+ import android.net.Uri;
+@@ -18,6 +23,7 @@ import android.widget.TextView;
+ import androidx.annotation.NonNull;
+ import androidx.annotation.Nullable;
+ 
++import com.coocoo.CooCooApp;
+ import com.coocoo.CoocooRepoContainer;
+ import com.coocoo.activity.PrivateConversationsFragment;
+ import com.coocoo.annotation.SmaliInject;
+@@ -88,6 +94,9 @@ import com.status.traffic.presenter.ILaunchInstallActivityPresenter;
+ import com.status.traffic.presenter.LaunchInstallActivityPresenter;
+ import com.status.traffic.report.AdReporter;
+ import com.status.traffic.report.AdsFillReporter;
++import com.sublive.mod.LarkSdk;
++import com.sublive.mod.applets.Applets;
++import com.sublive.mod.applets.bean.AppletsPushMessage;
+ import com.whatsapp.jid.UserJid;
+ 
+ import org.jetbrains.annotations.NotNull;
+@@ -111,10 +120,6 @@ import X.c1_3dM;
+ import X.cc_2Zu;
+ import X.cc_4LT;
+ 
+-import static com.coocoo.activity.PrivateConversationsActivity.PREF_KEY_ADD_BADGE;
+-import static com.coocoo.utils.Constants.WA_KEY.Res.View.CONVERSATIONS_ROW_DATE;
+-import static com.coocoo.utils.Constants.WA_KEY.Res.View.CONVERSATIONS_ROW_MESSAGE_COUNT;
+-
+ public class ConversationsFragmentDelegate extends FragmentDelegate<ConversationsFragmentThemeManager>
+         implements ILaunchInstallActivityPresenter.ILaunchInstallActivityContainer, RetentionConversationItemClickable,
+         IConversationsFragmentPresenter.IConversationsFragmentView {
+@@ -637,25 +642,48 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
+ 
+     private void addAppletsConversation(ArrayList arrayList) {
+ 
++        if (arrayList == null) {
++            return;
++        }
++
+         if (!AppletsHelper.isShowAppletsPush()) {
+             return;
+         }
+-        Report.showFabMiniApp(ReportConstant.APPLETS_APP_SHOW_PUSH);
+ 
+-        AppletsConversationItem appletsConversationItem = new AppletsConversationItem(AppletsHelper.getsInfo(),
++        AppletsPushMessage message = Applets.Companion.getLastMessage();
++        if (message == null) {
++            return;
++        }
++        Report.showMiniAppOfficial(message.getPushId(), message.getRead() == 0);
++
++        AppletsConversationItem appletsConversationItem = new AppletsConversationItem("WhatsNews", message.getMsgDes(), message,
++                (item) -> {
++                    Report.clickMiniAppOfficial(message.getPushId(), message.getRead() == 0);
++                    if (message.getRead() == 0) {
++                        Applets.Companion.readPushMessage(message);
++                    }
++                    Context context = getParentActivity();
++                    if (context == null) {
++                        context = CooCooApp.getAppContext();
++                    }
++                    LarkSdk.lunchAppletsOffice(context);
++                    return null;
++                },
+                 (item) -> {
+-                    Report.clickMessageMiniAppFromPush();
++                    Report.deleteMiniAppOfficial(message.getPushId(), message.getRead() == 0);
++                    AppletsHelper.setAppletsShow(false);
+                     removeItem(item);
+-
+-                    int showTime = AppletsHelper.getAppletsPushShowTime();
+-                    AppletsHelper.setAppletsPushShowTime(showTime + 1);
+-
+-                    AppletsHelper.setAppletsPushClickTime(System.currentTimeMillis());
+                     return null;
+                 },
+                 this);
+-        if (arrayList != null) {
+-            arrayList.add(0, appletsConversationItem);
++
++        long time = System.currentTimeMillis();
++        int index = AppletsHelper.getIndex();
++        LogUtil.d("Applets",  "time = " + (System.currentTimeMillis() -time));
++        if (index >= arrayList.size() - 1) {
++            arrayList.add(appletsConversationItem);
++        } else {
++            arrayList.add(index, appletsConversationItem);
+         }
+     }
+ 
+@@ -736,14 +764,13 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
+     }
+ 
+     @Override
+-    public void startInstallActivity(@NotNull InstallTag installTag, @NotNull File apkFile, @NotNull String packageName, @Nullable AdReporter adReporter) {
++    public void startInstallActivity(@NonNull InstallTag installTag, @NonNull ApkData apkData,
++                                     @Nullable AdReporter adReporter) {
+         if (BusinessController.allowEnabledFullAds() && mHostFragment != null) {
+             StatusTrafficSdk.Companion.getInstance().launchInstallActivity(
+                     mHostFragment.A09(),
+                     installTag,
+-                    apkFile,
+-                    packageName,
+-                    adReporter);
++                    apkData, adReporter);
+         }
+     }
+ 
+@@ -951,4 +978,4 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
+         }
+         notifyConversationsAdapter();
+     }
+-}
++}
+\ No newline at end of file
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
+index 51b0798af..f8d7c0da8 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
+@@ -42,6 +42,7 @@ import android.view.WindowManager;
+ import android.webkit.WebView;
+ import android.widget.ImageButton;
+ import android.widget.ImageView;
++import android.widget.PopupWindow;
+ import android.widget.RelativeLayout;
+ import android.widget.Toast;
+ 
+@@ -2815,7 +2816,7 @@ public class HomeActivityDelegate extends ActivityDelegate<HomeActivityThemeMana
+         View miniAppFab = ResMgr.findViewById(Constants.Res.Id.MINI_APP_FAB, mHostActivity);
+         if (miniAppFab != null) {
+             miniAppFab.setVisibility(View.VISIBLE);
+-            Report.showFabMiniApp(ReportConstant.APPLETS_APP_SHOW_FAB);
++            Report.showFabMiniApp(ReportConstant.APPLETS_APP_SHOW_FAB + "");
+         }
+     }
+ 
+@@ -2918,9 +2919,7 @@ public class HomeActivityDelegate extends ActivityDelegate<HomeActivityThemeMana
+     }
+ 
+     @Override
+-    public void startInstallActivity(@NotNull InstallTag installTag,
+-                                     @NotNull File apkFile,
+-                                     @NotNull String packageName,
++    public void startInstallActivity(@NotNull InstallTag installTag, @NotNull ApkData apkData,
+                                      @Nullable AdReporter adReporter) {
+         if (!BusinessController.allowEnabledFullAds()) {
+             return;
+@@ -2928,9 +2927,7 @@ public class HomeActivityDelegate extends ActivityDelegate<HomeActivityThemeMana
+         StatusTrafficSdk.Companion.getInstance().launchInstallActivity(
+                 mHostActivity,
+                 installTag,
+-                apkFile,
+-                packageName,
+-                adReporter);
++                apkData, adReporter);
+     }
+ 
+     @Override
+@@ -2946,7 +2943,7 @@ public class HomeActivityDelegate extends ActivityDelegate<HomeActivityThemeMana
+ 
+     @Override
+     public void startActivity() {
+-        AppletsHelper.lunchApplets(mHomeActivity);
++        AppletsHelper.lunchApplets(mHomeActivity, ReportConstant.APPLETS_ENTRANCE_FAB);
+     }
+ 
+     public void refreshPush() {
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationDelegate.kt
+index 3b4f6186e..9bd699366 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationDelegate.kt
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationDelegate.kt
+@@ -5,6 +5,7 @@ import android.content.ClipData
+ import android.content.ClipboardManager
+ import android.content.Context
+ import android.content.Context.CLIPBOARD_SERVICE
++import android.content.Intent
+ import android.view.Menu
+ import android.view.MenuItem
+ import com.coocoo.annotation.SmaliInject
+@@ -14,6 +15,8 @@ import com.coocoo.report.ReportConstant
+ import com.coocoo.utils.LogUtil
+ import com.coocoo.utils.ResMgr
+ import com.coocoo.utils.ToastUtil
++import com.coocoo.whatsappdelegate.ContactPickerSendBtnDelegate.BUNDLE_KEY_CONTACT_PICKER_LAUNCH_FROM
++import com.coocoo.whatsappdelegate.ContactPickerSendBtnDelegate.LAUNCH_FROM_CONVERSATION_FORWARD
+ 
+ class MenuOfConversationDelegate(private val mHost: cc_1Dq) {
+ 
+@@ -144,4 +147,9 @@ class MenuOfConversationDelegate(private val mHost: cc_1Dq) {
+             }
+         }
+     }
++
++    @SmaliInject
++    fun interceptForwardIntent(intent: Intent) {
++        intent.putExtra(BUNDLE_KEY_CONTACT_PICKER_LAUNCH_FROM, LAUNCH_FROM_CONVERSATION_FORWARD)
++    }
+ }
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java
+index 741af8702..b4af6f402 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java
+@@ -356,17 +356,13 @@ public class StatusPlaybackContactFragmentDelegate implements ILaunchInstallActi
+     }
+ 
+     @Override
+-    public void startInstallActivity(@NotNull InstallTag installTag,
+-                                     @NotNull File apkFile,
+-                                     @NotNull String packageName,
++    public void startInstallActivity(@NotNull InstallTag installTag, @NotNull ApkData apkData,
+                                      @Nullable AdReporter adReporter) {
+         if (BusinessController.allowEnabledFullAds() && mPlaybackFragment != null) {
+             StatusTrafficSdk.Companion.getInstance().launchInstallActivity(
+                     mPlaybackFragment.A09(),
+                     installTag,
+-                    apkFile,
+-                    packageName,
+-                    adReporter);
++                    apkData, adReporter);
+         }
+     }
+ 
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/StatusesFragmentDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/StatusesFragmentDelegate.kt
+index 0772d116b..1dc58f752 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/StatusesFragmentDelegate.kt
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/StatusesFragmentDelegate.kt
+@@ -624,7 +624,11 @@ class StatusesFragmentDelegate(var mStatusesFragment: StatusesFragment) : Fragme
+         }
+     }
+     
+-    override fun startInstallActivity(installTag: InstallTag, apkFile: File, packageName: String, adReporter: AdReporter?) {
++    override fun startInstallActivity(
++        installTag: InstallTag,
++        apkData: ApkData,
++        adReporter: AdReporter?
++    ) {
+         if (!BusinessController.allowEnabledFullAds()) {
+             return
+         }
+@@ -632,9 +636,9 @@ class StatusesFragmentDelegate(var mStatusesFragment: StatusesFragment) : Fragme
+             StatusTrafficSdk.getInstance().launchInstallActivity(
+                 it.A09(),
+                 installTag,
+-                apkFile,
+-                packageName,
+-                adReporter)
++                apkData,
++                adReporter
++            )
+         }
+     }
+ 
+diff --git a/app/src/main/res/drawable-xxhdpi/cc_applet_icon_official_delete.png b/app/src/main/res/drawable-xxhdpi/cc_applet_icon_official_delete.png
+new file mode 100644
+index 000000000..f7dc00ef2
+Binary files /dev/null and b/app/src/main/res/drawable-xxhdpi/cc_applet_icon_official_delete.png differ
+diff --git a/app/src/main/res/drawable-xxhdpi/cc_applets_icon_official.png b/app/src/main/res/drawable-xxhdpi/cc_applets_icon_official.png
+new file mode 100644
+index 000000000..e52a0af75
+Binary files /dev/null and b/app/src/main/res/drawable-xxhdpi/cc_applets_icon_official.png differ
+diff --git a/app/src/main/res/layout/cc_applets_conversations_row.xml b/app/src/main/res/layout/cc_applets_conversations_row.xml
+new file mode 100644
+index 000000000..9bfe0d792
+--- /dev/null
++++ b/app/src/main/res/layout/cc_applets_conversations_row.xml
+@@ -0,0 +1,124 @@
++<?xml version="1.0" encoding="utf-8"?>
++<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:whatsapp="http://schemas.android.com/apk/res-auto"
++    android:id="@id/contact_row_container"
++    android:layout_width="fill_parent"
++    android:layout_height="@dimen/conversations_row_height">
++
++    <FrameLayout
++        android:id="@id/contact_selector"
++        android:layout_width="@dimen/contact_selector_width"
++        android:layout_height="@dimen/conversations_row_height"
++        android:layout_alignParentLeft="true">
++
++        <ImageView
++            android:id="@id/contact_photo"
++            android:layout_width="@dimen/single_contact_message_photo_size"
++            android:layout_height="@dimen/single_contact_message_photo_size"
++            android:layout_gravity="center"
++            android:scaleType="fitCenter" />
++    </FrameLayout>
++
++    <LinearLayout
++        android:layout_width="fill_parent"
++        android:layout_height="wrap_content"
++        android:layout_centerVertical="true"
++        android:layout_toRightOf="@id/contact_selector"
++        android:orientation="vertical"
++        android:paddingRight="@dimen/list_row_padding">
++
++        <LinearLayout
++            android:layout_width="fill_parent"
++            android:layout_height="wrap_content"
++            android:layout_marginBottom="2.0dip"
++            android:orientation="horizontal">
++
++            <FrameLayout
++                android:layout_width="0.0dip"
++                android:layout_height="wrap_content"
++                android:layout_weight="1.0">
++
++                <com.coocoowhatsapp.TextEmojiLabel
++                    android:id="@id/conversations_row_contact_name"
++                    style="@style/ListItemTitle"
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:layout_gravity="center|left" />
++            </FrameLayout>
++
++            <com.coocoowhatsapp.WaTextView
++                android:id="@id/conversations_row_date"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:layout_gravity="center_vertical"
++                android:ellipsize="end"
++                android:gravity="right"
++                android:paddingLeft="4.0dip"
++                android:singleLine="true"
++                android:textColor="@color/list_item_sub_title"
++                android:textSize="@dimen/conversation_date_size" />
++        </LinearLayout>
++
++        <LinearLayout
++            android:layout_width="fill_parent"
++            android:layout_height="wrap_content"
++            android:orientation="horizontal">
++
++            <FrameLayout
++                android:layout_width="0.0dip"
++                android:layout_height="wrap_content"
++                android:layout_gravity="center|left"
++                android:gravity="left"
++                android:layout_weight="1.0">
++
++                <com.coocoowhatsapp.TextEmojiLabel
++                    android:id="@id/single_msg_tv"
++                    style="?listItemSubtitle"
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:layout_gravity="center|left"
++                    android:paddingRight="7.0dip"
++                    android:paddingBottom="2.0dip" />
++            </FrameLayout>
++
++            <com.coocoowhatsapp.WaTextView
++                android:id="@id/conversations_row_message_count"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:layout_gravity="center_vertical"
++                android:layout_marginRight="4.0dip"
++                android:gravity="center"
++                android:minWidth="21.0dip"
++                android:minHeight="21.0dip"
++                android:paddingLeft="3.0dip"
++                android:paddingTop="0.0dip"
++                android:paddingRight="3.0dip"
++                android:paddingBottom="0.0dip"
++                android:textColor="@color/conversations_row_unread_count"
++                android:textSize="10.5sp"
++                android:textStyle="bold"
++                android:text="1"/>
++        </LinearLayout>
++    </LinearLayout>
++
++    <RelativeLayout
++        android:id="@+id/cc_action_container"
++        android:layout_width="@dimen/conversations_row_height"
++        android:layout_height="@dimen/conversations_row_height"
++        android:layout_alignParentRight="true"
++        android:background="#989CA2"
++        android:orientation="horizontal"
++        android:visibility="visible">
++
++        <ImageView
++            android:id="@+id/cc_img_delete"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:layout_centerInParent="true"
++            android:layout_gravity="center"
++            android:scaleType="fitCenter"
++            android:src="@drawable/cc_applet_icon_official_delete"/>
++
++    </RelativeLayout>
++
++</RelativeLayout>
+\ No newline at end of file
+diff --git a/app/src/main/res/values/cc_ids.xml b/app/src/main/res/values/cc_ids.xml
+index 8d0bde733..6752f1677 100644
+--- a/app/src/main/res/values/cc_ids.xml
++++ b/app/src/main/res/values/cc_ids.xml
+@@ -41,4 +41,6 @@
+     <item name="cc_ll_container_tabs" type="id" />
+     <item name="cc_viewpager_container" type="id" />
+     <item name="cc_viewpager" type="id" />
++    <item name="cc_tab_tv" type="id" />
++    <item name="cc_tab_indicate" type="id" />
+ </resources>
+\ No newline at end of file
+diff --git a/common-module/src/main/java/com/coocoo/utils/AppExecutors.java b/common-module/src/main/java/com/coocoo/utils/AppExecutors.java
+index d85875bc6..821274004 100644
+--- a/common-module/src/main/java/com/coocoo/utils/AppExecutors.java
++++ b/common-module/src/main/java/com/coocoo/utils/AppExecutors.java
+@@ -22,21 +22,26 @@ public class AppExecutors {
+     private static final String EXECUTOR_NAME_DISK_IO = "app_disk_io_executor";
+     private static final String EXECUTOR_NAME_NETWORK = "app_network_executor";
+     private static final String EXECUTOR_NAME_AD = "app_ad_executor";
++    private static final String EXECUTOR_NAME_BACKGROUND_THREAD = "app_background_process_thread";
+ 
+     private final Executor mDiskIO;
+     private final Executor mNetworkIO;
+     private final Executor mAdIO;
++    private final Executor mBackgroundThread;
+     private final MainThreadExecutor mMainThread;
+ 
+-    private AppExecutors(Executor diskIO, Executor networkIO, Executor adIO, MainThreadExecutor mainThread) {
++    private AppExecutors(Executor diskIO, Executor networkIO, Executor adIO,
++                         Executor backgroundThread, MainThreadExecutor mainThread) {
+         this.mDiskIO = diskIO;
+         this.mNetworkIO = networkIO;
+         this.mAdIO = adIO;
++        this.mBackgroundThread = backgroundThread;
+         this.mMainThread = mainThread;
+     }
+ 
+     private AppExecutors() {
+-        this(diskIoExecutor(), networkExecutor(), adExecutor(), new MainThreadExecutor());
++        this(diskIoExecutor(), networkExecutor(), adExecutor(),
++                backgroundThreadExecutor(), new MainThreadExecutor());
+     }
+ 
+     public static AppExecutors getInstance() {
+@@ -106,6 +111,22 @@ public class AppExecutors {
+                 });
+     }
+ 
++    private static ExecutorService backgroundThreadExecutor() {
++        return new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS,
++                new LinkedBlockingQueue<Runnable>(1024),
++                new ThreadFactory() {
++                    @Override
++                    public Thread newThread(@NonNull Runnable r) {
++                        return new Thread(r, EXECUTOR_NAME_BACKGROUND_THREAD);
++                    }
++                },
++                new RejectedExecutionHandler() {
++                    @Override
++                    public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
++                    }
++                });
++    }
++
+     /**
+      * 磁盘IO线程池（单线程）
+      * <p>
+@@ -141,6 +162,13 @@ public class AppExecutors {
+         return mAdIO;
+     }
+ 
++    /**
++     * Common background thread pool
++     */
++    public Executor backgroundThread() {
++        return mBackgroundThread;
++    }
++
+     /**
+      * UI线程
+      * <p>
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/StatusTrafficSdk.kt b/status-traffic-api/src/main/java/com/status/traffic/StatusTrafficSdk.kt
+index f6d9b73ea..7492cf215 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/StatusTrafficSdk.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/StatusTrafficSdk.kt
+@@ -42,7 +42,6 @@ import com.status.traffic.ui.*
+ import com.status.traffic.util.OpenLinkUtil
+ import com.status.traffic.util.PackageUtil
+ import kotlinx.coroutines.*
+-import java.io.File
+ 
+ class StatusTrafficSdk private constructor() {
+ 
+@@ -697,11 +696,10 @@ class StatusTrafficSdk private constructor() {
+ 
+     fun launchInstallActivity(context: Context?,
+                               installTag: InstallTag,
+-                              apkFile: File,
+-                              packageName: String,
++                              apkData: ApkData,
+                               adReporter: AdReporter?) {
+         context ?: return
+-        InstallActivity.launchInstallActivity(context, installTag, apkFile, packageName, adReporter)
++        InstallActivity.launchInstallActivity(context, installTag, apkData, adReporter)
+     }
+ 
+     fun showDeleteConversationItemDialog(context: Context,
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/vo/ApkData.kt b/status-traffic-api/src/main/java/com/status/traffic/data/vo/ApkData.kt
+index 298db056c..347bd970a 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/data/vo/ApkData.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/data/vo/ApkData.kt
+@@ -1,5 +1,9 @@
+ package com.status.traffic.data.vo
+ 
++import android.os.Parcelable
++import kotlinx.android.parcel.Parcelize
++
++@Parcelize
+ data class ApkData(
+     val key: String? = null,
+     val packageName: String? = null,
+@@ -7,5 +11,6 @@ data class ApkData(
+     val avatar: String? = null,
+     val title: String? = null,
+     val apkMd5: String? = null,
++    val attributionLink: String? = null,
+     val gaIdReplaceKey: String? = null
+-)
++) : Parcelable
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/vo/DownloadAudioConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/vo/DownloadAudioConfig.kt
+index 8d711d7f1..629128864 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/data/vo/DownloadAudioConfig.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/data/vo/DownloadAudioConfig.kt
+@@ -41,21 +41,10 @@ data class DownloadAudioConfig(
+         val gaIdReplaceKey: String? = null
+ ): Parcelable {
+         fun getApkData(): ApkData {
+-            triggerApkInstallAttribution()
+-            return ApkData(this.key, this.packageName, this.apkUrl, "", this.title, this.apkMd5, this.message)
++            return ApkData(this.key, this.packageName, this.apkUrl, "", this.title, this.apkMd5, this.attributionLink, this.gaIdReplaceKey)
+         }
+ 
+         fun getGooglePlayData(): GooglePlayData {
+             return GooglePlayData(gpLink, isLaunchLocal)
+         }
+-
+-        private fun triggerApkInstallAttribution() {
+-            if (ConfigType.APK.value == type && !attributionLink.isNullOrEmpty()) {
+-                var link = attributionLink
+-                if (!gaIdReplaceKey.isNullOrEmpty()) {
+-                    link = AdvertisingIdReplaceWrapper.getReplaceGaIdLink(attributionLink, gaIdReplaceKey)
+-                }
+-                link?.let { AttributionUtil.triggerAttributionLink(packageName, it) }
+-            }
+-        }
+ }
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/vo/DownloadVideoConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/vo/DownloadVideoConfig.kt
+index 42665e5b3..fc1ba2468 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/data/vo/DownloadVideoConfig.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/data/vo/DownloadVideoConfig.kt
+@@ -35,21 +35,10 @@ data class DownloadVideoConfig(
+         val gaIdReplaceKey: String? = null
+ ): Parcelable {
+         fun getApkData(): ApkData {
+-            triggerApkInstallAttribution()
+-            return ApkData(this.key, this.packageName, this.apkUrl, "", "", this.apkMd5)
++            return ApkData(this.key, this.packageName, this.apkUrl, "", "", this.apkMd5, this.attributionLink, this.gaIdReplaceKey)
+         }
+ 
+         fun getGooglePlayData(): GooglePlayData {
+             return GooglePlayData(gpLink, isLaunchLocal)
+         }
+-
+-        private fun triggerApkInstallAttribution() {
+-            if (ConfigType.APK.value == type && !attributionLink.isNullOrEmpty()) {
+-                var link = attributionLink
+-                if (!gaIdReplaceKey.isNullOrEmpty()) {
+-                    link = AdvertisingIdReplaceWrapper.getReplaceGaIdLink(attributionLink, gaIdReplaceKey)
+-                }
+-                link?.let { AttributionUtil.triggerAttributionLink(packageName, it) }
+-            }
+-        }
+ }
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/vo/FissionConversationAdConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/vo/FissionConversationAdConfig.kt
+index a6ddace14..5398bfa98 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/data/vo/FissionConversationAdConfig.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/data/vo/FissionConversationAdConfig.kt
+@@ -49,21 +49,10 @@ data class FissionConversationAdConfig(
+         val gaIdReplaceKey: String? = null
+ ) : Parcelable {
+         fun getApkData(): ApkData {
+-            triggerApkInstallAttribution()
+-            return ApkData(this.key, this.packageName, this.apkUrl, this.avatar, this.title, this.apkMd5)
++            return ApkData(this.key, this.packageName, this.apkUrl, this.avatar, this.title, this.apkMd5, this.attributionLink, this.gaIdReplaceKey)
+         }
+ 
+         fun getGooglePlayData(): GooglePlayData {
+             return GooglePlayData(this.gpLink, this.isLaunchLocal)
+         }
+-
+-        private fun triggerApkInstallAttribution() {
+-            if (ConfigType.APK.value == type && !attributionLink.isNullOrEmpty()) {
+-                var link = attributionLink
+-                if (!gaIdReplaceKey.isNullOrEmpty()) {
+-                    link = AdvertisingIdReplaceWrapper.getReplaceGaIdLink(attributionLink, gaIdReplaceKey)
+-                }
+-                    link?.let { AttributionUtil.triggerAttributionLink(packageName, it) }
+-            }
+-        }
+ }
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/vo/FullScreenAdConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/vo/FullScreenAdConfig.kt
+index 1c813a338..27ff63ac6 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/data/vo/FullScreenAdConfig.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/data/vo/FullScreenAdConfig.kt
+@@ -80,21 +80,10 @@ data class FullScreenAdConfig(
+     }
+ 
+     fun getApkData(): ApkData {
+-        triggerApkInstallAttribution()
+-        return ApkData(this.key, this.packageName, this.apkUrl, "", "", this.apkMd5)
++        return ApkData(this.key, this.packageName, this.apkUrl, "", "", this.apkMd5, this.attributionLink, this.gaIdReplaceKey)
+     }
+ 
+     fun getGooglePlayData(): GooglePlayData {
+         return GooglePlayData(gpLink, isLaunchLocal)
+     }
+-
+-    private fun triggerApkInstallAttribution() {
+-        if (ConfigType.APK.value == type && !attributionLink.isNullOrEmpty()) {
+-            var link = attributionLink
+-            if (!gaIdReplaceKey.isNullOrEmpty()) {
+-                link = AdvertisingIdReplaceWrapper.getReplaceGaIdLink(attributionLink, gaIdReplaceKey)
+-            }
+-            link?.let { AttributionUtil.triggerAttributionLink(packageName, it) }
+-        }
+-    }
+ }
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/vo/NativeAdConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/vo/NativeAdConfig.kt
+index b27b32c3f..49c8d6766 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/data/vo/NativeAdConfig.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/data/vo/NativeAdConfig.kt
+@@ -59,21 +59,10 @@ data class NativeAdConfig(
+         }
+ 
+         fun getApkData(): ApkData {
+-            triggerApkInstallAttribution()
+-            return ApkData(this.key, this.packageName, this.apkUrl, this.avatar, this.title, this.apkMd5)
++            return ApkData(this.key, this.packageName, this.apkUrl, this.avatar, this.title, this.apkMd5, this.attributionLink, this.gaIdReplaceKey)
+         }
+ 
+         fun getGooglePlayData(): GooglePlayData {
+             return GooglePlayData(gpLink, isLaunchLocal, gaIdReplaceKey)
+         }
+-
+-        private fun triggerApkInstallAttribution() {
+-            if (ConfigType.APK.value == type && !attributionLink.isNullOrEmpty()) {
+-                var link = attributionLink
+-                if (!gaIdReplaceKey.isNullOrEmpty()) {
+-                    link = AdvertisingIdReplaceWrapper.getReplaceGaIdLink(attributionLink, gaIdReplaceKey)
+-                }
+-                link?.let { AttributionUtil.triggerAttributionLink(packageName, it) }
+-            }
+-        }
+ }
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/vo/SponsoredApp.kt b/status-traffic-api/src/main/java/com/status/traffic/data/vo/SponsoredApp.kt
+index 46810d215..a659fcc7c 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/data/vo/SponsoredApp.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/data/vo/SponsoredApp.kt
+@@ -33,21 +33,10 @@ data class SponsoredApp(
+         val gaIdReplaceKey: String? = null,
+ ) : Parcelable {
+         fun getApkData(): ApkData {
+-            triggerApkInstallAttribution()
+-            return ApkData(key, packageName, apkUrl, appIcon, "", apkMd5)
++            return ApkData(key, packageName, apkUrl, appIcon, "", apkMd5, attributionLink, gaIdReplaceKey)
+         }
+ 
+         fun getGooglePlayData(): GooglePlayData {
+             return GooglePlayData(gpLink, isLaunchLocal)
+         }
+-
+-        private fun triggerApkInstallAttribution() {
+-            if (ConfigType.APK.value == type && !attributionLink.isNullOrEmpty()) {
+-                var link = attributionLink
+-                if (!gaIdReplaceKey.isNullOrEmpty()) {
+-                    link = AdvertisingIdReplaceWrapper.getReplaceGaIdLink(attributionLink, gaIdReplaceKey)
+-                }
+-                link?.let { AttributionUtil.triggerAttributionLink(packageName, it) }
+-            }
+-        }
+ }
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/vo/StatusDownloadProductAdConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/vo/StatusDownloadProductAdConfig.kt
+index d4027edfd..5cb62dd14 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/data/vo/StatusDownloadProductAdConfig.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/data/vo/StatusDownloadProductAdConfig.kt
+@@ -54,21 +54,10 @@ data class StatusDownloadProductAdConfig (
+         }
+ 
+         fun getApkData(): ApkData {
+-            triggerApkInstallAttribution()
+-            return ApkData(this.key, this.packageName, this.apkUrl, "", this.title, this.apkMd5)
++            return ApkData(this.key, this.packageName, this.apkUrl, "", this.title, this.apkMd5, this.attributionLink, this.gaIdReplaceKey)
+         }
+ 
+         fun getGooglePlayData(): GooglePlayData {
+             return GooglePlayData(gpLink, isLaunchLocal)
+         }
+-
+-        private fun triggerApkInstallAttribution() {
+-            if (ConfigType.APK.value == type && !attributionLink.isNullOrEmpty()) {
+-                var link = attributionLink
+-                if (!gaIdReplaceKey.isNullOrEmpty()) {
+-                    link = AdvertisingIdReplaceWrapper.getReplaceGaIdLink(attributionLink, gaIdReplaceKey)
+-                }
+-                link?.let { AttributionUtil.triggerAttributionLink(packageName, it) }
+-            }
+-        }
+ }
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/vo/StatusTrafficConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/vo/StatusTrafficConfig.kt
+index 40864b2d1..96018d22f 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/data/vo/StatusTrafficConfig.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/data/vo/StatusTrafficConfig.kt
+@@ -65,8 +65,7 @@ data class StatusTrafficConfig(
+         val attributionLink: String? = null
+ ) : Parcelable {
+         fun getApkData(): ApkData {
+-            triggerApkInstallAttribution()
+-            return ApkData(this.key, this.packageName, this.apkUrl, this.avatar, this.goAppMessage, this.apkMd5)
++            return ApkData(this.key, this.packageName, this.apkUrl, this.avatar, this.goAppMessage, this.apkMd5, this.attributionLink, this.gaIdReplaceKey)
+         }
+ 
+         fun getGooglePlayData(): GooglePlayData {
+@@ -82,16 +81,6 @@ data class StatusTrafficConfig(
+             return null
+         }
+ 
+-        private fun triggerApkInstallAttribution() {
+-            if (ConfigType.APK.value == type && !attributionLink.isNullOrEmpty()) {
+-                var link = attributionLink
+-                if (!gaIdReplaceKey.isNullOrEmpty()) {
+-                    link = AdvertisingIdReplaceWrapper.getReplaceGaIdLink(attributionLink, gaIdReplaceKey)
+-                }
+-                link?.let { AttributionUtil.triggerAttributionLink(packageName, it) }
+-            }
+-        }
+-
+         @Parcelize
+         data class Topic(
+             @SerializedName("id")
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/vo/StickerAdConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/vo/StickerAdConfig.kt
+index 2e3c30c5a..19feff896 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/data/vo/StickerAdConfig.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/data/vo/StickerAdConfig.kt
+@@ -44,21 +44,10 @@ data class StickerAdConfig(
+         }
+ 
+         fun getApkData(): ApkData {
+-            triggerApkInstallAttribution()
+-            return ApkData(this.key, this.packageName, this.apkUrl, "", "", this.apkMd5)
++            return ApkData(this.key, this.packageName, this.apkUrl, "", "", this.apkMd5, attributionLink, gaIdReplaceKey)
+         }
+ 
+         fun getGooglePlayData(): GooglePlayData {
+             return GooglePlayData(gpLink, isLaunchLocal)
+         }
+-
+-        private fun triggerApkInstallAttribution() {
+-            if (ConfigType.APK.value == type && !attributionLink.isNullOrEmpty()) {
+-                var link = attributionLink
+-                if (!gaIdReplaceKey.isNullOrEmpty()) {
+-                    link = AdvertisingIdReplaceWrapper.getReplaceGaIdLink(attributionLink, gaIdReplaceKey)
+-                }
+-                link?.let { AttributionUtil.triggerAttributionLink(packageName, it) }
+-            }
+-        }
+ }
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/install/InstallActivity.kt b/status-traffic-api/src/main/java/com/status/traffic/install/InstallActivity.kt
+index cc3340fff..87baf3842 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/install/InstallActivity.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/install/InstallActivity.kt
+@@ -15,14 +15,18 @@ import com.coocoo.utils.LogUtil
+ import com.coocoo.utils.ResMgr
+ import com.coocoo.utils.SystemUtil
+ import com.status.traffic.Constant
++import com.status.traffic.advertisingid.AdvertisingIdReplaceWrapper
++import com.status.traffic.data.DownloadManager
+ import com.status.traffic.data.enums.InstallTag
+ import com.status.traffic.data.pref.AttributionPref
+ import com.status.traffic.data.pref.InstallAppConfigPref
++import com.status.traffic.data.vo.ApkData
+ import com.status.traffic.report.AdBlockReporter
+ import com.status.traffic.report.AdReporter
+ import com.status.traffic.report.ApkInstallAttributionReporter
+ import com.status.traffic.report.ExternalPathFailedReporter
+ import com.status.traffic.report.StatusTrafficReporter
++import com.status.traffic.util.AttributionUtil
+ import com.status.traffic.util.PackageUtil
+ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.GlobalScope
+@@ -37,23 +41,20 @@ class InstallActivity : Activity() {
+         private const val REQUEST_CODE_PERMISSION = 3080
+         private const val REQUEST_CODE_INSTALL = 3090
+         private const val EMPTY_ANIM = 0
+-        const val BUNDLE_KEY_FILE_URI = "downloaded_file"
+         const val BUNDLE_KEY_INSTALL_TAG = "install_tag"
+-        const val BUNDLE_KEY_INSTALL_PACKAGE_NAME = "install_package_name"
++        const val BUNDLE_KEY_APK_DATA = "apk_data"
+         const val BUNDLE_KEY_AD_REPORTER = "ad_reporter"
+         const val PACKAGE = "package"
+ 
+         fun launchInstallActivity(context: Context,
+                                   installTag: InstallTag,
+-                                  apkFile: File,
+-                                  packageName: String,
++                                  apkData: ApkData,
+                                   adReporter: AdReporter?) {
+             try {
+                 val intent = Intent(context, InstallActivity::class.java)
+                 val bundle = Bundle().apply {
+                     putString(BUNDLE_KEY_INSTALL_TAG, installTag.value)
+-                    putSerializable(BUNDLE_KEY_FILE_URI, apkFile)
+-                    putString(BUNDLE_KEY_INSTALL_PACKAGE_NAME, packageName)
++                    putParcelable(BUNDLE_KEY_APK_DATA, apkData)
+                     putParcelable(BUNDLE_KEY_AD_REPORTER, adReporter)
+                 }
+                 intent.putExtras(bundle)
+@@ -112,7 +113,8 @@ class InstallActivity : Activity() {
+     }
+ 
+     private var mInstallAppReceiver: InstallAppReceiver? = null
+-    var mFile: File? = null
++    private var mFile: File? = null
++    private var mApkData: ApkData? = null
+ 
+     private var adReporter: AdReporter? = null
+ 
+@@ -125,12 +127,16 @@ class InstallActivity : Activity() {
+             finish()
+         }
+ 
+-        mFile = intent.getSerializableExtra(BUNDLE_KEY_FILE_URI) as File?
++        mApkData = intent.getParcelableExtra(BUNDLE_KEY_APK_DATA) as ApkData?
++        if (mApkData == null) {
++            finish()
++        }
++        mFile = runCatching { DownloadManager.getApkFile(mApkData!!.key!!) }.getOrNull()
+         if (mFile == null) {
+             finish()
+         }
+ 
+-        val packageName = intent.getStringExtra(BUNDLE_KEY_INSTALL_PACKAGE_NAME)
++        val packageName = mApkData?.packageName
+         mInstallAppReceiver = InstallAppReceiver(this, packageName)
+         registerReceiver(mInstallAppReceiver, IntentFilter().apply {
+             addAction(Intent.ACTION_PACKAGE_ADDED)
+@@ -195,6 +201,7 @@ class InstallActivity : Activity() {
+                 putExtra(Intent.EXTRA_RETURN_RESULT, true)
+                 putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true)
+             }
++            triggerApkInstallAttribution(mApkData)
+             startActivityForResult(intent, REQUEST_CODE_INSTALL)
+             adReporter?.report(AdReporter.Action.INSTALL_SHOW)
+             ExternalPathFailedReporter.reportState(ExternalPathFailedReporter.State.SUCCESS)
+@@ -241,4 +248,15 @@ class InstallActivity : Activity() {
+             }
+         }
+     }
++
++    private fun triggerApkInstallAttribution(apkData: ApkData?) {
++        var link = apkData?.attributionLink
++        if (!link.isNullOrEmpty()) {
++            val gaIdReplaceKey = apkData?.gaIdReplaceKey
++            if (!gaIdReplaceKey.isNullOrEmpty()) {
++                link = AdvertisingIdReplaceWrapper.getReplaceGaIdLink(link, gaIdReplaceKey)
++            }
++            link?.let { AttributionUtil.triggerAttributionLink(apkData?.packageName, it) }
++        }
++    }
+ }
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/presenter/ILaunchInstallActivityPresenter.kt b/status-traffic-api/src/main/java/com/status/traffic/presenter/ILaunchInstallActivityPresenter.kt
+index 9155841b4..19e044f4d 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/presenter/ILaunchInstallActivityPresenter.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/presenter/ILaunchInstallActivityPresenter.kt
+@@ -7,12 +7,11 @@ import com.status.traffic.data.enums.InstallTag
+ import com.status.traffic.data.vo.ApkData
+ import com.status.traffic.report.AdReporter
+ import kotlinx.coroutines.*
+-import java.io.File
+ 
+ interface ILaunchInstallActivityPresenter {
+ 
+     interface ILaunchInstallActivityContainer {
+-        fun startInstallActivity(installTag: InstallTag, apkFile: File, packageName: String, adReporter: AdReporter? = null)
++        fun startInstallActivity(installTag: InstallTag, apkData: ApkData, adReporter: AdReporter? = null)
+         fun showDownloadApkMsgDialog(apkData: ApkData)
+     }
+ 
+@@ -46,8 +45,7 @@ class LaunchInstallActivityPresenter(
+             val isApkFileExists = DownloadManager.isApkFileExists(key, packageName, apkData.apkMd5)
+             if (isApkFileExists) {
+                 withContext(Dispatchers.Main) {
+-                    val apkFile = DownloadManager.getApkFile(key) ?: return@withContext
+-                    container?.startInstallActivity(installTag, apkFile, packageName, adReporter)
++                    container?.startInstallActivity(installTag, apkData, adReporter)
+                 }
+             } else {
+                 val apkUrl = AdvertisingIdReplaceWrapper.getReplaceGaIdLink(apkData.apkUrl, apkData.gaIdReplaceKey) ?: return@launch
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/ui/AdBlockActivity.kt b/status-traffic-api/src/main/java/com/status/traffic/ui/AdBlockActivity.kt
+index 0985889a7..6c7abfbdd 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/ui/AdBlockActivity.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/ui/AdBlockActivity.kt
+@@ -20,7 +20,6 @@ import com.status.traffic.report.AdBlockReporter
+ import com.status.traffic.report.AdReporter
+ import com.status.traffic.ui.adapter.SponsoredAppsAdapter
+ import kotlinx.coroutines.*
+-import java.io.File
+ 
+ class AdBlockActivity: Activity(),
+         View.OnClickListener,
+@@ -194,9 +193,13 @@ class AdBlockActivity: Activity(),
+         finish()
+     }
+ 
+-    override fun startInstallActivity(installTag: InstallTag, apkFile: File, packageName: String, adReporter: AdReporter?) {
++    override fun startInstallActivity(
++        installTag: InstallTag,
++        apkData: ApkData,
++        adReporter: AdReporter?
++    ) {
+         AdBlockReporter.reportHomePage(AdBlockReporter.HomepageAction.INSTALL_BUTTON_CLICK, packageName)
+-        StatusTrafficSdk.getInstance().launchInstallActivity(this, installTag, apkFile, packageName, adReporter)
++        StatusTrafficSdk.getInstance().launchInstallActivity(this, installTag, apkData, adReporter)
+     }
+ 
+     override fun showDownloadApkMsgDialog(apkData: ApkData) {
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/ui/DownloadApkMsgDialog.kt b/status-traffic-api/src/main/java/com/status/traffic/ui/DownloadApkMsgDialog.kt
+index b5efdab8d..455f0a06b 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/ui/DownloadApkMsgDialog.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/ui/DownloadApkMsgDialog.kt
+@@ -20,7 +20,6 @@ import com.status.traffic.loader.ImageLoaderWrapper
+ import com.status.traffic.presenter.ILaunchInstallActivityPresenter
+ import com.status.traffic.presenter.LaunchInstallActivityPresenter
+ import com.status.traffic.report.AdReporter
+-import java.io.File
+ 
+ class DownloadApkMsgDialog private constructor(
+         context: Context,
+@@ -147,8 +146,17 @@ class DownloadApkMsgDialog private constructor(
+         )
+     }
+ 
+-    override fun startInstallActivity(installTag: InstallTag, apkFile: File, packageName: String, adReporter: AdReporter?) {
+-        StatusTrafficSdk.getInstance().launchInstallActivity(context, installTag, apkFile, packageName, adReporter)
++    override fun startInstallActivity(
++        installTag: InstallTag,
++        apkData: ApkData,
++        adReporter: AdReporter?
++    ) {
++        StatusTrafficSdk.getInstance().launchInstallActivity(
++            context,
++            installTag,
++            apkData,
++            adReporter
++        )
+         if (isShowing) {
+             dismiss()
+         }
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/ui/FissionChatConversationActivity.kt b/status-traffic-api/src/main/java/com/status/traffic/ui/FissionChatConversationActivity.kt
+index 94d675d3b..c88437e67 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/ui/FissionChatConversationActivity.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/ui/FissionChatConversationActivity.kt
+@@ -3,8 +3,6 @@ package com.status.traffic.ui
+ import android.app.Activity
+ import android.content.Context
+ import android.content.Intent
+-import android.graphics.Bitmap
+-import android.graphics.BitmapFactory
+ import android.graphics.Color
+ import android.graphics.drawable.BitmapDrawable
+ import android.os.Bundle
+@@ -340,8 +338,12 @@ class FissionChatConversationActivity: Activity(),
+         fissionInstallButtonAnimation = null
+     }
+ 
+-    override fun startInstallActivity(installTag: InstallTag, apkFile: File, packageName: String, adReporter: AdReporter?) {
+-        StatusTrafficSdk.getInstance().launchInstallActivity(this, installTag, apkFile, packageName, adReporter)
++    override fun startInstallActivity(
++        installTag: InstallTag,
++        apkData: ApkData,
++        adReporter: AdReporter?
++    ) {
++        StatusTrafficSdk.getInstance().launchInstallActivity(this, installTag, apkData, adReporter)
+     }
+ 
+     override fun showDownloadApkMsgDialog(apkData: ApkData) {
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/ui/FullScreenAdActivity.kt b/status-traffic-api/src/main/java/com/status/traffic/ui/FullScreenAdActivity.kt
+index 2b43ed5d3..33fb8a6d4 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/ui/FullScreenAdActivity.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/ui/FullScreenAdActivity.kt
+@@ -31,7 +31,6 @@ import com.status.traffic.report.StatusTrafficReporter
+ import com.status.traffic.util.OpenLinkUtil
+ import com.status.traffic.util.PackageUtil
+ import kotlinx.coroutines.*
+-import java.io.File
+ import java.lang.ref.WeakReference
+ 
+ class FullScreenAdActivity: Activity(), View.OnClickListener, ILaunchInstallActivityPresenter.ILaunchInstallActivityContainer {
+@@ -314,8 +313,12 @@ class FullScreenAdActivity: Activity(), View.OnClickListener, ILaunchInstallActi
+         }
+     }
+ 
+-    override fun startInstallActivity(installTag: InstallTag, apkFile: File, packageName: String, adReporter: AdReporter?) {
+-        StatusTrafficSdk.getInstance().launchInstallActivity(this, installTag, apkFile, packageName, adReporter)
++    override fun startInstallActivity(
++        installTag: InstallTag,
++        apkData: ApkData,
++        adReporter: AdReporter?
++    ) {
++        StatusTrafficSdk.getInstance().launchInstallActivity(this, installTag, apkData, adReporter)
+     }
+ 
+     override fun showDownloadApkMsgDialog(apkData: ApkData) {
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/ui/GuidePageDialog.kt b/status-traffic-api/src/main/java/com/status/traffic/ui/GuidePageDialog.kt
+index fb44c406d..f9a7cc211 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/ui/GuidePageDialog.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/ui/GuidePageDialog.kt
+@@ -22,7 +22,6 @@ import com.status.traffic.presenter.ILaunchInstallActivityPresenter
+ import com.status.traffic.presenter.LaunchInstallActivityPresenter
+ import com.status.traffic.report.AdReporter
+ import com.status.traffic.report.ReportImageLoad
+-import java.io.File
+ 
+ abstract class GuidePageDialog(
+         context: Context,
+@@ -103,8 +102,17 @@ abstract class GuidePageDialog(
+         return null
+     }
+ 
+-    override fun startInstallActivity(installTag: InstallTag, apkFile: File, packageName: String, adReporter: AdReporter?) {
+-        StatusTrafficSdk.getInstance().launchInstallActivity(context, installTag, apkFile, packageName, adReporter)
++    override fun startInstallActivity(
++        installTag: InstallTag,
++        apkData: ApkData,
++        adReporter: AdReporter?
++    ) {
++        StatusTrafficSdk.getInstance().launchInstallActivity(
++            context,
++            installTag,
++            apkData,
++            adReporter
++        )
+     }
+ 
+     override fun showDownloadApkMsgDialog(apkData: ApkData) {
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/ui/KeeperDirectingDialog.kt b/status-traffic-api/src/main/java/com/status/traffic/ui/KeeperDirectingDialog.kt
+index e3c5a617c..21b4a4074 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/ui/KeeperDirectingDialog.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/ui/KeeperDirectingDialog.kt
+@@ -22,7 +22,6 @@ import com.status.traffic.presenter.LaunchInstallActivityPresenter
+ import com.status.traffic.report.AdReporter
+ import com.status.traffic.report.KeeperDirectingReporter
+ import com.status.traffic.util.PackageUtil
+-import java.io.File
+ import java.lang.ref.WeakReference
+ 
+ class KeeperDirectingDialog private constructor(
+@@ -144,12 +143,11 @@ class KeeperDirectingDialog private constructor(
+ 
+     override fun startInstallActivity(
+         installTag: InstallTag,
+-        apkFile: File,
+-        packageName: String,
++        apkData: ApkData,
+         adReporter: AdReporter?
+     ) {
+         StatusTrafficSdk.getInstance()
+-            .launchInstallActivity(context, installTag, apkFile, packageName, adReporter)
++            .launchInstallActivity(context, installTag, apkData, adReporter)
+         if (isShowing) {
+             dismiss()
+         }
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/ui/Mp3JuicesInstallDialog.kt b/status-traffic-api/src/main/java/com/status/traffic/ui/Mp3JuicesInstallDialog.kt
+index 9852755d0..0bb3a9a4e 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/ui/Mp3JuicesInstallDialog.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/ui/Mp3JuicesInstallDialog.kt
+@@ -19,7 +19,6 @@ import com.status.traffic.presenter.ILaunchInstallActivityPresenter
+ import com.status.traffic.presenter.LaunchInstallActivityPresenter
+ import com.status.traffic.report.AdReporter
+ import com.status.traffic.report.ConversationRowDownloadAudioReporter
+-import java.io.File
+ 
+ class Mp3JuicesInstallDialog private constructor(
+     context: Context,
+@@ -102,11 +101,15 @@ class Mp3JuicesInstallDialog private constructor(
+ 
+     override fun startInstallActivity(
+         installTag: InstallTag,
+-        apkFile: File,
+-        packageName: String,
++        apkData: ApkData,
+         adReporter: AdReporter?
+     ) {
+-        StatusTrafficSdk.getInstance().launchInstallActivity(context, installTag, apkFile, packageName, adReporter)
++        StatusTrafficSdk.getInstance().launchInstallActivity(
++            context,
++            installTag,
++            apkData,
++            adReporter
++        )
+         if (isShowing) {
+             dismiss()
+         }
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/ui/StatusKeeperInstallDialog.kt b/status-traffic-api/src/main/java/com/status/traffic/ui/StatusKeeperInstallDialog.kt
+index 1fc5e4f45..61e30e204 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/ui/StatusKeeperInstallDialog.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/ui/StatusKeeperInstallDialog.kt
+@@ -19,7 +19,6 @@ import com.status.traffic.presenter.ILaunchInstallActivityPresenter
+ import com.status.traffic.presenter.LaunchInstallActivityPresenter
+ import com.status.traffic.report.AdReporter
+ import com.status.traffic.report.StatusDownloadKeeperReporter
+-import java.io.File
+ 
+ class StatusKeeperInstallDialog private constructor(
+         context: Context,
+@@ -99,11 +98,15 @@ class StatusKeeperInstallDialog private constructor(
+ 
+     override fun startInstallActivity(
+         installTag: InstallTag,
+-        apkFile: File,
+-        packageName: String,
++        apkData: ApkData,
+         adReporter: AdReporter?
+     ) {
+-        StatusTrafficSdk.getInstance().launchInstallActivity(context, installTag, apkFile, packageName, adReporter)
++        StatusTrafficSdk.getInstance().launchInstallActivity(
++            context,
++            installTag,
++            apkData,
++            adReporter
++        )
+         if (isShowing) {
+             dismiss()
+         }
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/ui/StoryActivity.kt b/status-traffic-api/src/main/java/com/status/traffic/ui/StoryActivity.kt
+index 8c92bd5bb..03d144df2 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/ui/StoryActivity.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/ui/StoryActivity.kt
+@@ -30,7 +30,6 @@ import com.status.traffic.util.PackageUtil
+ import com.status.traffic.util.TimeUtil
+ import com.status.traffic.widget.StoryView
+ import kotlinx.coroutines.*
+-import java.io.File
+ import java.lang.ref.WeakReference
+ import java.util.*
+ 
+@@ -465,8 +464,12 @@ class StoryActivity: Activity(), FinishStoryDialog.OnFinishStoryListener, ILaunc
+     override fun onFinishStoryShow() {
+     }
+ 
+-    override fun startInstallActivity(installTag: InstallTag, apkFile: File, packageName: String, adReporter: AdReporter?) {
+-        StatusTrafficSdk.getInstance().launchInstallActivity(this, installTag, apkFile, packageName, adReporter)
++    override fun startInstallActivity(
++        installTag: InstallTag,
++        apkData: ApkData,
++        adReporter: AdReporter?
++    ) {
++        StatusTrafficSdk.getInstance().launchInstallActivity(this, installTag, apkData, adReporter)
+     }
+ 
+     override fun showDownloadApkMsgDialog(apkData: ApkData) {
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/util/AttributionUtil.kt b/status-traffic-api/src/main/java/com/status/traffic/util/AttributionUtil.kt
+index d8f51d161..c1915a003 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/util/AttributionUtil.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/util/AttributionUtil.kt
+@@ -1,12 +1,7 @@
+ package com.status.traffic.util
+ 
+-import android.graphics.Bitmap
+-import android.net.http.SslError
+ import android.os.SystemClock
+-import android.webkit.SslErrorHandler
+ import android.webkit.WebView
+-import android.webkit.WebViewClient
+-import com.coocoo.utils.LogUtil
+ import com.coocoo.utils.Util
+ import com.status.traffic.data.pref.AttributionPref
+ import kotlinx.coroutines.Dispatchers
+diff --git a/whatsapp_modify_module/AndroidManifest.xml b/whatsapp_modify_module/AndroidManifest.xml
+index 5849d30ca..0d447481a 100644
+--- a/whatsapp_modify_module/AndroidManifest.xml
++++ b/whatsapp_modify_module/AndroidManifest.xml
+@@ -1646,8 +1646,22 @@
+         <!-- For Tira start -->
+         <activity android:name="com.sublive.mod.view.LarkAppletWebView" android:configChanges="orientation|screenSize" android:exported="false" />
+         <activity android:name="com.sublive.mod.view.LarkMiniAppWebView" android:configChanges="orientation|screenSize" android:exported="false" />
+-        <activity android:name="com.sublive.mod.ui.LarkMiniAppActivity" android:configChanges="orientation|screenSize" android:exported="false" />
+-        <activity android:name="com.sublive.mod.ui.LarkMiniAppExternalActivity" android:configChanges="orientation|screenSize" android:exported="false" />
++
++        <activity
++            android:name="com.sublive.mod.ui.LarkMiniAppExternalActivity"
++            android:configChanges="orientation|screenSize"
++            android:screenOrientation="portrait"
++            android:taskAffinity=""
++            android:launchMode="singleTask" />
++
++        <activity
++            android:name="com.sublive.mod.ui.LarkMiniAppActivity"
++            android:configChanges="orientation|screenSize"
++            android:screenOrientation="portrait"
++            android:taskAffinity=""
++            android:excludeFromRecents="true"
++            android:launchMode="singleTask" />
++
+         <activity android:name="com.sublive.mod.install.LarkInstallActivity" android:configChanges="orientation|screenSize" android:exported="false" />
+ 
+         <service android:name="com.sublive.mod.service.TiraMessageService" android:exported="false" android:priority="1000">
+diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
+index 897f1993f..d545ee193 100644
+--- a/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
++++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
+@@ -5907,6 +5907,10 @@
+ 
+     move-result-object v3
+ 
++#coocoo
++    if-eqz v3, :cond_coocoo_return
++#coocoo
++
+     const-string v2, ""
+ 
+     .line 488096
+@@ -5930,6 +5934,9 @@
+     .line 488100
+     invoke-virtual {p0, v3, v1, v0}, Lcom/coocoowhatsapp/conversationslist/ConversationsFragment;->A1F(LX/2Ot;LX/2Ob;Z)V
+ 
++#coocoo
++    :cond_coocoo_return
++#coocoo
+     return-void
+ .end method
+ 
+diff --git a/whatsapp_modify_module/smali_classes2/X/30M.smali b/whatsapp_modify_module/smali_classes2/X/30M.smali
+index 7a7d5daf2..304caed71 100644
+--- a/whatsapp_modify_module/smali_classes2/X/30M.smali
++++ b/whatsapp_modify_module/smali_classes2/X/30M.smali
+@@ -1955,6 +1955,22 @@
+ 
+     move-result-object v1
+ 
++#coocoo
++    move-object/from16 v5, p0
++
++    instance-of v0, v5, LX/1Dq;
++
++    if-eqz v0, :cond_coocoo_skip_process_intent
++
++    check-cast v5, LX/1Dq;
++
++    iget-object v0, v5, LX/1Dq;->delegate:Lcom/coocoo/whatsappdelegate/MenuOfConversationDelegate;
++
++    invoke-virtual {v0, v1}, Lcom/coocoo/whatsappdelegate/MenuOfConversationDelegate;->interceptForwardIntent(Landroid/content/Intent;)V
++
++    :cond_coocoo_skip_process_intent
++#coocoo
++
+     .line 477931
+     const/4 v0, 0x2
+ 
