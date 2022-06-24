@@ -133,7 +133,7 @@ index 2d387b461..1bafacd85 100644
 +    }
  }
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
-index a42ff3bbe..ae0f810fb 100644
+index a42ff3bbe..cb31d9b34 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate.kt
 @@ -1,7 +1,14 @@
@@ -151,22 +151,6 @@ index a42ff3bbe..ae0f810fb 100644
  import com.coocoowhatsapp.contact.picker.ContactPickerFragment
  
  object ContactPickerSendBtnDelegate {
-@@ -22,5 +29,14 @@ object ContactPickerSendBtnDelegate {
-                 Report.reportFavoriteStatusFeedPlaybackShareDone(statusId)
-             }
-         }
-+
-+        (fragment.A2Q.values as List<c1_2Ot>).forEach { c12Ot ->
-+            if (c12Ot.A0I == ResMgr.getString(MY_MESSAGE_CONTACT_PICKER_NAME)) {
-+                val myMessageRepo = Coocoo.getRepoContainer().myMessageRepo
-+                if (myMessageRepo.hasMyMessage()) {
-+
-+                }
-+            }
-+        }
-     }
- }
-\ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
 index 2b8c43fa2..c058420b6 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
