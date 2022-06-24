@@ -54,6 +54,19 @@ index 77bd78c7b..0752e5ab9 100644
      public static void traceLogCodeStack() {
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
+index 9e41c9f92..4188b0529 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
+@@ -156,4 +156,8 @@ public class ContactPickerFragmentDelegate {
+         return fragmentBundle.getBoolean(EXTRA_SKIP_CHECK_TEXT);
+     }
+ 
++    @SmaliInject
++    public static boolean isMyMessage(c1_2Ot c12Ot) {
++        return ResMgr.getString(MY_MESSAGE_CONTACT_PICKER_NAME).equals(c12Ot.A0I);
++    }
+ }
 diff --git a/whatsapp_modify_module/smali/X/0HQ.smali b/whatsapp_modify_module/smali/X/0HQ.smali
 index 12bcbbc88..bbf2768db 100644
 --- a/whatsapp_modify_module/smali/X/0HQ.smali
@@ -70,15 +83,19 @@ index 12bcbbc88..bbf2768db 100644
      .line 84712
      iget-object v0, p0, LX/0HQ;->A07:LX/06l;
 diff --git a/whatsapp_modify_module/smali/X/1Da.1.smali b/whatsapp_modify_module/smali/X/1Da.1.smali
-index 631347fc1..2d8d72d08 100644
+index 631347fc1..8b75cc393 100644
 --- a/whatsapp_modify_module/smali/X/1Da.1.smali
 +++ b/whatsapp_modify_module/smali/X/1Da.1.smali
-@@ -900,7 +900,7 @@
-     .line 218642
-     const/4 v1, 0x0
+@@ -891,7 +891,11 @@
+     .line 218640
+     :goto_6
+     invoke-static/range {v25 .. v25}, LX/0AT;->A06(Landroid/widget/TextView;)V
+-
++#coocoo
++    invoke-static {v7}, Lcom/coocoo/whatsappdelegate/ContactPickerFragmentDelegate;->isMyMessage(LX/2Ot;)Z
++    move-result v14
++    if-nez v14, :cond_a
++#coocoo
+     .line 218641
+     iget-object v14, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A0f:LX/0HQ;
  
--    invoke-virtual {v14, v6, v7, v1}, LX/0HQ;->A07(Landroid/widget/ImageView;LX/2Ot;Z)V
-+    #invoke-virtual {v14, v6, v7, v1}, LX/0HQ;->A07(Landroid/widget/ImageView;LX/2Ot;Z)V
- 
-     .line 218643
-     :cond_a
