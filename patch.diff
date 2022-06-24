@@ -242,7 +242,7 @@ index 2b8c43fa2..c058420b6 100644
 +    }
  }
 diff --git a/whatsapp_modify_module/smali/X/1Fe.1.smali b/whatsapp_modify_module/smali/X/1Fe.1.smali
-index 37372812c..391a093bf 100644
+index 37372812c..ad50670ec 100644
 --- a/whatsapp_modify_module/smali/X/1Fe.1.smali
 +++ b/whatsapp_modify_module/smali/X/1Fe.1.smali
 @@ -6,6 +6,10 @@
@@ -250,7 +250,7 @@ index 37372812c..391a093bf 100644
  .field public final synthetic A00:Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;
  
 +#coocoo
-+.field public final delegate:Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;
++.field public final synthetic delegate:Lcom/coocoo/whatsappdelegate/ContactPickerSendBtnDelegate;
 +#coocoo
 +
  
