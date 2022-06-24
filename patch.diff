@@ -1,5 +1,5 @@
 diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-index 77bd78c7b..c86b220fd 100644
+index 77bd78c7b..0752e5ab9 100644
 --- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 +++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
 @@ -116,6 +116,7 @@ import javax.crypto.SecretKey;
@@ -22,7 +22,7 @@ index 77bd78c7b..c86b220fd 100644
          Log.e(TAG, "-----------------4---------------- // object : " + object);
      }
  
-@@ -656,6 +661,26 @@ public class Coocoo {
+@@ -656,6 +661,31 @@ public class Coocoo {
          Log.e(TAG, "-----------------5---------------- // value : " + value);
      }
  
@@ -39,6 +39,11 @@ index 77bd78c7b..c86b220fd 100644
 +    // invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog8(Ljava/util/ArrayList;)V
 +    public static void traceLog8(ArrayList value) {
 +        Log.e(TAG, "-----------------8---------------- // value : " + value);
++    }
++
++    // invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog9(Landroid/view/View;)V
++    public static void traceLog9(View value) {
++        Log.e(TAG, "-----------------9---------------- // value : " + value.getId());
 +    }
 +
 +    // invoke-static {}, Lcom/coocoo/coocoo/Coocoo;->stackTrace()V
@@ -330,3 +335,167 @@ index 53ec77c53..b6496f4b1 100644
      iget-object v1, v0, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A1p:Ljava/util/ArrayList;
  
      const/4 v2, 0x0
+diff --git a/whatsapp_modify_module/smali_classes2/X/4ZG.smali b/whatsapp_modify_module/smali_classes2/X/4ZG.smali
+new file mode 100644
+index 000000000..44c7575db
+--- /dev/null
++++ b/whatsapp_modify_module/smali_classes2/X/4ZG.smali
+@@ -0,0 +1,70 @@
++.class public LX/4ZG;
++.super Ljava/lang/Object;
++.source ""
++
++# interfaces
++.implements LX/0gu;
++
++
++# instance fields
++.field public final A00:LX/06m;
++
++
++# direct methods
++.method public constructor <init>(LX/06m;)V
++    .locals 0
++
++    .line 703323
++    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
++
++    .line 703324
++    iput-object p1, p0, LX/4ZG;->A00:LX/06m;
++
++    return-void
++.end method
++
++
++# virtual methods
++.method public AXB(Landroid/graphics/Bitmap;Landroid/widget/ImageView;Z)V
++    .locals 0
++
++    if-eqz p1, :cond_0
++
++    .line 703325
++    invoke-virtual {p2, p1}, Landroid/widget/ImageView;->setImageBitmap(Landroid/graphics/Bitmap;)V
++
++    .line 703326
++    return-void
++
++    :cond_0
++    invoke-virtual {p0, p2}, LX/4ZG;->AXO(Landroid/widget/ImageView;)V
++
++    return-void
++.end method
++
++.method public AXO(Landroid/widget/ImageView;)V
++    .locals 3
++
++    .line 703327
++    iget-object v2, p0, LX/4ZG;->A00:LX/06m;
++
++    .line 703328
++    invoke-virtual {p1}, Landroid/view/View;->getContext()Landroid/content/Context;
++
++    move-result-object v1
++
++    const v0, 0x7f0801a9
++
++    invoke-virtual {v2, v1, v0}, LX/06m;->A04(Landroid/content/Context;I)Landroid/graphics/Bitmap;
++
++    move-result-object v0
++
++    .line 703329
++    invoke-virtual {p1, v0}, Landroid/widget/ImageView;->setImageBitmap(Landroid/graphics/Bitmap;)V
++
++#coocoo
++    invoke-static {p1}, Lcom/coocoo/coocoo/Coocoo;->traceLog9(Landroid/view/View;)V
++#coocoo
++
++    return-void
++.end method
+diff --git a/whatsapp_modify_module/smali_classes2/X/4ZI.smali b/whatsapp_modify_module/smali_classes2/X/4ZI.smali
+new file mode 100644
+index 000000000..0408af76d
+--- /dev/null
++++ b/whatsapp_modify_module/smali_classes2/X/4ZI.smali
+@@ -0,0 +1,82 @@
++.class public LX/4ZI;
++.super Ljava/lang/Object;
++.source ""
++
++# interfaces
++.implements LX/0gu;
++
++
++# instance fields
++.field public final synthetic A00:LX/06m;
++
++.field public final synthetic A01:Z
++
++
++# direct methods
++.method public constructor <init>(LX/06m;Z)V
++    .locals 0
++
++    .line 703338
++    iput-object p1, p0, LX/4ZI;->A00:LX/06m;
++
++    iput-boolean p2, p0, LX/4ZI;->A01:Z
++
++    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
++
++    return-void
++.end method
++
++
++# virtual methods
++.method public AXB(Landroid/graphics/Bitmap;Landroid/widget/ImageView;Z)V
++    .locals 0
++
++    if-eqz p1, :cond_0
++
++    .line 703339
++    invoke-virtual {p2, p1}, Landroid/widget/ImageView;->setImageBitmap(Landroid/graphics/Bitmap;)V
++
++    .line 703340
++    return-void
++
++    :cond_0
++    invoke-virtual {p0, p2}, LX/4ZI;->AXO(Landroid/widget/ImageView;)V
++
++    return-void
++.end method
++
++.method public AXO(Landroid/widget/ImageView;)V
++    .locals 4
++
++    .line 703341
++    iget-object v3, p0, LX/4ZI;->A00:LX/06m;
++
++    .line 703342
++    invoke-virtual {p1}, Landroid/view/View;->getContext()Landroid/content/Context;
++
++    move-result-object v2
++
++    .line 703343
++    iget-boolean v1, p0, LX/4ZI;->A01:Z
++
++    const v0, 0x7f0801a4
++
++    if-eqz v1, :cond_0
++
++    const v0, 0x7f0801a9
++
++    .line 703344
++    :cond_0
++    invoke-virtual {v3, v2, v0}, LX/06m;->A04(Landroid/content/Context;I)Landroid/graphics/Bitmap;
++
++    move-result-object v0
++
++    .line 703345
++    invoke-virtual {p1, v0}, Landroid/widget/ImageView;->setImageBitmap(Landroid/graphics/Bitmap;)V
++
++#coocoo
++    invoke-static {p1}, Lcom/coocoo/coocoo/Coocoo;->traceLog9(Landroid/view/View;)V
++#coocoo
++
++    return-void
++.end method
