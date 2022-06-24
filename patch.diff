@@ -246,6 +246,20 @@ index 2b8c43fa2..c058420b6 100644
 +        LogUtil.d("resolveIntent:" + data);
 +    }
  }
+diff --git a/whatsapp_modify_module/smali/X/1Da.1.smali b/whatsapp_modify_module/smali/X/1Da.1.smali
+index 631347fc1..379d88413 100644
+--- a/whatsapp_modify_module/smali/X/1Da.1.smali
++++ b/whatsapp_modify_module/smali/X/1Da.1.smali
+@@ -472,6 +472,9 @@
+     instance-of v1, v14, LX/0iK;
+ 
+     const/4 v2, 0x0
++#coocoo
++     invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(Z)V
++#coocoo
+ 
+     if-eqz v1, :cond_8
+ 
 diff --git a/whatsapp_modify_module/smali/X/1Fe.1.smali b/whatsapp_modify_module/smali/X/1Fe.1.smali
 index 37372812c..9145c872d 100644
 --- a/whatsapp_modify_module/smali/X/1Fe.1.smali
