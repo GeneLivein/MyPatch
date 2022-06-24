@@ -50,7 +50,7 @@ index 77bd78c7b..c86b220fd 100644
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-index 2d387b461..1bafacd85 100644
+index 2d387b461..a59bab31c 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 @@ -17,12 +17,17 @@ import android.widget.TextView;
@@ -92,7 +92,7 @@ index 2d387b461..1bafacd85 100644
      @SmaliInject
      public static void insertBroadcastConversations(@Nullable ContactPickerFragment pickerFragment, @Nullable List existingFilteredList) {
          LogUtil.d(TAG, "insertBroadcastConversations");
-@@ -154,4 +166,39 @@ public class ContactPickerFragmentDelegate {
+@@ -154,4 +166,41 @@ public class ContactPickerFragmentDelegate {
          return fragmentBundle.getBoolean(EXTRA_SKIP_CHECK_TEXT);
      }
  
@@ -100,8 +100,10 @@ index 2d387b461..1bafacd85 100644
 +
 +    @SmaliInject
 +    public void onSendBtnClick() {
++        LogUtil.d("onSendBtnClick");
 +        for (Object o : fragment.A2Q.values()) {
 +            c1_2Ot c12Ot = (c1_2Ot) o;
++            LogUtil.d(c12Ot.A0I);
 +            if (ResMgr.getString(MY_MESSAGE_CONTACT_PICKER_NAME).equals(c12Ot.A0I)) {
 +                MyMessageRepository repo = Coocoo.getRepoContainer().getMyMessageRepo();
 +                if (repo.hasMyMessage()) {
