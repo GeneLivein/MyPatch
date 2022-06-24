@@ -84,7 +84,7 @@ index 12bcbbc88..bbf2768db 100644
      .line 84712
      iget-object v0, p0, LX/0HQ;->A07:LX/06l;
 diff --git a/whatsapp_modify_module/smali/X/1Da.1.smali b/whatsapp_modify_module/smali/X/1Da.1.smali
-index 631347fc1..8b75cc393 100644
+index 631347fc1..408a2a00e 100644
 --- a/whatsapp_modify_module/smali/X/1Da.1.smali
 +++ b/whatsapp_modify_module/smali/X/1Da.1.smali
 @@ -891,7 +891,11 @@
@@ -93,7 +93,7 @@ index 631347fc1..8b75cc393 100644
      invoke-static/range {v25 .. v25}, LX/0AT;->A06(Landroid/widget/TextView;)V
 -
 +#coocoo
-+    invoke-static {v7}, Lcom/coocoo/whatsappdelegate/ContactPickerFragmentDelegate;->isMyMessage(LX/2Ot;)Z
++    invoke-static {v7, v11}, Lcom/coocoo/whatsappdelegate/ContactPickerFragmentDelegate;->isMyMessage(LX/2Ot;Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;)Z
 +    move-result v14
 +    if-nez v14, :cond_a
 +#coocoo
