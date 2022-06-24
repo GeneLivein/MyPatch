@@ -55,15 +55,16 @@ index 77bd78c7b..0752e5ab9 100644
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-index 9e41c9f92..4188b0529 100644
+index 9e41c9f92..89a820b77 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-@@ -156,4 +156,8 @@ public class ContactPickerFragmentDelegate {
+@@ -156,4 +156,9 @@ public class ContactPickerFragmentDelegate {
          return fragmentBundle.getBoolean(EXTRA_SKIP_CHECK_TEXT);
      }
  
 +    @SmaliInject
-+    public static boolean isMyMessage(c1_2Ot c12Ot) {
++    public static boolean isMyMessage(c1_2Ot c12Ot, ContactPickerFragment fragment) {
++        LogUtil.d(fragment.A0A());
 +        return ResMgr.getString(MY_MESSAGE_CONTACT_PICKER_NAME).equals(c12Ot.A0I);
 +    }
  }
