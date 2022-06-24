@@ -49,6 +49,21 @@ index 77bd78c7b..c86b220fd 100644
      public static void traceLogCodeStack() {
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
+diff --git a/app/src/main/java/com/coocoo/statuses/feed/fragment/StatusHeaderViewHolder.kt b/app/src/main/java/com/coocoo/statuses/feed/fragment/StatusHeaderViewHolder.kt
+index 8513cd92b..518416d3d 100644
+--- a/app/src/main/java/com/coocoo/statuses/feed/fragment/StatusHeaderViewHolder.kt
++++ b/app/src/main/java/com/coocoo/statuses/feed/fragment/StatusHeaderViewHolder.kt
+@@ -32,8 +32,8 @@ import com.coocoo.utils.Constants.Res.String.SENDING_MESSAGES
+ import com.coocoo.utils.Constants.Res.String.STATUS_FEED_FAILED_TO_SHARE
+ import com.coocoo.utils.Constants.Res.String.STATUS_FEED_SENDING_MESSAGE_AND_UPDATE_STATUS
+ import com.coocoo.utils.PrivacyUtils.Companion.POSTFIX_STATUS_BROADCAST_MSG
+-import com.coocoo.whatsappdelegate.ContactPickerSendBtnDelegate.BUNDLE_KEY_STATUS_FEED_FAV_ID
+-import com.coocoo.whatsappdelegate.ContactPickerSendBtnDelegate.BUNDLE_KEY_STATUS_FEED_ID
++import com.coocoo.whatsappdelegate.ContactPickerSendBtnDelegate.Companion.BUNDLE_KEY_STATUS_FEED_FAV_ID
++import com.coocoo.whatsappdelegate.ContactPickerSendBtnDelegate.Companion.BUNDLE_KEY_STATUS_FEED_ID
+ import com.coocoowhatsapp.Conversation
+ 
+ class StatusHeaderViewHolder(
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
 index 2d387b461..a59bab31c 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
