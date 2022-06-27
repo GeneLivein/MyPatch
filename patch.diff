@@ -77,7 +77,7 @@ index 3b51bd9c5..6142e8d80 100644
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
 diff --git a/whatsapp_modify_module/smali/X/1Da.1.smali b/whatsapp_modify_module/smali/X/1Da.1.smali
-index 631347fc1..b163a5138 100644
+index 631347fc1..80693c7c6 100644
 --- a/whatsapp_modify_module/smali/X/1Da.1.smali
 +++ b/whatsapp_modify_module/smali/X/1Da.1.smali
 @@ -2411,6 +2411,9 @@
@@ -85,8 +85,23 @@ index 631347fc1..b163a5138 100644
      :cond_37
      iget-boolean v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A2C:Z
 +#coocoo
-+    invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(Z)V
++    #invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(Z)V
 +#coocoo
  
      if-eqz v1, :cond_38
  
+diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
+index 53ec77c53..6f86bbd9c 100644
+--- a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
++++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
+@@ -2866,6 +2866,10 @@
+     :cond_d
+     iget-boolean v2, p0, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A29:Z
+ 
++#coocoo
++    invoke-static {v2}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(Z)V
++#coocoo
++
+     if-eqz v2, :cond_e
+ 
+     .line 116969
