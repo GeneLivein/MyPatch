@@ -76,6 +76,38 @@ index 3b51bd9c5..6142e8d80 100644
      public static void traceLogCodeStack() {
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
+index b4eefeb33..2d8ae9dd9 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
+@@ -88,9 +88,11 @@ public class ContactPickerFragmentDelegate {
+             }
+         }
+ 
+-        c1_2Ot c12Ot = new c1_2Ot(ProfileManager.getSelfJid());
+-        c12Ot.A0I = ResMgr.getString(MY_MESSAGE_CONTACT_PICKER_NAME);
+-        existingFilteredList.add(1, new cc_25m(c12Ot));
++        if (!pickerFragment.A29) {
++            c1_2Ot c12Ot = new c1_2Ot(ProfileManager.getSelfJid());
++            c12Ot.A0I = ResMgr.getString(MY_MESSAGE_CONTACT_PICKER_NAME);
++            existingFilteredList.add(1, new cc_25m(c12Ot));
++        }
+     }
+ 
+     @SmaliInject
+diff --git a/app/src/main/java/com/coocoowhatsapp/contact/picker/ContactPickerFragment.java b/app/src/main/java/com/coocoowhatsapp/contact/picker/ContactPickerFragment.java
+index 9682c2023..33d63546c 100644
+--- a/app/src/main/java/com/coocoowhatsapp/contact/picker/ContactPickerFragment.java
++++ b/app/src/main/java/com/coocoowhatsapp/contact/picker/ContactPickerFragment.java
+@@ -16,6 +16,8 @@ public class ContactPickerFragment extends c1_017 {
+ 
+     public c1_0HQ A0f;
+ 
++    public boolean A29;      // true: calls' picker; false: forward's picker
++
+     //Get extras
+     public Bundle A10() {
+         return null;
 diff --git a/whatsapp_modify_module/smali/X/1Da.1.smali b/whatsapp_modify_module/smali/X/1Da.1.smali
 index 631347fc1..80693c7c6 100644
 --- a/whatsapp_modify_module/smali/X/1Da.1.smali
