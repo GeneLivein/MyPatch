@@ -156,22 +156,20 @@ index 4d7c65397..8f5d0e32f 100644
  import android.widget.BaseAdapter;
  import android.widget.FrameLayout;
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationsDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationsDelegate.java
-index c87dadd6e..556e55e7a 100644
+index c87dadd6e..32c8990be 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationsDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationsDelegate.java
-@@ -22,7 +22,11 @@ import com.coocoo.manager.FingerPrintAuthCallback;
+@@ -22,7 +22,9 @@ import com.coocoo.manager.FingerPrintAuthCallback;
  import com.coocoo.manager.PrivateChatLock;
  import com.coocoo.manager.PrivateConversationsManager;
  import com.coocoo.report.Report;
 +import com.coocoo.report.ReportConstant;
-+import com.coocoo.report.ReportHomeMenu;
-+import com.coocoo.report.ReportMenuItem;
  import com.coocoo.utils.ActivityUtil;
 +import com.coocoo.utils.LogUtil;
  import com.coocoo.utils.NewGroupUtil;
  import com.coocoo.utils.PrivacyUtils;
  import com.coocoo.utils.ResMgr;
-@@ -140,6 +144,7 @@ public class MenuOfConversationsDelegate {
+@@ -140,6 +142,7 @@ public class MenuOfConversationsDelegate {
      }
  
      public void onMenuItemClicked(MenuItem menuItem) {
@@ -179,7 +177,7 @@ index c87dadd6e..556e55e7a 100644
          if (mHost == null || mHost.A0F == null || mHost.A0F.A21 == null) {
              return;
          }
-@@ -253,4 +258,32 @@ public class MenuOfConversationsDelegate {
+@@ -253,4 +256,32 @@ public class MenuOfConversationsDelegate {
              Report.addUserShortcutFromChatList();
          }
      }
