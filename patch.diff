@@ -102,7 +102,7 @@ index 4d7c65397..4ea646351 100644
  }
 \ No newline at end of file
 diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
-index d545ee193..b7ec2a094 100644
+index d545ee193..f60fabb4b 100644
 --- a/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
 +++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
 @@ -1338,7 +1338,10 @@
@@ -116,4 +116,16 @@ index d545ee193..b7ec2a094 100644
 +#coocoo
      .line 487478
      iget-object v1, p0, Lcom/coocoowhatsapp/conversationslist/ConversationsFragment;->A0u:LX/35c;
+ 
+@@ -1363,6 +1366,11 @@
+ .method public A0l(Landroid/view/MenuItem;)Z
+     .locals 8
+ 
++#coocoo
++    iget-object v0, p0, Lcom/coocoowhatsapp/conversationslist/ConversationsFragment;->conversationsFragmentDelegate:Lcom/coocoo/whatsappdelegate/ConversationsFragmentDelegate;
++    invoke-virtual {v0, p1}, Lcom/coocoo/whatsappdelegate/ConversationsFragmentDelegate;->onMenuItemClick(Landroid/view/MenuItem;)V
++#coocoo
++
+     .line 487479
+     invoke-interface {p1}, Landroid/view/MenuItem;->getItemId()I
  
