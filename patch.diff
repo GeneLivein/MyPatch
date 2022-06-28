@@ -148,16 +148,17 @@ index 4e94a3d7b..62c3e8e6b 100644
  }
 diff --git a/app/src/main/java/com/coocoo/report/ReportMenuItemAction.kt b/app/src/main/java/com/coocoo/report/ReportMenuItemAction.kt
 new file mode 100644
-index 000000000..a6058e1d2
+index 000000000..dbef63d20
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/report/ReportMenuItemAction.kt
-@@ -0,0 +1,50 @@
+@@ -0,0 +1,52 @@
 +package com.coocoo.report
 +
 +import android.view.MenuItem
 +import com.coocoo.activity.PrivateConversationsActivity
 +import com.coocoo.report.ReportConstant.VALUE_MUTIPLE
 +import com.coocoo.report.ReportConstant.VALUE_SINGLE
++import com.coocoo.utils.LogUtil
 +import com.coocoo.utils.ResMgr
 +import com.coocoo.whatsappdelegate.MenuOfConversationsDelegate
 +import com.coocoowhatsapp.HomeActivity
@@ -174,7 +175,7 @@ index 000000000..a6058e1d2
 +        ResMgr.getId("menuitem_conversations_archive") to ReportConstant.VALUE_ARCHIVE,
 +        ResMgr.getId("menuitem_conversations_unarchive") to ReportConstant.VALUE_UNARCHIV,
 +        ResMgr.getId("menuitem_conversations_create_shortcuit") to ReportConstant.VALUE_ADD_SHORT_CUT,
-+        ResMgr.getId("menuitem_add_to_contacts") to ReportConstant.VALUE_ADD_TO_CONTACTS,
++        ResMgr.getId("menuitem_conversations_add_new_contact") to ReportConstant.VALUE_ADD_TO_CONTACTS,
 +        ResMgr.getId("menuitem_conversations_mark_read") to ReportConstant.VALUE_READ,
 +        ResMgr.getId("menuitem_conversations_mark_unread") to ReportConstant.VALUE_UNREAD,
 +        MenuOfConversationsDelegate.MENU_ADD_GROUP_ID to ReportConstant.VALUE_INVITE,
@@ -187,6 +188,7 @@ index 000000000..a6058e1d2
 +
 +    @JvmStatic
 +    fun report(menuItem: MenuItem, fragment: ConversationsFragment) {
++        LogUtil.d("menuItem:${menuItem.itemId}")
 +        val value = map[menuItem.itemId] ?: return
 +        val num = if (fragment.A21.size > 1) VALUE_MUTIPLE else VALUE_SINGLE
 +        when {
