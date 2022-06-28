@@ -179,6 +179,26 @@ index 4d7c65397..4ea646351 100644
 +    }
  }
 \ No newline at end of file
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationsDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationsDelegate.java
+index c87dadd6e..f3c2af87a 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationsDelegate.java
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationsDelegate.java
+@@ -23,6 +23,7 @@ import com.coocoo.manager.PrivateChatLock;
+ import com.coocoo.manager.PrivateConversationsManager;
+ import com.coocoo.report.Report;
+ import com.coocoo.utils.ActivityUtil;
++import com.coocoo.utils.LogUtil;
+ import com.coocoo.utils.NewGroupUtil;
+ import com.coocoo.utils.PrivacyUtils;
+ import com.coocoo.utils.ResMgr;
+@@ -140,6 +141,7 @@ public class MenuOfConversationsDelegate {
+     }
+ 
+     public void onMenuItemClicked(MenuItem menuItem) {
++        LogUtil.d("onMenuItemClicked count:" + mConversationFragment.A21.size());
+         if (mHost == null || mHost.A0F == null || mHost.A0F.A21 == null) {
+             return;
+         }
 diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
 index d545ee193..f60fabb4b 100644
 --- a/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
@@ -207,18 +227,6 @@ index d545ee193..f60fabb4b 100644
      .line 487479
      invoke-interface {p1}, Landroid/view/MenuItem;->getItemId()I
  
-diff --git a/whatsapp_modify_module/smali_classes2/X/35b.1.smali b/whatsapp_modify_module/smali_classes2/X/35b.1.smali
-index ba84f2413..8defad4a5 100644
---- a/whatsapp_modify_module/smali_classes2/X/35b.1.smali
-+++ b/whatsapp_modify_module/smali_classes2/X/35b.1.smali
-@@ -75,6 +75,7 @@
-     .locals 18
- 
- #coocoo
-+    invoke-static {}, Lcom/coocoo/coocoo/Coocoo;->stackTrace()V
-     move-object/from16 v4, p0
- 
-     iget-object v0, v4, LX/35b;->delegate:Lcom/coocoo/whatsappdelegate/MenuOfConversationsDelegate;
 diff --git a/whatsapp_modify_module/smali_classes2/X/35c.1.smali b/whatsapp_modify_module/smali_classes2/X/35c.1.smali
 index f4538948c..6c14ba1ce 100644
 --- a/whatsapp_modify_module/smali_classes2/X/35c.1.smali
