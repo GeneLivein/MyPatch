@@ -1,139 +1,119 @@
-diff --git a/app/build.gradle b/app/build.gradle
-index ac7c94191..74ca898b6 100644
---- a/app/build.gradle
-+++ b/app/build.gradle
-@@ -45,7 +45,7 @@ android {
- //                || cur_flavor == "GbUnclone"
- //                || cur_flavor == "WhatsappPlus") {
-             rootProject.ext.version_name = '"9.0.0"' // HeyMods
--            rootProject.ext.version_code = "900000" // HeyMods
-+            rootProject.ext.version_code = "9000000" // HeyMods
- //        } else if (cur_flavor == "FM") {
- //            rootProject.ext.version_name = '"10.1.0"'
- //            rootProject.ext.version_code = "1001000"
-@@ -87,7 +87,7 @@ android {
- //            rootProject.ext.version_code = "20197"
- //        }
-             rootProject.ext.version_name = '"9.0.0"' // HeyMods
--            rootProject.ext.version_code = "900000" // HeyMods
-+            rootProject.ext.version_code = "9000000" // HeyMods
+diff --git a/app/src/main/java/com/coocoo/report/Report.java b/app/src/main/java/com/coocoo/report/Report.java
+index 69f3672db..38e310271 100644
+--- a/app/src/main/java/com/coocoo/report/Report.java
++++ b/app/src/main/java/com/coocoo/report/Report.java
+@@ -1159,4 +1159,28 @@ public class Report {
+     public static void reportMyMessageForwardDone() {
+         ReportCore.reportMyMessageForwardDone();
      }
- 
-     flavorDimensions "version"
-diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-index 3b51bd9c5..6142e8d80 100644
---- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-+++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-@@ -116,6 +116,7 @@ import javax.crypto.SecretKey;
- 
- import X.c1_01f;
- import X.c1_2Oc;
-+import X.c1_2Ot;
- import X.c1_3Ul;
- import X.c1_2P6;
- import X.c1_2ua;
-@@ -640,7 +641,11 @@ public class Coocoo {
-         Log.e(TAG, "-----------------3---------------- // value : " + value);
++
++    public static void reportSingleSelectHomeConversationAction(String action) {
++        ReportCore.reportConversationList(action, ReportConstant.VALUE_SINGLE ,ReportConstant.VALUE_HOME);
++    }
++
++    public static void reportMultiSelectHomeConversationAction(String action) {
++        ReportCore.reportConversationList(action, ReportConstant.VALUE_MUTIPLE ,ReportConstant.VALUE_HOME);
++    }
++
++    public static void reportSingleSelectArchiveConversationAction(String action) {
++        ReportCore.reportConversationList(action, ReportConstant.VALUE_SINGLE ,ReportConstant.VALUE_ARCHIVE);
++    }
++
++    public static void reportMultiSelectArchiveConversationAction(String action) {
++        ReportCore.reportConversationList(action, ReportConstant.VALUE_MUTIPLE ,ReportConstant.VALUE_ARCHIVE);
++    }
++
++    public static void reportSingleSelectHideConversationAction(String action) {
++        ReportCore.reportConversationList(action, ReportConstant.VALUE_SINGLE ,ReportConstant.VALUE_HIDE);
++    }
++
++    public static void reportMultiSelectHideConversationAction(String action) {
++        ReportCore.reportConversationList(action, ReportConstant.VALUE_MUTIPLE ,ReportConstant.VALUE_HIDE);
++    }
+ }
+diff --git a/app/src/main/java/com/coocoo/report/ReportConstant.java b/app/src/main/java/com/coocoo/report/ReportConstant.java
+index d0c833501..16825d371 100644
+--- a/app/src/main/java/com/coocoo/report/ReportConstant.java
++++ b/app/src/main/java/com/coocoo/report/ReportConstant.java
+@@ -958,4 +958,24 @@ public interface ReportConstant {
+     String ACTION_SHOW_DIALOG = "show_dialog";
+     String ACTION_FORWARD_DONE = "forward_done";
+     String ACTION_OK = "ok";
++
++    String EVENT_CONVERSATION_LIST = "con_list_select";
++    String KEY_CON_NUM = "con_num";
++    String KEY_SCENE = "scene";
++    String VALUE_SINGLE = "1";
++    String VALUE_MUTIPLE = "2";
++    String VALUE_UNPIN = "unpin";
++    String VALUE_DELETE = "delete";
++    String VALUE_MUTE = "mute";
++    String VALUE_UNMUTE = "unmute";
++    String VALUE_ARCHIVE = "archive";
++    String VALUE_UNARCHIV = "unarchive";
++    String VALUE_ADD_SHORT_CUT = "add_shortcut";
++    String VALUE_ADD_TO_CONTACTS = "add_to_contacts";
++    String VALUE_READ = "read";
++    String VALUE_UNREAD = "unread";
++    String VALUE_INVITE = "invite";
++    String VALUE_HIDE = "hide";
++    String VALUE_UNHIDE = "unhide";
++    String VALUE_HOME = "home";
+ }
+diff --git a/app/src/main/java/com/coocoo/report/ReportCore.java b/app/src/main/java/com/coocoo/report/ReportCore.java
+index 4e94a3d7b..62c3e8e6b 100644
+--- a/app/src/main/java/com/coocoo/report/ReportCore.java
++++ b/app/src/main/java/com/coocoo/report/ReportCore.java
+@@ -1874,4 +1874,12 @@ class ReportCore implements ReportConstant {
+         params.put(ReportConstant.KEY_ACTION, ReportConstant.ACTION_FORWARD_DONE);
+         report(ReportConstant.EVENT_MY_MESSAGE, params);
      }
- 
-+    // invoke-static {vx}, Lcom/coocoo/coocoo/Coocoo;->traceLog4(Ljava/lang/Object;)V
-     public static void traceLog4(Object object) {
-+        if (object instanceof c1_2Ot) {
-+            Log.e(TAG, "-----------------4---------------- // object : " + object);
-+        }
-         Log.e(TAG, "-----------------4---------------- // object : " + object);
-     }
- 
-@@ -648,6 +653,31 @@ public class Coocoo {
-         Log.e(TAG, "-----------------5---------------- // value : " + value);
-     }
- 
-+    // invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(Z)V
-+    public static void traceLog6(boolean value) {
-+        Log.e(TAG, "-----------------6---------------- // value : " + value);
-+    }
 +
-+    // invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog7(Ljava/lang/CharSequence;)V
-+    public static void traceLog7(CharSequence value) {
-+        Log.e(TAG, "-----------------7---------------- // value : " + value);
++    public static void reportConversationList(String action, String num, String scene) {
++        Map<String, String> params = new HashMap<>();
++        params.put(KEY_ACTION, action);
++        params.put(KEY_NUM, num);
++        params.put(KEY_SCENE, scene);
++        report(ReportConstant.EVENT_CONVERSATION_LIST, params);
 +    }
-+
-+    // invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog8(Ljava/util/ArrayList;)V
-+    public static void traceLog8(ArrayList value) {
-+        Log.e(TAG, "-----------------8---------------- // value : " + value);
-+    }
-+
-+    // invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog9(Landroid/view/View;)V
-+    public static void traceLog9(View value) {
-+        Log.e(TAG, "-----------------9---------------- // value : " + value.getId());
-+    }
-+
-+    // invoke-static {}, Lcom/coocoo/coocoo/Coocoo;->stackTrace()V
-+    public static void stackTrace() throws Exception {
-+        throw new Exception("Debug");
-+    }
-+
-     public static void traceLogCodeStack() {
-         try {
-             throw new IllegalArgumentException("traceLogCodeStack");
-diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-index b4eefeb33..2d8ae9dd9 100644
---- a/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-+++ b/app/src/main/java/com/coocoo/whatsappdelegate/ContactPickerFragmentDelegate.java
-@@ -88,9 +88,11 @@ public class ContactPickerFragmentDelegate {
-             }
+ }
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
+index 4d7c65397..4ea646351 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
+@@ -14,6 +14,7 @@ import android.os.Bundle;
+ import android.os.Handler;
+ import android.text.TextUtils;
+ import android.view.LayoutInflater;
++import android.view.MenuItem;
+ import android.view.View;
+ import android.widget.BaseAdapter;
+ import android.widget.FrameLayout;
+@@ -978,4 +979,10 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
          }
- 
--        c1_2Ot c12Ot = new c1_2Ot(ProfileManager.getSelfJid());
--        c12Ot.A0I = ResMgr.getString(MY_MESSAGE_CONTACT_PICKER_NAME);
--        existingFilteredList.add(1, new cc_25m(c12Ot));
-+        if (!pickerFragment.A29) {
-+            c1_2Ot c12Ot = new c1_2Ot(ProfileManager.getSelfJid());
-+            c12Ot.A0I = ResMgr.getString(MY_MESSAGE_CONTACT_PICKER_NAME);
-+            existingFilteredList.add(1, new cc_25m(c12Ot));
-+        }
+         notifyConversationsAdapter();
      }
- 
-     @SmaliInject
-diff --git a/app/src/main/java/com/coocoowhatsapp/contact/picker/ContactPickerFragment.java b/app/src/main/java/com/coocoowhatsapp/contact/picker/ContactPickerFragment.java
-index 9682c2023..33d63546c 100644
---- a/app/src/main/java/com/coocoowhatsapp/contact/picker/ContactPickerFragment.java
-+++ b/app/src/main/java/com/coocoowhatsapp/contact/picker/ContactPickerFragment.java
-@@ -16,6 +16,8 @@ public class ContactPickerFragment extends c1_017 {
- 
-     public c1_0HQ A0f;
- 
-+    public boolean A29;      // true: calls' picker; false: forward's picker
 +
-     //Get extras
-     public Bundle A10() {
-         return null;
-diff --git a/whatsapp_modify_module/smali/X/1Da.1.smali b/whatsapp_modify_module/smali/X/1Da.1.smali
-index 631347fc1..80693c7c6 100644
---- a/whatsapp_modify_module/smali/X/1Da.1.smali
-+++ b/whatsapp_modify_module/smali/X/1Da.1.smali
-@@ -2411,6 +2411,9 @@
-     .line 218869
-     :cond_37
-     iget-boolean v1, v11, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A2C:Z
-+#coocoo
-+    #invoke-static {v1}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(Z)V
-+#coocoo
++    @SmaliInject
++    public void onMenuItemClick(MenuItem item) {
++        ConversationsFragment fragment = (ConversationsFragment) mHostFragment;
++        LogUtil.d("item.getId:" + item.getItemId() + " A21:" + fragment.A21.size() + " A20:" + fragment.A20.size());
++    }
+ }
+\ No newline at end of file
+diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
+index d545ee193..a718d81de 100644
+--- a/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
++++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
+@@ -1338,7 +1338,10 @@
  
-     if-eqz v1, :cond_38
- 
-diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
-index 53ec77c53..6f86bbd9c 100644
---- a/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
-+++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/contact/picker/ContactPickerFragment.smali
-@@ -2866,6 +2866,10 @@
-     :cond_d
-     iget-boolean v2, p0, Lcom/coocoowhatsapp/contact/picker/ContactPickerFragment;->A29:Z
- 
+ .method public A0k(Landroid/view/MenuItem;)Z
+     .locals 2
+-
 +#coocoo
-+    invoke-static {v2}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(Z)V
++    iget-object v1, Lcom/coocoowhatsapp/conversationslist/ConversationsFragment;->Lcom/coocoo/whatsappdelegate/ConversationsFragmentDelegate;
++    invoke-virtual {v1}, Lcom/coocoo/whatsappdelegate/ConversationsFragmentDelegate;->onMenuItemClick(Landroid/view/MenuItem;)V
 +#coocoo
-+
-     if-eqz v2, :cond_e
+     .line 487478
+     iget-object v1, p0, Lcom/coocoowhatsapp/conversationslist/ConversationsFragment;->A0u:LX/35c;
  
-     .line 116969
