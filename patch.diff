@@ -77,36 +77,24 @@ index 3b51bd9c5..6142e8d80 100644
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
 diff --git a/app/src/main/java/com/coocoo/report/Report.java b/app/src/main/java/com/coocoo/report/Report.java
-index 69f3672db..38e310271 100644
+index 69f3672db..3bf0304d4 100644
 --- a/app/src/main/java/com/coocoo/report/Report.java
 +++ b/app/src/main/java/com/coocoo/report/Report.java
-@@ -1159,4 +1159,28 @@ public class Report {
+@@ -1159,4 +1159,16 @@ public class Report {
      public static void reportMyMessageForwardDone() {
          ReportCore.reportMyMessageForwardDone();
      }
 +
-+    public static void reportSingleSelectHomeConversationAction(String action) {
-+        ReportCore.reportConversationList(action, ReportConstant.VALUE_SINGLE ,ReportConstant.VALUE_HOME);
++    public static void reportHomeMenuItemAction(String action, String num) {
++        ReportCore.reportConversationList(action, num, ReportConstant.VALUE_HOME);
 +    }
 +
-+    public static void reportMultiSelectHomeConversationAction(String action) {
-+        ReportCore.reportConversationList(action, ReportConstant.VALUE_MUTIPLE ,ReportConstant.VALUE_HOME);
++    public static void reportArchiveMenuItemAction(String action, String num) {
++        ReportCore.reportConversationList(action, num, ReportConstant.VALUE_ARCHIVE);
 +    }
 +
-+    public static void reportSingleSelectArchiveConversationAction(String action) {
-+        ReportCore.reportConversationList(action, ReportConstant.VALUE_SINGLE ,ReportConstant.VALUE_ARCHIVE);
-+    }
-+
-+    public static void reportMultiSelectArchiveConversationAction(String action) {
-+        ReportCore.reportConversationList(action, ReportConstant.VALUE_MUTIPLE ,ReportConstant.VALUE_ARCHIVE);
-+    }
-+
-+    public static void reportSingleSelectHideConversationAction(String action) {
-+        ReportCore.reportConversationList(action, ReportConstant.VALUE_SINGLE ,ReportConstant.VALUE_HIDE);
-+    }
-+
-+    public static void reportMultiSelectHideConversationAction(String action) {
-+        ReportCore.reportConversationList(action, ReportConstant.VALUE_MUTIPLE ,ReportConstant.VALUE_HIDE);
++    public static void reportPrivateMenuItemAction(String action, String num) {
++        ReportCore.reportConversationList(action, num, ReportConstant.VALUE_HIDE);
 +    }
  }
 diff --git a/app/src/main/java/com/coocoo/report/ReportConstant.java b/app/src/main/java/com/coocoo/report/ReportConstant.java
@@ -168,32 +156,62 @@ index 4d7c65397..8f5d0e32f 100644
  import android.widget.BaseAdapter;
  import android.widget.FrameLayout;
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationsDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationsDelegate.java
-index c87dadd6e..518e78b7a 100644
+index c87dadd6e..556e55e7a 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationsDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationsDelegate.java
-@@ -23,6 +23,7 @@ import com.coocoo.manager.PrivateChatLock;
+@@ -22,7 +22,11 @@ import com.coocoo.manager.FingerPrintAuthCallback;
+ import com.coocoo.manager.PrivateChatLock;
  import com.coocoo.manager.PrivateConversationsManager;
  import com.coocoo.report.Report;
++import com.coocoo.report.ReportConstant;
++import com.coocoo.report.ReportHomeMenu;
++import com.coocoo.report.ReportMenuItem;
  import com.coocoo.utils.ActivityUtil;
 +import com.coocoo.utils.LogUtil;
  import com.coocoo.utils.NewGroupUtil;
  import com.coocoo.utils.PrivacyUtils;
  import com.coocoo.utils.ResMgr;
-@@ -140,6 +141,14 @@ public class MenuOfConversationsDelegate {
+@@ -140,6 +144,7 @@ public class MenuOfConversationsDelegate {
      }
  
      public void onMenuItemClicked(MenuItem menuItem) {
-+        if (mConversationFragment instanceof ArchivedConversationsFragment) {
-+            LogUtil.d("ArchivedConversationsFragment");
-+        } else if (mConversationFragment.A0A() instanceof PrivateConversationsActivity) {
-+            LogUtil.d("PrivateConversationsActivity");
-+        } else if (mConversationFragment.A0A() instanceof HomeActivity) {
-+            LogUtil.d("HomeActivity");
-+        }
-+        LogUtil.d("onMenuItemClicked count:" + mConversationFragment.A21.size());
++        reportMenuAction(menuItem);
          if (mHost == null || mHost.A0F == null || mHost.A0F.A21 == null) {
              return;
          }
+@@ -253,4 +258,32 @@ public class MenuOfConversationsDelegate {
+             Report.addUserShortcutFromChatList();
+         }
+     }
++
++    private void reportMenuAction(MenuItem menuItem) {
++        String num = mConversationFragment.A21.size() > 1 ? ReportConstant.VALUE_MUTIPLE : ReportConstant.VALUE_SINGLE;
++        if (mConversationFragment instanceof ArchivedConversationsFragment) {
++            reportArchiveMenuItem(menuItem, num);
++        } else if (mConversationFragment.A0A() instanceof PrivateConversationsActivity) {
++            reportPrivateMenuItem(menuItem);
++        } else if (mConversationFragment.A0A() instanceof HomeActivity) {
++            reportHomeMenuItem(menuItem);
++        }
++    }
++
++    private void reportArchiveMenuItem(MenuItem menuItem, String num) {
++        LogUtil.d("reportArchiveMenuItem:" + menuItem.getItemId());
++//        if (menuItem.getItemId() == ResMgr.getId("menuitem_delete")) {
++//            Report.reportHomeMenuItemAction(ReportConstant.VALUE_DELETE, num);
++//        } else if (menuItem.getItemId() == ResMgr.getId()) {
++//
++//        }
++    }
++
++    private void reportHomeMenuItem(MenuItem menuItem) {
++        LogUtil.d("reportHomeMenuItem:" + menuItem.getItemId());
++    }
++
++    private void reportPrivateMenuItem(MenuItem menuItem) {
++        LogUtil.d("reportPrivateMenuItem:" + menuItem.getItemId());
++    }
+ }
 diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
 index d545ee193..f60fabb4b 100644
 --- a/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
