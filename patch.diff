@@ -148,7 +148,7 @@ index 4e94a3d7b..62c3e8e6b 100644
  }
 diff --git a/app/src/main/java/com/coocoo/report/ReportMenuItemAction.kt b/app/src/main/java/com/coocoo/report/ReportMenuItemAction.kt
 new file mode 100644
-index 000000000..ef603c637
+index 000000000..a6058e1d2
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/report/ReportMenuItemAction.kt
 @@ -0,0 +1,50 @@
@@ -168,7 +168,7 @@ index 000000000..ef603c637
 +    private val map: Map<Int, String> = mapOf(
 +        ResMgr.getId("menuitem_conversations_pin") to  ReportConstant.VALUE_PIN,
 +        ResMgr.getId("menuitem_conversations_unpin") to  ReportConstant.VALUE_UNPIN,
-+        ResMgr.getId("menuitem_delete") to ReportConstant.VALUE_DELETE,
++        ResMgr.getId("menuitem_conversations_delete") to ReportConstant.VALUE_DELETE,
 +        ResMgr.getId("menuitem_conversations_mute") to ReportConstant.VALUE_MUTE,
 +        ResMgr.getId("menuitem_conversations_unmute") to ReportConstant.VALUE_UNMUTE,
 +        ResMgr.getId("menuitem_conversations_archive") to ReportConstant.VALUE_ARCHIVE,
