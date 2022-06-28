@@ -98,10 +98,10 @@ index 69f3672db..3bf0304d4 100644
 +    }
  }
 diff --git a/app/src/main/java/com/coocoo/report/ReportConstant.java b/app/src/main/java/com/coocoo/report/ReportConstant.java
-index d0c833501..16825d371 100644
+index d0c833501..4410827ea 100644
 --- a/app/src/main/java/com/coocoo/report/ReportConstant.java
 +++ b/app/src/main/java/com/coocoo/report/ReportConstant.java
-@@ -958,4 +958,24 @@ public interface ReportConstant {
+@@ -958,4 +958,27 @@ public interface ReportConstant {
      String ACTION_SHOW_DIALOG = "show_dialog";
      String ACTION_FORWARD_DONE = "forward_done";
      String ACTION_OK = "ok";
@@ -125,6 +125,9 @@ index d0c833501..16825d371 100644
 +    String VALUE_HIDE = "hide";
 +    String VALUE_UNHIDE = "unhide";
 +    String VALUE_HOME = "home";
++    String VALUE_EXIT_GROUP = "exit_group";
++    String VALUE_GROUP_INFO = "group_info";
++    String VALUE_SELECT_ALL = "select_all";
  }
 diff --git a/app/src/main/java/com/coocoo/report/ReportCore.java b/app/src/main/java/com/coocoo/report/ReportCore.java
 index 4e94a3d7b..62c3e8e6b 100644
@@ -143,6 +146,63 @@ index 4e94a3d7b..62c3e8e6b 100644
 +        report(ReportConstant.EVENT_CONVERSATION_LIST, params);
 +    }
  }
+diff --git a/app/src/main/java/com/coocoo/report/ReportMenuItemAction.kt b/app/src/main/java/com/coocoo/report/ReportMenuItemAction.kt
+new file mode 100644
+index 000000000..ef603c637
+--- /dev/null
++++ b/app/src/main/java/com/coocoo/report/ReportMenuItemAction.kt
+@@ -0,0 +1,50 @@
++package com.coocoo.report
++
++import android.view.MenuItem
++import com.coocoo.activity.PrivateConversationsActivity
++import com.coocoo.report.ReportConstant.VALUE_MUTIPLE
++import com.coocoo.report.ReportConstant.VALUE_SINGLE
++import com.coocoo.utils.ResMgr
++import com.coocoo.whatsappdelegate.MenuOfConversationsDelegate
++import com.coocoowhatsapp.HomeActivity
++import com.coocoowhatsapp.conversationslist.ArchivedConversationsFragment
++import com.coocoowhatsapp.conversationslist.ConversationsFragment
++
++object ReportMenuItemAction {
++    private val map: Map<Int, String> = mapOf(
++        ResMgr.getId("menuitem_conversations_pin") to  ReportConstant.VALUE_PIN,
++        ResMgr.getId("menuitem_conversations_unpin") to  ReportConstant.VALUE_UNPIN,
++        ResMgr.getId("menuitem_delete") to ReportConstant.VALUE_DELETE,
++        ResMgr.getId("menuitem_conversations_mute") to ReportConstant.VALUE_MUTE,
++        ResMgr.getId("menuitem_conversations_unmute") to ReportConstant.VALUE_UNMUTE,
++        ResMgr.getId("menuitem_conversations_archive") to ReportConstant.VALUE_ARCHIVE,
++        ResMgr.getId("menuitem_conversations_unarchive") to ReportConstant.VALUE_UNARCHIV,
++        ResMgr.getId("menuitem_conversations_create_shortcuit") to ReportConstant.VALUE_ADD_SHORT_CUT,
++        ResMgr.getId("menuitem_add_to_contacts") to ReportConstant.VALUE_ADD_TO_CONTACTS,
++        ResMgr.getId("menuitem_conversations_mark_read") to ReportConstant.VALUE_READ,
++        ResMgr.getId("menuitem_conversations_mark_unread") to ReportConstant.VALUE_UNREAD,
++        MenuOfConversationsDelegate.MENU_ADD_GROUP_ID to ReportConstant.VALUE_INVITE,
++        MenuOfConversationsDelegate.MENU_PRIVATE_ID to ReportConstant.VALUE_HIDE,
++        MenuOfConversationsDelegate.MENU_UN_PRIVATE_ID to ReportConstant.VALUE_UNHIDE,
++        ResMgr.getId("menuitem_conversations_leave") to ReportConstant.VALUE_EXIT_GROUP,
++        ResMgr.getId("menuitem_conversations_contact_info") to ReportConstant.VALUE_GROUP_INFO,
++        ResMgr.getId("menuitem_conversations_select_all") to ReportConstant.VALUE_SELECT_ALL
++    )
++
++    @JvmStatic
++    fun report(menuItem: MenuItem, fragment: ConversationsFragment) {
++        val value = map[menuItem.itemId] ?: return
++        val num = if (fragment.A21.size > 1) VALUE_MUTIPLE else VALUE_SINGLE
++        when {
++            fragment is ArchivedConversationsFragment -> {
++                Report.reportHomeMenuItemAction(value, num)
++            }
++            fragment.A0A() is PrivateConversationsActivity -> {
++                Report.reportPrivateMenuItemAction(value, num)
++            }
++            fragment.A0A() is HomeActivity -> {
++                Report.reportHomeMenuItemAction(value, num)
++            }
++        }
++    }
++}
+\ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
 index 4d7c65397..8f5d0e32f 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
@@ -156,60 +216,38 @@ index 4d7c65397..8f5d0e32f 100644
  import android.widget.BaseAdapter;
  import android.widget.FrameLayout;
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationsDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationsDelegate.java
-index c87dadd6e..32c8990be 100644
+index c87dadd6e..66e010167 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationsDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationsDelegate.java
-@@ -22,7 +22,9 @@ import com.coocoo.manager.FingerPrintAuthCallback;
+@@ -22,6 +22,7 @@ import com.coocoo.manager.FingerPrintAuthCallback;
  import com.coocoo.manager.PrivateChatLock;
  import com.coocoo.manager.PrivateConversationsManager;
  import com.coocoo.report.Report;
-+import com.coocoo.report.ReportConstant;
++import com.coocoo.report.ReportMenuItemAction;
  import com.coocoo.utils.ActivityUtil;
-+import com.coocoo.utils.LogUtil;
  import com.coocoo.utils.NewGroupUtil;
  import com.coocoo.utils.PrivacyUtils;
- import com.coocoo.utils.ResMgr;
-@@ -140,6 +142,7 @@ public class MenuOfConversationsDelegate {
+@@ -47,9 +48,9 @@ public class MenuOfConversationsDelegate {
+ 
+     private static final String TAG = "MenuOfConversations";
+ 
+-    private static final int MENU_ADD_GROUP_ID = 0x100;
+-    private static final int MENU_PRIVATE_ID = 0x101;
+-    private static final int MENU_UN_PRIVATE_ID = 0x102;
++    public static final int MENU_ADD_GROUP_ID = 0x100;
++    public static final int MENU_PRIVATE_ID = 0x101;
++    public static final int MENU_UN_PRIVATE_ID = 0x102;
+     private static final String SINGLE_USER_PATTERN = "@s.whatsapp.net";
+ 
+     private static final String RES_STRING_MENU_PRIVATE = "cc_conversations_menu_private";
+@@ -236,6 +237,7 @@ public class MenuOfConversationsDelegate {
+                 }
+             }
+         }
++        ReportMenuItemAction.report(menuItem, mConversationFragment);
      }
  
-     public void onMenuItemClicked(MenuItem menuItem) {
-+        reportMenuAction(menuItem);
-         if (mHost == null || mHost.A0F == null || mHost.A0F.A21 == null) {
-             return;
-         }
-@@ -253,4 +256,32 @@ public class MenuOfConversationsDelegate {
-             Report.addUserShortcutFromChatList();
-         }
-     }
-+
-+    private void reportMenuAction(MenuItem menuItem) {
-+        String num = mConversationFragment.A21.size() > 1 ? ReportConstant.VALUE_MUTIPLE : ReportConstant.VALUE_SINGLE;
-+        if (mConversationFragment instanceof ArchivedConversationsFragment) {
-+            reportArchiveMenuItem(menuItem, num);
-+        } else if (mConversationFragment.A0A() instanceof PrivateConversationsActivity) {
-+            reportPrivateMenuItem(menuItem);
-+        } else if (mConversationFragment.A0A() instanceof HomeActivity) {
-+            reportHomeMenuItem(menuItem);
-+        }
-+    }
-+
-+    private void reportArchiveMenuItem(MenuItem menuItem, String num) {
-+        LogUtil.d("reportArchiveMenuItem:" + menuItem.getItemId());
-+//        if (menuItem.getItemId() == ResMgr.getId("menuitem_delete")) {
-+//            Report.reportHomeMenuItemAction(ReportConstant.VALUE_DELETE, num);
-+//        } else if (menuItem.getItemId() == ResMgr.getId()) {
-+//
-+//        }
-+    }
-+
-+    private void reportHomeMenuItem(MenuItem menuItem) {
-+        LogUtil.d("reportHomeMenuItem:" + menuItem.getItemId());
-+    }
-+
-+    private void reportPrivateMenuItem(MenuItem menuItem) {
-+        LogUtil.d("reportPrivateMenuItem:" + menuItem.getItemId());
-+    }
- }
+     @SmaliInject
 diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
 index d545ee193..f60fabb4b 100644
 --- a/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
