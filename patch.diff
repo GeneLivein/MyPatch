@@ -156,7 +156,7 @@ index 4e94a3d7b..62c3e8e6b 100644
 +    }
  }
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
-index 4d7c65397..4ea646351 100644
+index 4d7c65397..8f5d0e32f 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
 @@ -14,6 +14,7 @@ import android.os.Bundle;
@@ -167,20 +167,8 @@ index 4d7c65397..4ea646351 100644
  import android.view.View;
  import android.widget.BaseAdapter;
  import android.widget.FrameLayout;
-@@ -978,4 +979,10 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
-         }
-         notifyConversationsAdapter();
-     }
-+
-+    @SmaliInject
-+    public void onMenuItemClick(MenuItem item) {
-+        ConversationsFragment fragment = (ConversationsFragment) mHostFragment;
-+        LogUtil.d("item.getId:" + item.getItemId() + " A21:" + fragment.A21.size() + " A20:" + fragment.A20.size());
-+    }
- }
-\ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationsDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationsDelegate.java
-index c87dadd6e..f3c2af87a 100644
+index c87dadd6e..7da894513 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationsDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationsDelegate.java
 @@ -23,6 +23,7 @@ import com.coocoo.manager.PrivateChatLock;
@@ -191,10 +179,13 @@ index c87dadd6e..f3c2af87a 100644
  import com.coocoo.utils.NewGroupUtil;
  import com.coocoo.utils.PrivacyUtils;
  import com.coocoo.utils.ResMgr;
-@@ -140,6 +141,7 @@ public class MenuOfConversationsDelegate {
+@@ -140,6 +141,10 @@ public class MenuOfConversationsDelegate {
      }
  
      public void onMenuItemClicked(MenuItem menuItem) {
++        if (mConversationFragment instanceof ArchivedConversationsFragment) {
++            LogUtil.d("ArchivedConversationsFragment");
++        }
 +        LogUtil.d("onMenuItemClicked count:" + mConversationFragment.A21.size());
          if (mHost == null || mHost.A0F == null || mHost.A0F.A21 == null) {
              return;
