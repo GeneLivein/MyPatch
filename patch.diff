@@ -1,133 +1,120 @@
-diff --git a/app/build.gradle b/app/build.gradle
-index ac7c94191..74ca898b6 100644
---- a/app/build.gradle
-+++ b/app/build.gradle
-@@ -45,7 +45,7 @@ android {
- //                || cur_flavor == "GbUnclone"
- //                || cur_flavor == "WhatsappPlus") {
-             rootProject.ext.version_name = '"9.0.0"' // HeyMods
--            rootProject.ext.version_code = "900000" // HeyMods
-+            rootProject.ext.version_code = "9000000" // HeyMods
- //        } else if (cur_flavor == "FM") {
- //            rootProject.ext.version_name = '"10.1.0"'
- //            rootProject.ext.version_code = "1001000"
-@@ -87,7 +87,7 @@ android {
- //            rootProject.ext.version_code = "20197"
- //        }
-             rootProject.ext.version_name = '"9.0.0"' // HeyMods
--            rootProject.ext.version_code = "900000" // HeyMods
-+            rootProject.ext.version_code = "9000000" // HeyMods
-     }
- 
-     flavorDimensions "version"
-diff --git a/app/src/main/java/com/coocoo/coocoo/Coocoo.java b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-index 3b51bd9c5..6142e8d80 100644
---- a/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-+++ b/app/src/main/java/com/coocoo/coocoo/Coocoo.java
-@@ -116,6 +116,7 @@ import javax.crypto.SecretKey;
- 
- import X.c1_01f;
- import X.c1_2Oc;
-+import X.c1_2Ot;
- import X.c1_3Ul;
- import X.c1_2P6;
- import X.c1_2ua;
-@@ -640,7 +641,11 @@ public class Coocoo {
-         Log.e(TAG, "-----------------3---------------- // value : " + value);
-     }
- 
-+    // invoke-static {vx}, Lcom/coocoo/coocoo/Coocoo;->traceLog4(Ljava/lang/Object;)V
-     public static void traceLog4(Object object) {
-+        if (object instanceof c1_2Ot) {
-+            Log.e(TAG, "-----------------4---------------- // object : " + object);
+diff --git a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
+index 83f989ab9..2bb1e6ef5 100644
+--- a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
++++ b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
+@@ -1039,4 +1039,8 @@ object RemoteConfig {
+         get() {
+             return getString(RemoteConfigKeys.THEME_WEB_DOWNLOAD_LAST_CODE, "")
+         }
++    val openChatLink: String
++        get() {
++            return getString(RemoteConfigKeys.OPEN_CHAT_LINK, "")
 +        }
-         Log.e(TAG, "-----------------4---------------- // object : " + object);
-     }
+ }
+\ No newline at end of file
+diff --git a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfigKeys.kt b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfigKeys.kt
+index 0904b8182..a8f3f1462 100644
+--- a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfigKeys.kt
++++ b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfigKeys.kt
+@@ -153,4 +153,6 @@ object RemoteConfigKeys {
  
-@@ -648,6 +653,31 @@ public class Coocoo {
-         Log.e(TAG, "-----------------5---------------- // value : " + value);
-     }
+     const val THEME_WEB_DOWNLOAD_ENABLED = "theme_web_download_enable"
+     const val THEME_WEB_DOWNLOAD_LAST_CODE = "theme_web_download_last_code"
++
++    const val OPEN_CHAT_LINK = "openchat_link"
+ }
+diff --git a/app/src/main/java/com/coocoo/openchat/activity/OpenChatWebActivity.kt b/app/src/main/java/com/coocoo/openchat/activity/OpenChatWebActivity.kt
+index 10af47ca9..32599765c 100644
+--- a/app/src/main/java/com/coocoo/openchat/activity/OpenChatWebActivity.kt
++++ b/app/src/main/java/com/coocoo/openchat/activity/OpenChatWebActivity.kt
+@@ -287,7 +287,7 @@ class OpenChatWebActivity : cc_01X() {
  
-+    // invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog6(Z)V
-+    public static void traceLog6(boolean value) {
-+        Log.e(TAG, "-----------------6---------------- // value : " + value);
-+    }
-+
-+    // invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog7(Ljava/lang/CharSequence;)V
-+    public static void traceLog7(CharSequence value) {
-+        Log.e(TAG, "-----------------7---------------- // value : " + value);
-+    }
-+
-+    // invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog8(Ljava/util/ArrayList;)V
-+    public static void traceLog8(ArrayList value) {
-+        Log.e(TAG, "-----------------8---------------- // value : " + value);
-+    }
-+
-+    // invoke-static {v0}, Lcom/coocoo/coocoo/Coocoo;->traceLog9(Landroid/view/View;)V
-+    public static void traceLog9(View value) {
-+        Log.e(TAG, "-----------------9---------------- // value : " + value.getId());
-+    }
-+
-+    // invoke-static {}, Lcom/coocoo/coocoo/Coocoo;->stackTrace()V
-+    public static void stackTrace() throws Exception {
-+        throw new Exception("Debug");
-+    }
-+
-     public static void traceLogCodeStack() {
-         try {
-             throw new IllegalArgumentException("traceLogCodeStack");
+     private fun handleExternalUrl(url: String?): Boolean {
+         url?.let {
+-            if (!it.startsWith(WhisperInjectUtil.OPENCHAT_WEB_HOST_URL) &&
++            if (!it.startsWith(WhisperOpenChatViewModel.OPENCHAT_HOME_URL) &&
+                 !viewModel.isMatchHandleUrl(it)
+             ) {
+                 return try {
 diff --git a/app/src/main/java/com/coocoo/openchat/activity/viewmodel/WhisperOpenChatViewModel.kt b/app/src/main/java/com/coocoo/openchat/activity/viewmodel/WhisperOpenChatViewModel.kt
-index 663d6a067..d53ec983f 100644
+index 663d6a067..470c481ad 100644
 --- a/app/src/main/java/com/coocoo/openchat/activity/viewmodel/WhisperOpenChatViewModel.kt
 +++ b/app/src/main/java/com/coocoo/openchat/activity/viewmodel/WhisperOpenChatViewModel.kt
-@@ -14,6 +14,7 @@ import com.coocoo.openchat.activity.OpenChatWebActivity.Companion.KEY_TYPE_LIVEH
- import com.coocoo.openchat.activity.OpenChatWebActivity.Companion.KEY_TYPE_OPENCHAT
- import com.coocoo.profile.ProfileManager
- import com.coocoo.report.ReportOpenChat
-+import com.coocoo.utils.LogUtil
- import com.coocoo.utils.PrivacyUtils
- import com.coocoo.utils.ResMgr
- import com.coocoo.utils.SystemUtil
-@@ -93,6 +94,9 @@ class WhisperOpenChatViewModel(private val whisper: Whisper) {
+@@ -6,6 +6,7 @@ import android.content.Intent
+ import android.net.Uri
+ import com.coocoo.conversation.model.GroupInfo
+ import com.coocoo.coocoo.Coocoo
++import com.coocoo.firebase.remoteConfig.RemoteConfig
+ import com.coocoo.message.MessageHelper
+ import com.coocoo.openchat.OpenChatRepository
+ import com.coocoo.openchat.activity.OpenChatWebActivity
+@@ -27,11 +28,11 @@ import java.util.regex.Pattern
+ 
+ class WhisperOpenChatViewModel(private val whisper: Whisper) {
+     companion object {
++        val OPENCHAT_HOME_URL = RemoteConfig.openChatLink
+         private const val KEY_RED_DOT = "red_dot"
+         private const val KEY_PHONE_NUMBER = "phone_number"
+         private const val LIVEHOUSE_PACKAGE_NAME = "com.livein.livehouse"
+         const val CHROME_PACKAGE_NAME = "com.android.chrome"
+-        private val OPENCHAT_HOME_URL = WhisperInjectUtil.OPENCHAT_WEB_HOST_URL
+         private val LIVEHOUSE_HOME_URL = WhisperInjectUtil.LIVEHOUSE_WEB_HOST_URL
+         private const val HANDLE_LIVEHOUSE_URL_PATTERN =
+             "https?:\\/\\/[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.(livehouse|lh)\\.(social)[-a-zA-Z0-9@:%._\\\\/?+~#=]{0,256}"
+@@ -75,7 +76,7 @@ class WhisperOpenChatViewModel(private val whisper: Whisper) {
+                 if (groupJid.isNullOrEmpty()) {
+                     OPENCHAT_HOME_URL
+                 } else {
+-                    WhisperInjectUtil.getPromoteGroupUrl(groupJidEncode)
++                    WhisperInjectUtil.getPromoteGroupUrl(OPENCHAT_HOME_URL, groupJidEncode)
+                 }
+             }
+             KEY_TYPE_LIVEHOUSE -> {
+@@ -92,7 +93,7 @@ class WhisperOpenChatViewModel(private val whisper: Whisper) {
+             KEY_TYPE_LIVEHOUSE_INTENT -> {
                  "${uri.toString()}&telephone=$phoneNumber"
              }
-             else -> OPENCHAT_HOME_URL
-+        }.also {
-+            LogUtil.d("type: $type")
-+            LogUtil.d(it)
+-            else -> OPENCHAT_HOME_URL
++            else -> RemoteConfig.openChatLink
          }
      }
  
-diff --git a/app/src/main/java/com/coocoo/report/ReportMenuItemAction.kt b/app/src/main/java/com/coocoo/report/ReportMenuItemAction.kt
-index dbef63d20..acc38e0b9 100644
---- a/app/src/main/java/com/coocoo/report/ReportMenuItemAction.kt
-+++ b/app/src/main/java/com/coocoo/report/ReportMenuItemAction.kt
-@@ -8,7 +8,7 @@ import com.coocoo.utils.LogUtil
- import com.coocoo.utils.ResMgr
- import com.coocoo.whatsappdelegate.MenuOfConversationsDelegate
- import com.coocoowhatsapp.HomeActivity
--import com.coocoowhatsapp.conversationslist.ArchivedConversationsFragment
-+import com.coocoowhatsapp.conversationslist.ArchivedConversationsActivity
- import com.coocoowhatsapp.conversationslist.ConversationsFragment
+diff --git a/open-chat/src/main/java/com/wormhole/openchat/whisper/WhisperInjectUtil.kt b/open-chat/src/main/java/com/wormhole/openchat/whisper/WhisperInjectUtil.kt
+index 1c1bbf9cb..a74e9c292 100644
+--- a/open-chat/src/main/java/com/wormhole/openchat/whisper/WhisperInjectUtil.kt
++++ b/open-chat/src/main/java/com/wormhole/openchat/whisper/WhisperInjectUtil.kt
+@@ -21,13 +21,10 @@ import java.io.File
+ object WhisperInjectUtil {
+     private const val DEV_API_HOST_URL = "https://dev-api.chatspace.im"
+     private const val PRODUCT_API_HOST_URL = "https://api.chatspace.im"
+-    private const val DEV_WEB_HOST_URL = "https://dev-web.whspr.im"
+-    private const val PRODUCT_WEB_HOST_URL = "https://whspr.im"
+     private const val DEV_LIVEHOUSE_WEB_HOST_URL = "https://tshare.livehouse.social/app-voice"
+     private const val PRODUCT_LIVEHOUSE_WEB_HOST_URL = "https://share.livehouse.social/app-voice"
  
- object ReportMenuItemAction {
-@@ -37,14 +37,14 @@ object ReportMenuItemAction {
-         LogUtil.d("menuItem:${menuItem.itemId}")
-         val value = map[menuItem.itemId] ?: return
-         val num = if (fragment.A21.size > 1) VALUE_MUTIPLE else VALUE_SINGLE
--        when {
--            fragment is ArchivedConversationsFragment -> {
--                Report.reportHomeMenuItemAction(value, num)
-+        when(fragment.A0A()) {
-+            is ArchivedConversationsActivity -> {
-+                Report.reportArchiveMenuItemAction(value, num)
-             }
--            fragment.A0A() is PrivateConversationsActivity -> {
-+            is PrivateConversationsActivity -> {
-                 Report.reportPrivateMenuItemAction(value, num)
-             }
--            fragment.A0A() is HomeActivity -> {
-+            is HomeActivity -> {
-                 Report.reportHomeMenuItemAction(value, num)
-             }
-         }
+     private val API_HOST_URL = if (BuildConfig.DEBUG) DEV_API_HOST_URL else PRODUCT_API_HOST_URL
+-    val OPENCHAT_WEB_HOST_URL = if (BuildConfig.DEBUG) DEV_WEB_HOST_URL else PRODUCT_WEB_HOST_URL
+     val LIVEHOUSE_WEB_HOST_URL = if (BuildConfig.DEBUG) DEV_LIVEHOUSE_WEB_HOST_URL else PRODUCT_LIVEHOUSE_WEB_HOST_URL
+ 
+     private const val WHISPER_SHARED_PREFERENCE = "whisper_pref"
+@@ -39,7 +36,7 @@ object WhisperInjectUtil {
+     private var whisperRepository: WhisperRepository? = null
+     private val provideWhisperLock = Any()
+ 
+-    fun getPromoteGroupUrl(groupJid: String) = "$OPENCHAT_WEB_HOST_URL/group/submit?jid=$groupJid"
++    fun getPromoteGroupUrl(domain: String, groupJid: String) = "$domain/group/submit?jid=$groupJid"
+     fun getStartPartyUrl(groupJid: String, groupName: String, phoneNumber: String) = "$LIVEHOUSE_WEB_HOST_URL?modGroupId=$groupJid&modGroupName=$groupName&telephone=$phoneNumber"
+ 
+     fun provideWhisper(context: Context): Whisper = synchronized(provideWhisperLock) {
+diff --git a/open-chat/src/main/java/com/wormhole/openchat/whisper/repository/WhisperRepository.kt b/open-chat/src/main/java/com/wormhole/openchat/whisper/repository/WhisperRepository.kt
+index 20f805083..a66fecdb0 100644
+--- a/open-chat/src/main/java/com/wormhole/openchat/whisper/repository/WhisperRepository.kt
++++ b/open-chat/src/main/java/com/wormhole/openchat/whisper/repository/WhisperRepository.kt
+@@ -166,4 +166,6 @@ internal class WhisperRepository(
+     override fun reportFullGroup(inviteCode: String) {
+         whisperClient.reportFullGroup(getAuthHeader(), inviteCode).map { }
+     }
++
++
+ }
+\ No newline at end of file
