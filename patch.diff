@@ -76,219 +76,25 @@ index 3b51bd9c5..6142e8d80 100644
      public static void traceLogCodeStack() {
          try {
              throw new IllegalArgumentException("traceLogCodeStack");
-diff --git a/app/src/main/java/com/coocoo/report/Report.java b/app/src/main/java/com/coocoo/report/Report.java
-index 69f3672db..3bf0304d4 100644
---- a/app/src/main/java/com/coocoo/report/Report.java
-+++ b/app/src/main/java/com/coocoo/report/Report.java
-@@ -1159,4 +1159,16 @@ public class Report {
-     public static void reportMyMessageForwardDone() {
-         ReportCore.reportMyMessageForwardDone();
-     }
-+
-+    public static void reportHomeMenuItemAction(String action, String num) {
-+        ReportCore.reportConversationList(action, num, ReportConstant.VALUE_HOME);
-+    }
-+
-+    public static void reportArchiveMenuItemAction(String action, String num) {
-+        ReportCore.reportConversationList(action, num, ReportConstant.VALUE_ARCHIVE);
-+    }
-+
-+    public static void reportPrivateMenuItemAction(String action, String num) {
-+        ReportCore.reportConversationList(action, num, ReportConstant.VALUE_HIDE);
-+    }
- }
-diff --git a/app/src/main/java/com/coocoo/report/ReportConstant.java b/app/src/main/java/com/coocoo/report/ReportConstant.java
-index d0c833501..4410827ea 100644
---- a/app/src/main/java/com/coocoo/report/ReportConstant.java
-+++ b/app/src/main/java/com/coocoo/report/ReportConstant.java
-@@ -958,4 +958,27 @@ public interface ReportConstant {
-     String ACTION_SHOW_DIALOG = "show_dialog";
-     String ACTION_FORWARD_DONE = "forward_done";
-     String ACTION_OK = "ok";
-+
-+    String EVENT_CONVERSATION_LIST = "con_list_select";
-+    String KEY_CON_NUM = "con_num";
-+    String KEY_SCENE = "scene";
-+    String VALUE_SINGLE = "1";
-+    String VALUE_MUTIPLE = "2";
-+    String VALUE_UNPIN = "unpin";
-+    String VALUE_DELETE = "delete";
-+    String VALUE_MUTE = "mute";
-+    String VALUE_UNMUTE = "unmute";
-+    String VALUE_ARCHIVE = "archive";
-+    String VALUE_UNARCHIV = "unarchive";
-+    String VALUE_ADD_SHORT_CUT = "add_shortcut";
-+    String VALUE_ADD_TO_CONTACTS = "add_to_contacts";
-+    String VALUE_READ = "read";
-+    String VALUE_UNREAD = "unread";
-+    String VALUE_INVITE = "invite";
-+    String VALUE_HIDE = "hide";
-+    String VALUE_UNHIDE = "unhide";
-+    String VALUE_HOME = "home";
-+    String VALUE_EXIT_GROUP = "exit_group";
-+    String VALUE_GROUP_INFO = "group_info";
-+    String VALUE_SELECT_ALL = "select_all";
- }
-diff --git a/app/src/main/java/com/coocoo/report/ReportCore.java b/app/src/main/java/com/coocoo/report/ReportCore.java
-index 4e94a3d7b..62c3e8e6b 100644
---- a/app/src/main/java/com/coocoo/report/ReportCore.java
-+++ b/app/src/main/java/com/coocoo/report/ReportCore.java
-@@ -1874,4 +1874,12 @@ class ReportCore implements ReportConstant {
-         params.put(ReportConstant.KEY_ACTION, ReportConstant.ACTION_FORWARD_DONE);
-         report(ReportConstant.EVENT_MY_MESSAGE, params);
-     }
-+
-+    public static void reportConversationList(String action, String num, String scene) {
-+        Map<String, String> params = new HashMap<>();
-+        params.put(KEY_ACTION, action);
-+        params.put(KEY_NUM, num);
-+        params.put(KEY_SCENE, scene);
-+        report(ReportConstant.EVENT_CONVERSATION_LIST, params);
-+    }
- }
-diff --git a/app/src/main/java/com/coocoo/report/ReportMenuItemAction.kt b/app/src/main/java/com/coocoo/report/ReportMenuItemAction.kt
-new file mode 100644
-index 000000000..dbef63d20
---- /dev/null
-+++ b/app/src/main/java/com/coocoo/report/ReportMenuItemAction.kt
-@@ -0,0 +1,52 @@
-+package com.coocoo.report
-+
-+import android.view.MenuItem
-+import com.coocoo.activity.PrivateConversationsActivity
-+import com.coocoo.report.ReportConstant.VALUE_MUTIPLE
-+import com.coocoo.report.ReportConstant.VALUE_SINGLE
+diff --git a/app/src/main/java/com/coocoo/openchat/activity/viewmodel/WhisperOpenChatViewModel.kt b/app/src/main/java/com/coocoo/openchat/activity/viewmodel/WhisperOpenChatViewModel.kt
+index 663d6a067..d53ec983f 100644
+--- a/app/src/main/java/com/coocoo/openchat/activity/viewmodel/WhisperOpenChatViewModel.kt
++++ b/app/src/main/java/com/coocoo/openchat/activity/viewmodel/WhisperOpenChatViewModel.kt
+@@ -14,6 +14,7 @@ import com.coocoo.openchat.activity.OpenChatWebActivity.Companion.KEY_TYPE_LIVEH
+ import com.coocoo.openchat.activity.OpenChatWebActivity.Companion.KEY_TYPE_OPENCHAT
+ import com.coocoo.profile.ProfileManager
+ import com.coocoo.report.ReportOpenChat
 +import com.coocoo.utils.LogUtil
-+import com.coocoo.utils.ResMgr
-+import com.coocoo.whatsappdelegate.MenuOfConversationsDelegate
-+import com.coocoowhatsapp.HomeActivity
-+import com.coocoowhatsapp.conversationslist.ArchivedConversationsFragment
-+import com.coocoowhatsapp.conversationslist.ConversationsFragment
-+
-+object ReportMenuItemAction {
-+    private val map: Map<Int, String> = mapOf(
-+        ResMgr.getId("menuitem_conversations_pin") to  ReportConstant.VALUE_PIN,
-+        ResMgr.getId("menuitem_conversations_unpin") to  ReportConstant.VALUE_UNPIN,
-+        ResMgr.getId("menuitem_conversations_delete") to ReportConstant.VALUE_DELETE,
-+        ResMgr.getId("menuitem_conversations_mute") to ReportConstant.VALUE_MUTE,
-+        ResMgr.getId("menuitem_conversations_unmute") to ReportConstant.VALUE_UNMUTE,
-+        ResMgr.getId("menuitem_conversations_archive") to ReportConstant.VALUE_ARCHIVE,
-+        ResMgr.getId("menuitem_conversations_unarchive") to ReportConstant.VALUE_UNARCHIV,
-+        ResMgr.getId("menuitem_conversations_create_shortcuit") to ReportConstant.VALUE_ADD_SHORT_CUT,
-+        ResMgr.getId("menuitem_conversations_add_new_contact") to ReportConstant.VALUE_ADD_TO_CONTACTS,
-+        ResMgr.getId("menuitem_conversations_mark_read") to ReportConstant.VALUE_READ,
-+        ResMgr.getId("menuitem_conversations_mark_unread") to ReportConstant.VALUE_UNREAD,
-+        MenuOfConversationsDelegate.MENU_ADD_GROUP_ID to ReportConstant.VALUE_INVITE,
-+        MenuOfConversationsDelegate.MENU_PRIVATE_ID to ReportConstant.VALUE_HIDE,
-+        MenuOfConversationsDelegate.MENU_UN_PRIVATE_ID to ReportConstant.VALUE_UNHIDE,
-+        ResMgr.getId("menuitem_conversations_leave") to ReportConstant.VALUE_EXIT_GROUP,
-+        ResMgr.getId("menuitem_conversations_contact_info") to ReportConstant.VALUE_GROUP_INFO,
-+        ResMgr.getId("menuitem_conversations_select_all") to ReportConstant.VALUE_SELECT_ALL
-+    )
-+
-+    @JvmStatic
-+    fun report(menuItem: MenuItem, fragment: ConversationsFragment) {
-+        LogUtil.d("menuItem:${menuItem.itemId}")
-+        val value = map[menuItem.itemId] ?: return
-+        val num = if (fragment.A21.size > 1) VALUE_MUTIPLE else VALUE_SINGLE
-+        when {
-+            fragment is ArchivedConversationsFragment -> {
-+                Report.reportHomeMenuItemAction(value, num)
-+            }
-+            fragment.A0A() is PrivateConversationsActivity -> {
-+                Report.reportPrivateMenuItemAction(value, num)
-+            }
-+            fragment.A0A() is HomeActivity -> {
-+                Report.reportHomeMenuItemAction(value, num)
-+            }
-+        }
-+    }
-+}
-\ No newline at end of file
-diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
-index 4d7c65397..8f5d0e32f 100644
---- a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
-+++ b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
-@@ -14,6 +14,7 @@ import android.os.Bundle;
- import android.os.Handler;
- import android.text.TextUtils;
- import android.view.LayoutInflater;
-+import android.view.MenuItem;
- import android.view.View;
- import android.widget.BaseAdapter;
- import android.widget.FrameLayout;
-diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationsDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationsDelegate.java
-index c87dadd6e..66e010167 100644
---- a/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationsDelegate.java
-+++ b/app/src/main/java/com/coocoo/whatsappdelegate/MenuOfConversationsDelegate.java
-@@ -22,6 +22,7 @@ import com.coocoo.manager.FingerPrintAuthCallback;
- import com.coocoo.manager.PrivateChatLock;
- import com.coocoo.manager.PrivateConversationsManager;
- import com.coocoo.report.Report;
-+import com.coocoo.report.ReportMenuItemAction;
- import com.coocoo.utils.ActivityUtil;
- import com.coocoo.utils.NewGroupUtil;
- import com.coocoo.utils.PrivacyUtils;
-@@ -47,9 +48,9 @@ public class MenuOfConversationsDelegate {
- 
-     private static final String TAG = "MenuOfConversations";
- 
--    private static final int MENU_ADD_GROUP_ID = 0x100;
--    private static final int MENU_PRIVATE_ID = 0x101;
--    private static final int MENU_UN_PRIVATE_ID = 0x102;
-+    public static final int MENU_ADD_GROUP_ID = 0x100;
-+    public static final int MENU_PRIVATE_ID = 0x101;
-+    public static final int MENU_UN_PRIVATE_ID = 0x102;
-     private static final String SINGLE_USER_PATTERN = "@s.whatsapp.net";
- 
-     private static final String RES_STRING_MENU_PRIVATE = "cc_conversations_menu_private";
-@@ -236,6 +237,7 @@ public class MenuOfConversationsDelegate {
-                 }
+ import com.coocoo.utils.PrivacyUtils
+ import com.coocoo.utils.ResMgr
+ import com.coocoo.utils.SystemUtil
+@@ -93,6 +94,9 @@ class WhisperOpenChatViewModel(private val whisper: Whisper) {
+                 "${uri.toString()}&telephone=$phoneNumber"
              }
+             else -> OPENCHAT_HOME_URL
++        }.also {
++            LogUtil.d("type: $type")
++            LogUtil.d(it)
          }
-+        ReportMenuItemAction.report(menuItem, mConversationFragment);
      }
  
-     @SmaliInject
-diff --git a/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali b/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
-index d545ee193..f60fabb4b 100644
---- a/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
-+++ b/whatsapp_modify_module/smali/com/coocoowhatsapp/conversationslist/ConversationsFragment.smali
-@@ -1338,7 +1338,10 @@
- 
- .method public A0k(Landroid/view/MenuItem;)Z
-     .locals 2
--
-+#coocoo
-+    iget-object v1, p0, Lcom/coocoowhatsapp/conversationslist/ConversationsFragment;->conversationsFragmentDelegate:Lcom/coocoo/whatsappdelegate/ConversationsFragmentDelegate;
-+    invoke-virtual {v1, p1}, Lcom/coocoo/whatsappdelegate/ConversationsFragmentDelegate;->onMenuItemClick(Landroid/view/MenuItem;)V
-+#coocoo
-     .line 487478
-     iget-object v1, p0, Lcom/coocoowhatsapp/conversationslist/ConversationsFragment;->A0u:LX/35c;
- 
-@@ -1363,6 +1366,11 @@
- .method public A0l(Landroid/view/MenuItem;)Z
-     .locals 8
- 
-+#coocoo
-+    iget-object v0, p0, Lcom/coocoowhatsapp/conversationslist/ConversationsFragment;->conversationsFragmentDelegate:Lcom/coocoo/whatsappdelegate/ConversationsFragmentDelegate;
-+    invoke-virtual {v0, p1}, Lcom/coocoo/whatsappdelegate/ConversationsFragmentDelegate;->onMenuItemClick(Landroid/view/MenuItem;)V
-+#coocoo
-+
-     .line 487479
-     invoke-interface {p1}, Landroid/view/MenuItem;->getItemId()I
- 
-diff --git a/whatsapp_modify_module/smali_classes2/X/35c.1.smali b/whatsapp_modify_module/smali_classes2/X/35c.1.smali
-index f4538948c..6c14ba1ce 100644
---- a/whatsapp_modify_module/smali_classes2/X/35c.1.smali
-+++ b/whatsapp_modify_module/smali_classes2/X/35c.1.smali
-@@ -794,6 +794,9 @@
- 
- .method public A03(Landroid/view/MenuItem;LX/017;LX/01K;)Z
-     .locals 11
-+#coocoo
-+    invoke-static {}, Lcom/coocoo/coocoo/Coocoo;->stackTrace()V
-+#coocoo
- 
-     .line 499348
-     iget-object v0, p0, LX/35c;->A0Q:Ljava/lang/ref/WeakReference;
