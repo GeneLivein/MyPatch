@@ -1,12 +1,12 @@
 diff --git a/app/src/main/java/com/coocoo/openchat/activity/OpenChatWebActivity.kt b/app/src/main/java/com/coocoo/openchat/activity/OpenChatWebActivity.kt
-index 32599765c..da948c891 100644
+index 32599765c..5b3910a39 100644
 --- a/app/src/main/java/com/coocoo/openchat/activity/OpenChatWebActivity.kt
 +++ b/app/src/main/java/com/coocoo/openchat/activity/OpenChatWebActivity.kt
 @@ -287,6 +287,7 @@ class OpenChatWebActivity : cc_01X() {
  
      private fun handleExternalUrl(url: String?): Boolean {
          url?.let {
-+            LogUtil.d("handleExternalUrl ${it.startsWith(WhisperOpenChatViewModel.OPENCHAT_HOME_URL)} ${viewModel.isMatchHandleUrl(it)}")
++            LogUtil.d("$it ${WhisperOpenChatViewModel.OPENCHAT_HOME_URL}")
              if (!it.startsWith(WhisperOpenChatViewModel.OPENCHAT_HOME_URL) &&
                  !viewModel.isMatchHandleUrl(it)
              ) {
