@@ -98,3 +98,35 @@ index 663d6a067..d53ec983f 100644
          }
      }
  
+diff --git a/app/src/main/java/com/coocoo/report/ReportMenuItemAction.kt b/app/src/main/java/com/coocoo/report/ReportMenuItemAction.kt
+index dbef63d20..4d3132b7a 100644
+--- a/app/src/main/java/com/coocoo/report/ReportMenuItemAction.kt
++++ b/app/src/main/java/com/coocoo/report/ReportMenuItemAction.kt
+@@ -8,7 +8,7 @@ import com.coocoo.utils.LogUtil
+ import com.coocoo.utils.ResMgr
+ import com.coocoo.whatsappdelegate.MenuOfConversationsDelegate
+ import com.coocoowhatsapp.HomeActivity
+-import com.coocoowhatsapp.conversationslist.ArchivedConversationsFragment
++import com.coocoowhatsapp.conversationslist.ArchivedConversationsActivity
+ import com.coocoowhatsapp.conversationslist.ConversationsFragment
+ 
+ object ReportMenuItemAction {
+@@ -37,14 +37,14 @@ object ReportMenuItemAction {
+         LogUtil.d("menuItem:${menuItem.itemId}")
+         val value = map[menuItem.itemId] ?: return
+         val num = if (fragment.A21.size > 1) VALUE_MUTIPLE else VALUE_SINGLE
+-        when {
+-            fragment is ArchivedConversationsFragment -> {
++        when(fragment.A0A()) {
++            is ArchivedConversationsActivity -> {
+                 Report.reportHomeMenuItemAction(value, num)
+             }
+-            fragment.A0A() is PrivateConversationsActivity -> {
++            is PrivateConversationsActivity -> {
+                 Report.reportPrivateMenuItemAction(value, num)
+             }
+-            fragment.A0A() is HomeActivity -> {
++            is HomeActivity -> {
+                 Report.reportHomeMenuItemAction(value, num)
+             }
+         }
