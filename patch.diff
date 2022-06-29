@@ -99,7 +99,7 @@ index 663d6a067..d53ec983f 100644
      }
  
 diff --git a/app/src/main/java/com/coocoo/report/ReportMenuItemAction.kt b/app/src/main/java/com/coocoo/report/ReportMenuItemAction.kt
-index dbef63d20..4d3132b7a 100644
+index dbef63d20..acc38e0b9 100644
 --- a/app/src/main/java/com/coocoo/report/ReportMenuItemAction.kt
 +++ b/app/src/main/java/com/coocoo/report/ReportMenuItemAction.kt
 @@ -8,7 +8,7 @@ import com.coocoo.utils.LogUtil
@@ -117,9 +117,10 @@ index dbef63d20..4d3132b7a 100644
          val num = if (fragment.A21.size > 1) VALUE_MUTIPLE else VALUE_SINGLE
 -        when {
 -            fragment is ArchivedConversationsFragment -> {
+-                Report.reportHomeMenuItemAction(value, num)
 +        when(fragment.A0A()) {
 +            is ArchivedConversationsActivity -> {
-                 Report.reportHomeMenuItemAction(value, num)
++                Report.reportArchiveMenuItemAction(value, num)
              }
 -            fragment.A0A() is PrivateConversationsActivity -> {
 +            is PrivateConversationsActivity -> {
