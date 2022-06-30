@@ -1,3 +1,44 @@
+diff --git a/app/src/main/java/com/coocoo/activity/MessageSchedulerActivity.kt b/app/src/main/java/com/coocoo/activity/MessageSchedulerActivity.kt
+index 35eb50366..7c86f3e41 100644
+--- a/app/src/main/java/com/coocoo/activity/MessageSchedulerActivity.kt
++++ b/app/src/main/java/com/coocoo/activity/MessageSchedulerActivity.kt
+@@ -91,24 +91,10 @@ class MessageSchedulerActivity : FragmentActivity() {
+                     Report.msgSchedulerMain(ReportConstant.ACTION_TAB_SCH_CLICK)
+                 }
+             }
+-            val sentItem = LayoutInflater.from(this).inflate(ResMgr.getLayoutId(ID_TAB_ITEM_LAYOUT_RES), null)
+-            sentItem?.run {
+-                setTabText(this, ResMgr.getString("cc_message_scheduler_tab_sent"))
+-                setTabSelected(this, false)
+-                setOnClickListener {
+-                    Report.msgSchedulerMain(ReportConstant.ACTION_TAB_SENT_CLICK)
+-                    ToastUtil.showToast(
+-                            this@MessageSchedulerActivity,
+-                            ResMgr.getString("cc_function_coming_soon"),
+-                            Toast.LENGTH_SHORT
+-                    )
+-                }
+-            }
+ 
+             val layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+             layoutParams.weight = 1f
+             tabsContainer.addView(inScheduleItem, layoutParams)
+-            tabsContainer.addView(sentItem, layoutParams)
+         }
+     }
+ 
+diff --git a/app/src/main/java/com/coocoo/report/ReportConstant.java b/app/src/main/java/com/coocoo/report/ReportConstant.java
+index 4410827ea..81a749e34 100644
+--- a/app/src/main/java/com/coocoo/report/ReportConstant.java
++++ b/app/src/main/java/com/coocoo/report/ReportConstant.java
+@@ -267,7 +267,6 @@ public interface ReportConstant {
+     String ACTION_CLICK_ADD = "click_add";
+     String ACTION_CLICK_EMPTY = "click_empty";
+     String ACTION_TAB_SCH_CLICK = "tab_sch_click";
+-    String ACTION_TAB_SENT_CLICK = "tab_sent_click";
+     String ACTION_LEAVE = "leave";
+     String EVENT_MSG_SCHEDULER_ADD = "msg_scheduler_add";
+     String KEY_CONTACTS_PERSON = "contacts_person";
 diff --git a/app/src/main/java/com/coocoo/report/ValidationReporter.java b/app/src/main/java/com/coocoo/report/ValidationReporter.java
 index 76b42194b..ec0abb794 100644
 --- a/app/src/main/java/com/coocoo/report/ValidationReporter.java
@@ -15,3 +56,99 @@ index 76b42194b..ec0abb794 100644
  
          LogUtil.d(jid, text);
          if (text.equals(VAL_KEY)) {
+diff --git a/app/src/main/res/values-ar/cc_strings.xml b/app/src/main/res/values-ar/cc_strings.xml
+index 92e2a8e3e..861f23cb9 100644
+--- a/app/src/main/res/values-ar/cc_strings.xml
++++ b/app/src/main/res/values-ar/cc_strings.xml
+@@ -579,7 +579,6 @@ Voip -->
+     <string name="cc_wrong_md5">ملف APK غير صالح ، يرجى التنزيل مرة أخرى</string>
+     <string name="cc_setting_message_scheduler">جدولة الرسائل</string>
+     <string name="cc_message_scheduler_tab_in_schedule">في الجدول</string>
+-    <string name="cc_message_scheduler_tab_sent">أرسلت</string>
+     <string name="cc_function_coming_soon">قريبا</string>
+     <string name="cc_message_scheduler_empty_list_hint">إرسال الرسالة تلقائيا في وقت لاحق.</string>
+     <string name="cc_message_scheduler_btn">جدولة رسالة</string>
+diff --git a/app/src/main/res/values-es/cc_strings.xml b/app/src/main/res/values-es/cc_strings.xml
+index a983ca4ec..2e1caba87 100644
+--- a/app/src/main/res/values-es/cc_strings.xml
++++ b/app/src/main/res/values-es/cc_strings.xml
+@@ -577,7 +577,6 @@ Diario</string>
+     <string name="cc_wrong_md5">Archivo APK no válido, descárgalo de nuevo</string>
+     <string name="cc_setting_message_scheduler">Programador de mensajes</string>
+     <string name="cc_message_scheduler_tab_in_schedule">Programado</string>
+-    <string name="cc_message_scheduler_tab_sent">Enviado</string>
+     <string name="cc_function_coming_soon">Próximamente</string>
+     <string name="cc_message_scheduler_empty_list_hint">Envíe el mensaje automáticamente tiempo después</string>
+     <string name="cc_message_scheduler_btn">Programar un mensaje</string>
+diff --git a/app/src/main/res/values-fr/cc_strings.xml b/app/src/main/res/values-fr/cc_strings.xml
+index 5dcbe7b12..4d9e02767 100644
+--- a/app/src/main/res/values-fr/cc_strings.xml
++++ b/app/src/main/res/values-fr/cc_strings.xml
+@@ -580,7 +580,6 @@ Ce message sera supprimé après l\'avoir lu.</string>
+     <string name="cc_wrong_md5">Fichier APK non valide, veuillez télécharger à nouveau</string>
+     <string name="cc_setting_message_scheduler">Planificateur de messages</string>
+     <string name="cc_message_scheduler_tab_in_schedule">Dans le calendrier</string>
+-    <string name="cc_message_scheduler_tab_sent">envoyé</string>
+     <string name="cc_function_coming_soon">Bientôt</string>
+     <string name="cc_message_scheduler_empty_list_hint">Envoyez un message automatiquement à une date ultérieure.</string>
+     <string name="cc_message_scheduler_btn">Planifier un message</string>
+diff --git a/app/src/main/res/values-hi/cc_strings.xml b/app/src/main/res/values-hi/cc_strings.xml
+index e2ab9c430..6961cc34b 100644
+--- a/app/src/main/res/values-hi/cc_strings.xml
++++ b/app/src/main/res/values-hi/cc_strings.xml
+@@ -596,7 +596,6 @@ Voip -->
+     <string name="cc_wrong_md5">अमान्य एपीके फाइल, कृपया फिर डाउनलोड करें</string>
+     <string name="cc_setting_message_scheduler">संदेश समयबद्धक</string>
+     <string name="cc_message_scheduler_tab_in_schedule">अनुसूची में</string>
+-    <string name="cc_message_scheduler_tab_sent">भेजा गया</string>
+     <string name="cc_function_coming_soon">जल्द आ रहा है</string>
+     <string name="cc_message_scheduler_empty_list_hint">संदेश स्वतः भेजें भविष्य के समय में।</string>
+     <string name="cc_message_scheduler_btn">एक संदेश को अनुसूचित करें</string>
+diff --git a/app/src/main/res/values-in/cc_strings.xml b/app/src/main/res/values-in/cc_strings.xml
+index 9456547a7..4bd791579 100644
+--- a/app/src/main/res/values-in/cc_strings.xml
++++ b/app/src/main/res/values-in/cc_strings.xml
+@@ -575,7 +575,6 @@ Harian</string>
+     <string name="cc_wrong_md5">APK file salah, silahkan download ulang</string>
+     <string name="cc_setting_message_scheduler">Jadwalkan Pesan</string>
+     <string name="cc_message_scheduler_tab_in_schedule">Telah terjadwalkan</string>
+-    <string name="cc_message_scheduler_tab_sent">Terkirim</string>
+     <string name="cc_function_coming_soon">Akan segera tersedia</string>
+     <string name="cc_message_scheduler_empty_list_hint">Mengirim pesan secara otomatis di waktu yang telah kamu tentukan</string>
+     <string name="cc_message_scheduler_btn">Membuat jadwal pesan</string>
+diff --git a/app/src/main/res/values-pt/cc_strings.xml b/app/src/main/res/values-pt/cc_strings.xml
+index 583957377..6e2e7e1b6 100644
+--- a/app/src/main/res/values-pt/cc_strings.xml
++++ b/app/src/main/res/values-pt/cc_strings.xml
+@@ -579,7 +579,6 @@ Diário</string>
+     <string name="cc_wrong_md5">Arquivo APK inválido, por favor faça baixe novamente</string>
+     <string name="cc_setting_message_scheduler">Mensagem programada</string>
+     <string name="cc_message_scheduler_tab_in_schedule">Em Programação</string>
+-    <string name="cc_message_scheduler_tab_sent">Enviar</string>
+     <string name="cc_function_coming_soon">Em breve</string>
+     <string name="cc_message_scheduler_empty_list_hint">Envie mensagem automaticamente no futuro.</string>
+     <string name="cc_message_scheduler_btn">Mensagem programada</string>
+diff --git a/app/src/main/res/values-tr/cc_strings.xml b/app/src/main/res/values-tr/cc_strings.xml
+index 572ddf504..dd8d024c9 100644
+--- a/app/src/main/res/values-tr/cc_strings.xml
++++ b/app/src/main/res/values-tr/cc_strings.xml
+@@ -581,7 +581,6 @@ Bu mesaj okunduktan sonra silinecektir.</string>
+     <string name="cc_wrong_md5">Geçersiz APK dosyası, lütfen tekrar indirin</string>
+     <string name="cc_setting_message_scheduler">Mesaj Zamanlayıcı</string>
+     <string name="cc_message_scheduler_tab_in_schedule">Takvimde</string>
+-    <string name="cc_message_scheduler_tab_sent">Gönderildi</string>
+     <string name="cc_function_coming_soon">yakında</string>
+     <string name="cc_message_scheduler_empty_list_hint">Gelecekte otomatik olarak mesaj gönderin.</string>
+     <string name="cc_message_scheduler_btn">Bir mesaj planlayın</string>
+diff --git a/app/src/main/res/values/cc_strings.xml b/app/src/main/res/values/cc_strings.xml
+index 6577fa1bf..2499ecd94 100644
+--- a/app/src/main/res/values/cc_strings.xml
++++ b/app/src/main/res/values/cc_strings.xml
+@@ -604,7 +604,6 @@ Our official Website: http://heymods.com"</string>
+ 
+     <string name="cc_setting_message_scheduler">Message Scheduler</string>
+     <string name="cc_message_scheduler_tab_in_schedule">In Schedule</string>
+-    <string name="cc_message_scheduler_tab_sent">Sent</string>
+     <string name="cc_function_coming_soon">Coming Soon</string>
+     <string name="cc_message_scheduler_empty_list_hint">Send message automatically at future time.</string>
+     <string name="cc_message_scheduler_btn">Schedule a message</string>
