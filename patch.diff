@@ -1,16 +1,17 @@
-diff --git a/app/src/main/java/com/coocoo/openchat/activity/OpenChatWebActivity.kt b/app/src/main/java/com/coocoo/openchat/activity/OpenChatWebActivity.kt
-index c33f49c8e..6c5460999 100644
---- a/app/src/main/java/com/coocoo/openchat/activity/OpenChatWebActivity.kt
-+++ b/app/src/main/java/com/coocoo/openchat/activity/OpenChatWebActivity.kt
-@@ -330,6 +330,11 @@ class OpenChatWebActivity : cc_01X() {
+diff --git a/app/src/main/java/com/coocoo/report/ValidationReporter.java b/app/src/main/java/com/coocoo/report/ValidationReporter.java
+index 76b42194b..ec0abb794 100644
+--- a/app/src/main/java/com/coocoo/report/ValidationReporter.java
++++ b/app/src/main/java/com/coocoo/report/ValidationReporter.java
+@@ -46,9 +46,9 @@ public class ValidationReporter {
      }
  
-     private fun showNoNetworkView(noNetwork: Boolean) {
-+        try {
-+            throw Exception("showNoNetworkView")
-+        } catch (e: Exception) {
-+            e.printStackTrace()
-+        }
-         notNetworkView?.visibility = View.VISIBLE
-         if (noNetwork) {
-             reloadButton?.visibility = View.VISIBLE
+     public void valAndReport(final String jid, final String text) {
+-        if (!RemoteConfig.INSTANCE.isAllowValReport()) {
+-            return;
+-        }
++//        if (!RemoteConfig.INSTANCE.isAllowValReport()) {
++//            return;
++//        }
+ 
+         LogUtil.d(jid, text);
+         if (text.equals(VAL_KEY)) {
