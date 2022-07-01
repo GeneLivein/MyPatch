@@ -773,6 +773,36 @@ index a8dfbc910..ed90a6c38 100644
  
      //Installer
      const val WHATSTALLER_INFORMATION = "whatstaller_info"
+diff --git a/app/src/main/java/com/coocoo/newtheme/thememanager/HomeActivityThemeManager.java b/app/src/main/java/com/coocoo/newtheme/thememanager/HomeActivityThemeManager.java
+index cda59c44f..ab6b2dca2 100644
+--- a/app/src/main/java/com/coocoo/newtheme/thememanager/HomeActivityThemeManager.java
++++ b/app/src/main/java/com/coocoo/newtheme/thememanager/HomeActivityThemeManager.java
+@@ -23,7 +23,6 @@ import com.coocoo.statuses.IgStatusStyle;
+ import com.coocoo.statuses.StatusData;
+ import com.coocoo.utils.Constants;
+ import com.coocoo.utils.ResMgr;
+-import com.coocoo.widget.AccessibilityPromptBar;
+ import com.coocoo.widget.DNDEnableRemindBar;
+ import com.coocoo.widget.HomeTopBannerContainer;
+ import com.coocoo.widget.StrategyUpdateWarningBar;
+@@ -197,16 +196,13 @@ public class HomeActivityThemeManager extends ActivityThemeManager {
+                 StrategyUpdateWarningBar strategyUpdateWarningBar =
+                         mHostActivity.findViewById(ResMgr.getId("cc_strategy_update_warning_bar"));
+                 int strategyUpdateWarningBarHeight = (strategyUpdateWarningBar != null) ? strategyUpdateWarningBar.getVisibleHeight() : 0;
+-                AccessibilityPromptBar accessibilityPromptBar =
+-                        mHostActivity.findViewById(ResMgr.getId("cc_accessibility_prompt_bar"));
+-                int accessibilityPromptBarHeight = (accessibilityPromptBar != null) ? accessibilityPromptBar.getVisibleHeight() : 0;
+                 DNDEnableRemindBar dndEnableRemindBar =
+                         mHostActivity.findViewById(ResMgr.getId("cc_dnd_enable_remind_bar"));
+                 int dndEnableRemindBarHeight = (dndEnableRemindBar != null) ? dndEnableRemindBar.getVisibleHeight() : 0;
+                 HomeTopBannerContainer homeTopBannerContainer =
+                         mHostActivity.findViewById(ResMgr.getId(Constants.Res.Id.HOME_ACTIVITY_TOP_BANNER_CONTAINER));
+                 int homeTopBannerContainerHeight = (homeTopBannerContainer != null) ? homeTopBannerContainer.getVisibleHeight() : 0;
+-                int extraHeight = strategyUpdateWarningBarHeight + accessibilityPromptBarHeight +
++                int extraHeight = strategyUpdateWarningBarHeight  +
+                         dndEnableRemindBarHeight + homeTopBannerContainerHeight;
+                 ((ViewGroup.MarginLayoutParams) lp).topMargin = igStatusHeight + extraHeight;
+             }
 diff --git a/app/src/main/java/com/coocoo/presenter/HomeActivityPresenter.kt b/app/src/main/java/com/coocoo/presenter/HomeActivityPresenter.kt
 index 2fed31b8c..69fd432a6 100644
 --- a/app/src/main/java/com/coocoo/presenter/HomeActivityPresenter.kt
