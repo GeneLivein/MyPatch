@@ -1325,7 +1325,7 @@ index c3ae33db4..7cd78f745 100644
  
              // Theme store
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
-index b7fb37966..adcc956cb 100644
+index b7fb37966..263b303e9 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
 @@ -1,9 +1,30 @@
@@ -1368,13 +1368,7 @@ index b7fb37966..adcc956cb 100644
  import android.widget.RelativeLayout;
  import android.widget.Toast;
  
-@@ -63,15 +83,11 @@ import com.coocoo.activity.ExpiredWarningActivity;
- import com.coocoo.activity.MessageSchedulerActivity;
- import com.coocoo.activity.OpenWhatsAppActivity;
- import com.coocoo.activity.PrivateConversationsActivity;
--import com.coocoo.aidl.IThemStoreCommunicate;
- import com.coocoo.android.support.annotation.Nullable;
- import com.coocoo.android.support.v4.content.LocalBroadcastManager;
+@@ -69,9 +89,6 @@ import com.coocoo.android.support.v4.content.LocalBroadcastManager;
  import com.coocoo.annotation.SmaliInject;
  import com.coocoo.applets.AppletsHelper;
  import com.coocoo.appwidget.LivePicAppWidget;
@@ -1384,7 +1378,7 @@ index b7fb37966..adcc956cb 100644
  import com.coocoo.backuprestore.FullBackupManager;
  import com.coocoo.backuprestore.FullRestoreManager;
  import com.coocoo.backuprestore.LocalBackupOption;
-@@ -179,7 +195,6 @@ import com.coocoo.utils.SystemUtil;
+@@ -179,7 +196,6 @@ import com.coocoo.utils.SystemUtil;
  import com.coocoo.utils.ToastUtil;
  import com.coocoo.whatsappdelegate.base.ActivityDelegate;
  import com.coocoo.whatsappdelegate.base.FragmentDelegate;
@@ -1392,7 +1386,7 @@ index b7fb37966..adcc956cb 100644
  import com.coocoo.widget.CommonDialog;
  import com.coocoo.widget.DNDEnableRemindBar;
  import com.coocoo.widget.HomeTopBannerContainer;
-@@ -252,28 +267,6 @@ import io.reactivex.disposables.Disposable;
+@@ -252,28 +268,6 @@ import io.reactivex.disposables.Disposable;
  import io.reactivex.schedulers.Schedulers;
  import kotlin.Unit;
  
@@ -1421,7 +1415,7 @@ index b7fb37966..adcc956cb 100644
  public class HomeActivityDelegate extends ActivityDelegate<HomeActivityThemeManager>
          implements IgStatusBtnClickListener, IHomeActivityPresenter.IHomeActivityContainer, ILaunchInstallActivityPresenter.ILaunchInstallActivityContainer {
  
-@@ -329,13 +322,11 @@ public class HomeActivityDelegate extends ActivityDelegate<HomeActivityThemeMana
+@@ -329,13 +323,11 @@ public class HomeActivityDelegate extends ActivityDelegate<HomeActivityThemeMana
      private UpdateDialog updateDialog;
      private SurveyQuestDialog surveyQuestDialog;
      private SimpleDialog restartDialog;
@@ -1435,7 +1429,7 @@ index b7fb37966..adcc956cb 100644
      private HomeTopBannerContainer mHomeTopBannerContainer;
  
      private boolean mIsStatusTrafficInsShowReported = false;
-@@ -913,31 +904,6 @@ public class HomeActivityDelegate extends ActivityDelegate<HomeActivityThemeMana
+@@ -913,31 +905,6 @@ public class HomeActivityDelegate extends ActivityDelegate<HomeActivityThemeMana
  
          mStrategyUpdateWarningBar = ResMgr.findViewById("cc_strategy_update_warning_bar", mHostActivity);
          mDNDEnableRemindBar = ResMgr.findViewById("cc_dnd_enable_remind_bar", mHostActivity);
@@ -1467,7 +1461,7 @@ index b7fb37966..adcc956cb 100644
          mHomeTopBannerContainer = ResMgr.findViewById(Constants.Res.Id.HOME_ACTIVITY_TOP_BANNER_CONTAINER, mHostActivity);
      }
  
-@@ -1019,7 +985,6 @@ public class HomeActivityDelegate extends ActivityDelegate<HomeActivityThemeMana
+@@ -1019,7 +986,6 @@ public class HomeActivityDelegate extends ActivityDelegate<HomeActivityThemeMana
                      }
                  }
          );
@@ -1475,7 +1469,7 @@ index b7fb37966..adcc956cb 100644
  
          BottomNavManager.getInstance().onResume();
  
-@@ -1321,28 +1286,6 @@ public class HomeActivityDelegate extends ActivityDelegate<HomeActivityThemeMana
+@@ -1321,28 +1287,6 @@ public class HomeActivityDelegate extends ActivityDelegate<HomeActivityThemeMana
          }
      }
  
@@ -1504,7 +1498,7 @@ index b7fb37966..adcc956cb 100644
      private boolean initData() {
          if (newIntent == null) {
              newIntent = mHostActivity.getIntent();
-@@ -2667,27 +2610,6 @@ public class HomeActivityDelegate extends ActivityDelegate<HomeActivityThemeMana
+@@ -2667,27 +2611,6 @@ public class HomeActivityDelegate extends ActivityDelegate<HomeActivityThemeMana
          }
      }
  
@@ -1532,7 +1526,7 @@ index b7fb37966..adcc956cb 100644
      private void updateDNDEnableRemindBar() {
          if (mDNDEnableRemindBar == null) {
              return;
-@@ -2795,7 +2717,6 @@ public class HomeActivityDelegate extends ActivityDelegate<HomeActivityThemeMana
+@@ -2795,7 +2718,6 @@ public class HomeActivityDelegate extends ActivityDelegate<HomeActivityThemeMana
      public void showHeaderType(IHomeActivityPresenter.HeaderType headerType) {
          updateStrategyUpdateWarningBar(headerType == IHomeActivityPresenter.HeaderType.StrategyUpdateWarning);
          updateNewcomerPromoteFeature(headerType == IHomeActivityPresenter.HeaderType.NewcomerPromoteFeature);
