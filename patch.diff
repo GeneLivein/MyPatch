@@ -30,11 +30,22 @@ index 740e1847b..f50148cb6 100644
  
      private fun setUpViewModel() {
 diff --git a/app/src/main/java/com/coocoo/newtheme/store/ThemeStoreActivity.java b/app/src/main/java/com/coocoo/newtheme/store/ThemeStoreActivity.java
-index 9dbc74b34..fcbee8ed3 100644
+index 9dbc74b34..ec3f073ec 100644
 --- a/app/src/main/java/com/coocoo/newtheme/store/ThemeStoreActivity.java
 +++ b/app/src/main/java/com/coocoo/newtheme/store/ThemeStoreActivity.java
-@@ -71,7 +71,7 @@ public class ThemeStoreActivity extends CCBaseActivity implements View.OnClickLi
+@@ -23,6 +23,7 @@ import com.coocoo.newtheme.notification.ThemeNotificationManager;
+ import com.coocoo.report.Report;
+ import com.coocoo.utils.Constants;
+ import com.coocoo.utils.FileUtil;
++import com.coocoo.utils.LogUtil;
+ import com.coocoo.utils.ResMgr;
+ import com.coocoo.widget.LoadingDialog;
+ import com.status.traffic.ThemeFabAdManager;
+@@ -69,9 +70,10 @@ public class ThemeStoreActivity extends CCBaseActivity implements View.OnClickLi
+     }
+ 
      private void initThemeFragment() {
++        LogUtil.d("initThemeFragment");
          String from = getIntent().getStringExtra(Constants.FROM);
          Fragment themeFragment = new CombinedThemeFragment();
 -        if (Constants.THEME_STORE.equals(from) && ThemeRemoteConfig.isUseWebStrategy()) {
