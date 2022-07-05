@@ -11,3 +11,20 @@ index 9dbc74b34..fcbee8ed3 100644
              themeFragment = new LocalThemeFragment();
          }
          FragmentManager fragmentManager = getSupportFragmentManager();
+diff --git a/app/src/main/java/com/coocoo/newtheme/store/viewmodel/LocalThemeViewModel.kt b/app/src/main/java/com/coocoo/newtheme/store/viewmodel/LocalThemeViewModel.kt
+index 4181283c7..fd436d25b 100644
+--- a/app/src/main/java/com/coocoo/newtheme/store/viewmodel/LocalThemeViewModel.kt
++++ b/app/src/main/java/com/coocoo/newtheme/store/viewmodel/LocalThemeViewModel.kt
+@@ -68,7 +68,11 @@ class LocalThemeViewModel(private val themeRepo: ThemeRepo) : CCViewModel() {
+             withContext(Dispatchers.IO) {
+                 ThemeManager.getInstance().copyAssetsThemes()
+             }
+-
++            try {
++                throw Exception()
++            } catch (e: Exception) {
++                e.printStackTrace()
++            }
+             themeRepo.getHotThemeData(object : ThemeRepo.OnResponseListener<List<ThemeInfo>> {
+                 override fun onSuccess(themeList: List<ThemeInfo>?) {
+                     themeList ?: return
