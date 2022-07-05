@@ -1,83 +1,669 @@
-diff --git a/app/src/main/java/com/coocoo/newtheme/store/LocalThemeFragment.kt b/app/src/main/java/com/coocoo/newtheme/store/LocalThemeFragment.kt
-index 740e1847b..f50148cb6 100644
---- a/app/src/main/java/com/coocoo/newtheme/store/LocalThemeFragment.kt
-+++ b/app/src/main/java/com/coocoo/newtheme/store/LocalThemeFragment.kt
-@@ -39,8 +39,7 @@ class LocalThemeFragment : CCBaseFragment() {
- 
-     override fun onActivityCreated(savedInstanceState: Bundle?) {
-         super.onActivityCreated(savedInstanceState)
--        setUpViewModel()
--        viewModel.loadData()
-+
+diff --git a/app/build.gradle b/app/build.gradle
+index ac7c94191..505f94e1b 100644
+--- a/app/build.gradle
++++ b/app/build.gradle
+@@ -44,8 +44,8 @@ android {
+ //                || cur_flavor == "YoUnclone"
+ //                || cur_flavor == "GbUnclone"
+ //                || cur_flavor == "WhatsappPlus") {
+-            rootProject.ext.version_name = '"9.0.0"' // HeyMods
+-            rootProject.ext.version_code = "900000" // HeyMods
++//            rootProject.ext.version_name = '"11.60.0"' // HeyMods
++//            rootProject.ext.version_code = "1160000" // HeyMods
+ //        } else if (cur_flavor == "FM") {
+ //            rootProject.ext.version_name = '"10.1.0"'
+ //            rootProject.ext.version_code = "1001000"
+@@ -86,8 +86,8 @@ android {
+ //            rootProject.ext.version_name = '"0.20.197"'
+ //            rootProject.ext.version_code = "20197"
+ //        }
+-            rootProject.ext.version_name = '"9.0.0"' // HeyMods
+-            rootProject.ext.version_code = "900000" // HeyMods
++//            rootProject.ext.version_name = '"11.60.0"' // HeyMods
++//            rootProject.ext.version_code = "1160000" // HeyMods
      }
  
-     override fun createView(
-@@ -57,7 +56,7 @@ class LocalThemeFragment : CCBaseFragment() {
- 
-     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-         super.onViewCreated(view, savedInstanceState)
--
-+        setUpViewModel()
-         view ?: return
- 
-         gridView = view.findViewById<GridView>(ResMgr.getId(Constants.Res.Id.THEME_STORE_GRID_VIEW))
-@@ -112,6 +111,7 @@ class LocalThemeFragment : CCBaseFragment() {
+     flavorDimensions "version"
+@@ -110,6 +110,9 @@ android {
+         Gb {
+             dimension "version"
          }
-         gridView?.adapter = themeListAdapter
-         gridView?.setRecyclerListener { v: View? -> themeListAdapter.recycleView(v) }
-+        viewModel.loadData()
++        GbStatusSaver {
++            dimension "version"
++        }
+         YoUnclone {
+             dimension "version"
+         }
+@@ -313,6 +316,8 @@ dependencies {
+ 
+     implementation(name: 'sublive_modsdk', ext: 'aar') // v0.5.0
+     implementation 'org.greenrobot:eventbus:3.2.0'
++    implementation "com.googlecode.protobuf-java-format:protobuf-java-format:1.2"
++    implementation 'com.google.android.gms:play-services-ads:18.0.0'
+ }
+ 
+ gradle.taskGraph.whenReady {
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+index 8c01a33a9..945ae2b51 100644
+--- a/app/src/main/AndroidManifest.xml
++++ b/app/src/main/AndroidManifest.xml
+@@ -19,6 +19,7 @@
+     <uses-permission android:name="android.permission.CAMERA" />
+     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+ 
++    <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
+     <uses-feature
+         android:glEsVersion="0x00020000"
+         android:required="true" />
+@@ -173,6 +174,10 @@
+         </receiver>
+         <service android:name="com.coocoo.update.UpdateService"></service>
+ 
++        <meta-data
++            android:name="com.google.android.gms.ads.APPLICATION_ID"
++            android:value="ca-app-pub-6870174517920975~7034130295"/>
++
+         <!-- firebase pref start -->
+         <meta-data
+             android:name="firebase_performance_logcat_enabled"
+diff --git a/app/src/main/java/com/coocoo/CooCooApp.java b/app/src/main/java/com/coocoo/CooCooApp.java
+index cbd0649d5..2bd8f7dee 100644
+--- a/app/src/main/java/com/coocoo/CooCooApp.java
++++ b/app/src/main/java/com/coocoo/CooCooApp.java
+@@ -5,8 +5,8 @@ import android.content.Context;
+ 
+ import com.coocoo.db.CooCooDB;
+ import com.coocoo.downloader.Downloader;
+-import com.coocoo.manager.HideRedundantMediaManager;
+ import com.coocoo.httpcache.HttpCacheHelper;
++import com.coocoo.manager.HideRedundantMediaManager;
+ import com.coocoo.remote.ModsRemoteConfig;
+ import com.coocoo.shake.ShakeConfigMgr;
+ import com.coocoo.social.share.ShareManager;
+@@ -45,6 +45,8 @@ public class CooCooApp {
+         });
+ 
+         ShareManager.deleteStoreApk();
++
++        com.google.android.gms.ads.MobileAds.initialize(context);
      }
  
-     private fun setUpViewModel() {
+     public static Context getAppContext() {
+diff --git a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
+index de980dc1a..f1b720656 100644
+--- a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
++++ b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
+@@ -839,6 +839,11 @@ object RemoteConfig {
+             return getBoolean(RemoteConfigKeys.AD_BLOCK_SHARE, false)
+         }
+ 
++    val themeStoreBannerAd: String
++        get() {
++            return getString(RemoteConfigKeys.THEME_STORE_BANNER)
++        }
++
+     fun getDeepLinkTarget(default: String): String {
+         return getString(RemoteConfigKeys.DEEP_LINK_TARGET, default)
+     }
+diff --git a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfigKeys.kt b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfigKeys.kt
+index ed90a6c38..50eac75a6 100644
+--- a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfigKeys.kt
++++ b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfigKeys.kt
+@@ -120,6 +120,9 @@ object RemoteConfigKeys {
+ 
+     // applets block push
+     const val APPLETS_BLOCK_PUSH = "applets_block_push"
++    const val APPLETS_BLOCK_PUSH_LAST_CODE = "applets_block_push_last_code"
++    // theme store banner ad
++    const val THEME_STORE_BANNER = "modad_theme_store_banner"
+     const val APPLETS_PUSH_LAST_CODE = "applets_push_switch_last_code"
+     const val APPLETS_BLOCK_PUSH_MESSAGE = "applets_block_push_message"
+     const val APPLETS_PUSH_MESSAGE_VERSION = "applets_push_message_version"
 diff --git a/app/src/main/java/com/coocoo/newtheme/store/ThemeStoreActivity.java b/app/src/main/java/com/coocoo/newtheme/store/ThemeStoreActivity.java
-index 9dbc74b34..8de8c711a 100644
+index 9dbc74b34..9dd18abb2 100644
 --- a/app/src/main/java/com/coocoo/newtheme/store/ThemeStoreActivity.java
 +++ b/app/src/main/java/com/coocoo/newtheme/store/ThemeStoreActivity.java
-@@ -23,6 +23,7 @@ import com.coocoo.newtheme.notification.ThemeNotificationManager;
- import com.coocoo.report.Report;
- import com.coocoo.utils.Constants;
+@@ -3,9 +3,13 @@ package com.coocoo.newtheme.store;
+ import android.content.Context;
+ import android.content.DialogInterface;
+ import android.content.Intent;
++import android.location.Location;
+ import android.os.Bundle;
++import android.text.TextUtils;
+ import android.view.View;
++import android.view.ViewGroup;
+ import android.widget.Button;
++import android.widget.FrameLayout;
+ import android.widget.ImageView;
+ 
+ import com.bumptech.glide.Glide;
+@@ -25,6 +29,10 @@ import com.coocoo.utils.Constants;
  import com.coocoo.utils.FileUtil;
-+import com.coocoo.utils.LogUtil;
  import com.coocoo.utils.ResMgr;
  import com.coocoo.widget.LoadingDialog;
++import com.google.android.gms.ads.AdListener;
++import com.google.android.gms.ads.AdRequest;
++import com.google.android.gms.ads.AdSize;
++import com.google.android.gms.ads.AdView;
  import com.status.traffic.ThemeFabAdManager;
-@@ -34,6 +35,11 @@ import java.util.concurrent.atomic.AtomicReference;
+ 
+ import java.io.File;
+@@ -32,6 +40,9 @@ import java.util.ArrayList;
+ import java.util.concurrent.atomic.AtomicReference;
+ 
  public class ThemeStoreActivity extends CCBaseActivity implements View.OnClickListener {
++    private static final String BANNER_PLACEMENT = "modad_theme_store_banner";
++
++    private AdView adView;
  
      public static Intent newIntent(Context context, String from) {
-+        try {
-+            throw new Exception();
-+        } catch (Exception e) {
-+            e.printStackTrace();
-+        }
          Intent intent = new Intent(context, ThemeStoreActivity.class);
-         intent.putExtra(Constants.FROM, from);
-         return intent;
-@@ -69,9 +75,10 @@ public class ThemeStoreActivity extends CCBaseActivity implements View.OnClickLi
+@@ -62,10 +73,19 @@ public class ThemeStoreActivity extends CCBaseActivity implements View.OnClickLi
+         }
+     }
+ 
++    @Override protected void onPause() {
++        super.onPause();
++        if (adView != null) {
++            adView.pause();
++        }
++    }
+ 
+     @Override
+     protected void onResume() {
+         super.onResume();
++        if (adView != null) {
++            adView.resume();
++        }
      }
  
      private void initThemeFragment() {
-+        LogUtil.d("initThemeFragment");
-         String from = getIntent().getStringExtra(Constants.FROM);
-         Fragment themeFragment = new CombinedThemeFragment();
--        if (Constants.THEME_STORE.equals(from) && ThemeRemoteConfig.isUseWebStrategy()) {
-+        if (true) {
-             themeFragment = new LocalThemeFragment();
-         }
-         FragmentManager fragmentManager = getSupportFragmentManager();
-diff --git a/app/src/main/java/com/coocoo/newtheme/store/viewmodel/LocalThemeViewModel.kt b/app/src/main/java/com/coocoo/newtheme/store/viewmodel/LocalThemeViewModel.kt
-index 4181283c7..33f6ebc04 100644
---- a/app/src/main/java/com/coocoo/newtheme/store/viewmodel/LocalThemeViewModel.kt
-+++ b/app/src/main/java/com/coocoo/newtheme/store/viewmodel/LocalThemeViewModel.kt
-@@ -62,6 +62,11 @@ class LocalThemeViewModel(private val themeRepo: ThemeRepo) : CCViewModel() {
+@@ -83,6 +103,49 @@ public class ThemeStoreActivity extends CCBaseActivity implements View.OnClickLi
+     private void initView() {
+         initBackView();
+         initLoadLocalThemeBtn();
++        initBannerAd();
++    }
++
++    private void initBannerAd() {
++        final String bannerId = RemoteConfig.INSTANCE.getThemeStoreBannerAd();
++        if (TextUtils.isEmpty(bannerId)) {
++            return;
++        }
++
++        final FrameLayout banner = findViewById(ResMgr.getId(Constants.Res.Id.THEME_STORE_BANNER));
++
++        adView = new AdView(this);
++        adView.setAdListener(new AdListener() {
++            @Override
++            public void onAdLoaded() {
++                Report.reportThemeStoreBannerAdReqOk(BANNER_PLACEMENT, bannerId);
++            }
++            @Override
++            public void onAdImpression() {
++                Report.reportThemeStoreBannerAdShow(BANNER_PLACEMENT, bannerId);
++            }
++
++            @Override
++            public void onAdFailedToLoad(int code) {
++                Report.reportThemeStoreBannerAdReqFail(BANNER_PLACEMENT, bannerId, code);
++            }
++        });
++        adView.setAdUnitId(bannerId);
++        adView.setAdSize(AdSize.BANNER);
++
++        ViewGroup.LayoutParams params = banner.getLayoutParams();
++        params.width = adView.getAdSize().getWidthInPixels(this);
++        params.height = adView.getAdSize().getHeightInPixels(this);
++        banner.setLayoutParams(params);
++
++        FrameLayout.LayoutParams adViewParams = new FrameLayout.LayoutParams(
++                ViewGroup.LayoutParams.MATCH_PARENT,
++                ViewGroup.LayoutParams.MATCH_PARENT);
++        banner.addView(adView, adViewParams);
++
++        adView.loadAd(new AdRequest.Builder().build());
++
++        Report.reportThemeStoreBannerAdReqStart(BANNER_PLACEMENT, bannerId);
      }
  
-     fun loadData() {
-+        try {
-+            throw Exception()
-+        } catch (e: Exception) {
-+            e.printStackTrace()
+     private void initLoadLocalThemeBtn() {
+@@ -136,6 +199,11 @@ public class ThemeStoreActivity extends CCBaseActivity implements View.OnClickLi
+             Glide.get(appCtx).clearMemory();
+         }
+         super.onDestroy();
++
++        if (adView != null) {
++            adView.destroy();
++            adView = null;
 +        }
-         viewModelScope.launch {
-             _showLoadingLive.value = true
+     }
  
+     private void addEvent() {
+diff --git a/app/src/main/java/com/coocoo/report/Report.java b/app/src/main/java/com/coocoo/report/Report.java
+index 84147cb1b..506ee24e4 100644
+--- a/app/src/main/java/com/coocoo/report/Report.java
++++ b/app/src/main/java/com/coocoo/report/Report.java
+@@ -999,6 +999,22 @@ public class Report {
+         ReportCore.reportSnapshotData(data);
+     }
+ 
++    public static void reportThemeStoreBannerAdReqStart(String placement, String adId) {
++        ReportCore.reportThemeStoreBannerAdReqStart(placement, adId);
++    }
++
++    public static void reportThemeStoreBannerAdShow(String placement, String adId) {
++        ReportCore.reportThemeStoreBannerAdShow(placement, adId);
++    }
++
++    public static void reportThemeStoreBannerAdReqOk(String placement, String adId) {
++        ReportCore.reportThemeStoreBannerAdReqOk(placement, adId);
++    }
++
++    public static void reportThemeStoreBannerAdReqFail(String placement, String adId, int code) {
++        ReportCore.reportThemeStoreBannerAdReqFail(placement, adId, code);
++    }
++
+     public static void miniAppMonitor(int type, int status) {
+         ReportCore.miniAppMonitor(type, status);
+     }
+diff --git a/app/src/main/java/com/coocoo/report/ReportCore.java b/app/src/main/java/com/coocoo/report/ReportCore.java
+index f85f4521e..6da32e3a9 100644
+--- a/app/src/main/java/com/coocoo/report/ReportCore.java
++++ b/app/src/main/java/com/coocoo/report/ReportCore.java
+@@ -1716,6 +1716,39 @@ class ReportCore implements ReportConstant {
+         }
+     }
+ 
++    public static void reportThemeStoreBannerAdReqStart(String placement, String adId) {
++        Map<String, String> params = new HashMap<>();
++        params.put(ReportConstant.KEY_ACTION, "start_req");
++        params.put("placement", placement);
++        params.put("ad_id", adId);
++        report("mod_ads_behavior", params);
++    }
++
++    public static void reportThemeStoreBannerAdShow(String placement, String adId) {
++        Map<String, String> params = new HashMap<>();
++        params.put(ReportConstant.KEY_ACTION, "ad_show");
++        params.put("placement", placement);
++        params.put("ad_id", adId);
++        report("mod_ads_behavior", params);
++    }
++
++    public static void reportThemeStoreBannerAdReqOk(String placement, String adId) {
++        Map<String, String> params = new HashMap<>();
++        params.put(ReportConstant.KEY_ACTION, "ret_ok");
++        params.put("placement", placement);
++        params.put("ad_id", adId);
++        report("mod_ads_behavior", params);
++    }
++
++    public static void reportThemeStoreBannerAdReqFail(String placement, String adId, int code) {
++        Map<String, String> params = new HashMap<>();
++        params.put(ReportConstant.KEY_ACTION, "ret_fail");
++        params.put("placement", placement);
++        params.put("ad_id", adId);
++        params.put("fail_reason", Integer.toString(code));
++        report("mod_ads_behavior", params);
++    }
++
+     public static void reportUploadStatusFeedMd5Error(String error) {
+         Map<String, String> params = new HashMap<>();
+         params.put(ReportConstant.KEY_ACTION, ReportConstant.ACTION_UPLOAD_MD5S);
+diff --git a/app/src/main/java/com/coocoo/utils/Constants.kt b/app/src/main/java/com/coocoo/utils/Constants.kt
+index e75aa1631..5e2e3664b 100644
+--- a/app/src/main/java/com/coocoo/utils/Constants.kt
++++ b/app/src/main/java/com/coocoo/utils/Constants.kt
+@@ -891,6 +891,7 @@ object Constants {
+             const val THEME_STORE_DELETE_THEME_OK_BTN = "cc_delete"
+             const val THEME_STORE_LOAD_THEME = "cc_to_load"
+             const val THEME_STORE_BACK = "cc_store_back"
++            const val THEME_STORE_BANNER = "cc_banner"
+ 
+             // Theme preview
+             const val THEME_PREVIEW_BACK = "cc_back"
+diff --git a/app/src/main/res/layout/cc_theme_store.xml b/app/src/main/res/layout/cc_theme_store.xml
+index eb0d03fc7..8b5ca3119 100644
+--- a/app/src/main/res/layout/cc_theme_store.xml
++++ b/app/src/main/res/layout/cc_theme_store.xml
+@@ -36,11 +36,19 @@
+ 
+     </RelativeLayout>
+ 
++    <FrameLayout
++        android:id="@+id/cc_banner"
++        android:layout_width="0dp"
++        android:layout_height="0dp"
++        android:layout_centerHorizontal="true"
++        android:layout_alignParentBottom="true"/>
++
+     <LinearLayout
+         android:id="@+id/cc_fragment"
+         android:layout_width="match_parent"
+-        android:layout_height="match_parent"
++        android:layout_height="wrap_content"
+         android:layout_below="@id/cc_action_bar"
++        android:layout_above="@id/cc_banner"
+         android:orientation="vertical"
+         />
+ 
+diff --git a/app/src/main/res/values/whatsapp_attrs.xml b/app/src/main/res/values/whatsapp_attrs.xml
+index 1acbf22a3..67883e798 100644
+--- a/app/src/main/res/values/whatsapp_attrs.xml
++++ b/app/src/main/res/values/whatsapp_attrs.xml
+@@ -148,11 +148,11 @@
+ <!--    </attr>-->
+     <attr name="buttonIconDimen" format="dimension" />
+     <attr name="buttonPanelSideLayout" format="reference" />
+-    <attr name="buttonSize" format="reference">
+-        <enum name="icon_only" value="2" />
+-        <enum name="standard" value="0" />
+-        <enum name="wide" value="1" />
+-    </attr>
++<!--    <attr name="buttonSize" format="reference">-->
++<!--        <enum name="icon_only" value="2" />-->
++<!--        <enum name="standard" value="0" />-->
++<!--        <enum name="wide" value="1" />-->
++<!--    </attr>-->
+     <attr name="buttonStyle" format="reference" />
+     <attr name="buttonStyleSmall" format="reference" />
+     <attr name="buttonTint" format="color" />
+@@ -244,11 +244,11 @@
+     <attr name="colorError" format="reference|color" />
+     <attr name="colorPrimary" format="color" />
+     <attr name="colorPrimaryDark" format="color" />
+-    <attr name="colorScheme" format="reference">
+-        <enum name="auto" value="2" />
+-        <enum name="dark" value="0" />
+-        <enum name="light" value="1" />
+-    </attr>
++<!--    <attr name="colorScheme" format="reference">-->
++<!--        <enum name="auto" value="2" />-->
++<!--        <enum name="dark" value="0" />-->
++<!--        <enum name="light" value="1" />-->
++<!--    </attr>-->
+     <attr name="colorSecondary" format="color" />
+     <attr name="colorSwitchThumbNormal" format="color" />
+     <attr name="commitIcon" format="reference" />
+@@ -441,11 +441,11 @@
+ <!--    </attr>-->
+     <attr name="iconifiedByDefault" format="boolean" />
+     <attr name="imageAspectRatio" format="float" />
+-    <attr name="imageAspectRatioAdjust">
+-        <enum name="adjust_height" value="2" />
+-        <enum name="adjust_width" value="1" />
+-        <enum name="none" value="0" />
+-    </attr>
++<!--    <attr name="imageAspectRatioAdjust">-->
++<!--        <enum name="adjust_height" value="2" />-->
++<!--        <enum name="adjust_width" value="1" />-->
++<!--        <enum name="none" value="0" />-->
++<!--    </attr>-->
+     <attr name="imageButtonStyle" format="reference" />
+     <attr name="indeterminateProgressStyle" format="reference" />
+     <attr name="initialActivityCount" format="string" />
+diff --git a/build.gradle b/build.gradle
+index c726062de..0c8061e8e 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -40,6 +40,7 @@ buildscript {
+     repositories {
+         jcenter()
+         google()
++        mavenCentral()
+ //        maven { url "https://s3.amazonaws.com/moat-sdk-builds" }
+     }
+     dependencies {
+@@ -62,6 +63,7 @@ allprojects {
+     repositories {
+         jcenter()
+         google()
++        mavenCentral()
+         maven { url 'https://jitpack.io' }
+         maven {
+             url "http://nexus.ci.wuren.com/repository/maven-releases/"
+diff --git a/script/build.py b/script/build.py
+index 825999fe5..cb128c8d5 100755
+--- a/script/build.py
++++ b/script/build.py
+@@ -40,11 +40,14 @@ PROVIDER_POSTFIX = 'provider_postfix'
+ FLURRY_KEY = 'flurry_key'
+ APP_CODE = 'app_code'
+ UMENG_CHANNEL = 'umeng_channel'
++GOOGLE_APP_ID = 'google_app_id'
++PKG_NAME_SLASH = 'pkg_name_slash'
+ 
+ HEYMODS_VARIANTS_HEY = 'Hey'
+ HEYMODS_VARIANTS_HEYUNCLONE = 'HeyUnclone'
+ HEYMODS_VARIANTS_YO = 'Yo'
+ HEYMODS_VARIANTS_GB = 'Gb'
++HEYMODS_VARIANTS_GB_STATUS_SAVER = 'GbStatusSaver'
+ HEYMODS_VARIANTS_YOUNCLONE = 'YoUnclone'
+ HEYMODS_VARIANTS_GBUNCLONE = 'GbUnclone'
+ HEYMODS_VARIANTS_WAPLUS = 'WhatsappPlus'
+@@ -65,7 +68,7 @@ SUPMODS_Aero = 'Aero'
+ SUPMODS_Aero2 = 'Aero2'
+ HEYMODS_RELEASE_LIST = [
+     HEYMODS_VARIANTS_YO, HEYMODS_VARIANTS_HEYUNCLONE, 
+-    HEYMODS_VARIANTS_WAPLUS, HEYMODS_VARIANTS_GB,
++    HEYMODS_VARIANTS_WAPLUS, HEYMODS_VARIANTS_GB, HEYMODS_VARIANTS_GB_STATUS_SAVER,
+     HEYMODS_VARIANTS_YOUNCLONE, HEYMODS_VARIANTS_GBUNCLONE, 
+     HEYMODS_VARIANTS_HEY
+ ]
+@@ -95,6 +98,19 @@ UNCLONE_VERSION_BASE_MOD = {
+         }
+ }
+ 
++SUB_VERSION_BASE_MOD = {
++    HEYMODS_VARIANTS_GB_STATUS_SAVER : {
++        BASE_FOLDER: HEYMODS_VARIANTS_GB,
++        PKG_NAME : 'cchl.status.downloader.saver',
++        PKG_NAME_SLASH : 'cchl\/status\/downloader\/saver',
++        PROVIDER_POSTFIX : 'cchl.status.downloader.saver',
++        FLURRY_KEY : ('S34552DSJJQGN6Y55H2G', 'S34552DSJJQGN6Y55H2G'),
++        APP_CODE : ('>gb<', '>gb<'),
++        UMENG_CHANNEL : ('>gb<', '>gb<'),
++        GOOGLE_APP_ID : '1:548258886856:android:0a6aa39aadfd3a84e6e1fd'
++        }
++}
++
+ IMODS_VARIANTS_LIST = IMODS_RELEASE_LIST.copy()
+ SUPMODS_RELEASE_LIST  = [
+     SUPMODS_Aero, SUPMODS_Aero2
+@@ -109,6 +125,7 @@ dic_pkg_map = {
+             HEYMODS_VARIANTS_HEYUNCLONE : ("com.whatsapp", "WhatsAppUnclone"),
+             HEYMODS_VARIANTS_YO : ("com.yowhatsapp", "YoWhatsApp"),
+             HEYMODS_VARIANTS_GB : ("com.gbwhatsapp", "GBWhatsApp"),
++            HEYMODS_VARIANTS_GB_STATUS_SAVER : ("com.cchl.status.downloader.saver", "GBWhatsApp"),
+             HEYMODS_VARIANTS_WAPLUS : ("com.whatsapp", "WhatsAppPlus"),
+             COOCOO_UNCLONE : ("com.whatsapp", "CoocooUnclone"),
+             HEYMODS_VARIANTS_HEY : ("com.heywhatsapp", "Hey"),
+@@ -575,11 +592,13 @@ class Builder:
+     def copy_whatsapp_moudle_flavor(self):
+         flavor_folder = self.flavor
+ 
+-        if self.flavor in UNCLONE_VERSION_BASE_MOD:
+-            flavor_dict = UNCLONE_VERSION_BASE_MOD[self.flavor]
++        base_list = [UNCLONE_VERSION_BASE_MOD, SUB_VERSION_BASE_MOD]
++        for sub_list in base_list:
++            if self.flavor in sub_list:
++                flavor_dict = sub_list[self.flavor]
+ 
+-            if BASE_FOLDER in flavor_dict:
+-                flavor_folder = flavor_dict[BASE_FOLDER]
++                if BASE_FOLDER in flavor_dict:
++                    flavor_folder = flavor_dict[BASE_FOLDER]
+ 
+         copy_src_dir = self.whatsapp_modify_module_dir + '_' + flavor_folder
+         if path.exists(copy_src_dir):
+@@ -777,6 +796,8 @@ class Builder:
+             self.build_yo()
+         elif HEYMODS_VARIANTS_GB == self.flavor:
+             self.build_gb()
++        elif HEYMODS_VARIANTS_GB_STATUS_SAVER == self.flavor:
++            self.build_gb()
+         elif HEYMODS_VARIANTS_YOUNCLONE == self.flavor:
+             self.build_yo()
+         elif HEYMODS_VARIANTS_HEY == self.flavor:
+@@ -922,17 +943,9 @@ class Builder:
+             self.install_apk(apk_path)
+ 
+     def gen_dbg_pkg_name(self, pkg_name):
+-        if self.build_mode == BUILD_MODE_DEBUG:
+-            if 'gbwhatsapp' == pkg_name:
+-                return pkg_name + ".dbg", pkg_name + '\/dbg'
+-            else:
+-                '''need to add com.<pkg_name>.dbg to firebase'''
+         return pkg_name, pkg_name
+ 
+     def gen_dbg_provider_posfix(self, provider_post_fix):
+-        if self.build_mode == BUILD_MODE_DEBUG:
+-            if 'gb' == provider_post_fix:
+-                return provider_post_fix + ".dbg"
+         return provider_post_fix
+ 
+     @timeit
+@@ -989,11 +1002,11 @@ class Builder:
+         return toBeChangedInVariantModuleString
+ 
+ 
+-    def check_unclone_base_mod(self, pkg_name, provider_post_fix):
++    def check_unclone_base_mod(self, pkg_name, provider_post_fix, base_list = UNCLONE_VERSION_BASE_MOD):
+         toBeChangedInVariantModuleString = list()
+ 
+-        if self.flavor in UNCLONE_VERSION_BASE_MOD:
+-            flavor_dict = UNCLONE_VERSION_BASE_MOD[self.flavor]
++        if self.flavor in base_list:
++            flavor_dict = base_list[self.flavor]
+ 
+             if PKG_NAME in flavor_dict:
+                 pkg_name = flavor_dict[PKG_NAME]
+@@ -1013,6 +1026,29 @@ class Builder:
+         
+         return pkg_name, provider_post_fix, toBeChangedInVariantModuleString
+ 
++    
++    def get_google_app_id(self, base_list):
++        google_app_id = None
++        if self.flavor in base_list:
++            flavor_dict = base_list[self.flavor]
++
++            if GOOGLE_APP_ID in flavor_dict:
++                google_app_id = flavor_dict[GOOGLE_APP_ID]
++
++        return google_app_id
++
++
++    def get_pkg_name_with_slash(self, base_list):
++        plg_name_slash = None
++        if self.flavor in base_list:
++            flavor_dict = base_list[self.flavor]
++
++            if PKG_NAME_SLASH in flavor_dict:
++                plg_name_slash = flavor_dict[PKG_NAME_SLASH]
++
++        return plg_name_slash
++
++
+     def copy_app_icon(self):
+         if self.app_icon is None:
+             return
+@@ -1107,23 +1143,37 @@ class Builder:
+     def build_gb(self):
+         pkg_name = 'gbwhatsapp'
+         provider_post_fix = 'gb'
++        google_app_id = ''
+         toBeChangedInVariantModuleString = list() 
+-
++        is_sub_mod = False
++
++        # if HEYMODS_VARIANTS_GB_STATUS_SAVER == self.flavor:
++        #     pkg_name = 'cchl.status.downloader.saver'
++        #     pkg_name_slash = 'cchl\/status\/downloader\/saver'
++        #     provider_post_fix = pkg_name
++        #     google_app_id = '1:548258886856:android:0a6aa39aadfd3a84e6e1fd'
++        # else:
+         if self.flavor in UNCLONE_VERSION_BASE_MOD:
+             pkg_name, provider_post_fix, toBeChangedInVariantModuleString = self.check_unclone_base_mod(pkg_name, provider_post_fix)
++        elif self.flavor in SUB_VERSION_BASE_MOD:
++            pkg_name, provider_post_fix, toBeChangedInVariantModuleString = self.check_unclone_base_mod(pkg_name, provider_post_fix, SUB_VERSION_BASE_MOD)
++            google_app_id = self.get_google_app_id(SUB_VERSION_BASE_MOD)
++            pkg_name_slash = self.get_pkg_name_with_slash(SUB_VERSION_BASE_MOD)
++            is_sub_mod = True
+         elif self.pure:
+             toBeChangedInVariantModuleString = self.check_pure_mod()
+ 
+ 
+-        if self.build_mode == BUILD_MODE_DEBUG:
+-            google_app_id = '1:548258886856:android:5e91d61c141f8316e6e1fd'
+-        else:
+-            google_app_id = '1:548258886856:android:b81c60d46e57503ae6e1fd'
+-        if pkg_name == 'whatsapp':
+-            google_app_id = '1:548258886856:android:f23f7340b1779d04e6e1fd'
++        if not is_sub_mod:
++            if self.build_mode == BUILD_MODE_DEBUG:
++                google_app_id = '1:548258886856:android:5e91d61c141f8316e6e1fd'
++            else:
++                google_app_id = '1:548258886856:android:b81c60d46e57503ae6e1fd'
++            if pkg_name == 'whatsapp':
++                google_app_id = '1:548258886856:android:f23f7340b1779d04e6e1fd'
+ 
+-        pkg_name, pkg_name_slash = self.gen_dbg_pkg_name(pkg_name)
+-        provider_post_fix = self.gen_dbg_provider_posfix(provider_post_fix)
++            pkg_name, pkg_name_slash = self.gen_dbg_pkg_name(pkg_name)
++            provider_post_fix = self.gen_dbg_provider_posfix(provider_post_fix)
+ 
+         toBeChangedGloably = []
+         toBeChangedGloably.append((r'Lcom\/coocoowhatsapp', 'Lcom\/coocoowhatsapp', 'Lcom\/' + pkg_name_slash))
+@@ -1159,6 +1209,7 @@ class Builder:
+         ]
+ 
+         print("build_gb, pkg_name: " + pkg_name)
++        print("build_gb, pkg_name_slash: " + pkg_name_slash)
+         if pkg_name == 'whatsapp':
+             toBeChangeInSmali.append((r'\"coocoowhatsapp:\/\/connect\"', '\"coocoowhatsapp:\/\/connect\"', '\"unclonewhatsapp:\/\/connect\"'))
+         else:
+diff --git a/whatsapp_modify_module/AndroidManifest.xml b/whatsapp_modify_module/AndroidManifest.xml
+index 4eb33edbb..4e9d66f1e 100644
+--- a/whatsapp_modify_module/AndroidManifest.xml
++++ b/whatsapp_modify_module/AndroidManifest.xml
+@@ -62,6 +62,11 @@
+         </intent>
+         <package android:name="com.google.android.apps.maps" />
+     </queries>
++
++    <!-- admob start -->
++    <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
++    <!-- admob end -->
++
+     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+     <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
+     <uses-permission android:name="android.permission.RECEIVE_SMS" />
+@@ -1748,6 +1753,26 @@
+         <activity android:name="com.coocoo.livepic.ui.LivePicFriendsListActivity" android:screenOrientation="portrait" />
+         <!-- LivePic end -->
+ 
++        <activity
++            android:name="com.coocoo.activity.AdBlockShareActivity"
++            android:screenOrientation="portrait" />
++
++        <!-- admob start -->
++        <activity
++            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
++            android:exported="false"
++            android:name="com.google.android.gms.ads.AdActivity"
++            android:theme="@android:style/Theme.Translucent"/>
++        <provider
++            android:authorities="com.coocoowhatsapp.delegate.mobileadsinitprovider"
++            android:exported="false"
++            android:initOrder="100"
++            android:name="com.google.android.gms.ads.MobileAdsInitProvider"/>
++
++        <meta-data
++            android:name="com.google.android.gms.ads.APPLICATION_ID"
++            android:value="ca-app-pub-6870174517920975~7034130295"/>
++        <!-- admob end -->
+         <activity android:name="com.coocoo.activity.AdBlockShareActivity" android:screenOrientation="portrait" />
+ 
+         <activity android:name="com.coocoo.statuses.myhistory.MyStatusHistoryActivity" android:screenOrientation="portrait" />
