@@ -30,7 +30,7 @@ index 740e1847b..f50148cb6 100644
  
      private fun setUpViewModel() {
 diff --git a/app/src/main/java/com/coocoo/newtheme/store/ThemeStoreActivity.java b/app/src/main/java/com/coocoo/newtheme/store/ThemeStoreActivity.java
-index 9dbc74b34..19d27ce20 100644
+index 9dbc74b34..8de8c711a 100644
 --- a/app/src/main/java/com/coocoo/newtheme/store/ThemeStoreActivity.java
 +++ b/app/src/main/java/com/coocoo/newtheme/store/ThemeStoreActivity.java
 @@ -23,6 +23,7 @@ import com.coocoo.newtheme.notification.ThemeNotificationManager;
@@ -53,14 +53,18 @@ index 9dbc74b34..19d27ce20 100644
          Intent intent = new Intent(context, ThemeStoreActivity.class);
          intent.putExtra(Constants.FROM, from);
          return intent;
-@@ -69,6 +75,7 @@ public class ThemeStoreActivity extends CCBaseActivity implements View.OnClickLi
+@@ -69,9 +75,10 @@ public class ThemeStoreActivity extends CCBaseActivity implements View.OnClickLi
      }
  
      private void initThemeFragment() {
 +        LogUtil.d("initThemeFragment");
          String from = getIntent().getStringExtra(Constants.FROM);
          Fragment themeFragment = new CombinedThemeFragment();
-         if (Constants.THEME_STORE.equals(from) && ThemeRemoteConfig.isUseWebStrategy()) {
+-        if (Constants.THEME_STORE.equals(from) && ThemeRemoteConfig.isUseWebStrategy()) {
++        if (true) {
+             themeFragment = new LocalThemeFragment();
+         }
+         FragmentManager fragmentManager = getSupportFragmentManager();
 diff --git a/app/src/main/java/com/coocoo/newtheme/store/viewmodel/LocalThemeViewModel.kt b/app/src/main/java/com/coocoo/newtheme/store/viewmodel/LocalThemeViewModel.kt
 index 4181283c7..33f6ebc04 100644
 --- a/app/src/main/java/com/coocoo/newtheme/store/viewmodel/LocalThemeViewModel.kt
