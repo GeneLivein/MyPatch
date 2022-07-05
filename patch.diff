@@ -1,15 +1,26 @@
 diff --git a/app/src/main/java/com/coocoo/newtheme/store/LocalThemeFragment.kt b/app/src/main/java/com/coocoo/newtheme/store/LocalThemeFragment.kt
-index 740e1847b..6142d9d07 100644
+index 740e1847b..f50148cb6 100644
 --- a/app/src/main/java/com/coocoo/newtheme/store/LocalThemeFragment.kt
 +++ b/app/src/main/java/com/coocoo/newtheme/store/LocalThemeFragment.kt
-@@ -40,7 +40,6 @@ class LocalThemeFragment : CCBaseFragment() {
+@@ -39,8 +39,7 @@ class LocalThemeFragment : CCBaseFragment() {
+ 
      override fun onActivityCreated(savedInstanceState: Bundle?) {
          super.onActivityCreated(savedInstanceState)
-         setUpViewModel()
+-        setUpViewModel()
 -        viewModel.loadData()
++
      }
  
      override fun createView(
+@@ -57,7 +56,7 @@ class LocalThemeFragment : CCBaseFragment() {
+ 
+     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+         super.onViewCreated(view, savedInstanceState)
+-
++        setUpViewModel()
+         view ?: return
+ 
+         gridView = view.findViewById<GridView>(ResMgr.getId(Constants.Res.Id.THEME_STORE_GRID_VIEW))
 @@ -112,6 +111,7 @@ class LocalThemeFragment : CCBaseFragment() {
          }
          gridView?.adapter = themeListAdapter
