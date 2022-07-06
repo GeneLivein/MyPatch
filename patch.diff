@@ -170,7 +170,7 @@ index 6da32e3a9..40432922a 100644
          params.put(ReportConstant.KEY_ACTION, "ret_fail");
          params.put("placement", placement);
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
-index 4d7c65397..d226cf923 100644
+index 4d7c65397..79a9459a3 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
 @@ -12,6 +12,7 @@ import android.graphics.Point;
@@ -181,7 +181,7 @@ index 4d7c65397..d226cf923 100644
  import android.text.TextUtils;
  import android.view.LayoutInflater;
  import android.view.View;
-@@ -34,20 +35,20 @@ import com.coocoo.conversation.PrivacyConversationManager;
+@@ -34,20 +35,19 @@ import com.coocoo.conversation.PrivacyConversationManager;
  import com.coocoo.conversation.item.AppletsConversationItem;
  import com.coocoo.conversation.item.BaseCarouselConversationItem;
  import com.coocoo.conversation.item.CarouselConversationItem;
@@ -201,11 +201,10 @@ index 4d7c65397..d226cf923 100644
  import com.coocoo.coocoo.Coocoo;
  import com.coocoo.coocoosp.SPDelegate;
 +import com.coocoo.firebase.remoteConfig.RemoteConfig;
-+import com.coocoo.highlight.EntryMsgFunction;
  import com.coocoo.manager.ContactTimeLineManager;
  import com.coocoo.manager.EmojiVariantManager;
  import com.coocoo.manager.HomeScreenPreferenceManager;
-@@ -64,7 +65,6 @@ import com.coocoo.preference.CoocooPrivacyAndSecurityPrefFragment;
+@@ -64,7 +64,6 @@ import com.coocoo.preference.CoocooPrivacyAndSecurityPrefFragment;
  import com.coocoo.preference.CoocooUniversalSettingsPrefFragment;
  import com.coocoo.report.Report;
  import com.coocoo.report.ReportConstant;
@@ -213,7 +212,7 @@ index 4d7c65397..d226cf923 100644
  import com.coocoo.theme.diy.DiyMainActivity;
  import com.coocoo.utils.ActivityUtil;
  import com.coocoo.utils.Constants;
-@@ -79,17 +79,14 @@ import com.coocoo.widget.AutoScrollViewPager;
+@@ -79,17 +78,14 @@ import com.coocoo.widget.AutoScrollViewPager;
  import com.coocoo.widget.indicator.ViewPagerIndicator;
  import com.coocoowhatsapp.conversationslist.ConversationsFragment;
  import com.coocoowhatsapp.conversationslist.ViewHolder;
@@ -235,7 +234,7 @@ index 4d7c65397..d226cf923 100644
  import com.status.traffic.presenter.ILaunchInstallActivityPresenter;
  import com.status.traffic.presenter.LaunchInstallActivityPresenter;
  import com.status.traffic.report.AdReporter;
-@@ -143,6 +140,7 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
+@@ -143,6 +139,7 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
      private ViewPagerIndicator newcomerPromoteFeaturePagerIndicator;
  
      private boolean isCurrentHomePage = false;
@@ -243,7 +242,7 @@ index 4d7c65397..d226cf923 100644
  
      public ConversationsFragmentDelegate(ConversationsFragment conversationFragment) {
          super(conversationFragment);
-@@ -249,6 +247,7 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
+@@ -249,6 +246,7 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
          LogUtil.debug("ConversationsFragmentDelegate.onCreateView");
          super.onCreateView(view, savedInstanceState);
          getHomeActivity();
@@ -251,7 +250,7 @@ index 4d7c65397..d226cf923 100644
      }
  
      @SmaliInject
-@@ -305,6 +304,49 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
+@@ -305,6 +303,49 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
          listView.addHeaderView(newcomerPromoteFeatureContainer);
      }
  
@@ -273,7 +272,7 @@ index 4d7c65397..d226cf923 100644
 +                        if (conversationBannerItem != null) {
 +                            conversationBannerItem.setAdLoadSuccess(true);
 +                        }
-+                        BaseAdapter adapter = ((ConversationsFragment) mHostFragment).A0q;
++                        BaseAdapter adapter = ((ConversationsFragment) mHostFragment).A0r;
 +                        if (adapter != null) {
 +                            adapter.notifyDataSetChanged();
 +                        }
@@ -301,7 +300,7 @@ index 4d7c65397..d226cf923 100644
      public void create(Bundle savedInstanceState) {
  
      }
-@@ -331,6 +373,9 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
+@@ -331,6 +372,9 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
          if (isCurrentHomePage && isNewcomerPromoteFeatureVisible()) {
              newcomerPromoteFeaturePager.startAutoScroll();
          }
@@ -311,7 +310,7 @@ index 4d7c65397..d226cf923 100644
      }
  
      @Override
-@@ -340,6 +385,9 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
+@@ -340,6 +384,9 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
          if (newcomerPromoteFeaturePager != null) {
              newcomerPromoteFeaturePager.stopAutoScroll();
          }
@@ -321,7 +320,7 @@ index 4d7c65397..d226cf923 100644
      }
  
      private boolean isNewcomerPromoteFeatureVisible() {
-@@ -443,6 +491,10 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
+@@ -443,6 +490,10 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
          }
  
          mConversationsFragmentPresenter.onDestroy();
@@ -332,14 +331,14 @@ index 4d7c65397..d226cf923 100644
      }
  
      private void notifyConversationsAdapter() {
-@@ -520,128 +572,18 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
+@@ -520,124 +571,10 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
          }
  
          filterChatsOrGroups(arrayList);
 -        addStatusTrafficSdkConversation(arrayList);
 -        addAppletsConversation(arrayList);
 -    }
--
+ 
 -    private void addStatusTrafficSdkConversation(ArrayList arrayList) {
 -        boolean isGroup = mHostFragment instanceof ConversationGroupsFragment;
 -        AdsFillReporter.INSTANCE.report(AdsFillReporter.Action.SHOW_TIMING,
@@ -397,7 +396,7 @@ index 4d7c65397..d226cf923 100644
 -                            this,
 -                            data);
 -                }
- 
+-
 -            } else if (ConfigType.SDK.getValue().equals(carouselAd.getType())) {
 -                if (HomeLifecycleAdManager.INSTANCE.isSdkConversationAdReady()) {
 -                    carouselItem = new SdkCarouselConversationItem(carouselAd,
@@ -459,15 +458,7 @@ index 4d7c65397..d226cf923 100644
      }
  
      private void addAppletsConversation(ArrayList arrayList) {
- 
-+        if (!AppletsDataManager.Companion.get().isAvailable()) {
-+            return;
-+        }
-+
-         if (arrayList == null) {
-             return;
-         }
-@@ -687,9 +629,24 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
+@@ -687,9 +624,24 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
          }
      }
  
