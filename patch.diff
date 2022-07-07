@@ -72,6 +72,20 @@ index d9ea2e382..bdc06ddb9 100644
      }
  }
  
+diff --git a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
+index edad124a8..ecf01838b 100644
+--- a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
++++ b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
+@@ -991,6 +991,7 @@ object RemoteConfig {
+     val conversationBannerAd: String
+         @JvmStatic
+         get() {
+-            return getString(RemoteConfigKeys.CONVERSATION_BANNER)
++//            return getString(RemoteConfigKeys.CONVERSATION_BANNER)
++            return "ca-app-pub-3940256099942544/2247696110"
+         }
+ }
+\ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfigKeys.kt b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfigKeys.kt
 index affcc597e..d80114505 100644
 --- a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfigKeys.kt
