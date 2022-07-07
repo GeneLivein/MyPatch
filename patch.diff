@@ -1,550 +1,72 @@
+diff --git a/app/build.gradle b/app/build.gradle
+index 522dd566f..74c4ed917 100644
+--- a/app/build.gradle
++++ b/app/build.gradle
+@@ -316,7 +316,7 @@ dependencies {
+ 
+     implementation(name: 'sublive_modsdk', ext: 'aar') // v0.5.0
+     implementation 'org.greenrobot:eventbus:3.2.0'
+-    implementation 'com.google.android.gms:play-services-ads:18.0.0'
++    implementation 'com.google.android.gms:play-services-ads:20.6.0'
+ }
+ 
+ gradle.taskGraph.whenReady {
 diff --git a/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt b/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
-index 988f1b490..d9ea2e382 100644
+index d9ea2e382..ec22540f2 100644
 --- a/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
 +++ b/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
-@@ -12,9 +12,11 @@ import android.graphics.drawable.GradientDrawable
- import android.os.Handler
- import android.os.Looper
- import android.text.TextUtils
-+import android.view.Gravity
- import android.view.LayoutInflater
- import android.view.View
- import android.view.ViewGroup
-+import android.widget.FrameLayout
- import android.widget.ImageView
- import android.widget.RelativeLayout
- import android.widget.TextView
-@@ -35,6 +37,7 @@ import com.coocoo.transform.CircleTransform
+@@ -37,7 +37,7 @@ import com.coocoo.transform.CircleTransform
  import com.coocoo.utils.*
  import com.coocoo.wallpapers.model.WallpaperBean
  import com.coocoo.whatsappdelegate.HomeActivityDelegate
-+import com.google.android.gms.ads.AdView
+-import com.google.android.gms.ads.AdView
++import com.google.android.gms.ads.*
  import com.status.traffic.AdCommonManager
  import com.status.traffic.AdSceneManager
  import com.status.traffic.StatusTrafficSdk
-@@ -766,6 +769,48 @@ class AppletsConversationItem(val title : String, val des: String, val pushMessa
+@@ -851,3 +851,24 @@ class SdkCarouselConversationItem(
+         }
      }
  }
- 
-+class ConversationBannerItem(
-+    private val adView: AdView?) : RetentionConversationItem() {
 +
-+    var isAdLoadSuccess = false
-+
-+    fun resume() {
-+        adView?.resume()
-+    }
-+
-+    fun pause() {
-+        adView?.pause()
-+    }
-+
-+    fun destroy() {
-+        adView?.destroy()
-+    }
-+
-+    override fun getView(parent: ViewGroup): View {
-+        if (adView?.parent != null) {
-+            return adView.parent as View
++fun loadNativeAd(context: Context) {
++    val builder = AdLoader.Builder(context, "ca-app-pub-3940256099942544/2247696110")
++    builder.forNativeAd { nativeAd ->
++        LogUtil.d("loadNativeAd $nativeAd")
++    }.withAdListener(object : AdListener() {
++        override fun onAdFailedToLoad(p0: LoadAdError) {
++            LogUtil.d("loadNativeAd onAdFailedToLoad")
 +        }
-+
-+        val frameLayout = FrameLayout(CooCooApp.getAppContext())
-+        val params: ViewGroup.LayoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-+        frameLayout.layoutParams = params
-+        if (!isAdLoadSuccess) {
-+            return frameLayout
-+        }
-+
-+        if (adView != null) {
-+            val childParams: FrameLayout.LayoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-+            childParams.width = adView.adSize.getWidthInPixels(CooCooApp.getAppContext())
-+            childParams.height = adView.adSize.getHeightInPixels(CooCooApp.getAppContext())
-+            childParams.gravity = Gravity.CENTER
-+            frameLayout.addView(adView, childParams)
-+        }
-+
-+
-+        return frameLayout
-+    }
++    })
++    val adLoader = builder.build()
++    adLoader.loadAd(AdRequest.Builder().build())
 +}
 +
- class SdkCarouselConversationItem(
-     carouselAd: NativeAdConfig,
-     onCloseAd: ((item: BaseCarouselConversationItem) -> Unit)?,
-diff --git a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
-index f1b720656..edad124a8 100644
---- a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
-+++ b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
-@@ -987,4 +987,10 @@ object RemoteConfig {
-         get() {
-             return getString(RemoteConfigKeys.OPEN_CHAT_LINK, "")
-         }
++fun loadAppOpen() {
 +
-+    val conversationBannerAd: String
-+        @JvmStatic
-+        get() {
-+            return getString(RemoteConfigKeys.CONVERSATION_BANNER)
-+        }
- }
++}
++
++fun loadInterstitial() {
++
++}
 \ No newline at end of file
-diff --git a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfigKeys.kt b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfigKeys.kt
-index 0fc63891c..affcc597e 100644
---- a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfigKeys.kt
-+++ b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfigKeys.kt
-@@ -122,6 +122,9 @@ object RemoteConfigKeys {
-     const val APPLETS_BLOCK_PUSH = "applets_block_push"
-     // theme store banner ad
-     const val THEME_STORE_BANNER = "modad_theme_store_banner"
-+
-+    // Conversation banner ad
-+    const val CONVERSATION_BANNER = "modad_homelist_banner"
-     const val APPLETS_PUSH_LAST_CODE = "applets_push_switch_last_code"
-     const val APPLETS_BLOCK_PUSH_MESSAGE = "applets_block_push_message"
-     const val APPLETS_PUSH_MESSAGE_VERSION = "applets_push_message_version"
-diff --git a/app/src/main/java/com/coocoo/newtheme/store/ThemeStoreActivity.java b/app/src/main/java/com/coocoo/newtheme/store/ThemeStoreActivity.java
-index 9dd18abb2..1e1a9d2b8 100644
---- a/app/src/main/java/com/coocoo/newtheme/store/ThemeStoreActivity.java
-+++ b/app/src/main/java/com/coocoo/newtheme/store/ThemeStoreActivity.java
-@@ -3,7 +3,6 @@ package com.coocoo.newtheme.store;
- import android.content.Context;
- import android.content.DialogInterface;
- import android.content.Intent;
--import android.location.Location;
- import android.os.Bundle;
- import android.text.TextUtils;
- import android.view.View;
-diff --git a/app/src/main/java/com/coocoo/report/Report.java b/app/src/main/java/com/coocoo/report/Report.java
-index 506ee24e4..5fbd7f0a7 100644
---- a/app/src/main/java/com/coocoo/report/Report.java
-+++ b/app/src/main/java/com/coocoo/report/Report.java
-@@ -1008,11 +1008,27 @@ public class Report {
-     }
- 
-     public static void reportThemeStoreBannerAdReqOk(String placement, String adId) {
--        ReportCore.reportThemeStoreBannerAdReqOk(placement, adId);
-+        ReportCore.reportBannerAdReqOk(placement, adId);
-     }
- 
-     public static void reportThemeStoreBannerAdReqFail(String placement, String adId, int code) {
--        ReportCore.reportThemeStoreBannerAdReqFail(placement, adId, code);
-+        ReportCore.reportBannerAdReqFail(placement, adId, code);
-+    }
-+
-+    public static void reportConversationBannerAdReqStart(String adId) {
-+        ReportCore.reportThemeStoreBannerAdReqStart("modad_homelist_banner", adId);
-+    }
-+
-+    public static void reportConversationBannerAdShow(String adId) {
-+        ReportCore.reportThemeStoreBannerAdShow("modad_homelist_banner", adId);
-+    }
-+
-+    public static void reportConversationBannerAdReqOk(String adId) {
-+        ReportCore.reportBannerAdReqOk("modad_homelist_banner", adId);
-+    }
-+
-+    public static void reportConversationBannerAdReqFail(String adId, int code) {
-+        ReportCore.reportBannerAdReqFail("modad_homelist_banner", adId, code);
-     }
- 
-     public static void miniAppMonitor(int type, int status) {
-diff --git a/app/src/main/java/com/coocoo/report/ReportCore.java b/app/src/main/java/com/coocoo/report/ReportCore.java
-index 6da32e3a9..40432922a 100644
---- a/app/src/main/java/com/coocoo/report/ReportCore.java
-+++ b/app/src/main/java/com/coocoo/report/ReportCore.java
-@@ -1732,7 +1732,7 @@ class ReportCore implements ReportConstant {
-         report("mod_ads_behavior", params);
-     }
- 
--    public static void reportThemeStoreBannerAdReqOk(String placement, String adId) {
-+    public static void reportBannerAdReqOk(String placement, String adId) {
-         Map<String, String> params = new HashMap<>();
-         params.put(ReportConstant.KEY_ACTION, "ret_ok");
-         params.put("placement", placement);
-@@ -1740,7 +1740,7 @@ class ReportCore implements ReportConstant {
-         report("mod_ads_behavior", params);
-     }
- 
--    public static void reportThemeStoreBannerAdReqFail(String placement, String adId, int code) {
-+    public static void reportBannerAdReqFail(String placement, String adId, int code) {
-         Map<String, String> params = new HashMap<>();
-         params.put(ReportConstant.KEY_ACTION, "ret_fail");
-         params.put("placement", placement);
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
-index 4d7c65397..79a9459a3 100644
+index 79a9459a3..25b96df54 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
-@@ -12,6 +12,7 @@ import android.graphics.Point;
- import android.net.Uri;
- import android.os.Bundle;
- import android.os.Handler;
-+import android.os.Looper;
- import android.text.TextUtils;
- import android.view.LayoutInflater;
- import android.view.View;
-@@ -34,20 +35,19 @@ import com.coocoo.conversation.PrivacyConversationManager;
- import com.coocoo.conversation.item.AppletsConversationItem;
- import com.coocoo.conversation.item.BaseCarouselConversationItem;
- import com.coocoo.conversation.item.CarouselConversationItem;
-+import com.coocoo.conversation.item.ConversationBannerItem;
- import com.coocoo.conversation.item.FissionConversationItem;
- import com.coocoo.conversation.item.NewcomerPromoteFeature;
- import com.coocoo.conversation.item.NewcomerPromoteFeatureAction;
+@@ -42,6 +42,7 @@ import com.coocoo.conversation.item.NewcomerPromoteFeatureAction;
  import com.coocoo.conversation.item.NewcomerPromoteFeatureAdapter;
--import com.coocoo.conversation.item.OpenRTBCarouselConversationItem;
--import com.coocoo.conversation.item.PushAppRetentionConversationItem;
  import com.coocoo.conversation.item.RetentionConversationItem;
  import com.coocoo.conversation.item.RetentionConversationItemClickable;
--import com.coocoo.conversation.item.SdkCarouselConversationItem;
++import com.coocoo.conversation.item.RetentionConversationItemKt;
  import com.coocoo.conversation.presenter.ConversationsFragmentPresenter;
  import com.coocoo.conversation.presenter.IConversationsFragmentPresenter;
  import com.coocoo.conversation.repository.MyMessageRepository;
- import com.coocoo.coocoo.Coocoo;
- import com.coocoo.coocoosp.SPDelegate;
-+import com.coocoo.firebase.remoteConfig.RemoteConfig;
- import com.coocoo.manager.ContactTimeLineManager;
- import com.coocoo.manager.EmojiVariantManager;
- import com.coocoo.manager.HomeScreenPreferenceManager;
-@@ -64,7 +64,6 @@ import com.coocoo.preference.CoocooPrivacyAndSecurityPrefFragment;
- import com.coocoo.preference.CoocooUniversalSettingsPrefFragment;
- import com.coocoo.report.Report;
- import com.coocoo.report.ReportConstant;
--import com.coocoo.report.ReportPushAppSolution;
- import com.coocoo.theme.diy.DiyMainActivity;
- import com.coocoo.utils.ActivityUtil;
- import com.coocoo.utils.Constants;
-@@ -79,17 +78,14 @@ import com.coocoo.widget.AutoScrollViewPager;
- import com.coocoo.widget.indicator.ViewPagerIndicator;
- import com.coocoowhatsapp.conversationslist.ConversationsFragment;
- import com.coocoowhatsapp.conversationslist.ViewHolder;
--import com.status.traffic.HomeLifecycleAdManager;
-+import com.google.android.gms.ads.AdListener;
-+import com.google.android.gms.ads.AdRequest;
-+import com.google.android.gms.ads.AdSize;
-+import com.google.android.gms.ads.AdView;
- import com.status.traffic.StatusTrafficSdk;
--import com.status.traffic.data.enums.ConfigType;
- import com.status.traffic.data.enums.DownloadApkDialogType;
- import com.status.traffic.data.enums.InstallTag;
--import com.status.traffic.data.enums.PushAppSolution;
- import com.status.traffic.data.vo.ApkData;
--import com.status.traffic.data.vo.FissionConversationAdConfig;
--import com.status.traffic.data.vo.NativeAdConfig;
--import com.status.traffic.data.vo.PushAppConfig;
--import com.status.traffic.openrtb.Bid;
- import com.status.traffic.presenter.ILaunchInstallActivityPresenter;
- import com.status.traffic.presenter.LaunchInstallActivityPresenter;
- import com.status.traffic.report.AdReporter;
-@@ -143,6 +139,7 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
-     private ViewPagerIndicator newcomerPromoteFeaturePagerIndicator;
- 
-     private boolean isCurrentHomePage = false;
-+    private ConversationBannerItem conversationBannerItem;
- 
-     public ConversationsFragmentDelegate(ConversationsFragment conversationFragment) {
-         super(conversationFragment);
-@@ -249,6 +246,7 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
-         LogUtil.debug("ConversationsFragmentDelegate.onCreateView");
-         super.onCreateView(view, savedInstanceState);
-         getHomeActivity();
-+        initBannerAd();
+@@ -343,6 +344,7 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
+         adView.setAdSize(AdSize.BANNER);
+         adView.loadAd(new AdRequest.Builder().build());
+         conversationBannerItem = new ConversationBannerItem(adView);
++        RetentionConversationItemKt.loadNativeAd(Coocoo.getAppContext());
+         Report.reportConversationBannerAdReqStart(bannerId);
      }
  
-     @SmaliInject
-@@ -305,6 +303,49 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
-         listView.addHeaderView(newcomerPromoteFeatureContainer);
-     }
- 
-+    private void initBannerAd() {
-+
-+        final String bannerId = RemoteConfig.getConversationBannerAd();
-+        if (TextUtils.isEmpty(bannerId)) {
-+            return;
-+        }
-+
-+        AdView adView = new AdView(Coocoo.getAppContext());
-+        adView.setAdListener(new AdListener() {
-+            @Override
-+            public void onAdLoaded() {
-+                Report.reportConversationBannerAdReqOk(bannerId);
-+                new Handler(Looper.getMainLooper()).post(new Runnable() {
-+                    @Override
-+                    public void run() {
-+                        if (conversationBannerItem != null) {
-+                            conversationBannerItem.setAdLoadSuccess(true);
-+                        }
-+                        BaseAdapter adapter = ((ConversationsFragment) mHostFragment).A0r;
-+                        if (adapter != null) {
-+                            adapter.notifyDataSetChanged();
-+                        }
-+                    }
-+                });
-+            }
-+
-+            @Override
-+            public void onAdImpression() {
-+                Report.reportConversationBannerAdShow(bannerId);
-+            }
-+
-+            @Override
-+            public void onAdFailedToLoad(int code) {
-+                Report.reportConversationBannerAdReqFail(bannerId, code);
-+            }
-+        });
-+        adView.setAdUnitId(bannerId);
-+        adView.setAdSize(AdSize.BANNER);
-+        adView.loadAd(new AdRequest.Builder().build());
-+        conversationBannerItem = new ConversationBannerItem(adView);
-+        Report.reportConversationBannerAdReqStart(bannerId);
-+    }
-+
-     public void create(Bundle savedInstanceState) {
- 
-     }
-@@ -331,6 +372,9 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
-         if (isCurrentHomePage && isNewcomerPromoteFeatureVisible()) {
-             newcomerPromoteFeaturePager.startAutoScroll();
-         }
-+        if (conversationBannerItem != null) {
-+            conversationBannerItem.resume();
-+        }
-     }
- 
-     @Override
-@@ -340,6 +384,9 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
-         if (newcomerPromoteFeaturePager != null) {
-             newcomerPromoteFeaturePager.stopAutoScroll();
-         }
-+        if (conversationBannerItem != null) {
-+            conversationBannerItem.pause();
-+        }
-     }
- 
-     private boolean isNewcomerPromoteFeatureVisible() {
-@@ -443,6 +490,10 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
-         }
- 
-         mConversationsFragmentPresenter.onDestroy();
-+
-+        if (conversationBannerItem != null) {
-+            conversationBannerItem.destroy();
-+        }
-     }
- 
-     private void notifyConversationsAdapter() {
-@@ -520,124 +571,10 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
-         }
- 
-         filterChatsOrGroups(arrayList);
--        addStatusTrafficSdkConversation(arrayList);
--        addAppletsConversation(arrayList);
--    }
- 
--    private void addStatusTrafficSdkConversation(ArrayList arrayList) {
--        boolean isGroup = mHostFragment instanceof ConversationGroupsFragment;
--        AdsFillReporter.INSTANCE.report(AdsFillReporter.Action.SHOW_TIMING,
--                isGroup ? AdsFillReporter.From.GROUP : AdsFillReporter.From.CONVERSATION,
--                null);
--        if (!BusinessController.allowEnabledFullAds()) {
--            AdsFillReporter.INSTANCE.report(
--                    AdsFillReporter.Action.NOTHING_TO_SHOW,
--                    isGroup ? AdsFillReporter.From.GROUP : AdsFillReporter.From.CONVERSATION,
--                    AdsFillReporter.Reason.FIREBASE_CONFIG_OFF);
--            return;
--        }
--        if (mLaunchInstallActivityPresenter == null) {
--            mLaunchInstallActivityPresenter = new LaunchInstallActivityPresenter(this);
--        }
--        StatusTrafficSdk sdk = StatusTrafficSdk.Companion.getInstance();
--        // Add retention item if needed.
--        List<PushAppConfig> pushApps = sdk.getPushApps(PushAppSolution.CHAT);
--        List<PushAppRetentionConversationItem> needPushApps = new ArrayList<>();
--        for (int i = 0; i < pushApps.size(); i++) {
--            PushAppConfig pushApp = pushApps.get(i);
--            Integer id = pushApp.getId();
--            String packageName = pushApp.getPackageName();
--            if (id != null && packageName != null) {
--                ReportPushAppSolution.INSTANCE.showAdChat(id, packageName);
--                needPushApps.add(new PushAppRetentionConversationItem(
--                        pushApp,
--                        (item) -> {
--                            ReportPushAppSolution.INSTANCE.clickAdChat(id, packageName);
--                            removeItem(item);
--                            return null;
--                        },
--                        this));
--            }
--        }
--        arrayList.addAll(0, needPushApps);
--
--        // Add Carousel Conversation Ad
--        NativeAdConfig carouselAd = HomeLifecycleAdManager.INSTANCE.getCarouselConversationAd(isGroup);
--        if (carouselAd != null) {
--            AdsFillReporter.INSTANCE.report(
--                    AdsFillReporter.Action.SHOW,
--                    isGroup ? AdsFillReporter.From.GROUP : AdsFillReporter.From.CONVERSATION,
--                    null);
--            BaseCarouselConversationItem carouselItem = null;
--            if (ConfigType.OPEN_RTB.getValue().equals(carouselAd.getType())) {
--                Bid.Native data = sdk.getConversationOpenRTB();
--                if (data != null) {
--                    carouselItem = new OpenRTBCarouselConversationItem(carouselAd,
--                            (item) -> {
--                                sdk.closeCarouselConversationAd();
--                                removeItem(item);
--                                return null;
--                            },
--                            this,
--                            data);
--                }
--
--            } else if (ConfigType.SDK.getValue().equals(carouselAd.getType())) {
--                if (HomeLifecycleAdManager.INSTANCE.isSdkConversationAdReady()) {
--                    carouselItem = new SdkCarouselConversationItem(carouselAd,
--                            (item) -> {
--                                sdk.closeCarouselConversationAd();
--                                removeItem(item);
--                                return null;
--                            },
--                            this);
--                }
--            } else {
--                carouselItem = new CarouselConversationItem(
--                        carouselAd,
--                        (item, isRemove) -> {
--                            if (isRemove) {
--                                sdk.cleanCarouselConversationAdCache(carouselAd);
--                                removeItem(item);
--                            }
--                            return null;
--                        },
--                        (item) -> {
--                            sdk.closeCarouselConversationAd();
--                            removeItem(item);
--                            return null;
--                        },
--                        mLaunchInstallActivityPresenter,
--                        this);
--            }
--            if (carouselItem != null) {
--                int position = sdk.getCarouselConversationAdPosition();
--                if (arrayList.size() > position) {
--                    arrayList.add(position, carouselItem);
--                } else {
--                    arrayList.add(carouselItem);
--                }
--            }
--        } else {
--            AdsFillReporter.INSTANCE.report(
--                    AdsFillReporter.Action.NOTHING_TO_SHOW,
--                    isGroup ? AdsFillReporter.From.GROUP : AdsFillReporter.From.CONVERSATION,
--                    AdsFillReporter.Reason.STATUS_TRAFFIC_CONFIG_OFF);
--        }
-+        addAppletsConversation(arrayList);
- 
--        // Add Fission Conversation Ad
--        FissionConversationAdConfig fissionAd = sdk.getFissionConversationAd();
--        if (fissionAd != null) {
--            FissionConversationItem fissionItem = new FissionConversationItem(
--                    fissionAd,
--                    (item) -> {
--                        removeItem(item);
--                        return null;
--                    },
--                    this,
--                    mLaunchInstallActivityPresenter);
--            arrayList.add(0, fissionItem);
--        }
-+        addBannerId(arrayList);
-     }
- 
-     private void addAppletsConversation(ArrayList arrayList) {
-@@ -687,9 +624,24 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
-         }
-     }
- 
-+    private void addBannerId(ArrayList arrayList) {
-+
-+        String bannerId = RemoteConfig.getConversationBannerAd();
-+        if (TextUtils.isEmpty(bannerId)) {
-+            return;
-+        }
-+
-+        if (conversationBannerItem == null) {
-+            return;
-+        }
-+
-+        if (arrayList != null && !arrayList.contains(conversationBannerItem)) {
-+            arrayList.add(0, conversationBannerItem);
-+        }
-+    }
-+
-     private void removeItem(@NonNull RetentionConversationItem data) {
--        if ((data instanceof PushAppRetentionConversationItem
--                || data instanceof BaseCarouselConversationItem
-+        if ((data instanceof BaseCarouselConversationItem
-                 || data instanceof FissionConversationItem
-                 || data instanceof AppletsConversationItem)
-                 && mHostFragment instanceof ConversationsFragment) {
-diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
-index 625ee7ade..8e4deba98 100644
---- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
-+++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
-@@ -74,6 +74,7 @@ import com.coocoo.business.BusinessController;
- import com.coocoo.colorphone.ColorPhoneActivity;
- import com.coocoo.conversation.item.AppletsConversationItem;
- import com.coocoo.conversation.item.CarouselConversationItem;
-+import com.coocoo.conversation.item.ConversationBannerItem;
- import com.coocoo.conversation.item.FissionConversationItem;
- import com.coocoo.conversation.item.OpenRTBCarouselConversationItem;
- import com.coocoo.conversation.item.PushAppRetentionConversationItem;
-@@ -742,6 +743,8 @@ public class HomeActivityDelegate extends ActivityDelegate<HomeActivityThemeMana
- 
-         initAppletsConfig();
- 
-+        initBannerAdConfig();
-+
-         initThemeFabAd();
- 
-         DeletedStatusHandler.INSTANCE.clearExpiredStatus();
-@@ -783,7 +786,7 @@ public class HomeActivityDelegate extends ActivityDelegate<HomeActivityThemeMana
-                 Coocoo.initStatusTrafficSdk();
-             }
-             if (!mHostActivity.isDestroyed() && !mHostActivity.isFinishing()) {
--                sdk.loadCarouselConversationAd(mHostActivity);
-+//                sdk.loadCarouselConversationAd(mHostActivity);
-                 sdk.loadPushAppAd(mHostActivity);
-                 sdk.loadFissionConversationAd(mHostActivity);
-                 sdk.loadStatusAd(mHostActivity);
-@@ -875,12 +878,12 @@ public class HomeActivityDelegate extends ActivityDelegate<HomeActivityThemeMana
-             }
-         });
- 
--        ConversationsItemTypeManager conversationsItemTypeManager = ConversationsItemTypeManager.INSTANCE;
--        conversationsItemTypeManager.registerItem(PushAppRetentionConversationItem.class);
--        conversationsItemTypeManager.registerItem(CarouselConversationItem.class);
--        conversationsItemTypeManager.registerItem(OpenRTBCarouselConversationItem.class);
--        conversationsItemTypeManager.registerItem(FissionConversationItem.class);
--        conversationsItemTypeManager.registerItem(SdkCarouselConversationItem.class);
-+//        ConversationsItemTypeManager conversationsItemTypeManager = ConversationsItemTypeManager.INSTANCE;
-+//        conversationsItemTypeManager.registerItem(PushAppRetentionConversationItem.class);
-+//        conversationsItemTypeManager.registerItem(CarouselConversationItem.class);
-+//        conversationsItemTypeManager.registerItem(OpenRTBCarouselConversationItem.class);
-+//        conversationsItemTypeManager.registerItem(FissionConversationItem.class);
-+//        conversationsItemTypeManager.registerItem(SdkCarouselConversationItem.class);
- //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
- //                && !PushAppJobService.Companion.isPushAppJobServiceExist(mHostActivity)) {
- //            JobScheduler jobScheduler = (JobScheduler) mHomeActivity.getSystemService(Context.JOB_SCHEDULER_SERVICE);
-@@ -895,6 +898,13 @@ public class HomeActivityDelegate extends ActivityDelegate<HomeActivityThemeMana
-         }
-     }
- 
-+    private void initBannerAdConfig() {
-+        if (!TextUtils.isEmpty(RemoteConfig.getConversationBannerAd())) {
-+            ConversationsItemTypeManager conversationsItemTypeManager = ConversationsItemTypeManager.INSTANCE;
-+            conversationsItemTypeManager.registerItem(ConversationBannerItem.class);
-+        }
-+    }
-+
-     private void initThemeFabAd() {
-         ThemeFabAdManager.INSTANCE.init(mHostActivity);
-     }
