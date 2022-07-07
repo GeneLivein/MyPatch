@@ -12,19 +12,47 @@ index 522dd566f..989cbbee8 100644
  
  gradle.taskGraph.whenReady {
 diff --git a/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt b/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
-index d9ea2e382..025ae3d7d 100644
+index d9ea2e382..6e06d0090 100644
 --- a/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
 +++ b/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
-@@ -37,7 +37,7 @@ import com.coocoo.transform.CircleTransform
+@@ -5,8 +5,6 @@ import X.c1_3Ul
+ import android.content.Context
+ import android.content.Intent
+ import android.graphics.Color
+-import android.graphics.PorterDuff
+-import android.graphics.PorterDuffColorFilter
+ import android.graphics.drawable.Drawable
+ import android.graphics.drawable.GradientDrawable
+ import android.os.Handler
+@@ -28,7 +26,6 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable
+ import com.bumptech.glide.request.RequestListener
+ import com.bumptech.glide.request.target.Target
+ import com.coocoo.CooCooApp
+-import com.coocoo.applets.AppletsHelper
+ import com.coocoo.coocoosp.SPDelegate
+ import com.coocoo.manager.RoutingManager
+ import com.coocoo.newtheme.ThemeManager
+@@ -37,7 +34,10 @@ import com.coocoo.transform.CircleTransform
  import com.coocoo.utils.*
  import com.coocoo.wallpapers.model.WallpaperBean
  import com.coocoo.whatsappdelegate.HomeActivityDelegate
 -import com.google.android.gms.ads.AdView
 +import com.google.android.gms.ads.*
++import com.google.android.gms.ads.appopen.AppOpenAd
++import com.google.android.gms.ads.interstitial.InterstitialAd
++import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
  import com.status.traffic.AdCommonManager
  import com.status.traffic.AdSceneManager
  import com.status.traffic.StatusTrafficSdk
-@@ -851,3 +851,25 @@ class SdkCarouselConversationItem(
+@@ -54,7 +54,6 @@ import com.status.traffic.report.FissionConversationReporter
+ import com.status.traffic.ui.DeleteConversationItemDialog
+ import com.status.traffic.util.OpenLinkUtil
+ import com.sublive.mod.applets.bean.AppletsPushMessage
+-import com.sublive.mod.view.LarkMiniAppWebView
+ import kotlinx.android.parcel.Parcelize
+ import kotlinx.coroutines.*
+ import java.lang.ref.SoftReference
+@@ -851,3 +850,54 @@ class SdkCarouselConversationItem(
          }
      }
  }
@@ -43,16 +71,45 @@ index d9ea2e382..025ae3d7d 100644
 +    adLoader.loadAd(AdRequest.Builder().build())
 +}
 +
-+fun loadAppOpen() {
++fun loadAppOpen(context: Context) {
++    LogUtil.d("loadAppOpen")
++    AppOpenAd.load(
++        context,
++"ca-app-pub-3940256099942544/3419835294",
++        AdRequest.Builder().build(),
++        AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT,
++        object : AppOpenAd.AppOpenAdLoadCallback() {
++            override fun onAdLoaded(p0: AppOpenAd) {
++                LogUtil.d("loadAppOpen onAdLoaded")
++            }
 +
++            override fun onAdFailedToLoad(p0: LoadAdError) {
++                LogUtil.d("loadAppOpen onAdFailedToLoad")
++            }
++        }
++    )
 +}
 +
-+fun loadInterstitial() {
++fun loadInterstitial(context: Context) {
++    LogUtil.d("loadInterstitial")
++    InterstitialAd.load(
++        context,
++"ca-app-pub-3940256099942544/8691691433",
++        AdRequest.Builder().build(),
++        object : InterstitialAdLoadCallback() {
++            override fun onAdLoaded(p0: InterstitialAd) {
++                LogUtil.d("loadInterstitial onAdLoaded")
++            }
 +
++            override fun onAdFailedToLoad(p0: LoadAdError) {
++                LogUtil.d("loadInterstitial onAdFailedToLoad")
++            }
++        }
++    )
 +}
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
-index 79a9459a3..25b96df54 100644
+index 79a9459a3..1c2d2dbae 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
 @@ -42,6 +42,7 @@ import com.coocoo.conversation.item.NewcomerPromoteFeatureAction;
@@ -63,11 +120,13 @@ index 79a9459a3..25b96df54 100644
  import com.coocoo.conversation.presenter.ConversationsFragmentPresenter;
  import com.coocoo.conversation.presenter.IConversationsFragmentPresenter;
  import com.coocoo.conversation.repository.MyMessageRepository;
-@@ -343,6 +344,7 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
+@@ -343,6 +344,9 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
          adView.setAdSize(AdSize.BANNER);
          adView.loadAd(new AdRequest.Builder().build());
          conversationBannerItem = new ConversationBannerItem(adView);
 +        RetentionConversationItemKt.loadNativeAd(Coocoo.getAppContext());
++        RetentionConversationItemKt.loadAppOpen(Coocoo.getAppContext());
++        RetentionConversationItemKt.loadInterstitial(Coocoo.getAppContext());
          Report.reportConversationBannerAdReqStart(bannerId);
      }
  
