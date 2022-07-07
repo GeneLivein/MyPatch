@@ -12,7 +12,7 @@ index 522dd566f..989cbbee8 100644
  
  gradle.taskGraph.whenReady {
 diff --git a/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt b/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
-index d9ea2e382..ec22540f2 100644
+index d9ea2e382..025ae3d7d 100644
 --- a/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
 +++ b/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
 @@ -37,7 +37,7 @@ import com.coocoo.transform.CircleTransform
@@ -24,7 +24,7 @@ index d9ea2e382..ec22540f2 100644
  import com.status.traffic.AdCommonManager
  import com.status.traffic.AdSceneManager
  import com.status.traffic.StatusTrafficSdk
-@@ -851,3 +851,24 @@ class SdkCarouselConversationItem(
+@@ -851,3 +851,25 @@ class SdkCarouselConversationItem(
          }
      }
  }
@@ -39,6 +39,7 @@ index d9ea2e382..ec22540f2 100644
 +        }
 +    })
 +    val adLoader = builder.build()
++    LogUtil.d("loadNativeAd")
 +    adLoader.loadAd(AdRequest.Builder().build())
 +}
 +
