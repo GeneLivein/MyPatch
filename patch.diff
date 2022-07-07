@@ -85,6 +85,44 @@ index affcc597e..d80114505 100644
      const val APPLETS_PUSH_LAST_CODE = "applets_push_switch_last_code"
      const val APPLETS_BLOCK_PUSH_MESSAGE = "applets_block_push_message"
      const val APPLETS_PUSH_MESSAGE_VERSION = "applets_push_message_version"
+diff --git a/app/src/main/java/com/coocoo/newtheme/store/ThemeStoreActivity.java b/app/src/main/java/com/coocoo/newtheme/store/ThemeStoreActivity.java
+index 1e1a9d2b8..d78b64c61 100644
+--- a/app/src/main/java/com/coocoo/newtheme/store/ThemeStoreActivity.java
++++ b/app/src/main/java/com/coocoo/newtheme/store/ThemeStoreActivity.java
+@@ -11,6 +11,8 @@ import android.widget.Button;
+ import android.widget.FrameLayout;
+ import android.widget.ImageView;
+ 
++import androidx.annotation.NonNull;
++
+ import com.bumptech.glide.Glide;
+ import com.coocoo.android.support.v4.app.Fragment;
+ import com.coocoo.android.support.v4.app.FragmentManager;
+@@ -32,6 +34,7 @@ import com.google.android.gms.ads.AdListener;
+ import com.google.android.gms.ads.AdRequest;
+ import com.google.android.gms.ads.AdSize;
+ import com.google.android.gms.ads.AdView;
++import com.google.android.gms.ads.LoadAdError;
+ import com.status.traffic.ThemeFabAdManager;
+ 
+ import java.io.File;
+@@ -124,9 +127,14 @@ public class ThemeStoreActivity extends CCBaseActivity implements View.OnClickLi
+                 Report.reportThemeStoreBannerAdShow(BANNER_PLACEMENT, bannerId);
+             }
+ 
++//            @Override
++//            public void onAdFailedToLoad(int code) {
++//                Report.reportThemeStoreBannerAdReqFail(BANNER_PLACEMENT, bannerId, code);
++//            }
++
+             @Override
+-            public void onAdFailedToLoad(int code) {
+-                Report.reportThemeStoreBannerAdReqFail(BANNER_PLACEMENT, bannerId, code);
++            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
++                Report.reportThemeStoreBannerAdReqFail(BANNER_PLACEMENT, bannerId, loadAdError.getCode());
+             }
+         });
+         adView.setAdUnitId(bannerId);
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
 index 79a9459a3..99aad543a 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
