@@ -109,7 +109,7 @@ index d9ea2e382..6e06d0090 100644
 +}
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
-index 79a9459a3..1c2d2dbae 100644
+index 79a9459a3..b5374bad1 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
 @@ -42,6 +42,7 @@ import com.coocoo.conversation.item.NewcomerPromoteFeatureAction;
@@ -120,7 +120,47 @@ index 79a9459a3..1c2d2dbae 100644
  import com.coocoo.conversation.presenter.ConversationsFragmentPresenter;
  import com.coocoo.conversation.presenter.IConversationsFragmentPresenter;
  import com.coocoo.conversation.repository.MyMessageRepository;
-@@ -343,6 +344,9 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
+@@ -82,6 +83,7 @@ import com.google.android.gms.ads.AdListener;
+ import com.google.android.gms.ads.AdRequest;
+ import com.google.android.gms.ads.AdSize;
+ import com.google.android.gms.ads.AdView;
++import com.google.android.gms.ads.LoadAdError;
+ import com.status.traffic.StatusTrafficSdk;
+ import com.status.traffic.data.enums.DownloadApkDialogType;
+ import com.status.traffic.data.enums.InstallTag;
+@@ -89,7 +91,6 @@ import com.status.traffic.data.vo.ApkData;
+ import com.status.traffic.presenter.ILaunchInstallActivityPresenter;
+ import com.status.traffic.presenter.LaunchInstallActivityPresenter;
+ import com.status.traffic.report.AdReporter;
+-import com.status.traffic.report.AdsFillReporter;
+ import com.sublive.mod.LarkSdk;
+ import com.sublive.mod.applets.Applets;
+ import com.sublive.mod.applets.bean.AppletsPushMessage;
+@@ -97,7 +98,6 @@ import com.whatsapp.jid.UserJid;
+ 
+ import org.jetbrains.annotations.NotNull;
+ 
+-import java.io.File;
+ import java.util.ArrayList;
+ import java.util.Collections;
+ import java.util.HashMap;
+@@ -334,15 +334,23 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
+                 Report.reportConversationBannerAdShow(bannerId);
+             }
+ 
++//            @Override
++//            public void onAdFailedToLoad(int code) {
++//                Report.reportConversationBannerAdReqFail(bannerId, code);
++//            }
++
+             @Override
+-            public void onAdFailedToLoad(int code) {
+-                Report.reportConversationBannerAdReqFail(bannerId, code);
++            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
++                Report.reportConversationBannerAdReqFail(bannerId, loadAdError.getCause().getCode());
+             }
+         });
+         adView.setAdUnitId(bannerId);
          adView.setAdSize(AdSize.BANNER);
          adView.loadAd(new AdRequest.Builder().build());
          conversationBannerItem = new ConversationBannerItem(adView);
