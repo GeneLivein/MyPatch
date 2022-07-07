@@ -12,7 +12,7 @@ index 522dd566f..64d651d1f 100644
  
  gradle.taskGraph.whenReady {
 diff --git a/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt b/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
-index d9ea2e382..bdc06ddb9 100644
+index d9ea2e382..b968cb237 100644
 --- a/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
 +++ b/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
 @@ -38,6 +38,7 @@ import com.coocoo.utils.*
@@ -43,7 +43,7 @@ index d9ea2e382..bdc06ddb9 100644
  
      fun destroy() {
 -        adView?.destroy()
-+        adView.destroy()
++//        adView.destroy()
      }
  
      override fun getView(parent: ViewGroup): View {
@@ -275,7 +275,7 @@ index 79a9459a3..95c398379 100644
      }
 diff --git a/app/src/main/res/layout/cc_ad_banner.xml b/app/src/main/res/layout/cc_ad_banner.xml
 new file mode 100644
-index 000000000..732d37431
+index 000000000..e6f7faa6b
 --- /dev/null
 +++ b/app/src/main/res/layout/cc_ad_banner.xml
 @@ -0,0 +1,67 @@
@@ -290,7 +290,7 @@ index 000000000..732d37431
 +        android:layout_width="match_parent"
 +        android:layout_height="match_parent">
 +
-+        <ImageView
++        <com.coocoowhatsapp.WaImageView
 +            android:id="@+id/cc_iv_ad"
 +            android:layout_width="48dp"
 +            android:layout_height="48dp"
