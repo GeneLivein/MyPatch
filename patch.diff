@@ -138,7 +138,7 @@ index 1e1a9d2b8..d78b64c61 100644
          });
          adView.setAdUnitId(bannerId);
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
-index 79a9459a3..f5cc5502e 100644
+index 79a9459a3..8fec221d7 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
 @@ -12,12 +12,13 @@ import android.graphics.Point;
@@ -195,7 +195,7 @@ index 79a9459a3..f5cc5502e 100644
      }
  
      @SmaliInject
-@@ -303,49 +304,62 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
+@@ -303,49 +304,63 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
          listView.addHeaderView(newcomerPromoteFeatureContainer);
      }
  
@@ -280,6 +280,7 @@ index 79a9459a3..f5cc5502e 100644
 +        }
 +        TextView body = nativeAdView.findViewById(ResMgr.getId("cc_tv_subtitle"));
 +        body.setText(nativeAd.getBody());
++        nativeAdView.setVisibility(View.VISIBLE);
 +        nativeAdView.setNativeAd(nativeAd);
 +    }
 +
@@ -288,16 +289,18 @@ index 79a9459a3..f5cc5502e 100644
      }
 diff --git a/app/src/main/res/layout/cc_ad_banner.xml b/app/src/main/res/layout/cc_ad_banner.xml
 new file mode 100644
-index 000000000..e6f7faa6b
+index 000000000..b922fcc44
 --- /dev/null
 +++ b/app/src/main/res/layout/cc_ad_banner.xml
-@@ -0,0 +1,67 @@
+@@ -0,0 +1,69 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<com.google.android.gms.ads.nativead.NativeAdView xmlns:android="http://schemas.android.com/apk/res/android"
 +    android:layout_width="match_parent"
 +    android:layout_height="76dp"
++    android:visibility="gone"
 +    xmlns:app="http://schemas.android.com/apk/res-auto"
-+    xmlns:tools="http://schemas.android.com/tools">
++    xmlns:tools="http://schemas.android.com/tools"
++    tools:visibility="visible">
 +
 +    <androidx.constraintlayout.widget.ConstraintLayout
 +        android:layout_width="match_parent"
