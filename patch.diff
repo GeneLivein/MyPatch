@@ -1,8 +1,21 @@
 diff --git a/app/build.gradle b/app/build.gradle
-index 522dd566f..74c4ed917 100644
+index 522dd566f..cde94acf0 100644
 --- a/app/build.gradle
 +++ b/app/build.gradle
-@@ -316,7 +316,7 @@ dependencies {
+@@ -209,6 +209,12 @@ repositories {
+     mavenCentral()
+ }
+ 
++configurations.all {
++    resolutionStrategy {
++        force 'com.google.android.gms:play-services-measurement-sdk-api:18.0.3'
++    }
++}
++
+ dependencies {
+     implementation fileTree(dir: 'libs', include: ['*.jar'], exclude: [])
+     implementation 'androidx.appcompat:appcompat:1.0.2'
+@@ -316,7 +322,7 @@ dependencies {
  
      implementation(name: 'sublive_modsdk', ext: 'aar') // v0.5.0
      implementation 'org.greenrobot:eventbus:3.2.0'
