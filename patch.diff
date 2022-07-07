@@ -12,10 +12,10 @@ index 522dd566f..64d651d1f 100644
  
  gradle.taskGraph.whenReady {
 diff --git a/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt b/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
-index d9ea2e382..bf5092d15 100644
+index d9ea2e382..6e42e1b5d 100644
 --- a/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
 +++ b/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
-@@ -5,18 +5,14 @@ import X.c1_3Ul
+@@ -5,14 +5,11 @@ import X.c1_3Ul
  import android.content.Context
  import android.content.Intent
  import android.graphics.Color
@@ -30,11 +30,7 @@ index d9ea2e382..bf5092d15 100644
  import android.view.LayoutInflater
  import android.view.View
  import android.view.ViewGroup
--import android.widget.FrameLayout
- import android.widget.ImageView
- import android.widget.RelativeLayout
- import android.widget.TextView
-@@ -28,7 +24,6 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable
+@@ -28,7 +25,6 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable
  import com.bumptech.glide.request.RequestListener
  import com.bumptech.glide.request.target.Target
  import com.coocoo.CooCooApp
@@ -42,7 +38,7 @@ index d9ea2e382..bf5092d15 100644
  import com.coocoo.coocoosp.SPDelegate
  import com.coocoo.manager.RoutingManager
  import com.coocoo.newtheme.ThemeManager
-@@ -37,7 +32,7 @@ import com.coocoo.transform.CircleTransform
+@@ -37,7 +33,7 @@ import com.coocoo.transform.CircleTransform
  import com.coocoo.utils.*
  import com.coocoo.wallpapers.model.WallpaperBean
  import com.coocoo.whatsappdelegate.HomeActivityDelegate
@@ -51,7 +47,7 @@ index d9ea2e382..bf5092d15 100644
  import com.status.traffic.AdCommonManager
  import com.status.traffic.AdSceneManager
  import com.status.traffic.StatusTrafficSdk
-@@ -54,7 +49,6 @@ import com.status.traffic.report.FissionConversationReporter
+@@ -54,7 +50,6 @@ import com.status.traffic.report.FissionConversationReporter
  import com.status.traffic.ui.DeleteConversationItemDialog
  import com.status.traffic.util.OpenLinkUtil
  import com.sublive.mod.applets.bean.AppletsPushMessage
@@ -59,7 +55,7 @@ index d9ea2e382..bf5092d15 100644
  import kotlinx.android.parcel.Parcelize
  import kotlinx.coroutines.*
  import java.lang.ref.SoftReference
-@@ -769,17 +763,17 @@ class AppletsConversationItem(val title : String, val des: String, val pushMessa
+@@ -769,45 +764,41 @@ class AppletsConversationItem(val title : String, val des: String, val pushMessa
      }
  }
  
@@ -72,6 +68,8 @@ index d9ea2e382..bf5092d15 100644
 +    var adView: NativeAdView? = null
 +        private set
 +
++    private var rootView: FrameLayout? = null
++
      fun resume() {
 -        adView?.resume()
      }
@@ -81,26 +79,30 @@ index d9ea2e382..bf5092d15 100644
      }
  
      fun destroy() {
-@@ -787,27 +781,17 @@ class ConversationBannerItem(
+         adView?.destroy()
      }
  
-     override fun getView(parent: ViewGroup): View {
+-    override fun getView(parent: ViewGroup): View {
 -        if (adView?.parent != null) {
 -            return adView.parent as View
 -        }
--
++    fun addNativeAdView(nativeView: NativeAdView) {
++        this.adView = nativeView
++        rootView?.addView(adView)
++    }
+ 
 -        val frameLayout = FrameLayout(CooCooApp.getAppContext())
 -        val params: ViewGroup.LayoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 -        frameLayout.layoutParams = params
 -        if (!isAdLoadSuccess) {
 -            return frameLayout
-+        var view = adView
++    override fun getView(parent: ViewGroup): View {
++        var view = rootView
 +        if (view != null) {
 +            return view
          }
-+        view = LayoutInflater
-+            .from(parent.context)
-+            .inflate(ResMgr.getLayoutId("cc_ad_banner"), parent, false) as NativeAdView
++        view = FrameLayout(parent.context)
++        view.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
  
 -        if (adView != null) {
 -            val childParams: FrameLayout.LayoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -109,7 +111,7 @@ index d9ea2e382..bf5092d15 100644
 -            childParams.gravity = Gravity.CENTER
 -            frameLayout.addView(adView, childParams)
 +        return view.also {
-+            adView = it
++            rootView = it
          }
 -
 -
@@ -183,10 +185,10 @@ index 1e1a9d2b8..d78b64c61 100644
          });
          adView.setAdUnitId(bannerId);
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
-index 79a9459a3..e9bcefcc5 100644
+index 79a9459a3..0d017e949 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
-@@ -12,18 +12,19 @@ import android.graphics.Point;
+@@ -12,18 +12,20 @@ import android.graphics.Point;
  import android.net.Uri;
  import android.os.Bundle;
  import android.os.Handler;
@@ -194,6 +196,7 @@ index 79a9459a3..e9bcefcc5 100644
  import android.text.TextUtils;
  import android.view.LayoutInflater;
  import android.view.View;
++import android.view.ViewGroup;
  import android.widget.BaseAdapter;
  import android.widget.FrameLayout;
 +import android.widget.ImageView;
@@ -207,7 +210,7 @@ index 79a9459a3..e9bcefcc5 100644
  import com.coocoo.CooCooApp;
  import com.coocoo.CoocooRepoContainer;
  import com.coocoo.activity.PrivateConversationsFragment;
-@@ -65,6 +66,7 @@ import com.coocoo.preference.CoocooUniversalSettingsPrefFragment;
+@@ -65,6 +67,7 @@ import com.coocoo.preference.CoocooUniversalSettingsPrefFragment;
  import com.coocoo.report.Report;
  import com.coocoo.report.ReportConstant;
  import com.coocoo.theme.diy.DiyMainActivity;
@@ -215,7 +218,7 @@ index 79a9459a3..e9bcefcc5 100644
  import com.coocoo.utils.ActivityUtil;
  import com.coocoo.utils.Constants;
  import com.coocoo.utils.JidUtils;
-@@ -79,9 +81,11 @@ import com.coocoo.widget.indicator.ViewPagerIndicator;
+@@ -79,9 +82,11 @@ import com.coocoo.widget.indicator.ViewPagerIndicator;
  import com.coocoowhatsapp.conversationslist.ConversationsFragment;
  import com.coocoowhatsapp.conversationslist.ViewHolder;
  import com.google.android.gms.ads.AdListener;
@@ -229,7 +232,7 @@ index 79a9459a3..e9bcefcc5 100644
  import com.status.traffic.StatusTrafficSdk;
  import com.status.traffic.data.enums.DownloadApkDialogType;
  import com.status.traffic.data.enums.InstallTag;
-@@ -89,7 +93,6 @@ import com.status.traffic.data.vo.ApkData;
+@@ -89,7 +94,6 @@ import com.status.traffic.data.vo.ApkData;
  import com.status.traffic.presenter.ILaunchInstallActivityPresenter;
  import com.status.traffic.presenter.LaunchInstallActivityPresenter;
  import com.status.traffic.report.AdReporter;
@@ -237,7 +240,7 @@ index 79a9459a3..e9bcefcc5 100644
  import com.sublive.mod.LarkSdk;
  import com.sublive.mod.applets.Applets;
  import com.sublive.mod.applets.bean.AppletsPushMessage;
-@@ -97,7 +100,6 @@ import com.whatsapp.jid.UserJid;
+@@ -97,7 +101,6 @@ import com.whatsapp.jid.UserJid;
  
  import org.jetbrains.annotations.NotNull;
  
@@ -245,7 +248,7 @@ index 79a9459a3..e9bcefcc5 100644
  import java.util.ArrayList;
  import java.util.Collections;
  import java.util.HashMap;
-@@ -246,7 +248,7 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
+@@ -246,7 +249,7 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
          LogUtil.debug("ConversationsFragmentDelegate.onCreateView");
          super.onCreateView(view, savedInstanceState);
          getHomeActivity();
@@ -254,7 +257,7 @@ index 79a9459a3..e9bcefcc5 100644
      }
  
      @SmaliInject
-@@ -303,49 +305,69 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
+@@ -303,49 +306,69 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
          listView.addHeaderView(newcomerPromoteFeatureContainer);
      }
  
@@ -284,16 +287,17 @@ index 79a9459a3..e9bcefcc5 100644
 -                        }
 -                    }
 -                });
+-            }
+-
 +//        NativeAdView nativeAdView = (NativeAdView) LayoutInflater
 +//                .from(view.getContext()).inflate(ResMgr.getLayoutId("cc_ad_banner"), (ViewGroup) view, false);
 +        AdLoader.Builder builder = new AdLoader.Builder(Coocoo.getAppContext(), bannerId);
 +        AdLoader adLoader = builder.forNativeAd((nativeAd) -> {
 +            LogUtil.d("onAdLoaded" + nativeAd.getHeadline());
-+            NativeAdView nativeAdView = conversationBannerItem.getAdView();
-+            if (nativeAdView != null) {
-+                populateNativeAdView(nativeAd, nativeAdView);
-             }
--
++            NativeAdView nativeAdView = (NativeAdView) LayoutInflater
++                .from(view.getContext()).inflate(ResMgr.getLayoutId("cc_ad_banner"), (ViewGroup) view, false);
++            populateNativeAdView(nativeAd, nativeAdView);
++            conversationBannerItem.addNativeAdView(nativeAdView);
 +//            nativeAdView.invalidate();
 +//            new Handler().post(() -> {
 +//                if (conversationBannerItem != null) {
