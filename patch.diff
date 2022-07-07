@@ -12,7 +12,7 @@ index 522dd566f..64d651d1f 100644
  
  gradle.taskGraph.whenReady {
 diff --git a/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt b/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
-index d9ea2e382..78346af76 100644
+index d9ea2e382..3b2a09725 100644
 --- a/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
 +++ b/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
 @@ -5,14 +5,11 @@ import X.c1_3Ul
@@ -55,7 +55,7 @@ index d9ea2e382..78346af76 100644
  import kotlinx.android.parcel.Parcelize
  import kotlinx.coroutines.*
  import java.lang.ref.SoftReference
-@@ -769,45 +764,41 @@ class AppletsConversationItem(val title : String, val des: String, val pushMessa
+@@ -769,45 +764,42 @@ class AppletsConversationItem(val title : String, val des: String, val pushMessa
      }
  }
  
@@ -89,6 +89,7 @@ index d9ea2e382..78346af76 100644
 +    fun addNativeAdView(nativeView: NativeAdView) {
 +        this.adView = nativeView
 +        rootView?.addView(adView, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT))
++        rootView?.requestLayout()
 +    }
  
 -        val frameLayout = FrameLayout(CooCooApp.getAppContext())
