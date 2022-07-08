@@ -12,7 +12,7 @@ index 522dd566f..64d651d1f 100644
  
  gradle.taskGraph.whenReady {
 diff --git a/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt b/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
-index d9ea2e382..c2be8c583 100644
+index d9ea2e382..1e1b1dbd0 100644
 --- a/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
 +++ b/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
 @@ -5,14 +5,11 @@ import X.c1_3Ul
@@ -56,7 +56,7 @@ index d9ea2e382..c2be8c583 100644
  import kotlinx.android.parcel.Parcelize
  import kotlinx.coroutines.*
  import java.lang.ref.SoftReference
-@@ -769,45 +765,77 @@ class AppletsConversationItem(val title : String, val des: String, val pushMessa
+@@ -769,45 +765,80 @@ class AppletsConversationItem(val title : String, val des: String, val pushMessa
      }
  }
  
@@ -94,6 +94,13 @@ index d9ea2e382..c2be8c583 100644
      override fun getView(parent: ViewGroup): View {
 -        if (adView?.parent != null) {
 -            return adView.parent as View
+-        }
+ 
+-        val frameLayout = FrameLayout(CooCooApp.getAppContext())
+-        val params: ViewGroup.LayoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+-        frameLayout.layoutParams = params
+-        if (!isAdLoadSuccess) {
+-            return frameLayout
 +        var view = rootView
 +        if (view != null) {
 +            val nativeView = LayoutInflater
@@ -108,21 +115,12 @@ index d9ea2e382..c2be8c583 100644
 +                        FrameLayout.LayoutParams.WRAP_CONTENT
 +                    )
 +                )
++                LogUtil.d("add Native view")
 +            }
 +            return view
          }
 +        view = FrameLayout(parent.context)
 +        view.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
- 
--        val frameLayout = FrameLayout(CooCooApp.getAppContext())
--        val params: ViewGroup.LayoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
--        frameLayout.layoutParams = params
--        if (!isAdLoadSuccess) {
--            return frameLayout
-+        return view.also {
-+            rootView = it
-         }
-+    }
  
 -        if (adView != null) {
 -            val childParams: FrameLayout.LayoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -130,6 +128,14 @@ index d9ea2e382..c2be8c583 100644
 -            childParams.height = adView.adSize.getHeightInPixels(CooCooApp.getAppContext())
 -            childParams.gravity = Gravity.CENTER
 -            frameLayout.addView(adView, childParams)
++        return view.also {
++            LogUtil.d("return framelayout")
++            rootView = it
+         }
++    }
+ 
+-
+-        return frameLayout
 +    private fun populateNativeAdView(nativeAd: NativeAd, nativeAdView: NativeAdView) {
 +//        nativeAdView.setHeadlineView(nativeAdView.findViewById(ResMgr.getId("cc_tv_title")));
 +//        nativeAdView.setBodyView(nativeAdView.findViewById(ResMgr.getId("cc_tv_subtitle")));
@@ -143,10 +149,7 @@ index d9ea2e382..c2be8c583 100644
 +                .load(nativeAd.icon.uri)
 +                .transform(CircleTransform(nativeAdView.context))
 +                .into(iconView)
-         }
--
--
--        return frameLayout
++        }
 +        val body = nativeAdView.findViewById<TextView>(ResMgr.getId("cc_tv_subtitle"))
 +        body.text = nativeAd.body
 +        //        nativeAdView.setVisibility(View.VISIBLE);
