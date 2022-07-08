@@ -339,10 +339,10 @@ index 1e1a9d2b8..c63c9b619 100644
          });
          adView.setAdUnitId(bannerId);
 diff --git a/app/src/main/java/com/coocoo/report/Report.java b/app/src/main/java/com/coocoo/report/Report.java
-index 5fbd7f0a7..728616c41 100644
+index 5fbd7f0a7..07a8d1dfc 100644
 --- a/app/src/main/java/com/coocoo/report/Report.java
 +++ b/app/src/main/java/com/coocoo/report/Report.java
-@@ -1016,11 +1016,11 @@ public class Report {
+@@ -1016,19 +1016,19 @@ public class Report {
      }
  
      public static void reportConversationBannerAdReqStart(String adId) {
@@ -356,7 +356,8 @@ index 5fbd7f0a7..728616c41 100644
      }
  
      public static void reportConversationBannerAdReqOk(String adId) {
-@@ -1028,7 +1028,7 @@ public class Report {
+-        ReportCore.reportBannerAdReqOk("modad_homelist_banner", adId);
++        ReportCore.reportBannerAdReqOk("modad_homelist_banner_native", adId);
      }
  
      public static void reportConversationBannerAdReqFail(String adId, int code) {
