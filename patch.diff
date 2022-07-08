@@ -367,7 +367,7 @@ index 5fbd7f0a7..07a8d1dfc 100644
  
      public static void miniAppMonitor(int type, int status) {
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
-index 79a9459a3..3affec1dd 100644
+index 79a9459a3..1b6be8747 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
 @@ -12,7 +12,6 @@ import android.graphics.Point;
@@ -405,7 +405,7 @@ index 79a9459a3..3affec1dd 100644
  import java.util.ArrayList;
  import java.util.Collections;
  import java.util.HashMap;
-@@ -304,46 +297,11 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
+@@ -304,46 +297,12 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
      }
  
      private void initBannerAd() {
@@ -445,6 +445,7 @@ index 79a9459a3..3affec1dd 100644
 -            }
 +        conversationBannerItem = new ConversationBannerItem();
 +        Coocoo.getRepoContainer().getAdMobRepo().getNativeAd().observeForever((nativeAd) -> {
++            LogUtil.d("mod_ads_behavior", nativeAd.getHeadline());
 +            BaseAdapter adapter = ((ConversationsFragment) mHostFragment).A0r;
 +            conversationBannerItem.refresh(nativeAd, adapter);
          });
@@ -456,7 +457,7 @@ index 79a9459a3..3affec1dd 100644
      }
  
      public void create(Bundle savedInstanceState) {
-@@ -372,9 +330,9 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
+@@ -372,9 +331,9 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
          if (isCurrentHomePage && isNewcomerPromoteFeatureVisible()) {
              newcomerPromoteFeaturePager.startAutoScroll();
          }
