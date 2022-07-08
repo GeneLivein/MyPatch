@@ -38,10 +38,10 @@ index 93fe511fa..e4f3622dd 100644
  }
 diff --git a/app/src/main/java/com/coocoo/admob/AdMobLoader.kt b/app/src/main/java/com/coocoo/admob/AdMobLoader.kt
 new file mode 100644
-index 000000000..642eaf1dd
+index 000000000..b7721d98c
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/admob/AdMobLoader.kt
-@@ -0,0 +1,21 @@
+@@ -0,0 +1,22 @@
 +package com.coocoo.admob
 +
 +import android.content.Context
@@ -57,10 +57,11 @@ index 000000000..642eaf1dd
 +    fun load(adId: String, cachedNativeAd: CCMutableLiveData<NativeAd>, adListener: AdListener) {
 +
 +        val adLoader = AdLoader.Builder(context, adId).forNativeAd { nativeAd ->
++            cachedNativeAd.value?.destroy()
 +            cachedNativeAd.value = nativeAd
 +        }.withAdListener(adListener).build()
 +
-+        adLoader.loadAd(AdRequest.Builder().build())
++        adLoader.loadAds(AdRequest.Builder().build(),5)
 +    }
 +}
 \ No newline at end of file
