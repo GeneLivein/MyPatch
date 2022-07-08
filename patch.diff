@@ -38,15 +38,14 @@ index 93fe511fa..e4f3622dd 100644
  }
 diff --git a/app/src/main/java/com/coocoo/admob/AdMobLoader.kt b/app/src/main/java/com/coocoo/admob/AdMobLoader.kt
 new file mode 100644
-index 000000000..b7721d98c
+index 000000000..9175286c9
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/admob/AdMobLoader.kt
-@@ -0,0 +1,22 @@
+@@ -0,0 +1,21 @@
 +package com.coocoo.admob
 +
 +import android.content.Context
 +import androidx.lifecycle.CCMutableLiveData
-+import com.coocoo.report.Report
 +import com.google.android.gms.ads.AdListener
 +import com.google.android.gms.ads.AdLoader
 +import com.google.android.gms.ads.AdRequest
@@ -61,13 +60,13 @@ index 000000000..b7721d98c
 +            cachedNativeAd.value = nativeAd
 +        }.withAdListener(adListener).build()
 +
-+        adLoader.loadAds(AdRequest.Builder().build(),5)
++        adLoader.loadAd(AdRequest.Builder().build())
 +    }
 +}
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/admob/AdMobRepository.kt b/app/src/main/java/com/coocoo/admob/AdMobRepository.kt
 new file mode 100644
-index 000000000..85de574fe
+index 000000000..31a2d4876
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/admob/AdMobRepository.kt
 @@ -0,0 +1,55 @@
@@ -123,7 +122,7 @@ index 000000000..85de574fe
 +    }
 +
 +    companion object {
-+        private val TIME_OUT = TimeUnit.SECONDS.toMillis(10)
++        private val TIME_OUT = TimeUnit.MINUTES.toMillis(5)
 +    }
 +}
 \ No newline at end of file
