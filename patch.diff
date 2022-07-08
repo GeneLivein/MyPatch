@@ -66,7 +66,7 @@ index 000000000..642eaf1dd
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/admob/AdMobRepository.kt b/app/src/main/java/com/coocoo/admob/AdMobRepository.kt
 new file mode 100644
-index 000000000..6eca3258f
+index 000000000..85de574fe
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/admob/AdMobRepository.kt
 @@ -0,0 +1,55 @@
@@ -122,7 +122,7 @@ index 000000000..6eca3258f
 +    }
 +
 +    companion object {
-+        private val TIME_OUT = TimeUnit.HOURS.toMillis(1)
++        private val TIME_OUT = TimeUnit.SECONDS.toMillis(10)
 +    }
 +}
 \ No newline at end of file
