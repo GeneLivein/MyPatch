@@ -12,7 +12,7 @@ index 522dd566f..64d651d1f 100644
  
  gradle.taskGraph.whenReady {
 diff --git a/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt b/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
-index d9ea2e382..0d2916c22 100644
+index d9ea2e382..e405e7c31 100644
 --- a/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
 +++ b/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
 @@ -5,14 +5,11 @@ import X.c1_3Ul
@@ -56,7 +56,7 @@ index d9ea2e382..0d2916c22 100644
  import kotlinx.android.parcel.Parcelize
  import kotlinx.coroutines.*
  import java.lang.ref.SoftReference
-@@ -769,45 +765,93 @@ class AppletsConversationItem(val title : String, val des: String, val pushMessa
+@@ -769,17 +765,19 @@ class AppletsConversationItem(val title : String, val des: String, val pushMessa
      }
  }
  
@@ -69,8 +69,6 @@ index d9ea2e382..0d2916c22 100644
 +    var adView: NativeAdView? = null
 +        private set
 +
-+    private var rootView: FrameLayout? = null
-+
 +    var nativeAd: NativeAd? = null
 +
      fun resume() {
@@ -82,62 +80,28 @@ index d9ea2e382..0d2916c22 100644
      }
  
      fun destroy() {
-         adView?.destroy()
+@@ -787,27 +785,35 @@ class ConversationBannerItem(
      }
  
-+    fun addNativeAdView(nativeView: NativeAdView) {
-+        this.adView = nativeView
-+        rootView?.addView(adView, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT))
-+        rootView?.requestLayout()
-+    }
-+
      override fun getView(parent: ViewGroup): View {
 -        if (adView?.parent != null) {
 -            return adView.parent as View
 -        }
- 
+-
 -        val frameLayout = FrameLayout(CooCooApp.getAppContext())
 -        val params: ViewGroup.LayoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 -        frameLayout.layoutParams = params
 -        if (!isAdLoadSuccess) {
 -            return frameLayout
-+//        var view = rootView
-+//        if (view != null) {
-+//            val nativeView = LayoutInflater
-+//                .from(view.context)
-+//                .inflate(ResMgr.getLayoutId("cc_ad_banner"), rootView, false) as NativeAdView
-+//            if (nativeAd != null) {
-+//                populateNativeAdView(nativeAd!!, nativeView)
-+//                view.addView(
-+//                    nativeView,
-+//                    FrameLayout.LayoutParams(
-+//                        FrameLayout.LayoutParams.MATCH_PARENT,
-+//                        FrameLayout.LayoutParams.WRAP_CONTENT
-+//                    )
-+//                )
-+//                LogUtil.d("add Native view")
-+//            }
-+//            return view
-+//        }
-+//        view = FrameLayout(parent.context)
-+//        view.id = ResMgr.getId("cc_ad_root")
-+//        view.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
-+//
-+//        return view.also {
-+//            LogUtil.d("return framelayout")
-+//            rootView = it
-+//        }
-+        val data = nativeAd
-+        return if (data == null) {
-+            FrameLayout(parent.context).apply {
-+                layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
-+            }
++        val ad = nativeAd
++        return if (ad == null) {
++            FrameLayout(parent.context)
 +        } else {
-+            val nativeView = LayoutInflater
++            LayoutInflater
 +                .from(parent.context)
-+                .inflate(ResMgr.getLayoutId("cc_ad_banner"), parent, false) as NativeAdView
-+            populateNativeAdView(data, nativeView)
-+            nativeView
++                .inflate(ResMgr.getLayoutId("cc_ad_banner"), parent, false).also { view ->
++                    populateNativeAdView(ad, view as NativeAdView)
++                }
          }
 +    }
  
@@ -154,10 +118,10 @@ index d9ea2e382..0d2916c22 100644
 +//        nativeAdView.setNativeAd(nativeAd);
 +        val textView = nativeAdView.findViewById<TextView>(ResMgr.getId("cc_tv_title"))
 +        textView.text = nativeAd.headline
-+        if (nativeAd.icon != null) {
++        nativeAd.icon?.let { icon ->
 +            val iconView = nativeAdView.findViewById<ImageView>(ResMgr.getId("cc_iv_ad"))
 +            Glide.with(nativeAdView.context)
-+                .load(nativeAd.icon.uri)
++                .load(icon.uri)
 +                .transform(CircleTransform(nativeAdView.context))
 +                .into(iconView)
          }
@@ -166,25 +130,10 @@ index d9ea2e382..0d2916c22 100644
 -        return frameLayout
 +        val body = nativeAdView.findViewById<TextView>(ResMgr.getId("cc_tv_subtitle"))
 +        body.text = nativeAd.body
-+        //        nativeAdView.setVisibility(View.VISIBLE);
 +        nativeAdView.setNativeAd(nativeAd)
      }
  }
  
-diff --git a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
-index edad124a8..ecf01838b 100644
---- a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
-+++ b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfig.kt
-@@ -991,6 +991,7 @@ object RemoteConfig {
-     val conversationBannerAd: String
-         @JvmStatic
-         get() {
--            return getString(RemoteConfigKeys.CONVERSATION_BANNER)
-+//            return getString(RemoteConfigKeys.CONVERSATION_BANNER)
-+            return "ca-app-pub-3940256099942544/2247696110"
-         }
- }
-\ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfigKeys.kt b/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfigKeys.kt
 index affcc597e..d80114505 100644
 --- a/app/src/main/java/com/coocoo/firebase/remoteConfig/RemoteConfigKeys.kt
@@ -237,10 +186,10 @@ index 1e1a9d2b8..d78b64c61 100644
          });
          adView.setAdUnitId(bannerId);
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
-index 79a9459a3..516dfec94 100644
+index 79a9459a3..544466bd9 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/ConversationsFragmentDelegate.java
-@@ -12,18 +12,19 @@ import android.graphics.Point;
+@@ -12,7 +12,6 @@ import android.graphics.Point;
  import android.net.Uri;
  import android.os.Bundle;
  import android.os.Handler;
@@ -248,28 +197,7 @@ index 79a9459a3..516dfec94 100644
  import android.text.TextUtils;
  import android.view.LayoutInflater;
  import android.view.View;
- import android.widget.BaseAdapter;
- import android.widget.FrameLayout;
-+import android.widget.ImageView;
- import android.widget.ListView;
- import android.widget.TextView;
- 
- import androidx.annotation.NonNull;
- import androidx.annotation.Nullable;
- 
-+import com.bumptech.glide.Glide;
- import com.coocoo.CooCooApp;
- import com.coocoo.CoocooRepoContainer;
- import com.coocoo.activity.PrivateConversationsFragment;
-@@ -65,6 +66,7 @@ import com.coocoo.preference.CoocooUniversalSettingsPrefFragment;
- import com.coocoo.report.Report;
- import com.coocoo.report.ReportConstant;
- import com.coocoo.theme.diy.DiyMainActivity;
-+import com.coocoo.transform.CircleTransform;
- import com.coocoo.utils.ActivityUtil;
- import com.coocoo.utils.Constants;
- import com.coocoo.utils.JidUtils;
-@@ -79,9 +81,11 @@ import com.coocoo.widget.indicator.ViewPagerIndicator;
+@@ -79,9 +78,9 @@ import com.coocoo.widget.indicator.ViewPagerIndicator;
  import com.coocoowhatsapp.conversationslist.ConversationsFragment;
  import com.coocoowhatsapp.conversationslist.ViewHolder;
  import com.google.android.gms.ads.AdListener;
@@ -278,12 +206,10 @@ index 79a9459a3..516dfec94 100644
 -import com.google.android.gms.ads.AdSize;
 -import com.google.android.gms.ads.AdView;
 +import com.google.android.gms.ads.LoadAdError;
-+import com.google.android.gms.ads.nativead.NativeAd;
-+import com.google.android.gms.ads.nativead.NativeAdView;
  import com.status.traffic.StatusTrafficSdk;
  import com.status.traffic.data.enums.DownloadApkDialogType;
  import com.status.traffic.data.enums.InstallTag;
-@@ -89,7 +93,6 @@ import com.status.traffic.data.vo.ApkData;
+@@ -89,7 +88,6 @@ import com.status.traffic.data.vo.ApkData;
  import com.status.traffic.presenter.ILaunchInstallActivityPresenter;
  import com.status.traffic.presenter.LaunchInstallActivityPresenter;
  import com.status.traffic.report.AdReporter;
@@ -291,7 +217,7 @@ index 79a9459a3..516dfec94 100644
  import com.sublive.mod.LarkSdk;
  import com.sublive.mod.applets.Applets;
  import com.sublive.mod.applets.bean.AppletsPushMessage;
-@@ -97,7 +100,6 @@ import com.whatsapp.jid.UserJid;
+@@ -97,7 +95,6 @@ import com.whatsapp.jid.UserJid;
  
  import org.jetbrains.annotations.NotNull;
  
@@ -299,7 +225,7 @@ index 79a9459a3..516dfec94 100644
  import java.util.ArrayList;
  import java.util.Collections;
  import java.util.HashMap;
-@@ -246,7 +248,7 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
+@@ -246,7 +243,7 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
          LogUtil.debug("ConversationsFragmentDelegate.onCreateView");
          super.onCreateView(view, savedInstanceState);
          getHomeActivity();
@@ -308,7 +234,7 @@ index 79a9459a3..516dfec94 100644
      }
  
      @SmaliInject
-@@ -303,49 +305,70 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
+@@ -303,46 +300,36 @@ public class ConversationsFragmentDelegate extends FragmentDelegate<Conversation
          listView.addHeaderView(newcomerPromoteFeatureContainer);
      }
  
@@ -316,7 +242,6 @@ index 79a9459a3..516dfec94 100644
 +    private void initBannerAd(View view) {
  
          final String bannerId = RemoteConfig.getConversationBannerAd();
-+        LogUtil.d("bannerId" + bannerId);
          if (TextUtils.isEmpty(bannerId)) {
              return;
          }
@@ -340,26 +265,16 @@ index 79a9459a3..516dfec94 100644
 -                });
 -            }
 -
-+//        NativeAdView nativeAdView = (NativeAdView) LayoutInflater
-+//                .from(view.getContext()).inflate(ResMgr.getLayoutId("cc_ad_banner"), (ViewGroup) view, false);
 +        AdLoader.Builder builder = new AdLoader.Builder(Coocoo.getAppContext(), bannerId);
 +        AdLoader adLoader = builder.forNativeAd((nativeAd) -> {
 +            LogUtil.d("onAdLoaded" + nativeAd.getHeadline());
-+//            NativeAdView nativeAdView = (NativeAdView) LayoutInflater
-+//                .from(view.getContext()).inflate(ResMgr.getLayoutId("cc_ad_banner"), (ViewGroup) view, false);
-+//            populateNativeAdView(nativeAd, nativeAdView);
-+//            conversationBannerItem.addNativeAdView(nativeAdView);
-+//            nativeAdView.invalidate();
 +            conversationBannerItem.setNativeAd(nativeAd);
-+            new Handler().post(() -> {
-+                if (conversationBannerItem != null) {
-+                    conversationBannerItem.setAdLoadSuccess(true);
-+                }
++//            new Handler().post(() -> {
 +                BaseAdapter adapter = ((ConversationsFragment) mHostFragment).A0r;
 +                if (adapter != null) {
 +                    adapter.notifyDataSetChanged();
 +                }
-+            });
++//            });
 +        }).withAdListener(new AdListener() {
              @Override
              public void onAdImpression() {
@@ -384,29 +299,6 @@ index 79a9459a3..516dfec94 100644
          Report.reportConversationBannerAdReqStart(bannerId);
      }
  
-+    private void populateNativeAdView(NativeAd nativeAd, NativeAdView nativeAdView) {
-+//        nativeAdView.setHeadlineView(nativeAdView.findViewById(ResMgr.getId("cc_tv_title")));
-+//        nativeAdView.setBodyView(nativeAdView.findViewById(ResMgr.getId("cc_tv_subtitle")));
-+//        nativeAdView.setIconView(nativeAdView.findViewById(ResMgr.getId("cc_iv_ad")));
-+//        nativeAdView.setNativeAd(nativeAd);
-+        TextView textView = nativeAdView.findViewById(ResMgr.getId("cc_tv_title"));
-+        textView.setText(nativeAd.getHeadline());
-+        if (nativeAd.getIcon() != null) {
-+            ImageView iconView = nativeAdView.findViewById(ResMgr.getId("cc_iv_ad"));
-+            Glide.with(nativeAdView.getContext())
-+                    .load(nativeAd.getIcon().getUri())
-+                    .transform(new CircleTransform(nativeAdView.getContext()))
-+                    .into(iconView);
-+        }
-+        TextView body = nativeAdView.findViewById(ResMgr.getId("cc_tv_subtitle"));
-+        body.setText(nativeAd.getBody());
-+//        nativeAdView.setVisibility(View.VISIBLE);
-+        nativeAdView.setNativeAd(nativeAd);
-+    }
-+
-     public void create(Bundle savedInstanceState) {
- 
-     }
 diff --git a/app/src/main/res/layout/cc_ad_banner.xml b/app/src/main/res/layout/cc_ad_banner.xml
 new file mode 100644
 index 000000000..9f3a728d1
