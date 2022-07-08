@@ -128,7 +128,7 @@ index 000000000..85de574fe
 +}
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt b/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
-index d9ea2e382..83d7c1cd6 100644
+index d9ea2e382..9f2206417 100644
 --- a/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
 +++ b/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
 @@ -5,21 +5,15 @@ import X.c1_3Ul
@@ -181,7 +181,7 @@ index d9ea2e382..83d7c1cd6 100644
  import kotlinx.android.parcel.Parcelize
  import kotlinx.coroutines.*
  import java.lang.ref.SoftReference
-@@ -769,45 +763,56 @@ class AppletsConversationItem(val title : String, val des: String, val pushMessa
+@@ -769,45 +763,63 @@ class AppletsConversationItem(val title : String, val des: String, val pushMessa
      }
  }
  
@@ -225,11 +225,18 @@ index d9ea2e382..83d7c1cd6 100644
 +        return if (ad == null) {
 +            FrameLayout(parent.context)
 +        } else {
-+            LayoutInflater
-+                .from(parent.context)
-+                .inflate(ResMgr.getLayoutId("cc_ad_banner"), parent, false).also { view ->
-+                    populateNativeAdView(ad, view as NativeAdView)
-+                }
++            val adView = this.adView
++            if (adView == null) {
++                LayoutInflater
++                    .from(parent.context)
++                    .inflate(ResMgr.getLayoutId("cc_ad_banner"), parent, false).also { view ->
++                        this.adView = view as NativeAdView
++                        populateNativeAdView(ad, view)
++                    }
++            } else {
++                populateNativeAdView(ad, adView)
++                adView
++            }
          }
 +    }
  
