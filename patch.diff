@@ -38,10 +38,10 @@ index 93fe511fa..e4f3622dd 100644
  }
 diff --git a/app/src/main/java/com/coocoo/admob/AdMobLoader.kt b/app/src/main/java/com/coocoo/admob/AdMobLoader.kt
 new file mode 100644
-index 000000000..9175286c9
+index 000000000..a7623d417
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/admob/AdMobLoader.kt
-@@ -0,0 +1,21 @@
+@@ -0,0 +1,46 @@
 +package com.coocoo.admob
 +
 +import android.content.Context
@@ -49,24 +49,49 @@ index 000000000..9175286c9
 +import com.google.android.gms.ads.AdListener
 +import com.google.android.gms.ads.AdLoader
 +import com.google.android.gms.ads.AdRequest
++import com.google.android.gms.ads.LoadAdError
 +import com.google.android.gms.ads.nativead.NativeAd
 +
 +class AdMobLoader(private val context: Context) {
 +
 +    fun load(adId: String, cachedNativeAd: CCMutableLiveData<NativeAd>, adListener: AdListener) {
-+
++        var retry = 0
 +        val adLoader = AdLoader.Builder(context, adId).forNativeAd { nativeAd ->
 +            cachedNativeAd.value?.destroy()
 +            cachedNativeAd.value = nativeAd
-+        }.withAdListener(adListener).build()
++        }.withAdListener(object : AdListener() {
++            override fun onAdLoaded() {
++                adListener.onAdLoaded()
++            }
++
++            override fun onAdImpression() {
++                adListener.onAdImpression()
++            }
++
++            override fun onAdFailedToLoad(loadAdError: LoadAdError) {
++                adListener.onAdFailedToLoad(loadAdError)
++                if (retry < RETRY_COUNT) {
++                    retry++
++                    load(adId, cachedNativeAd, adListener)
++                }
++            }
++
++            override fun onAdClicked() {
++                adListener.onAdClicked()
++            }
++        }).build()
 +
 +        adLoader.loadAd(AdRequest.Builder().build())
++    }
++
++    companion object {
++        private const val RETRY_COUNT = 1
 +    }
 +}
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/admob/AdMobRepository.kt b/app/src/main/java/com/coocoo/admob/AdMobRepository.kt
 new file mode 100644
-index 000000000..31a2d4876
+index 000000000..21bbdf8e2
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/admob/AdMobRepository.kt
 @@ -0,0 +1,55 @@
@@ -122,12 +147,12 @@ index 000000000..31a2d4876
 +    }
 +
 +    companion object {
-+        private val TIME_OUT = TimeUnit.MINUTES.toMillis(5)
++        private val TIME_OUT = TimeUnit.SECONDS.toMillis(30)
 +    }
 +}
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt b/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
-index d9ea2e382..9f2206417 100644
+index d9ea2e382..2bcd33bea 100644
 --- a/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
 +++ b/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
 @@ -5,21 +5,15 @@ import X.c1_3Ul
@@ -180,7 +205,7 @@ index d9ea2e382..9f2206417 100644
  import kotlinx.android.parcel.Parcelize
  import kotlinx.coroutines.*
  import java.lang.ref.SoftReference
-@@ -769,45 +763,63 @@ class AppletsConversationItem(val title : String, val des: String, val pushMessa
+@@ -769,45 +763,62 @@ class AppletsConversationItem(val title : String, val des: String, val pushMessa
      }
  }
  
@@ -246,10 +271,9 @@ index d9ea2e382..9f2206417 100644
 -            childParams.gravity = Gravity.CENTER
 -            frameLayout.addView(adView, childParams)
 +    private fun populateNativeAdView(nativeAd: NativeAd, nativeAdView: NativeAdView) {
-+//        nativeAdView.setHeadlineView(nativeAdView.findViewById(ResMgr.getId("cc_tv_title")));
-+//        nativeAdView.setBodyView(nativeAdView.findViewById(ResMgr.getId("cc_tv_subtitle")));
-+//        nativeAdView.setIconView(nativeAdView.findViewById(ResMgr.getId("cc_iv_ad")));
-+//        nativeAdView.setNativeAd(nativeAd);
++        nativeAdView.headlineView = nativeAdView.findViewById(ResMgr.getId("cc_tv_title"));
++        nativeAdView.bodyView = nativeAdView.findViewById(ResMgr.getId("cc_tv_subtitle"));
++        nativeAdView.iconView = nativeAdView.findViewById(ResMgr.getId("cc_iv_ad"));
 +        nativeAdView.callToActionView = nativeAdView
 +        val textView = nativeAdView.findViewById<TextView>(ResMgr.getId("cc_tv_title"))
 +        textView.text = nativeAd.headline
