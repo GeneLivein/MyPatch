@@ -12,7 +12,7 @@ index 522dd566f..64d651d1f 100644
  
  gradle.taskGraph.whenReady {
 diff --git a/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt b/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
-index d9ea2e382..1e1b1dbd0 100644
+index d9ea2e382..16c99b877 100644
 --- a/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
 +++ b/app/src/main/java/com/coocoo/conversation/item/RetentionConversationItem.kt
 @@ -5,14 +5,11 @@ import X.c1_3Ul
@@ -105,7 +105,7 @@ index d9ea2e382..1e1b1dbd0 100644
 +        if (view != null) {
 +            val nativeView = LayoutInflater
 +                .from(view.context)
-+                .inflate(ResMgr.getLayoutId("cc_ad_banner"), parent, false) as NativeAdView
++                .inflate(ResMgr.getLayoutId("cc_ad_banner"), rootView, false) as NativeAdView
 +            if (nativeAd != null) {
 +                populateNativeAdView(nativeAd!!, nativeView)
 +                view.addView(
