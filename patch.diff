@@ -32,7 +32,7 @@ index 5fae8e0..7d880ba 100644
                      </FrameLayout>
 diff --git a/whatsapp_modify_module/res/layout/home_stock.xml b/whatsapp_modify_module/res/layout/home_stock.xml
 new file mode 100644
-index 0000000..3b0e252
+index 0000000..0260fb1
 --- /dev/null
 +++ b/whatsapp_modify_module/res/layout/home_stock.xml
 @@ -0,0 +1,48 @@
@@ -62,7 +62,7 @@ index 0000000..3b0e252
 +            <include layout="@layout/yo_fab_aux" />
 +            <com.gbwhatsapp.components.FloatingActionButton android:id="@id/fab_aux" android:visibility="gone" android:contentDescription="@string/menuitem_new_text_status" whatsapp:tint="@color/fabSecondaryContent" style="@style/WA.FAB.Secondary" />
 +            <!-- #coocoo -->
-+            <com.gbwhatsapp.components.FloatingActionButton android:id="@+id/cc_fab_mini_app" style="@style/WA.FAB" android:src="@drawable/cc_fab_mini_app" android:layout_marginRight="@dimen/fab_aux_margin_right" android:layout_marginBottom="@dimen/fab_aux_margin_bottom" />
++            <com.gbwhatsapp.components.FloatingActionButton android:id="@+id/cc_fab_mini_app" style="@style/WA.FAB" android:src="@drawable/cc_fab_mini_app" android:layout_marginBottom="@dimen/fab_aux_margin_bottom" />
 +            <!-- #coocoo -->
 +            <com.gbwhatsapp.components.FloatingActionButton android:id="@id/fab" style="@style/WA.FAB" />
 +            <com.gbwhatsapp.WaTextView android:textSize="14.0sp" android:textColor="@color/white" android:ellipsize="end" android:gravity="center" android:id="@id/fabText" android:background="@drawable/rounded_rect" android:padding="@dimen/space_loose" android:visibility="gone" android:layout_height="@dimen/fab_button_size" android:layout_marginLeft="@dimen/fab_button_margin" android:layout_marginRight="@dimen/fab_button_margin" android:layout_marginBottom="@dimen/fab_button_margin" android:maxLines="1" android:textAllCaps="true" style="@style/WA.FAB" />
