@@ -10,7 +10,7 @@ index 4459569..86bd35f 100644
      <uses-feature android:name="android.hardware.location" android:required="false"/>
      <uses-feature android:name="android.hardware.location.network" android:required="false"/>
 diff --git a/whatsapp_modify_module/res/layout/home.xml b/whatsapp_modify_module/res/layout/home.xml
-index 5fae8e0..7c4e519 100644
+index 5fae8e0..7d880ba 100644
 --- a/whatsapp_modify_module/res/layout/home.xml
 +++ b/whatsapp_modify_module/res/layout/home.xml
 @@ -45,12 +45,12 @@
@@ -23,7 +23,7 @@ index 5fae8e0..7c4e519 100644
 +<!--                        <com.gbwhatsapp.components.FloatingActionButton android:id="@id/fab_aux" android:visibility="gone" android:contentDescription="@string/menuitem_new_text_status" whatsapp:tint="@color/fabSecondaryContent" style="@style/WA.FAB.Secondary" />-->
                          <!-- #coocoo -->
 -                        <com.gbwhatsapp.components.FloatingActionButton android:id="@id/cc_fab_mini_app" style="@style/WA.FAB" />
-+<!--                        <com.gbwhatsapp.components.FloatingActionButton android:id="@+id/cc_fab_mini_app" style="@style/WA.FAB.Secondary" android:src="@drawable/cc_fab_mini_app"/>-->
++                        <com.gbwhatsapp.components.FloatingActionButton android:id="@+id/cc_fab_mini_app" style="@style/WA.FAB.Secondary" android:src="@drawable/cc_fab_mini_app"/>
                          <!-- #coocoo -->
 -                        <com.gbwhatsapp.components.FloatingActionButton android:id="@id/fab" style="@style/WA.FAB" />
 +<!--                        <com.gbwhatsapp.components.FloatingActionButton android:id="@id/fab" style="@style/WA.FAB" />-->
@@ -32,10 +32,10 @@ index 5fae8e0..7c4e519 100644
                      </FrameLayout>
 diff --git a/whatsapp_modify_module/res/layout/home_stock.xml b/whatsapp_modify_module/res/layout/home_stock.xml
 new file mode 100644
-index 0000000..937beae
+index 0000000..dd4b1c9
 --- /dev/null
 +++ b/whatsapp_modify_module/res/layout/home_stock.xml
-@@ -0,0 +1,45 @@
+@@ -0,0 +1,48 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<FrameLayout android:id="@id/root_view" android:layout_width="fill_parent" android:layout_height="fill_parent"
 +  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:whatsapp="http://schemas.android.com/apk/res-auto">
@@ -61,7 +61,10 @@ index 0000000..937beae
 +            <ViewStub android:layout_gravity="center|right|top" android:id="@id/filter_chat_tip_view_stub" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/abc_action_bar_default_height_material" />
 +            <include layout="@layout/yo_fab_aux" />
 +            <com.gbwhatsapp.components.FloatingActionButton android:id="@id/fab_aux" android:visibility="gone" android:contentDescription="@string/menuitem_new_text_status" whatsapp:tint="@color/fabSecondaryContent" style="@style/WA.FAB.Secondary" />
-+<!--            <com.gbwhatsapp.components.FloatingActionButton android:id="@id/fab" style="@style/WA.FAB" />-->
++            <!-- #coocoo -->
++            <com.gbwhatsapp.components.FloatingActionButton android:id="@+id/cc_fab_mini_app" style="@style/WA.FAB.Secondary" android:src="@drawable/cc_fab_mini_app"/>
++            <!-- #coocoo -->
++            <com.gbwhatsapp.components.FloatingActionButton android:id="@id/fab" style="@style/WA.FAB" />
 +            <com.gbwhatsapp.WaTextView android:textSize="14.0sp" android:textColor="@color/white" android:ellipsize="end" android:gravity="center" android:id="@id/fabText" android:background="@drawable/rounded_rect" android:padding="@dimen/space_loose" android:visibility="gone" android:layout_height="@dimen/fab_button_size" android:layout_marginLeft="@dimen/fab_button_margin" android:layout_marginRight="@dimen/fab_button_margin" android:layout_marginBottom="@dimen/fab_button_margin" android:maxLines="1" android:textAllCaps="true" style="@style/WA.FAB" />
 +            <LinearLayout android:layout_gravity="bottom" android:orientation="vertical" android:id="@id/bottom_container" android:layout_width="fill_parent" android:layout_height="wrap_content">
 +                <include layout="@layout/yo_fab" />
