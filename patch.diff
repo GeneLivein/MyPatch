@@ -1,9 +1,9 @@
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate.kt
 new file mode 100644
-index 0000000..db5bb4c
+index 0000000..1e03aa3
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate.kt
-@@ -0,0 +1,17 @@
+@@ -0,0 +1,27 @@
 +package com.coocoo.whatsappdelegate
 +
 +import com.coocoo.annotation.SmaliInject
@@ -13,11 +13,21 @@ index 0000000..db5bb4c
 +
 +    @SmaliInject
 +    fun onMenuExpand() {
++        try {
++            throw Exception("onMenuExpand")
++        } catch (e: Exception) {
++            e.printStackTrace()
++        }
 +        LogUtil.d("onMenuExpand")
 +    }
 +
 +    @SmaliInject
 +    fun onMenuCollapse() {
++        try {
++            throw Exception("onMenuCollapse")
++        } catch (e: Exception) {
++            e.printStackTrace()
++        }
 +        LogUtil.d("onMenuCollapse")
 +    }
 +}
