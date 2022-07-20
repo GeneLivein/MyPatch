@@ -1,1228 +1,549 @@
-diff --git a/app/src/main/java/com/coocoo/utils/ResMgr.java b/app/src/main/java/com/coocoo/utils/ResMgr.java
-index fae7d2f..0659523 100644
---- a/app/src/main/java/com/coocoo/utils/ResMgr.java
-+++ b/app/src/main/java/com/coocoo/utils/ResMgr.java
-@@ -3,6 +3,7 @@ package com.coocoo.utils;
- import android.content.Context;
- import android.content.res.Resources;
- 
-+import androidx.annotation.IdRes;
- import androidx.annotation.StyleRes;
- 
- /**
-@@ -54,6 +55,11 @@ public final class ResMgr {
-         return getResourceId(idName, "array", true);
-     }
- 
-+    public static @IdRes
-+    int getId(String idName) {
-+        return getResourceId(idName, "id", true);
-+    }
-+
-     public static String[] getStringArray(String idName) {
-         int stringArrayId = getStringArrayId(idName);
-         return appContext.getResources().getStringArray(stringArrayId);
-diff --git a/app/src/main/java/com/coocoo/utils/ViewExt.kt b/app/src/main/java/com/coocoo/utils/ViewExt.kt
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt
 new file mode 100644
-index 0000000..f41293c
+index 0000000..15c4a39
 --- /dev/null
-+++ b/app/src/main/java/com/coocoo/utils/ViewExt.kt
-@@ -0,0 +1,18 @@
-+package com.coocoo.utils
-+
-+import android.app.Activity
-+import android.content.Context
-+import android.content.ContextWrapper
-+import android.view.View
-+
-+fun View.findActivity(): Activity? {
-+    return findActivity(context)
-+}
-+
-+fun findActivity(context: Context): Activity? {
-+    return when (context) {
-+        is Activity -> context
-+        is ContextWrapper -> findActivity(context.baseContext)
-+        else -> null
-+    }
-+}
-\ No newline at end of file
-diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate.kt
-new file mode 100644
-index 0000000..0f80542
---- /dev/null
-+++ b/app/src/main/java/com/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate.kt
-@@ -0,0 +1,25 @@
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt
+@@ -0,0 +1,16 @@
 +package com.coocoo.whatsappdelegate
 +
-+import android.content.Context
-+import android.view.View
++import android.os.Bundle
 +import com.coocoo.annotation.SmaliInject
 +import com.coocoo.utils.LogUtil
-+import com.coocoo.utils.ResMgr
-+import com.coocoo.utils.findActivity
++import com.coocoo.whatsappdelegate.base.ActivityDelegate
++import com.gbwhatsapp.AllSettings
 +
-+class FloatingActionMenuUpdateDelegate() {
-+
-+    @SmaliInject
-+    fun onMenuExpand(view: View) {
-+        val activity = view.findActivity() ?: return
-+        val appletFab = activity.findViewById<View>(ResMgr.getId("cc_fab_mini_app"))
-+        appletFab.visibility = View.GONE
-+    }
++class AllSettingsDelegate(hostActivity: AllSettings) : ActivityDelegate(hostActivity) {
 +
 +    @SmaliInject
-+    fun onMenuCollapse(view: View) {
-+        val activity = view.findActivity() ?: return
-+        val appletFab = activity.findViewById<View>(ResMgr.getId("cc_fab_mini_app"))
-+        appletFab.visibility = View.VISIBLE
++    override fun onCreate(savedInstanceState: Bundle?) {
++        super.onCreate(savedInstanceState)
++        LogUtil.d("AllSettingsDelegate onCreate")
 +    }
 +}
 \ No newline at end of file
-diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomePageSelectedDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/HomePageSelectedDelegate.kt
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
+index dac76e7..73fbd28 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
+@@ -1,5 +1,6 @@
+ package com.coocoo.whatsappdelegate;
+ 
++import android.content.pm.PackageManager;
+ import android.os.Bundle;
+ import android.util.Log;
+ 
+diff --git a/app/src/main/java/com/gbwhatsapp/AllSettings.java b/app/src/main/java/com/gbwhatsapp/AllSettings.java
 new file mode 100644
-index 0000000..9a32baa
+index 0000000..495b31f
 --- /dev/null
-+++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomePageSelectedDelegate.kt
-@@ -0,0 +1,19 @@
-+package com.coocoo.whatsappdelegate
++++ b/app/src/main/java/com/gbwhatsapp/AllSettings.java
+@@ -0,0 +1,6 @@
++package com.gbwhatsapp;
 +
-+import android.app.Activity
-+import android.view.View
-+import com.coocoo.annotation.SmaliInject
-+import com.coocoo.utils.ResMgr
++import android.app.Activity;
 +
-+class HomePageSelectedDelegate {
-+
-+    @SmaliInject
-+    fun onPageSelected(i: Int, activity: Activity) {
-+        val fab = activity.findViewById<View>(ResMgr.getId("cc_fab_mini_app"))
-+        if (i == 1) {    // CHATS page
-+            fab.visibility = View.VISIBLE
-+        } else {
-+            fab.visibility = View.GONE
-+        }
-+    }
++public class AllSettings extends Activity {
 +}
-\ No newline at end of file
-diff --git a/whatsapp_modify_module/AndroidManifest.xml b/whatsapp_modify_module/AndroidManifest.xml
-index 4459569..86bd35f 100644
---- a/whatsapp_modify_module/AndroidManifest.xml
-+++ b/whatsapp_modify_module/AndroidManifest.xml
-@@ -1,5 +1,5 @@
- <?xml version='1.0' encoding='UTF-8'?>
--<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:compileSdkVersion="23" android:compileSdkVersionCodename="6.0-2438415" package="com.gbwhatsapp" platformBuildVersionCode="31" platformBuildVersionName="12" android:versionCode="900000" android:versionName="9.0.0">
-+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:compileSdkVersion="23" android:compileSdkVersionCodename="6.0-2438415" package="com.gbwhatsapp" platformBuildVersionCode="31" platformBuildVersionName="12" android:versionCode="9000000" android:versionName="9.0.0">
-     <uses-feature android:name="android.hardware.bluetooth" android:required="false"/>
-     <uses-feature android:name="android.hardware.location" android:required="false"/>
-     <uses-feature android:name="android.hardware.location.network" android:required="false"/>
-diff --git a/whatsapp_modify_module/smali/com/gbwhatsapp/HomeActivity.smali b/whatsapp_modify_module/smali/com/gbwhatsapp/HomeActivity.smali
-index 705ac3f..5db660e 100644
---- a/whatsapp_modify_module/smali/com/gbwhatsapp/HomeActivity.smali
-+++ b/whatsapp_modify_module/smali/com/gbwhatsapp/HomeActivity.smali
-@@ -5223,6 +5223,9 @@
-     invoke-static {v0}, Lcom/gbwhatsapp/yo/HomeUI;->NewOldUI(I)I
- 
-     move-result v0
-+#coocoo
-+    invoke-static {v0}, Lcom/coocoo/utils/LogUtil;->traceLog5(I)V
-+#coocoo
- 
-     const/4 v4, 0x0
- 
-diff --git a/whatsapp_modify_module/smali_classes4/com/google/gson/internal/i.smali b/whatsapp_modify_module/smali_classes4/com/google/gson/internal/i.smali
+diff --git a/whatsapp_modify_module/smali_classes4/com/gbwhatsapp/youbasha/ui/YoSettings/AllSettings.smali b/whatsapp_modify_module/smali_classes4/com/gbwhatsapp/youbasha/ui/YoSettings/AllSettings.smali
 new file mode 100644
-index 0000000..631f696
+index 0000000..e9848b0
 --- /dev/null
-+++ b/whatsapp_modify_module/smali_classes4/com/google/gson/internal/i.smali
-@@ -0,0 +1,384 @@
-+.class public final Lcom/google/gson/internal/i;
-+.super Ljava/lang/Object;
++++ b/whatsapp_modify_module/smali_classes4/com/gbwhatsapp/youbasha/ui/YoSettings/AllSettings.smali
+@@ -0,0 +1,497 @@
++.class public Lcom/gbwhatsapp/youbasha/ui/YoSettings/AllSettings;
++.super Lcom/gbwhatsapp/youbasha/ui/YoSettings/BaseSettingsActivity;
 +.source "SourceFile"
 +
-+# interfaces
-+.implements Lcom/google/gson/internal/ObjectConstructor;
-+.implements Lcom/gbwhatsapp/youbasha/ui/views/FloatingActionsMenu$OnFloatingActionsMenuUpdateListener;
-+.implements Lokhttp3/Callback;
++
++# static fields
++.field public static final synthetic c:I
 +
 +
 +# instance fields
-+.field public final synthetic a:Ljava/lang/Object;
-+
-+.field public final synthetic b:Ljava/lang/Object;
++.field public b:Z
 +
 +#coocoo
-+.field public final delegate:Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;
++.field public delegate:Lcom/coocoo/whatsappdelegate/AllSettingsDelegate;
 +#coocoo
++
 +
 +# direct methods
-+.method public synthetic constructor <init>(Ljava/lang/Object;Ljava/lang/Object;)V
-+#coocoo
-+    #.locals 0
++.method public constructor <init>()V
 +    .locals 1
-+#coocoo
-+    iput-object p1, p0, Lcom/google/gson/internal/i;->b:Ljava/lang/Object;
 +
-+    iput-object p2, p0, Lcom/google/gson/internal/i;->a:Ljava/lang/Object;
++    invoke-direct {p0}, Lcom/gbwhatsapp/youbasha/ui/YoSettings/BaseSettingsActivity;-><init>()V
 +
-+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
++    const/4 v0, 0x0
++
++    iput-boolean v0, p0, Lcom/gbwhatsapp/youbasha/ui/YoSettings/AllSettings;->b:Z
 +#coocoo
-+    new-instance v0, Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;
-+    invoke-direct {v0}, Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;-><init>()V
-+    iput-object v0, p0, Lcom/google/gson/internal/i;->delegate:Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;
++    new-instance v0, Lcom/coocoo/whatsappdelegate/AllSettingsDelegate;
++    invoke-direct {v0, p0}, Lcom/coocoo/whatsappdelegate/AllSettingsDelegate;-><init>(Lcom/gbwhatsapp/youbasha/ui/YoSettings/AllSettings;)V
++    iput-object v0, p0, Lcom/gbwhatsapp/youbasha/ui/YoSettings/AllSettings;->delegate:Lcom/coocoo/whatsappdelegate/AllSettingsDelegate;
 +#coocoo
 +    return-void
 +.end method
 +
 +
 +# virtual methods
-+.method public final construct()Ljava/lang/Object;
-+    .locals 5
-+
-+    const-string v0, " with no args"
-+
-+    const-string v1, "Failed to invoke "
-+
-+    :try_start_0
-+    iget-object v2, p0, Lcom/google/gson/internal/i;->a:Ljava/lang/Object;
-+
-+    check-cast v2, Ljava/lang/reflect/Constructor;
-+
-+    const/4 v3, 0x0
-+
-+    new-array v3, v3, [Ljava/lang/Object;
-+
-+    invoke-virtual {v2, v3}, Ljava/lang/reflect/Constructor;->newInstance([Ljava/lang/Object;)Ljava/lang/Object;
-+
-+    move-result-object v0
-+    :try_end_0
-+    .catch Ljava/lang/InstantiationException; {:try_start_0 .. :try_end_0} :catch_2
-+    .catch Ljava/lang/reflect/InvocationTargetException; {:try_start_0 .. :try_end_0} :catch_1
-+    .catch Ljava/lang/IllegalAccessException; {:try_start_0 .. :try_end_0} :catch_0
-+
-+    return-object v0
-+
-+    :catch_0
-+    move-exception v0
-+
-+    new-instance v1, Ljava/lang/AssertionError;
-+
-+    invoke-direct {v1, v0}, Ljava/lang/AssertionError;-><init>(Ljava/lang/Object;)V
-+
-+    throw v1
-+
-+    :catch_1
-+    move-exception v2
-+
-+    new-instance v3, Ljava/lang/RuntimeException;
-+
-+    .line 1
-+    invoke-static {v1}, La/a;->h(Ljava/lang/String;)Ljava/lang/StringBuilder;
-+
-+    move-result-object v1
-+
-+    .line 2
-+    iget-object v4, p0, Lcom/google/gson/internal/i;->a:Ljava/lang/Object;
-+
-+    check-cast v4, Ljava/lang/reflect/Constructor;
-+
-+    invoke-virtual {v1, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
-+
-+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-+
-+    invoke-virtual {v1}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
-+
-+    move-result-object v0
-+
-+    invoke-virtual {v2}, Ljava/lang/reflect/InvocationTargetException;->getTargetException()Ljava/lang/Throwable;
-+
-+    move-result-object v1
-+
-+    invoke-direct {v3, v0, v1}, Ljava/lang/RuntimeException;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
-+
-+    throw v3
-+
-+    :catch_2
-+    move-exception v2
-+
-+    new-instance v3, Ljava/lang/RuntimeException;
-+
-+    .line 3
-+    invoke-static {v1}, La/a;->h(Ljava/lang/String;)Ljava/lang/StringBuilder;
-+
-+    move-result-object v1
-+
-+    .line 4
-+    iget-object v4, p0, Lcom/google/gson/internal/i;->a:Ljava/lang/Object;
-+
-+    check-cast v4, Ljava/lang/reflect/Constructor;
-+
-+    invoke-virtual {v1, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
-+
-+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-+
-+    invoke-virtual {v1}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
-+
-+    move-result-object v0
-+
-+    invoke-direct {v3, v0, v2}, Ljava/lang/RuntimeException;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
-+
-+    throw v3
-+.end method
-+
-+.method public final onFailure(Lokhttp3/Call;Ljava/io/IOException;)V
++.method public attachBaseContext(Landroid/content/Context;)V
 +    .locals 1
-+
-+    iget-object p1, p0, Lcom/google/gson/internal/i;->b:Ljava/lang/Object;
-+
-+    check-cast p1, Lokhttp3/internal/ws/RealWebSocket;
-+
-+    const/4 v0, 0x0
-+
-+    invoke-virtual {p1, p2, v0}, Lokhttp3/internal/ws/RealWebSocket;->failWebSocket(Ljava/lang/Exception;Lokhttp3/Response;)V
-+
-+    return-void
-+.end method
-+
-+.method public final onMenuCollapsed()V
-+    .locals 6
-+
-+    iget-object v0, p0, Lcom/google/gson/internal/i;->a:Ljava/lang/Object;
-+
-+    check-cast v0, Landroid/widget/ImageView;
-+
-+    iget-object v1, p0, Lcom/google/gson/internal/i;->b:Ljava/lang/Object;
-+
-+    check-cast v1, Lcom/gbwhatsapp/youbasha/ui/views/YoFABView;
-+#coocoo
-+    iget-object v2, p0, Lcom/google/gson/internal/i;->delegate:Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;
-+    invoke-virtual {v2, v1}, Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;->onMenuCollapse(Landroid/view/View;)V
-+#coocoo
-+    .line 1
-+    iget v2, v1, Lcom/gbwhatsapp/youbasha/ui/views/YoFABView;->b:I
-+
-+    .line 2
-+    iget v3, v1, Lcom/gbwhatsapp/youbasha/ui/views/YoFABView;->c:I
-+
-+    .line 3
-+    iget-wide v4, v1, Lcom/gbwhatsapp/youbasha/ui/views/YoFABView;->d:D
-+
-+    double-to-int v1, v4
-+
-+    int-to-float v1, v1
-+
-+    const/4 v4, 0x0
-+
-+    .line 4
-+    invoke-static {v0, v2, v3, v1, v4}, Landroid/view/ViewAnimationUtils;->createCircularReveal(Landroid/view/View;IIFF)Landroid/animation/Animator;
-+
-+    move-result-object v0
-+
-+    const-wide/16 v1, 0x2bc
-+
-+    invoke-virtual {v0, v1, v2}, Landroid/animation/Animator;->setDuration(J)Landroid/animation/Animator;
-+
-+    move-result-object v0
-+
-+    new-instance v1, Lcom/gbwhatsapp/youbasha/ui/views/w;
-+
-+    invoke-direct {v1, p0}, Lcom/gbwhatsapp/youbasha/ui/views/w;-><init>(Lcom/google/gson/internal/i;)V
-+
-+    invoke-virtual {v0, v1}, Landroid/animation/Animator;->addListener(Landroid/animation/Animator$AnimatorListener;)V
-+
-+    invoke-virtual {v0}, Landroid/animation/Animator;->start()V
-+
-+    return-void
-+.end method
-+
-+.method public final onMenuExpanded()V
-+    .locals 7
-+
-+    iget-object v0, p0, Lcom/google/gson/internal/i;->a:Ljava/lang/Object;
-+
-+    check-cast v0, Landroid/widget/ImageView;
-+
-+    const/4 v1, 0x0
-+
-+    invoke-virtual {v0, v1}, Landroid/widget/ImageView;->setVisibility(I)V
-+
-+    iget-object v0, p0, Lcom/google/gson/internal/i;->a:Ljava/lang/Object;
-+
-+    check-cast v0, Landroid/widget/ImageView;
-+
-+    iget-object v1, p0, Lcom/google/gson/internal/i;->b:Ljava/lang/Object;
-+
-+    move-object v2, v1
-+
-+    check-cast v2, Lcom/gbwhatsapp/youbasha/ui/views/YoFABView;
-+#coocoo
-+    iget-object v3, p0, Lcom/google/gson/internal/i;->delegate:Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;
-+    invoke-virtual {v3, v2}, Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;->onMenuExpand(Landroid/view/View;)V
-+#coocoo
-+    .line 1
-+    iget v2, v2, Lcom/gbwhatsapp/youbasha/ui/views/YoFABView;->b:I
-+
-+    .line 2
-+    move-object v3, v1
-+
-+    check-cast v3, Lcom/gbwhatsapp/youbasha/ui/views/YoFABView;
-+
-+    .line 3
-+    iget v3, v3, Lcom/gbwhatsapp/youbasha/ui/views/YoFABView;->c:I
-+
-+    const/4 v4, 0x0
-+
-+    .line 4
-+    check-cast v1, Lcom/gbwhatsapp/youbasha/ui/views/YoFABView;
-+
-+    .line 5
-+    iget-wide v5, v1, Lcom/gbwhatsapp/youbasha/ui/views/YoFABView;->d:D
-+
-+    double-to-int v1, v5
-+
-+    int-to-float v1, v1
-+
-+    .line 6
-+    invoke-static {v0, v2, v3, v4, v1}, Landroid/view/ViewAnimationUtils;->createCircularReveal(Landroid/view/View;IIFF)Landroid/animation/Animator;
-+
-+    move-result-object v0
-+
-+    const-wide/16 v1, 0x2bc
-+
-+    invoke-virtual {v0, v1, v2}, Landroid/animation/Animator;->setDuration(J)Landroid/animation/Animator;
-+
-+    move-result-object v0
-+
-+    invoke-virtual {v0}, Landroid/animation/Animator;->start()V
-+
-+    return-void
-+.end method
-+
-+.method public final onResponse(Lokhttp3/Call;Lokhttp3/Response;)V
-+    .locals 3
-+
-+    :try_start_0
-+    iget-object v0, p0, Lcom/google/gson/internal/i;->b:Ljava/lang/Object;
-+
-+    check-cast v0, Lokhttp3/internal/ws/RealWebSocket;
-+
-+    invoke-virtual {v0, p2}, Lokhttp3/internal/ws/RealWebSocket;->a(Lokhttp3/Response;)V
-+    :try_end_0
-+    .catch Ljava/net/ProtocolException; {:try_start_0 .. :try_end_0} :catch_1
-+
-+    sget-object v0, Lokhttp3/internal/Internal;->instance:Lokhttp3/internal/Internal;
-+
-+    invoke-virtual {v0, p1}, Lokhttp3/internal/Internal;->streamAllocation(Lokhttp3/Call;)Lokhttp3/internal/connection/StreamAllocation;
-+
-+    move-result-object p1
-+
-+    invoke-virtual {p1}, Lokhttp3/internal/connection/StreamAllocation;->noNewStreams()V
-+
-+    invoke-virtual {p1}, Lokhttp3/internal/connection/StreamAllocation;->connection()Lokhttp3/internal/connection/RealConnection;
-+
-+    move-result-object v0
-+
-+    invoke-virtual {v0, p1}, Lokhttp3/internal/connection/RealConnection;->newWebSocketStreams(Lokhttp3/internal/connection/StreamAllocation;)Lokhttp3/internal/ws/RealWebSocket$Streams;
-+
-+    move-result-object v0
-+
-+    :try_start_1
-+    iget-object v1, p0, Lcom/google/gson/internal/i;->b:Ljava/lang/Object;
-+
-+    move-object v2, v1
-+
-+    check-cast v2, Lokhttp3/internal/ws/RealWebSocket;
-+
-+    iget-object v2, v2, Lokhttp3/internal/ws/RealWebSocket;->b:Lokhttp3/WebSocketListener;
-+
-+    check-cast v1, Lokhttp3/internal/ws/RealWebSocket;
-+
-+    invoke-virtual {v2, v1, p2}, Lokhttp3/WebSocketListener;->onOpen(Lokhttp3/WebSocket;Lokhttp3/Response;)V
-+
-+    new-instance p2, Ljava/lang/StringBuilder;
-+
-+    invoke-direct {p2}, Ljava/lang/StringBuilder;-><init>()V
-+
-+    const-string v1, "OkHttp WebSocket "
-+
-+    invoke-virtual {p2, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-+
-+    iget-object v1, p0, Lcom/google/gson/internal/i;->a:Ljava/lang/Object;
-+
-+    check-cast v1, Lokhttp3/Request;
-+
-+    invoke-virtual {v1}, Lokhttp3/Request;->url()Lokhttp3/HttpUrl;
-+
-+    move-result-object v1
-+
-+    invoke-virtual {v1}, Lokhttp3/HttpUrl;->redact()Ljava/lang/String;
-+
-+    move-result-object v1
-+
-+    invoke-virtual {p2, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-+
-+    invoke-virtual {p2}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
-+
-+    move-result-object p2
-+
-+    iget-object v1, p0, Lcom/google/gson/internal/i;->b:Ljava/lang/Object;
-+
-+    check-cast v1, Lokhttp3/internal/ws/RealWebSocket;
-+
-+    invoke-virtual {v1, p2, v0}, Lokhttp3/internal/ws/RealWebSocket;->initReaderAndWriter(Ljava/lang/String;Lokhttp3/internal/ws/RealWebSocket$Streams;)V
-+
-+    invoke-virtual {p1}, Lokhttp3/internal/connection/StreamAllocation;->connection()Lokhttp3/internal/connection/RealConnection;
-+
-+    move-result-object p1
-+
-+    invoke-virtual {p1}, Lokhttp3/internal/connection/RealConnection;->socket()Ljava/net/Socket;
-+
-+    move-result-object p1
-+
-+    const/4 p2, 0x0
-+
-+    invoke-virtual {p1, p2}, Ljava/net/Socket;->setSoTimeout(I)V
-+
-+    iget-object p1, p0, Lcom/google/gson/internal/i;->b:Ljava/lang/Object;
-+
-+    check-cast p1, Lokhttp3/internal/ws/RealWebSocket;
-+
-+    invoke-virtual {p1}, Lokhttp3/internal/ws/RealWebSocket;->loopReader()V
-+    :try_end_1
-+    .catch Ljava/lang/Exception; {:try_start_1 .. :try_end_1} :catch_0
-+
-+    goto :goto_0
-+
-+    :catch_0
-+    move-exception p1
-+
-+    iget-object p2, p0, Lcom/google/gson/internal/i;->b:Ljava/lang/Object;
-+
-+    check-cast p2, Lokhttp3/internal/ws/RealWebSocket;
-+
-+    const/4 v0, 0x0
-+
-+    invoke-virtual {p2, p1, v0}, Lokhttp3/internal/ws/RealWebSocket;->failWebSocket(Ljava/lang/Exception;Lokhttp3/Response;)V
-+
-+    :goto_0
-+    return-void
-+
-+    :catch_1
-+    move-exception p1
-+
-+    iget-object v0, p0, Lcom/google/gson/internal/i;->b:Ljava/lang/Object;
-+
-+    check-cast v0, Lokhttp3/internal/ws/RealWebSocket;
-+
-+    invoke-virtual {v0, p1, p2}, Lokhttp3/internal/ws/RealWebSocket;->failWebSocket(Ljava/lang/Exception;Lokhttp3/Response;)V
-+
-+    invoke-static {p2}, Lokhttp3/internal/Util;->closeQuietly(Ljava/io/Closeable;)V
-+
-+    return-void
-+.end method
-diff --git a/whatsapp_modify_module/smali_classes4/rc/whatsapp/home/HomeActivity/OnPageSelected.smali b/whatsapp_modify_module/smali_classes4/rc/whatsapp/home/HomeActivity/OnPageSelected.smali
-new file mode 100644
-index 0000000..f0a2aca
---- /dev/null
-+++ b/whatsapp_modify_module/smali_classes4/rc/whatsapp/home/HomeActivity/OnPageSelected.smali
-@@ -0,0 +1,700 @@
-+.class public Lrc/whatsapp/home/HomeActivity/OnPageSelected;
-+.super Ljava/lang/Object;
-+.source "SourceFile"
-+
-+
-+# static fields
-+.field public static m:Landroid/view/animation/Animation;
-+
-+
-+# instance fields
-+.field public a:I
-+
-+.field public b:I
-+
-+.field public c:I
-+
-+.field public d:I
-+
-+.field public e:I
-+
-+.field public f:I
-+
-+.field public g:I
-+
-+.field public h:I
-+
-+.field public i:I
-+
-+.field public j:I
-+
-+.field public k:I
-+
-+.field public l:I
-+
-+#coocoo
-+.field public delegate:Lcom/coocoo/whatsappdelegate/HomePageSelectedDelegate;
-+#coocoo
-+
-+
-+# direct methods
-+.method public static constructor <clinit>()V
-+    .locals 3
 +
 +    invoke-static {}, Lcom/gbwhatsapp/yo/yo;->getCtx()Landroid/content/Context;
 +
 +    move-result-object v0
 +
-+    const-string v1, "rc_fade_in"
++    if-nez v0, :cond_0
 +
-+    const-string v2, "anim"
++    invoke-static {p1}, Lcom/gbwhatsapp/yo/yo;->yo(Landroid/content/Context;)V
 +
-+    invoke-static {v1, v2}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
-+
-+    move-result v1
-+
-+    invoke-static {v0, v1}, Landroid/view/animation/AnimationUtils;->loadAnimation(Landroid/content/Context;I)Landroid/view/animation/Animation;
-+
-+    move-result-object v0
-+
-+    sput-object v0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->m:Landroid/view/animation/Animation;
-+
-+    return-void
-+.end method
-+
-+.method public constructor <init>()V
-+    .locals 2
-+
-+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
-+
-+    const-string v0, "holder"
-+
-+    const-string v1, "id"
-+
-+    invoke-static {v0, v1}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
-+
-+    move-result v0
-+
-+    iput v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->c:I
-+
-+    const-string v0, "bottom_container"
-+
-+    invoke-static {v0, v1}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
-+
-+    move-result v0
-+
-+    iput v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->d:I
-+
-+    const-string v0, "aux_statubar"
-+
-+    invoke-static {v0, v1}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
-+
-+    move-result v0
-+
-+    iput v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->e:I
-+
-+    const-string v0, "bgLisBg"
-+
-+    invoke-static {v0, v1}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
-+
-+    move-result v0
-+
-+    iput v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->f:I
-+
-+    const-string v0, "fab_yo"
-+
-+    invoke-static {v0, v1}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
-+
-+    move-result v0
-+
-+    iput v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->g:I
-+
-+    const-string v0, "mWall"
-+
-+    invoke-static {v0, v1}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
-+
-+    move-result v0
-+
-+    iput v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->h:I
-+
-+    const-string v0, "titulo_anim"
-+
-+    invoke-static {v0, v1}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
-+
-+    move-result v0
-+
-+    iput v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->i:I
-+
-+    const-string v0, "scrolling_content_oneui"
-+
-+    invoke-static {v0, v1}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
-+
-+    move-result v0
-+
-+    iput v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->j:I
-+
-+    const-string v0, "toolbar"
-+
-+    invoke-static {v0, v1}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
-+
-+    move-result v0
-+
-+    iput v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b:I
-+
-+    const-string v0, "action_delet_call"
-+
-+    invoke-static {v0, v1}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
-+
-+    move-result v0
-+
-+    iput v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->k:I
-+
-+    const-string v0, "fabdiv"
-+
-+    invoke-static {v0, v1}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
-+
-+    move-result v0
-+
-+    iput v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->l:I
-+#coocoo
-+    new-instance v0, Lcom/coocoo/whatsappdelegate/HomePageSelectedDelegate;
-+    invoke-direct {v0}, Lcom/coocoo/whatsappdelegate/HomePageSelectedDelegate;-><init>()V
-+    iput-object v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->delegate:Lcom/coocoo/whatsappdelegate/HomePageSelectedDelegate;
-+#coocoo
-+    return-void
-+.end method
-+
-+.method public static a(Landroid/app/Activity;IZ)V
-+    .locals 0
-+
-+    .line 1
-+    invoke-virtual {p0, p1}, Landroid/app/Activity;->findViewById(I)Landroid/view/View;
-+
-+    move-result-object p0
-+
-+    .line 2
-+    invoke-virtual {p0}, Landroid/view/View;->getLayoutParams()Landroid/view/ViewGroup$LayoutParams;
-+
-+    move-result-object p1
-+
-+    check-cast p1, LX/0fi;
-+
-+    if-eqz p2, :cond_0
-+
-+    const/4 p2, 0x0
-+
-+    :goto_0
-+    invoke-virtual {p1, p2}, LX/0fi;->A00(LX/0bw;)V
-+
-+    invoke-virtual {p0}, Landroid/view/View;->requestLayout()V
-+
-+    goto :goto_1
++    invoke-static {}, Lcom/gbwhatsapp/yo/yo;->setLanguage()V
 +
 +    :cond_0
-+    invoke-virtual {p1}, LX/0fi;->getBehavior()LX/0bw;
++    invoke-super {p0, p1}, Lcom/gbwhatsapp/youbasha/ui/YoSettings/BaseSettingsActivity;->attachBaseContext(Landroid/content/Context;)V
 +
-+    move-result-object p2
++    return-void
++.end method
 +
-+    if-nez p2, :cond_1
++.method public onBackPressed()V
++    .locals 2
 +
-+    new-instance p2, Lcom/google/android/material/appbar/AppBarLayout$ScrollingViewBehavior;
++    invoke-super {p0}, Landroid/app/Activity;->onBackPressed()V
 +
-+    invoke-direct {p2}, Lcom/google/android/material/appbar/AppBarLayout$ScrollingViewBehavior;-><init>()V
++    :try_start_0
++    sget-object v0, Lcom/gbwhatsapp/yo/yo;->Homeac:Lcom/gbwhatsapp/HomeActivity;
++
++    if-eqz v0, :cond_0
++
++    invoke-virtual {v0}, Landroid/app/Activity;->finish()V
++    :try_end_0
++    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
 +
 +    goto :goto_0
 +
-+    :cond_1
-+    :goto_1
-+    return-void
-+.end method
-+
-+.method public static b(Landroid/app/Activity;II)V
-+    .locals 0
-+
-+    .line 1
-+    invoke-virtual {p0, p1}, Landroid/app/Activity;->findViewById(I)Landroid/view/View;
-+
-+    move-result-object p0
-+
-+    if-eqz p0, :cond_0
-+
-+    .line 2
-+    invoke-virtual {p0, p2}, Landroid/view/View;->setVisibility(I)V
++    :catch_0
++    nop
 +
 +    :cond_0
-+    return-void
-+.end method
-+
-+
-+# virtual methods
-+.method public onPageListener(ILcom/gbwhatsapp/HomeActivity;)V
-+    .locals 7
-+#coocoo
-+    iget-object v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->delegate:Lcom/coocoo/whatsappdelegate/HomePageSelectedDelegate;
-+    invoke-virtual {v0, p1, p2}, Lcom/coocoo/whatsappdelegate/HomePageSelectedDelegate;->onPageSelected(ILandroid/app/Activity;)V
-+#coocoo
-+
-+    if-nez p2, :cond_0
-+
-+    return-void
-+
-+    :cond_0
-+    iput p1, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->a:I
-+
-+    invoke-static {}, Lcom/gbwhatsapp/yo/HomeUI;->isOneUIEnabled()Z
-+
-+    move-result v0
-+
-+    const/4 v1, 0x1
++    :goto_0
++    sget-boolean v0, Lcom/gbwhatsapp/youbasha/ui/YoSettings/BaseSettingsActivity;->mustRestart:Z
 +
 +    if-eqz v0, :cond_1
 +
-+    iget-object v0, p2, Lcom/gbwhatsapp/HomeActivity;->mTitle:Landroid/widget/TextView;
++    invoke-static {}, Lcom/gbwhatsapp/yo/yo;->serverProps()V
 +
-+    invoke-static {v0, p1}, Lcom/gbwhatsapp/yo/HomeUI;->setToolbarTitle(Landroid/widget/TextView;I)V
-+
-+    iget-object v0, p2, Lcom/gbwhatsapp/HomeActivity;->mTitle:Landroid/widget/TextView;
-+
-+    iget-boolean v2, p2, Lcom/gbwhatsapp/HomeActivity;->mIsTheTitleContainerVisible:Z
-+
-+    xor-int/2addr v2, v1
-+
-+    invoke-virtual {v0, v2}, Landroid/widget/TextView;->setSelected(Z)V
-+
-+    iget-object v0, p2, Lcom/gbwhatsapp/HomeActivity;->mTitle2:Landroid/widget/TextView;
-+
-+    invoke-static {v0, p1}, Lcom/gbwhatsapp/yo/HomeUI;->setToolbarTitle(Landroid/widget/TextView;I)V
-+
-+    iget-object v0, p2, Lcom/gbwhatsapp/HomeActivity;->mTitle2:Landroid/widget/TextView;
-+
-+    iget-boolean v2, p2, Lcom/gbwhatsapp/HomeActivity;->mIsTheTitleContainerVisible:Z
-+
-+    invoke-virtual {v0, v2}, Landroid/widget/TextView;->setSelected(Z)V
-+
-+    goto :goto_0
-+
-+    :cond_1
-+    iget-object v0, p2, Lcom/gbwhatsapp/HomeActivity;->mTitle:Landroid/widget/TextView;
-+
-+    invoke-static {v0, p1}, Lcom/gbwhatsapp/yo/HomeUI;->setToolbarTitle(Landroid/widget/TextView;I)V
-+
-+    :goto_0
-+    iget-object v0, p2, Lcom/gbwhatsapp/HomeActivity;->yoBottomBarView:Landroid/view/View;
-+
-+    instance-of v2, v0, Lcom/gbwhatsapp/youbasha/ui/views/IBottomNavigation;
-+
-+    if-eqz v2, :cond_2
-+
-+    check-cast v0, Lcom/gbwhatsapp/youbasha/ui/views/IBottomNavigation;
-+
-+    invoke-interface {v0, p1}, Lcom/gbwhatsapp/youbasha/ui/views/IBottomNavigation;->setCurrentActiveItem(I)V
-+
-+    :cond_2
-+    iget p1, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->i:I
-+
-+    .line 1
-+    invoke-virtual {p2, p1}, Landroid/app/Activity;->findViewById(I)Landroid/view/View;
-+
-+    move-result-object p1
-+
-+    .line 2
-+    iget v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->a:I
-+
-+    const/16 v2, 0x8
-+
-+    if-eqz v0, :cond_18
-+
-+    const-string v3, "drawable"
-+
-+    const/4 v4, 0x0
-+
-+    if-eq v0, v1, :cond_12
-+
-+    const/4 v1, 0x2
-+
-+    const-string v5, "ic_status_black"
-+
-+    if-eq v0, v1, :cond_c
-+
-+    const/4 v1, 0x3
-+
-+    const-string v6, "rc_call"
-+
-+    if-eq v0, v1, :cond_6
-+
-+    const/4 v1, 0x4
-+
-+    if-eq v0, v1, :cond_3
-+
-+    goto/16 :goto_5
-+
-+    :cond_3
-+    iget-object v0, p2, Lcom/gbwhatsapp/HomeActivity;->mIconTitle:Landroid/widget/ImageView;
-+
-+    if-eqz v0, :cond_4
-+
-+    invoke-static {v6, v3}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
-+
-+    move-result v1
-+
-+    invoke-virtual {v0, v1}, Landroid/widget/ImageView;->setImageResource(I)V
-+
-+    :cond_4
-+    iget-object v0, p2, Lcom/gbwhatsapp/HomeActivity;->mSubTitle:Landroid/widget/TextView;
-+
-+    if-eqz v0, :cond_5
-+
-+    invoke-virtual {v0, v2}, Landroid/view/View;->setVisibility(I)V
-+
-+    :cond_5
-+    iget v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->k:I
-+
-+    invoke-static {p2, v0, v4}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
-+
-+    iget v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->g:I
-+
-+    invoke-static {p2, v0, v2}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
-+
-+    iget v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->l:I
-+
-+    invoke-static {p2, v0, v2}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
-+
-+    if-eqz p1, :cond_1b
-+
-+    iget-boolean p2, p2, Lcom/gbwhatsapp/HomeActivity;->mIsTheTitleContainerVisible:Z
-+
-+    if-eqz p2, :cond_1b
-+
-+    :goto_1
-+    sget-object p2, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->m:Landroid/view/animation/Animation;
-+
-+    invoke-virtual {p1, p2}, Landroid/view/View;->startAnimation(Landroid/view/animation/Animation;)V
-+
-+    goto/16 :goto_5
-+
-+    :cond_6
-+    invoke-static {}, Lcom/gbwhatsapp/yo/yo;->isGrpSeparateEnabled()Z
-+
-+    move-result v0
-+
-+    if-eqz v0, :cond_9
-+
-+    iget-object v0, p2, Lcom/gbwhatsapp/HomeActivity;->mSubTitle:Landroid/widget/TextView;
-+
-+    if-eqz v0, :cond_7
-+
-+    invoke-virtual {v0, v2}, Landroid/view/View;->setVisibility(I)V
-+
-+    :cond_7
-+    iget-object v0, p2, Lcom/gbwhatsapp/HomeActivity;->mIconTitle:Landroid/widget/ImageView;
-+
-+    if-eqz v0, :cond_8
-+
-+    invoke-static {v5, v3}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
-+
-+    move-result v1
-+
-+    invoke-virtual {v0, v1}, Landroid/widget/ImageView;->setImageResource(I)V
-+
-+    :cond_8
-+    iget v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->g:I
-+
-+    invoke-static {p2, v0, v2}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
-+
-+    iget v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->k:I
-+
-+    invoke-static {p2, v0, v2}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
-+
-+    iget v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->l:I
++    invoke-virtual {p0}, Lcom/gbwhatsapp/youbasha/ui/YoSettings/AllSettings;->restartHome()V
 +
 +    goto :goto_2
 +
-+    :cond_9
-+    iget-object v0, p2, Lcom/gbwhatsapp/HomeActivity;->mIconTitle:Landroid/widget/ImageView;
++    :cond_1
++    iget-boolean v0, p0, Lcom/gbwhatsapp/youbasha/ui/YoSettings/AllSettings;->b:Z
 +
-+    if-eqz v0, :cond_a
++    if-eqz v0, :cond_2
 +
-+    invoke-static {v6, v3}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
++    invoke-static {}, Lcom/gbwhatsapp/yo/yo;->a()Ljava/lang/Class;
 +
-+    move-result v1
-+
-+    invoke-virtual {v0, v1}, Landroid/widget/ImageView;->setImageResource(I)V
-+
-+    :cond_a
-+    iget-object v0, p2, Lcom/gbwhatsapp/HomeActivity;->mSubTitle:Landroid/widget/TextView;
-+
-+    if-eqz v0, :cond_b
-+
-+    invoke-virtual {v0, v2}, Landroid/view/View;->setVisibility(I)V
-+
-+    :cond_b
-+    iget v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->g:I
-+
-+    invoke-static {p2, v0, v2}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
-+
-+    iget v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->l:I
-+
-+    invoke-static {p2, v0, v2}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
-+
-+    iget v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->k:I
-+
-+    :goto_2
-+    invoke-static {p2, v0, v4}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
-+
-+    if-eqz p1, :cond_1b
-+
-+    iget-boolean p2, p2, Lcom/gbwhatsapp/HomeActivity;->mIsTheTitleContainerVisible:Z
-+
-+    if-eqz p2, :cond_1b
++    move-result-object v0
 +
 +    goto :goto_1
 +
-+    :cond_c
-+    invoke-static {}, Lcom/gbwhatsapp/yo/yo;->isGrpSeparateEnabled()Z
++    :cond_2
++    const-class v0, Lcom/gbwhatsapp/HomeActivity;
 +
-+    move-result v0
++    .line 1
++    :goto_1
++    new-instance v1, Landroid/content/Intent;
 +
-+    if-eqz v0, :cond_f
++    invoke-direct {v1, p0, v0}, Landroid/content/Intent;-><init>(Landroid/content/Context;Ljava/lang/Class;)V
 +
-+    iget-object v0, p2, Lcom/gbwhatsapp/HomeActivity;->mSubTitle:Landroid/widget/TextView;
++    invoke-virtual {p0, v1}, Landroid/content/Context;->startActivity(Landroid/content/Intent;)V
 +
-+    if-eqz v0, :cond_d
++    .line 2
++    invoke-virtual {p0}, Landroid/app/Activity;->finish()V
 +
-+    invoke-virtual {v0, v2}, Landroid/view/View;->setVisibility(I)V
++    :goto_2
++    return-void
++.end method
 +
-+    :cond_d
-+    iget-object v0, p2, Lcom/gbwhatsapp/HomeActivity;->mIconTitle:Landroid/widget/ImageView;
++.method public onCreate(Landroid/os/Bundle;)V
++    .locals 8
 +
-+    if-eqz v0, :cond_e
++    invoke-super {p0, p1}, Lcom/gbwhatsapp/youbasha/ui/YoSettings/BaseSettingsActivity;->onCreate(Landroid/os/Bundle;)V
 +
-+    const-string v1, "rc_group"
++    .line 1
++    invoke-static {}, Lcom/gbwhatsapp/yo/yo;->getCtx()Landroid/content/Context;
 +
-+    invoke-static {v1, v3}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
++    move-result-object p1
 +
-+    move-result v1
++    if-nez p1, :cond_0
 +
-+    invoke-virtual {v0, v1}, Landroid/widget/ImageView;->setImageResource(I)V
++    invoke-static {p0}, Lcom/gbwhatsapp/yo/yo;->yo(Landroid/content/Context;)V
 +
-+    :cond_e
-+    iget v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->g:I
++    :cond_0
++    invoke-virtual {p0}, Landroid/app/Activity;->getIntent()Landroid/content/Intent;
 +
-+    invoke-static {p2, v0, v4}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
++    move-result-object p1
 +
-+    iget v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->l:I
++    const/4 v0, 0x0
 +
-+    invoke-static {p2, v0, v2}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
++    if-eqz p1, :cond_1
 +
-+    goto :goto_3
++    invoke-virtual {p0}, Landroid/app/Activity;->getIntent()Landroid/content/Intent;
 +
-+    :cond_f
-+    iget-object v0, p2, Lcom/gbwhatsapp/HomeActivity;->mSubTitle:Landroid/widget/TextView;
++    move-result-object p1
 +
-+    if-eqz v0, :cond_10
++    const-string v1, "lockOnBack"
 +
-+    invoke-virtual {v0, v2}, Landroid/view/View;->setVisibility(I)V
-+
-+    :cond_10
-+    iget-object v0, p2, Lcom/gbwhatsapp/HomeActivity;->mIconTitle:Landroid/widget/ImageView;
-+
-+    if-eqz v0, :cond_11
-+
-+    invoke-static {v5, v3}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
-+
-+    move-result v1
-+
-+    invoke-virtual {v0, v1}, Landroid/widget/ImageView;->setImageResource(I)V
-+
-+    :cond_11
-+    iget v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->g:I
-+
-+    invoke-static {p2, v0, v2}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
-+
-+    iget v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->l:I
-+
-+    invoke-static {p2, v0, v4}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
-+
-+    :goto_3
-+    iget v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->k:I
-+
-+    invoke-static {p2, v0, v2}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
-+
-+    if-eqz p1, :cond_1b
-+
-+    iget-boolean p2, p2, Lcom/gbwhatsapp/HomeActivity;->mIsTheTitleContainerVisible:Z
-+
-+    if-eqz p2, :cond_1b
-+
-+    goto/16 :goto_1
-+
-+    :cond_12
-+    sget-object v0, Lrc/whatsapp/home/HomeActivity/HomeView;->mHomeac:Lcom/gbwhatsapp/HomeActivity;
-+
-+    iget-object v0, v0, Lcom/gbwhatsapp/HomeActivity;->yoBottomBarView:Landroid/view/View;
-+
-+    if-eqz v0, :cond_13
-+
-+    invoke-virtual {v0, v4}, Landroid/view/View;->setVisibility(I)V
-+
-+    :cond_13
-+    iget v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b:I
-+
-+    invoke-static {p2, v0, v4}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
-+
-+    iget v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->c:I
-+
-+    invoke-static {p2, v0, v4}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
-+
-+    iget v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->f:I
-+
-+    invoke-static {p2, v0, v4}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
-+
-+    iget v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->e:I
-+
-+    invoke-static {p2, v0, v4}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
-+
-+    iget v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->d:I
-+
-+    invoke-static {p2, v0, v4}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
-+
-+    iget v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->h:I
-+
-+    invoke-static {p2, v0, v4}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
-+
-+    invoke-static {}, Lcom/gbwhatsapp/yo/HomeUI;->isOneUIEnabled()Z
-+
-+    move-result v0
-+
-+    if-eqz v0, :cond_14
-+
-+    iget v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->j:I
-+
-+    invoke-static {p2, v0, v4}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->a(Landroid/app/Activity;IZ)V
-+
-+    :cond_14
-+    iget-object v0, p2, Lcom/gbwhatsapp/HomeActivity;->mIconTitle:Landroid/widget/ImageView;
-+
-+    if-eqz v0, :cond_15
-+
-+    const-string v1, "ic_icon_wa"
-+
-+    invoke-static {v1, v3}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
-+
-+    move-result v1
-+
-+    invoke-virtual {v0, v1}, Landroid/widget/ImageView;->setImageResource(I)V
-+
-+    :cond_15
-+    const-string v0, "my_name"
-+
-+    invoke-static {v0}, Lcom/gbwhatsapp/yo/shp;->getBoolean(Ljava/lang/String;)Z
-+
-+    move-result v0
-+
-+    const-string v1, "my_statusd"
-+
-+    invoke-static {v1}, Lcom/gbwhatsapp/yo/shp;->getBoolean(Ljava/lang/String;)Z
-+
-+    move-result v1
-+
-+    if-eqz v0, :cond_16
-+
-+    if-nez v1, :cond_16
-+
-+    iget-object v0, p2, Lcom/gbwhatsapp/HomeActivity;->mSubTitle:Landroid/widget/TextView;
-+
-+    if-eqz v0, :cond_17
-+
-+    invoke-virtual {v0, v4}, Landroid/view/View;->setVisibility(I)V
-+
-+    goto :goto_4
-+
-+    :cond_16
-+    iget-object v0, p2, Lcom/gbwhatsapp/HomeActivity;->mSubTitle:Landroid/widget/TextView;
-+
-+    if-eqz v0, :cond_17
-+
-+    invoke-virtual {v0, v2}, Landroid/view/View;->setVisibility(I)V
-+
-+    :cond_17
-+    :goto_4
-+    iget v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->g:I
-+
-+    invoke-static {p2, v0, v4}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
-+
-+    iget v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->k:I
-+
-+    invoke-static {p2, v0, v2}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
-+
-+    iget v0, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->l:I
-+
-+    invoke-static {p2, v0, v2}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
-+
-+    if-eqz p1, :cond_1b
-+
-+    iget-boolean p2, p2, Lcom/gbwhatsapp/HomeActivity;->mIsTheTitleContainerVisible:Z
-+
-+    if-eqz p2, :cond_1b
-+
-+    goto/16 :goto_1
-+
-+    :cond_18
-+    sget-object p1, Lrc/whatsapp/home/HomeActivity/HomeView;->mHomeac:Lcom/gbwhatsapp/HomeActivity;
-+
-+    iget-object p1, p1, Lcom/gbwhatsapp/HomeActivity;->yoBottomBarView:Landroid/view/View;
-+
-+    if-eqz p1, :cond_19
-+
-+    invoke-virtual {p1, v2}, Landroid/view/View;->setVisibility(I)V
-+
-+    :cond_19
-+    iget p1, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b:I
-+
-+    invoke-static {p2, p1, v2}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
-+
-+    iget p1, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->c:I
-+
-+    invoke-static {p2, p1, v2}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
-+
-+    iget p1, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->f:I
-+
-+    invoke-static {p2, p1, v2}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
-+
-+    invoke-static {}, Lcom/gbwhatsapp/yo/HomeUI;->isOneUIEnabled()Z
++    invoke-virtual {p1, v1}, Landroid/content/Intent;->hasExtra(Ljava/lang/String;)Z
 +
 +    move-result p1
 +
-+    if-eqz p1, :cond_1a
++    if-eqz p1, :cond_1
 +
-+    iget p1, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->j:I
++    invoke-virtual {p0}, Landroid/app/Activity;->getIntent()Landroid/content/Intent;
 +
-+    invoke-static {p2, p1, v1}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->a(Landroid/app/Activity;IZ)V
++    move-result-object p1
 +
-+    :cond_1a
-+    iget p1, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->e:I
++    invoke-virtual {p1, v1, v0}, Landroid/content/Intent;->getBooleanExtra(Ljava/lang/String;Z)Z
 +
-+    invoke-static {p2, p1, v2}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
++    move-result p1
 +
-+    iget p1, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->d:I
++    iput-boolean p1, p0, Lcom/gbwhatsapp/youbasha/ui/YoSettings/AllSettings;->b:Z
 +
-+    invoke-static {p2, p1, v2}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
++    :cond_1
++    :try_start_0
++    invoke-static {}, Lcom/gbwhatsapp/youbasha/app;->getOkHttpClient()Lokhttp3/OkHttpClient;
 +
-+    iget p1, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->h:I
++    move-result-object p1
 +
-+    invoke-static {p2, p1, v2}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
++    if-nez p1, :cond_2
 +
-+    iget p1, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->g:I
++    invoke-virtual {p0}, Landroid/app/Activity;->finishAffinity()V
++    :try_end_0
++    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
 +
-+    invoke-static {p2, p1, v2}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
++    goto :goto_0
 +
-+    iget p1, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->k:I
++    :catch_0
++    nop
 +
-+    invoke-static {p2, p1, v2}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
++    :cond_2
++    :goto_0
++    const-string p1, "yo_settings"
 +
-+    iget p1, p0, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->l:I
++    const-string v1, "layout"
 +
-+    invoke-static {p2, p1, v2}, Lrc/whatsapp/home/HomeActivity/OnPageSelected;->b(Landroid/app/Activity;II)V
++    .line 2
++    invoke-static {p1, v1}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
 +
-+    :cond_1b
-+    :goto_5
++    move-result p1
++
++    invoke-virtual {p0, p1}, Landroid/app/Activity;->setContentView(I)V
++
++    .line 3
++    invoke-static {}, Ljava/util/Calendar;->getInstance()Ljava/util/Calendar;
++
++    move-result-object p1
++
++    const/4 v1, 0x6
++
++    invoke-virtual {p1, v1}, Ljava/util/Calendar;->get(I)I
++
++    move-result v2
++
++    const/4 v3, 0x1
++
++    invoke-virtual {p1, v3}, Ljava/util/Calendar;->get(I)I
++
++    move-result p1
++
++    const-string v4, "lastSK"
++
++    .line 4
++    invoke-static {v4, p1}, La/a;->d(Ljava/lang/String;I)Ljava/lang/String;
++
++    move-result-object p1
++
++    const-string v4, "askTwitter"
++
++    .line 5
++    invoke-static {v4}, Lcom/gbwhatsapp/yo/shp;->getBooleanPriv(Ljava/lang/String;)Z
++
++    move-result v5
++
++    invoke-static {p1}, Lcom/gbwhatsapp/yo/shp;->getIntPriv(Ljava/lang/String;)I
++
++    move-result v6
++
++    sub-int v6, v2, v6
++
++    const/16 v7, 0x8
++
++    if-le v6, v7, :cond_3
++
++    const-string v6, "isFollowing"
++
++    invoke-static {v6}, Lcom/gbwhatsapp/yo/shp;->getBooleanPriv(Ljava/lang/String;)Z
++
++    move-result v6
++
++    if-nez v6, :cond_3
++
++    invoke-static {v4, v3}, Lcom/gbwhatsapp/yo/shp;->setBooleanPriv(Ljava/lang/String;Z)V
++
++    invoke-static {p1, v2}, Lcom/gbwhatsapp/yo/shp;->setIntPriv(Ljava/lang/String;I)V
++
++    :cond_3
++    if-eqz v5, :cond_4
++
++    invoke-static {v4, v0}, Lcom/gbwhatsapp/yo/shp;->setBooleanPriv(Ljava/lang/String;Z)V
++
++    new-instance p1, Landroid/app/AlertDialog$Builder;
++
++    invoke-direct {p1, p0}, Landroid/app/AlertDialog$Builder;-><init>(Landroid/content/Context;)V
++
++    const-string v2, "Do you have a Twitter?"
++
++    invoke-virtual {p1, v2}, Landroid/app/AlertDialog$Builder;->setTitle(Ljava/lang/CharSequence;)Landroid/app/AlertDialog$Builder;
++
++    move-result-object p1
++
++    const-string v2, "Follow me on Twitter to get latest updates!"
++
++    invoke-virtual {p1, v2}, Landroid/app/AlertDialog$Builder;->setMessage(Ljava/lang/CharSequence;)Landroid/app/AlertDialog$Builder;
++
++    move-result-object p1
++
++    new-instance v2, Lc/a;
++
++    const/16 v4, 0xb
++
++    invoke-direct {v2, p0, v4}, Lc/a;-><init>(Ljava/lang/Object;I)V
++
++    const-string v4, "Follow!"
++
++    invoke-virtual {p1, v4, v2}, Landroid/app/AlertDialog$Builder;->setPositiveButton(Ljava/lang/CharSequence;Landroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;
++
++    move-result-object p1
++
++    sget-object v2, Lcom/gbwhatsapp/yo/m;->t:Lcom/gbwhatsapp/yo/m;
++
++    const-string v4, "Close"
++
++    invoke-virtual {p1, v4, v2}, Landroid/app/AlertDialog$Builder;->setNegativeButton(Ljava/lang/CharSequence;Landroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;
++
++    move-result-object p1
++
++    invoke-virtual {p1}, Landroid/app/AlertDialog$Builder;->show()Landroid/app/AlertDialog;
++
++    :cond_4
++    const-string p1, "modDon"
++
++    const-string v2, "id"
++
++    .line 6
++    invoke-static {p1, v2}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
++
++    move-result p1
++
++    invoke-virtual {p0, p1}, Landroid/app/Activity;->findViewById(I)Landroid/view/View;
++
++    move-result-object p1
++
++    new-instance v4, Ll/a;
++
++    invoke-direct {v4, p0, p1, v0}, Ll/a;-><init>(Lcom/gbwhatsapp/youbasha/ui/YoSettings/AllSettings;Landroid/view/View;I)V
++
++    invoke-virtual {p1, v4}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    const-string p1, "modPriv"
++
++    invoke-static {p1, v2}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
++
++    move-result p1
++
++    invoke-virtual {p0, p1}, Landroid/app/Activity;->findViewById(I)Landroid/view/View;
++
++    move-result-object p1
++
++    new-instance v0, Ll/a;
++
++    invoke-direct {v0, p0, p1, v3}, Ll/a;-><init>(Lcom/gbwhatsapp/youbasha/ui/YoSettings/AllSettings;Landroid/view/View;I)V
++
++    invoke-virtual {p1, v0}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    const-string p1, "modThemes"
++
++    invoke-static {p1, v2}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
++
++    move-result p1
++
++    invoke-virtual {p0, p1}, Landroid/app/Activity;->findViewById(I)Landroid/view/View;
++
++    move-result-object p1
++
++    new-instance v0, Ll/a;
++
++    const/4 v3, 0x2
++
++    invoke-direct {v0, p0, p1, v3}, Ll/a;-><init>(Lcom/gbwhatsapp/youbasha/ui/YoSettings/AllSettings;Landroid/view/View;I)V
++
++    invoke-virtual {p1, v0}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    const-string p1, "modUni"
++
++    invoke-static {p1, v2}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
++
++    move-result p1
++
++    invoke-virtual {p0, p1}, Landroid/app/Activity;->findViewById(I)Landroid/view/View;
++
++    move-result-object p1
++
++    new-instance v0, Ll/a;
++
++    const/4 v3, 0x3
++
++    invoke-direct {v0, p0, p1, v3}, Ll/a;-><init>(Lcom/gbwhatsapp/youbasha/ui/YoSettings/AllSettings;Landroid/view/View;I)V
++
++    invoke-virtual {p1, v0}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    const-string p1, "modHome"
++
++    invoke-static {p1, v2}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
++
++    move-result p1
++
++    invoke-virtual {p0, p1}, Landroid/app/Activity;->findViewById(I)Landroid/view/View;
++
++    move-result-object p1
++
++    new-instance v0, Ll/a;
++
++    const/4 v3, 0x4
++
++    invoke-direct {v0, p0, p1, v3}, Ll/a;-><init>(Lcom/gbwhatsapp/youbasha/ui/YoSettings/AllSettings;Landroid/view/View;I)V
++
++    invoke-virtual {p1, v0}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    const-string p1, "modChat"
++
++    invoke-static {p1, v2}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
++
++    move-result p1
++
++    invoke-virtual {p0, p1}, Landroid/app/Activity;->findViewById(I)Landroid/view/View;
++
++    move-result-object p1
++
++    new-instance v0, Ll/a;
++
++    const/4 v3, 0x5
++
++    invoke-direct {v0, p0, p1, v3}, Ll/a;-><init>(Lcom/gbwhatsapp/youbasha/ui/YoSettings/AllSettings;Landroid/view/View;I)V
++
++    invoke-virtual {p1, v0}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    const-string p1, "wdg_mod"
++
++    invoke-static {p1, v2}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
++
++    move-result p1
++
++    invoke-virtual {p0, p1}, Landroid/app/Activity;->findViewById(I)Landroid/view/View;
++
++    move-result-object p1
++
++    new-instance v0, Ll/a;
++
++    invoke-direct {v0, p0, p1, v1}, Ll/a;-><init>(Lcom/gbwhatsapp/youbasha/ui/YoSettings/AllSettings;Landroid/view/View;I)V
++
++    invoke-virtual {p1, v0}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    const-string p1, "modUpdate"
++
++    invoke-static {p1, v2}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
++
++    move-result p1
++
++    invoke-virtual {p0, p1}, Landroid/app/Activity;->findViewById(I)Landroid/view/View;
++
++    move-result-object p1
++
++    new-instance v0, Ll/a;
++
++    const/4 v1, 0x7
++
++    invoke-direct {v0, p0, p1, v1}, Ll/a;-><init>(Lcom/gbwhatsapp/youbasha/ui/YoSettings/AllSettings;Landroid/view/View;I)V
++
++    invoke-virtual {p1, v0}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    const-string p1, "modAbout"
++
++    invoke-static {p1, v2}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
++
++    move-result p1
++
++    invoke-virtual {p0, p1}, Landroid/app/Activity;->findViewById(I)Landroid/view/View;
++
++    move-result-object p1
++
++    new-instance v0, Ll/a;
++
++    invoke-direct {v0, p0, p1, v7}, Ll/a;-><init>(Lcom/gbwhatsapp/youbasha/ui/YoSettings/AllSettings;Landroid/view/View;I)V
++
++    invoke-virtual {p1, v0}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    const-string p1, "modShare"
++
++    invoke-static {p1, v2}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
++
++    move-result p1
++
++    invoke-virtual {p0, p1}, Landroid/app/Activity;->findViewById(I)Landroid/view/View;
++
++    move-result-object p1
++
++    new-instance v0, Lc/b;
++
++    invoke-direct {v0, p0, v1}, Lc/b;-><init>(Ljava/lang/Object;I)V
++
++    invoke-virtual {p1, v0}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++#coocoo
++    iget-object v0, p0, Lcom/gbwhatsapp/youbasha/ui/YoSettings/AllSettings;->delegate:Lcom/coocoo/whatsappdelegate/AllSettingsDelegate;
++    invoke-virtual {v0, p1}, Lcom/coocoo/whatsappdelegate/AllSettingsDelegate;->onCreate(Landroid/os/Bundle;)V
++#coocoo
++    return-void
++.end method
++
++.method public restartHome()V
++    .locals 2
++
++    iget-boolean v0, p0, Lcom/gbwhatsapp/youbasha/ui/YoSettings/AllSettings;->b:Z
++
++    if-eqz v0, :cond_0
++
++    invoke-static {}, Lcom/gbwhatsapp/yo/yo;->a()Ljava/lang/Class;
++
++    move-result-object v0
++
++    goto :goto_0
++
++    :cond_0
++    const-class v0, Lcom/gbwhatsapp/HomeActivity;
++
++    .line 1
++    :goto_0
++    new-instance v1, Landroid/content/Intent;
++
++    invoke-direct {v1, p0, v0}, Landroid/content/Intent;-><init>(Landroid/content/Context;Ljava/lang/Class;)V
++
++    invoke-virtual {p0, v1}, Landroid/content/Context;->startActivity(Landroid/content/Intent;)V
++
++    const/4 v0, 0x0
++
++    .line 2
++    invoke-static {v0}, Ljava/lang/System;->exit(I)V
++
 +    return-void
 +.end method
