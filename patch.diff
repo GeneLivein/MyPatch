@@ -81,18 +81,19 @@ index 0000000..0f80542
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomePageSelectedDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/HomePageSelectedDelegate.kt
 new file mode 100644
-index 0000000..8a2bdcc
+index 0000000..705a352
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomePageSelectedDelegate.kt
-@@ -0,0 +1,10 @@
+@@ -0,0 +1,11 @@
 +package com.coocoo.whatsappdelegate
 +
 +import android.app.Activity
++import com.coocoo.utils.LogUtil
 +
 +class HomePageSelectedDelegate {
 +
 +    fun onPageSelected(i: Int, activity: Activity) {
-+
++        LogUtil.d("i:$i")
 +    }
 +}
 \ No newline at end of file
