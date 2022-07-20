@@ -81,19 +81,27 @@ index 0000000..0f80542
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomePageSelectedDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/HomePageSelectedDelegate.kt
 new file mode 100644
-index 0000000..705a352
+index 0000000..9a32baa
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomePageSelectedDelegate.kt
-@@ -0,0 +1,11 @@
+@@ -0,0 +1,19 @@
 +package com.coocoo.whatsappdelegate
 +
 +import android.app.Activity
-+import com.coocoo.utils.LogUtil
++import android.view.View
++import com.coocoo.annotation.SmaliInject
++import com.coocoo.utils.ResMgr
 +
 +class HomePageSelectedDelegate {
 +
++    @SmaliInject
 +    fun onPageSelected(i: Int, activity: Activity) {
-+        LogUtil.d("i:$i")
++        val fab = activity.findViewById<View>(ResMgr.getId("cc_fab_mini_app"))
++        if (i == 1) {    // CHATS page
++            fab.visibility = View.VISIBLE
++        } else {
++            fab.visibility = View.GONE
++        }
 +    }
 +}
 \ No newline at end of file
