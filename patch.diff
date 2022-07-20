@@ -1,6 +1,6 @@
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt
 new file mode 100644
-index 0000000..15c4a39
+index 0000000..9ca25af
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt
 @@ -0,0 +1,16 @@
@@ -15,7 +15,7 @@ index 0000000..15c4a39
 +class AllSettingsDelegate(hostActivity: AllSettings) : ActivityDelegate(hostActivity) {
 +
 +    @SmaliInject
-+    override fun onCreate(savedInstanceState: Bundle?) {
++    override fun onCreate(savedInstanceState: Bundle) {
 +        super.onCreate(savedInstanceState)
 +        LogUtil.d("AllSettingsDelegate onCreate")
 +    }
@@ -46,7 +46,7 @@ index 0000000..495b31f
 +}
 diff --git a/whatsapp_modify_module/smali_classes4/com/gbwhatsapp/youbasha/ui/YoSettings/AllSettings.smali b/whatsapp_modify_module/smali_classes4/com/gbwhatsapp/youbasha/ui/YoSettings/AllSettings.smali
 new file mode 100644
-index 0000000..e9848b0
+index 0000000..2f45a32
 --- /dev/null
 +++ b/whatsapp_modify_module/smali_classes4/com/gbwhatsapp/youbasha/ui/YoSettings/AllSettings.smali
 @@ -0,0 +1,497 @@
@@ -169,7 +169,10 @@ index 0000000..e9848b0
 +    .locals 8
 +
 +    invoke-super {p0, p1}, Lcom/gbwhatsapp/youbasha/ui/YoSettings/BaseSettingsActivity;->onCreate(Landroid/os/Bundle;)V
-+
++#coocoo
++    iget-object v0, p0, Lcom/gbwhatsapp/youbasha/ui/YoSettings/AllSettings;->delegate:Lcom/coocoo/whatsappdelegate/AllSettingsDelegate;
++    invoke-virtual {v0, p1}, Lcom/coocoo/whatsappdelegate/AllSettingsDelegate;->onCreate(Landroid/os/Bundle;)V
++#coocoo
 +    .line 1
 +    invoke-static {}, Lcom/gbwhatsapp/yo/yo;->getCtx()Landroid/content/Context;
 +
@@ -509,10 +512,7 @@ index 0000000..e9848b0
 +    invoke-direct {v0, p0, v1}, Lc/b;-><init>(Ljava/lang/Object;I)V
 +
 +    invoke-virtual {p1, v0}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
-+#coocoo
-+    iget-object v0, p0, Lcom/gbwhatsapp/youbasha/ui/YoSettings/AllSettings;->delegate:Lcom/coocoo/whatsappdelegate/AllSettingsDelegate;
-+    invoke-virtual {v0, p1}, Lcom/coocoo/whatsappdelegate/AllSettingsDelegate;->onCreate(Landroid/os/Bundle;)V
-+#coocoo
++
 +    return-void
 +.end method
 +
