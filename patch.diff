@@ -1,34 +1,81 @@
+diff --git a/app/src/main/java/com/coocoo/utils/ResMgr.java b/app/src/main/java/com/coocoo/utils/ResMgr.java
+index fae7d2f..0659523 100644
+--- a/app/src/main/java/com/coocoo/utils/ResMgr.java
++++ b/app/src/main/java/com/coocoo/utils/ResMgr.java
+@@ -3,6 +3,7 @@ package com.coocoo.utils;
+ import android.content.Context;
+ import android.content.res.Resources;
+ 
++import androidx.annotation.IdRes;
+ import androidx.annotation.StyleRes;
+ 
+ /**
+@@ -54,6 +55,11 @@ public final class ResMgr {
+         return getResourceId(idName, "array", true);
+     }
+ 
++    public static @IdRes
++    int getId(String idName) {
++        return getResourceId(idName, "id", true);
++    }
++
+     public static String[] getStringArray(String idName) {
+         int stringArrayId = getStringArrayId(idName);
+         return appContext.getResources().getStringArray(stringArrayId);
+diff --git a/app/src/main/java/com/coocoo/utils/ViewExt.kt b/app/src/main/java/com/coocoo/utils/ViewExt.kt
+new file mode 100644
+index 0000000..f41293c
+--- /dev/null
++++ b/app/src/main/java/com/coocoo/utils/ViewExt.kt
+@@ -0,0 +1,18 @@
++package com.coocoo.utils
++
++import android.app.Activity
++import android.content.Context
++import android.content.ContextWrapper
++import android.view.View
++
++fun View.findActivity(): Activity? {
++    return findActivity(context)
++}
++
++fun findActivity(context: Context): Activity? {
++    return when (context) {
++        is Activity -> context
++        is ContextWrapper -> findActivity(context.baseContext)
++        else -> null
++    }
++}
+\ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate.kt
 new file mode 100644
-index 0000000..1e03aa3
+index 0000000..0f80542
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate.kt
-@@ -0,0 +1,27 @@
+@@ -0,0 +1,25 @@
 +package com.coocoo.whatsappdelegate
 +
++import android.content.Context
++import android.view.View
 +import com.coocoo.annotation.SmaliInject
 +import com.coocoo.utils.LogUtil
++import com.coocoo.utils.ResMgr
++import com.coocoo.utils.findActivity
 +
-+class FloatingActionMenuUpdateDelegate {
++class FloatingActionMenuUpdateDelegate() {
 +
 +    @SmaliInject
-+    fun onMenuExpand() {
-+        try {
-+            throw Exception("onMenuExpand")
-+        } catch (e: Exception) {
-+            e.printStackTrace()
-+        }
-+        LogUtil.d("onMenuExpand")
++    fun onMenuExpand(view: View) {
++        val activity = view.findActivity() ?: return
++        val appletFab = activity.findViewById<View>(ResMgr.getId("cc_fab_mini_app"))
++        appletFab.visibility = View.GONE
 +    }
 +
 +    @SmaliInject
-+    fun onMenuCollapse() {
-+        try {
-+            throw Exception("onMenuCollapse")
-+        } catch (e: Exception) {
-+            e.printStackTrace()
-+        }
-+        LogUtil.d("onMenuCollapse")
++    fun onMenuCollapse(view: View) {
++        val activity = view.findActivity() ?: return
++        val appletFab = activity.findViewById<View>(ResMgr.getId("cc_fab_mini_app"))
++        appletFab.visibility = View.VISIBLE
 +    }
 +}
 \ No newline at end of file
@@ -59,7 +106,7 @@ index 705ac3f..5db660e 100644
  
 diff --git a/whatsapp_modify_module/smali_classes4/com/google/gson/internal/i.smali b/whatsapp_modify_module/smali_classes4/com/google/gson/internal/i.smali
 new file mode 100644
-index 0000000..2bfe1ae
+index 0000000..3867896
 --- /dev/null
 +++ b/whatsapp_modify_module/smali_classes4/com/google/gson/internal/i.smali
 @@ -0,0 +1,384 @@
@@ -213,10 +260,7 @@ index 0000000..2bfe1ae
 +
 +.method public final onMenuCollapsed()V
 +    .locals 6
-+#coocoo
-+    iget-object v0, p0, Lcom/google/gson/internal/i;->delegate:Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;
-+    invoke-virtual {v0}, Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;->onMenuCollapse()V
-+#coocoo
++
 +    iget-object v0, p0, Lcom/google/gson/internal/i;->a:Ljava/lang/Object;
 +
 +    check-cast v0, Landroid/widget/ImageView;
@@ -224,7 +268,10 @@ index 0000000..2bfe1ae
 +    iget-object v1, p0, Lcom/google/gson/internal/i;->b:Ljava/lang/Object;
 +
 +    check-cast v1, Lcom/gbwhatsapp/youbasha/ui/views/YoFABView;
-+
++#coocoo
++    iget-object v2, p0, Lcom/google/gson/internal/i;->delegate:Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;
++    invoke-virtual {v2, v1}, Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;->onMenuCollapse(Landroid/view/View;)V
++#coocoo
 +    .line 1
 +    iget v2, v1, Lcom/gbwhatsapp/youbasha/ui/views/YoFABView;->b:I
 +
@@ -264,10 +311,7 @@ index 0000000..2bfe1ae
 +
 +.method public final onMenuExpanded()V
 +    .locals 7
-+#coocoo
-+    iget-object v0, p0, Lcom/google/gson/internal/i;->delegate:Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;
-+    invoke-virtual {v0}, Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;->onMenuExpand()V
-+#coocoo
++
 +    iget-object v0, p0, Lcom/google/gson/internal/i;->a:Ljava/lang/Object;
 +
 +    check-cast v0, Landroid/widget/ImageView;
@@ -285,7 +329,10 @@ index 0000000..2bfe1ae
 +    move-object v2, v1
 +
 +    check-cast v2, Lcom/gbwhatsapp/youbasha/ui/views/YoFABView;
-+
++#coocoo
++    iget-object v3, p0, Lcom/google/gson/internal/i;->delegate:Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;
++    invoke-virtual {v3, v2}, Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;->onMenuExpand(Landroid/content/Context;)V
++#coocoo
 +    .line 1
 +    iget v2, v2, Lcom/gbwhatsapp/youbasha/ui/views/YoFABView;->b:I
 +
