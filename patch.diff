@@ -49,7 +49,7 @@ index 705ac3f..5db660e 100644
  
 diff --git a/whatsapp_modify_module/smali_classes4/com/google/gson/internal/i.smali b/whatsapp_modify_module/smali_classes4/com/google/gson/internal/i.smali
 new file mode 100644
-index 0000000..37ef412
+index 0000000..2bfe1ae
 --- /dev/null
 +++ b/whatsapp_modify_module/smali_classes4/com/google/gson/internal/i.smali
 @@ -0,0 +1,384 @@
@@ -205,7 +205,7 @@ index 0000000..37ef412
 +    .locals 6
 +#coocoo
 +    iget-object v0, p0, Lcom/google/gson/internal/i;->delegate:Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;
-+    invoke-virtual {v0}, Lcom/coocoo/whatsappdelegate;->onMenuCollapse()V
++    invoke-virtual {v0}, Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;->onMenuCollapse()V
 +#coocoo
 +    iget-object v0, p0, Lcom/google/gson/internal/i;->a:Ljava/lang/Object;
 +
@@ -256,7 +256,7 @@ index 0000000..37ef412
 +    .locals 7
 +#coocoo
 +    iget-object v0, p0, Lcom/google/gson/internal/i;->delegate:Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;
-+    invoke-virtual {v0}, Lcom/coocoo/whatsappdelegate;->onMenuExpand()V
++    invoke-virtual {v0}, Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;->onMenuExpand()V
 +#coocoo
 +    iget-object v0, p0, Lcom/google/gson/internal/i;->a:Ljava/lang/Object;
 +
