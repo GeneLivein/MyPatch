@@ -1,6 +1,6 @@
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt
 new file mode 100644
-index 0000000..60f84e7
+index 0000000..f9817ef
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt
 @@ -0,0 +1,16 @@
@@ -15,23 +15,12 @@ index 0000000..60f84e7
 +class AllSettingsDelegate(hostActivity: AllSettings) : ActivityDelegate(hostActivity) {
 +
 +    @SmaliInject
-+    override fun onCreate(savedInstanceState: Bundle) {
++    override fun onCreate(savedInstanceState: Bundle?) {
 +        super.onCreate(savedInstanceState)
 +        LogUtil.d("AllSettingsDelegate onCreate")
 +    }
 +}
 \ No newline at end of file
-diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
-index dac76e7..73fbd28 100644
---- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
-+++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
-@@ -1,5 +1,6 @@
- package com.coocoo.whatsappdelegate;
- 
-+import android.content.pm.PackageManager;
- import android.os.Bundle;
- import android.util.Log;
- 
 diff --git a/app/src/main/java/com/gbwhatsapp/youbasha/ui/YoSettings/AllSettings.java b/app/src/main/java/com/gbwhatsapp/youbasha/ui/YoSettings/AllSettings.java
 new file mode 100644
 index 0000000..eb73113
