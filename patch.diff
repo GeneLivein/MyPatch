@@ -1,6 +1,6 @@
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt
 new file mode 100644
-index 0000000..9ca25af
+index 0000000..60f84e7
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt
 @@ -0,0 +1,16 @@
@@ -10,7 +10,7 @@ index 0000000..9ca25af
 +import com.coocoo.annotation.SmaliInject
 +import com.coocoo.utils.LogUtil
 +import com.coocoo.whatsappdelegate.base.ActivityDelegate
-+import com.gbwhatsapp.AllSettings
++import com.gbwhatsapp.youbasha.ui.YoSettings.AllSettings
 +
 +class AllSettingsDelegate(hostActivity: AllSettings) : ActivityDelegate(hostActivity) {
 +
@@ -32,13 +32,13 @@ index dac76e7..73fbd28 100644
  import android.os.Bundle;
  import android.util.Log;
  
-diff --git a/app/src/main/java/com/gbwhatsapp/AllSettings.java b/app/src/main/java/com/gbwhatsapp/AllSettings.java
+diff --git a/app/src/main/java/com/gbwhatsapp/youbasha/ui/YoSettings/AllSettings.java b/app/src/main/java/com/gbwhatsapp/youbasha/ui/YoSettings/AllSettings.java
 new file mode 100644
-index 0000000..495b31f
+index 0000000..eb73113
 --- /dev/null
-+++ b/app/src/main/java/com/gbwhatsapp/AllSettings.java
++++ b/app/src/main/java/com/gbwhatsapp/youbasha/ui/YoSettings/AllSettings.java
 @@ -0,0 +1,6 @@
-+package com.gbwhatsapp;
++package com.gbwhatsapp.youbasha.ui.YoSettings;
 +
 +import android.app.Activity;
 +
