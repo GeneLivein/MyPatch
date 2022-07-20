@@ -1,14 +1,41 @@
+diff --git a/app/src/main/java/com/coocoo/utils/ResMgr.java b/app/src/main/java/com/coocoo/utils/ResMgr.java
+index fae7d2f..0659523 100644
+--- a/app/src/main/java/com/coocoo/utils/ResMgr.java
++++ b/app/src/main/java/com/coocoo/utils/ResMgr.java
+@@ -3,6 +3,7 @@ package com.coocoo.utils;
+ import android.content.Context;
+ import android.content.res.Resources;
+ 
++import androidx.annotation.IdRes;
+ import androidx.annotation.StyleRes;
+ 
+ /**
+@@ -54,6 +55,11 @@ public final class ResMgr {
+         return getResourceId(idName, "array", true);
+     }
+ 
++    public static @IdRes
++    int getId(String idName) {
++        return getResourceId(idName, "id", true);
++    }
++
+     public static String[] getStringArray(String idName) {
+         int stringArrayId = getStringArrayId(idName);
+         return appContext.getResources().getStringArray(stringArrayId);
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt
 new file mode 100644
-index 0000000..f9817ef
+index 0000000..3ea010f
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt
-@@ -0,0 +1,16 @@
+@@ -0,0 +1,24 @@
 +package com.coocoo.whatsappdelegate
 +
 +import android.os.Bundle
++import android.os.Handler
++import android.view.View
 +import com.coocoo.annotation.SmaliInject
 +import com.coocoo.utils.LogUtil
++import com.coocoo.utils.ResMgr
 +import com.coocoo.whatsappdelegate.base.ActivityDelegate
 +import com.gbwhatsapp.youbasha.ui.YoSettings.AllSettings
 +
@@ -17,7 +44,12 @@ index 0000000..f9817ef
 +    @SmaliInject
 +    override fun onCreate(savedInstanceState: Bundle?) {
 +        super.onCreate(savedInstanceState)
-+        LogUtil.d("AllSettingsDelegate onCreate")
++        val modDon = mHostActivity.findViewById<View>(ResMgr.getId("modDon"))
++        Handler(mHostActivity.mainLooper).post {
++            modDon.setOnClickListener {
++                LogUtil.d("AllSettingsDelegate modDon OnClick")
++            }
++        }
 +    }
 +}
 \ No newline at end of file
