@@ -45,10 +45,10 @@ index fae7d2f..93e72af 100644
          return appContext.getResources().getStringArray(stringArrayId);
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt
 new file mode 100644
-index 0000000..07cc0af
+index 0000000..316ed0d
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt
-@@ -0,0 +1,30 @@
+@@ -0,0 +1,32 @@
 +package com.coocoo.whatsappdelegate
 +
 +import android.content.Intent
@@ -72,7 +72,9 @@ index 0000000..07cc0af
 +    fun setWhatsAppClickListener(view: View) {
 +        val title = ((view as ViewGroup).getChildAt(1) as ViewGroup).getChildAt(0) as TextView
 +        val packageInfo = view.context.packageManager.getPackageInfo(view.context.packageName, 0)
-+        title.text = ResMgr.getString("cc_app_name") + packageInfo.versionName
++        val str = ResMgr.getString("cc_app_name") + packageInfo.versionName
++        LogUtil.d(str)
++        title.text = str
 +        view.setOnClickListener {
 +            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(WHATS_APP_URL))
 +            mHostActivity.startActivity(intent)
