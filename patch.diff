@@ -49,7 +49,7 @@ index 705ac3f..5db660e 100644
  
 diff --git a/whatsapp_modify_module/smali_classes4/com/google/gson/internal/i.smali b/whatsapp_modify_module/smali_classes4/com/google/gson/internal/i.smali
 new file mode 100644
-index 0000000..8f7e65b
+index 0000000..37ef412
 --- /dev/null
 +++ b/whatsapp_modify_module/smali_classes4/com/google/gson/internal/i.smali
 @@ -0,0 +1,384 @@
@@ -69,7 +69,7 @@ index 0000000..8f7e65b
 +.field public final synthetic b:Ljava/lang/Object;
 +
 +#coocoo
-+.field public final delegate:Lcom/coocoo/whatsappdelegate;
++.field public final delegate:Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;
 +#coocoo
 +
 +# direct methods
@@ -84,9 +84,9 @@ index 0000000..8f7e65b
 +
 +    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
 +#coocoo
-+    new-instance v0, Lcom/coocoo/whatsappdelegate;
-+    invoke-direct {v0}, Lcom/coocoo/whatsappdelegate;-><init>()V
-+    iput-object v0, p0, Lcom/google/gson/internal/i;->delegate:Lcom/coocoo/whatsappdelegate;
++    new-instance v0, Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;
++    invoke-direct {v0}, Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;-><init>()V
++    iput-object v0, p0, Lcom/google/gson/internal/i;->delegate:Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;
 +#coocoo
 +    return-void
 +.end method
@@ -204,7 +204,7 @@ index 0000000..8f7e65b
 +.method public final onMenuCollapsed()V
 +    .locals 6
 +#coocoo
-+    iget-object v0, p0, Lcom/google/gson/internal/i;->delegate:Lcom/coocoo/whatsappdelegate;
++    iget-object v0, p0, Lcom/google/gson/internal/i;->delegate:Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;
 +    invoke-virtual {v0}, Lcom/coocoo/whatsappdelegate;->onMenuCollapse()V
 +#coocoo
 +    iget-object v0, p0, Lcom/google/gson/internal/i;->a:Ljava/lang/Object;
@@ -255,7 +255,7 @@ index 0000000..8f7e65b
 +.method public final onMenuExpanded()V
 +    .locals 7
 +#coocoo
-+    iget-object v0, p0, Lcom/google/gson/internal/i;->delegate:Lcom/coocoo/whatsappdelegate;
++    iget-object v0, p0, Lcom/google/gson/internal/i;->delegate:Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;
 +    invoke-virtual {v0}, Lcom/coocoo/whatsappdelegate;->onMenuExpand()V
 +#coocoo
 +    iget-object v0, p0, Lcom/google/gson/internal/i;->a:Ljava/lang/Object;
