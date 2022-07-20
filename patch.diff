@@ -67,10 +67,10 @@ index 0000000..eb73113
 +}
 diff --git a/whatsapp_modify_module/smali_classes4/com/gbwhatsapp/youbasha/ui/YoSettings/AllSettings.smali b/whatsapp_modify_module/smali_classes4/com/gbwhatsapp/youbasha/ui/YoSettings/AllSettings.smali
 new file mode 100644
-index 0000000..2f45a32
+index 0000000..5d735e3
 --- /dev/null
 +++ b/whatsapp_modify_module/smali_classes4/com/gbwhatsapp/youbasha/ui/YoSettings/AllSettings.smali
-@@ -0,0 +1,497 @@
+@@ -0,0 +1,494 @@
 +.class public Lcom/gbwhatsapp/youbasha/ui/YoSettings/AllSettings;
 +.super Lcom/gbwhatsapp/youbasha/ui/YoSettings/BaseSettingsActivity;
 +.source "SourceFile"
@@ -190,10 +190,7 @@ index 0000000..2f45a32
 +    .locals 8
 +
 +    invoke-super {p0, p1}, Lcom/gbwhatsapp/youbasha/ui/YoSettings/BaseSettingsActivity;->onCreate(Landroid/os/Bundle;)V
-+#coocoo
-+    iget-object v0, p0, Lcom/gbwhatsapp/youbasha/ui/YoSettings/AllSettings;->delegate:Lcom/coocoo/whatsappdelegate/AllSettingsDelegate;
-+    invoke-virtual {v0, p1}, Lcom/coocoo/whatsappdelegate/AllSettingsDelegate;->onCreate(Landroid/os/Bundle;)V
-+#coocoo
++
 +    .line 1
 +    invoke-static {}, Lcom/gbwhatsapp/yo/yo;->getCtx()Landroid/content/Context;
 +
@@ -378,7 +375,7 @@ index 0000000..2f45a32
 +
 +    invoke-direct {v4, p0, p1, v0}, Ll/a;-><init>(Lcom/gbwhatsapp/youbasha/ui/YoSettings/AllSettings;Landroid/view/View;I)V
 +
-+    invoke-virtual {p1, v4}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++#    invoke-virtual {p1, v4}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
 +
 +    const-string p1, "modPriv"
 +
