@@ -106,7 +106,7 @@ index 705ac3f..5db660e 100644
  
 diff --git a/whatsapp_modify_module/smali_classes4/com/google/gson/internal/i.smali b/whatsapp_modify_module/smali_classes4/com/google/gson/internal/i.smali
 new file mode 100644
-index 0000000..3867896
+index 0000000..631f696
 --- /dev/null
 +++ b/whatsapp_modify_module/smali_classes4/com/google/gson/internal/i.smali
 @@ -0,0 +1,384 @@
@@ -331,7 +331,7 @@ index 0000000..3867896
 +    check-cast v2, Lcom/gbwhatsapp/youbasha/ui/views/YoFABView;
 +#coocoo
 +    iget-object v3, p0, Lcom/google/gson/internal/i;->delegate:Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;
-+    invoke-virtual {v3, v2}, Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;->onMenuExpand(Landroid/content/Context;)V
++    invoke-virtual {v3, v2}, Lcom/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate;->onMenuExpand(Landroid/view/View;)V
 +#coocoo
 +    .line 1
 +    iget v2, v2, Lcom/gbwhatsapp/youbasha/ui/views/YoFABView;->b:I
