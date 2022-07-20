@@ -1,3 +1,14 @@
+diff --git a/app/src/main/java/com/coocoo/utils/Constants.kt b/app/src/main/java/com/coocoo/utils/Constants.kt
+index bb58231..6e53868 100644
+--- a/app/src/main/java/com/coocoo/utils/Constants.kt
++++ b/app/src/main/java/com/coocoo/utils/Constants.kt
+@@ -143,4 +143,6 @@ object Constants {
+     const val KEY_YO_HI = "yo_hideinfo"
+     const val KEY_AUDIO_SENSOR = "Audio_sensor"
+     const val KEY_AUDIO_EARS = "Audio_ears"
++
++    const val WHATS_APP_URL = "https://www.whatsmod.app/"
+ }
 diff --git a/app/src/main/java/com/coocoo/utils/ResMgr.java b/app/src/main/java/com/coocoo/utils/ResMgr.java
 index fae7d2f..0659523 100644
 --- a/app/src/main/java/com/coocoo/utils/ResMgr.java
@@ -24,16 +35,19 @@ index fae7d2f..0659523 100644
          return appContext.getResources().getStringArray(stringArrayId);
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt
 new file mode 100644
-index 0000000..3ea010f
+index 0000000..7d57770
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt
 @@ -0,0 +1,24 @@
 +package com.coocoo.whatsappdelegate
 +
++import android.content.Intent
++import android.net.Uri
 +import android.os.Bundle
 +import android.os.Handler
 +import android.view.View
 +import com.coocoo.annotation.SmaliInject
++import com.coocoo.utils.Constants.WHATS_APP_URL
 +import com.coocoo.utils.LogUtil
 +import com.coocoo.utils.ResMgr
 +import com.coocoo.whatsappdelegate.base.ActivityDelegate
@@ -42,13 +56,10 @@ index 0000000..3ea010f
 +class AllSettingsDelegate(hostActivity: AllSettings) : ActivityDelegate(hostActivity) {
 +
 +    @SmaliInject
-+    override fun onCreate(savedInstanceState: Bundle?) {
-+        super.onCreate(savedInstanceState)
-+        val modDon = mHostActivity.findViewById<View>(ResMgr.getId("modDon"))
-+        Handler(mHostActivity.mainLooper).post {
-+            modDon.setOnClickListener {
-+                LogUtil.d("AllSettingsDelegate modDon OnClick")
-+            }
++    fun setWhatsAppClickListener(view: View) {
++        view.setOnClickListener {
++            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(WHATS_APP_URL))
++            mHostActivity.startActivity(intent)
 +        }
 +    }
 +}
@@ -67,10 +78,10 @@ index 0000000..eb73113
 +}
 diff --git a/whatsapp_modify_module/smali_classes4/com/gbwhatsapp/youbasha/ui/YoSettings/AllSettings.smali b/whatsapp_modify_module/smali_classes4/com/gbwhatsapp/youbasha/ui/YoSettings/AllSettings.smali
 new file mode 100644
-index 0000000..5d735e3
+index 0000000..9e92727
 --- /dev/null
 +++ b/whatsapp_modify_module/smali_classes4/com/gbwhatsapp/youbasha/ui/YoSettings/AllSettings.smali
-@@ -0,0 +1,494 @@
+@@ -0,0 +1,496 @@
 +.class public Lcom/gbwhatsapp/youbasha/ui/YoSettings/AllSettings;
 +.super Lcom/gbwhatsapp/youbasha/ui/YoSettings/BaseSettingsActivity;
 +.source "SourceFile"
@@ -374,9 +385,11 @@ index 0000000..5d735e3
 +    new-instance v4, Ll/a;
 +
 +    invoke-direct {v4, p0, p1, v0}, Ll/a;-><init>(Lcom/gbwhatsapp/youbasha/ui/YoSettings/AllSettings;Landroid/view/View;I)V
-+
++#coocoo
 +#    invoke-virtual {p1, v4}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
-+
++    iget-object v0, p0, Lcom/gbwhatsapp/youbasha/ui/YoSettings/AllSettings;->delegate:Lcom/coocoo/whatsappdelegate/AllSettingsDelegate;
++    invoke-virtual {v0, p1}, Lcom/coocoo/whatsappdelegate/AllSettingsDelegate;->setWhatsAppClickListener(Landroid/view/View;)V
++#coocoo
 +    const-string p1, "modPriv"
 +
 +    invoke-static {p1, v2}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
