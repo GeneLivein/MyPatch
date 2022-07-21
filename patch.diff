@@ -81,6 +81,47 @@ index 4727dd4..76dbcf9 100644
      }
  }
 \ No newline at end of file
+diff --git a/whatsapp_modify_module/res/layout/yo_settings_about.xml b/whatsapp_modify_module/res/layout/yo_settings_about.xml
+new file mode 100644
+index 0000000..047b691
+--- /dev/null
++++ b/whatsapp_modify_module/res/layout/yo_settings_about.xml
+@@ -0,0 +1,34 @@
++<?xml version="1.0" encoding="utf-8"?>
++<ScrollView android:orientation="vertical" android:background="@color/yosettings_background" android:layout_width="fill_parent" android:layout_height="fill_parent"
++  xmlns:android="http://schemas.android.com/apk/res/android">
++    <LinearLayout android:orientation="vertical" android:descendantFocusability="blocksDescendants" android:layout_width="fill_parent" android:layout_height="wrap_content">
++        <include layout="@layout/yo_toolbar" />
++        <LinearLayout android:orientation="vertical" android:background="@drawable/rounded_card" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/settings_divider_text_margin_top">
++            <com.gbwhatsapp.yo.tf android:text="@string/yo_About" style="@style/YoSettings_row_title" />
++            <LinearLayout android:orientation="vertical" android:background="?android:selectableItemBackground" android:padding="@dimen/info_screen_padding" android:focusable="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent">
++            <!-- #coocoo -->
++<!--                <com.gbwhatsapp.yo.tf android:text="GBWhatsApp By Fouad Mokdad" android:drawablePadding="@dimen/settings_row_horizontal_padding" android:drawableStart="@drawable/icon_06" android:drawableTint="@null" style="@style/YoSettings_row" />-->
++                <com.gbwhatsapp.yo.tf android:text="GBWhatsApp" android:drawablePadding="@dimen/settings_row_horizontal_padding" android:drawableStart="@drawable/icon_06" android:drawableTint="@null" style="@style/YoSettings_row" />
++            <!-- #coocoo -->
++            </LinearLayout>
++            <View android:layout_marginStart="@dimen/settings_divider_horizontal_margin_left" android:layout_marginEnd="@dimen/settings_radio_button_text_padding_left" style="@style/FlatCardSeparator" />
++            <LinearLayout android:orientation="horizontal" android:background="?android:selectableItemBackground" android:padding="@dimen/info_screen_padding" android:focusable="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent" android:onClick="openWebsite">
++                <com.gbwhatsapp.yo.tf android:text="@string/view_website" android:drawablePadding="@dimen/settings_row_horizontal_padding" android:drawableStart="@drawable/ic_yoweb" style="@style/YoSettings_row" />
++            </LinearLayout>
++        </LinearLayout>
++        <LinearLayout android:orientation="vertical" android:background="@drawable/rounded_card" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/settings_divider_text_margin_top">
++            <com.gbwhatsapp.yo.tf android:text="@string/yo_follow" style="@style/YoSettings_row_title" />
++            <LinearLayout android:orientation="horizontal" android:tag="twitter" android:background="?android:selectableItemBackground" android:padding="@dimen/info_screen_padding" android:focusable="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent" android:onClick="openSocialMedia">
++                <com.gbwhatsapp.yo.tf android:text="Twitter" android:drawablePadding="@dimen/settings_row_horizontal_padding" android:drawableStart="@drawable/ic_yotwitter" style="@style/YoSettings_row" />
++            </LinearLayout>
++            <View android:layout_marginStart="@dimen/settings_divider_horizontal_margin_left" android:layout_marginEnd="@dimen/settings_radio_button_text_padding_left" style="@style/FlatCardSeparator" />
++            <LinearLayout android:orientation="horizontal" android:tag="telegram" android:background="?android:selectableItemBackground" android:padding="@dimen/info_screen_padding" android:focusable="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent" android:onClick="openSocialMedia">
++                <com.gbwhatsapp.yo.tf android:text="Telegram" android:drawablePadding="@dimen/settings_row_horizontal_padding" android:drawableStart="@drawable/ic_yotelegram" style="@style/YoSettings_row" />
++            </LinearLayout>
++        </LinearLayout>
++        <LinearLayout android:orientation="vertical" android:id="@id/div2" android:background="@drawable/rounded_card" android:padding="@dimen/info_screen_padding" android:focusable="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_marginTop="@dimen/settings_divider_text_margin_top" android:foreground="?android:selectableItemBackground">
++            <com.gbwhatsapp.yo.tf android:text="@string/creditsS" android:drawablePadding="@dimen/settings_row_horizontal_padding" android:drawableStart="@drawable/ic_yoabout" style="@style/YoSettings_row" />
++        </LinearLayout>
++        <com.gbwhatsapp.yo.tf android:gravity="center" android:layout_marginTop="@dimen/info_screen_padding" android:text="@string/yowav" style="@style/YoSettings_row" />
++    </LinearLayout>
++</ScrollView>
+\ No newline at end of file
 diff --git a/whatsapp_modify_module/smali_classes4/com/gbwhatsapp/youbasha/ui/YoSettings/About.smali b/whatsapp_modify_module/smali_classes4/com/gbwhatsapp/youbasha/ui/YoSettings/About.smali
 new file mode 100644
 index 0000000..6a6baa6
