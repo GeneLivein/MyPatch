@@ -1,8 +1,8 @@
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt
-index 4727dd4..d95d787 100644
+index 4727dd4..325f3f4 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt
-@@ -18,15 +18,17 @@ import com.gbwhatsapp.youbasha.ui.YoSettings.AllSettings
+@@ -18,15 +18,21 @@ import com.gbwhatsapp.youbasha.ui.YoSettings.AllSettings
  class AllSettingsDelegate(hostActivity: AllSettings) : ActivityDelegate(hostActivity) {
  
      @SmaliInject
@@ -15,16 +15,20 @@ index 4727dd4..d95d787 100644
 -        view.setOnClickListener {
 +    override fun onCreate(savedInstanceState: Bundle?) {
 +        super.onCreate(savedInstanceState)
++
 +        val whatsapp = mHostActivity.findViewById<View>(ResMgr.getId("modDon"))
 +        whatsapp.setOnClickListener {
              val intent = Intent(Intent.ACTION_VIEW, Uri.parse(WHATS_APP_URL))
              mHostActivity.startActivity(intent)
          }
 +
-+        val packageInfo = whatsapp.context.packageManager.getPackageInfo(whatsapp.context.packageName, 0)
++        val packageInfo = mHostActivity.packageManager.getPackageInfo(mHostActivity.packageName, 0)
 +        val str = "${ResMgr.getString("cc_app_name")} ${packageInfo.versionName}"
 +        val title = ((whatsapp as ViewGroup).getChildAt(1) as ViewGroup).getChildAt(0) as TextView
 +        title.text = str
++
++        val updateBtn = mHostActivity.findViewById<View>(ResMgr.getId("modUpdate"))
++        updateBtn.isEnabled = false
      }
  }
 \ No newline at end of file
