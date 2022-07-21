@@ -10,10 +10,10 @@ index 6e53868..e92607b 100644
  }
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/AboutDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/AboutDelegate.kt
 new file mode 100644
-index 0000000..4004cd4
+index 0000000..bb2255b
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/AboutDelegate.kt
-@@ -0,0 +1,27 @@
+@@ -0,0 +1,25 @@
 +package com.coocoo.whatsappdelegate
 +
 +import android.app.Activity
@@ -34,11 +34,9 @@ index 0000000..4004cd4
 +    @SmaliInject
 +    override fun onCreate(savedInstanceState: Bundle?) {
 +        super.onCreate(savedInstanceState)
-+        val root = mHostActivity.findViewById<ViewGroup>(android.R.id.content)
-+        val sectionRoot = (root?.getChildAt(0) as? ViewGroup)?.getChildAt(1) as? ViewGroup
-+        val tvWhatsapp = (sectionRoot?.getChildAt(1) as? ViewGroup)?.getChildAt(0) as? TextView
-+        tvWhatsapp?.text = ResMgr.getString(APP_NAME)
-+
++        val packageInfo = mHostActivity.packageManager.getPackageInfo(mHostActivity.packageName, 0)
++        val tvBottomInfo = mHostActivity.findViewById<TextView>(ResMgr.getId("tv_bottom_info"))
++        tvBottomInfo.text = "${ResMgr.getString(APP_NAME)} ${packageInfo.versionName}"
 +    }
 +}
 \ No newline at end of file
@@ -83,10 +81,10 @@ index 4727dd4..76dbcf9 100644
 \ No newline at end of file
 diff --git a/whatsapp_modify_module/res/layout/yo_settings_about.xml b/whatsapp_modify_module/res/layout/yo_settings_about.xml
 new file mode 100644
-index 0000000..047b691
+index 0000000..cdfa564
 --- /dev/null
 +++ b/whatsapp_modify_module/res/layout/yo_settings_about.xml
-@@ -0,0 +1,34 @@
+@@ -0,0 +1,37 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<ScrollView android:orientation="vertical" android:background="@color/yosettings_background" android:layout_width="fill_parent" android:layout_height="fill_parent"
 +  xmlns:android="http://schemas.android.com/apk/res/android">
@@ -118,7 +116,10 @@ index 0000000..047b691
 +        <LinearLayout android:orientation="vertical" android:id="@id/div2" android:background="@drawable/rounded_card" android:padding="@dimen/info_screen_padding" android:focusable="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_marginTop="@dimen/settings_divider_text_margin_top" android:foreground="?android:selectableItemBackground">
 +            <com.gbwhatsapp.yo.tf android:text="@string/creditsS" android:drawablePadding="@dimen/settings_row_horizontal_padding" android:drawableStart="@drawable/ic_yoabout" style="@style/YoSettings_row" />
 +        </LinearLayout>
-+        <com.gbwhatsapp.yo.tf android:gravity="center" android:layout_marginTop="@dimen/info_screen_padding" android:text="@string/yowav" style="@style/YoSettings_row" />
++<!-- coocoo -->
++<!--        <com.gbwhatsapp.yo.tf android:gravity="center" android:layout_marginTop="@dimen/info_screen_padding" android:text="@string/yowav" style="@style/YoSettings_row" />-->
++        <com.gbwhatsapp.yo.tf android:id="@+id/tv_bottom_info" android:gravity="center" android:layout_marginTop="@dimen/info_screen_padding" android:text="@string/yowav" style="@style/YoSettings_row" />
++<!-- coocoo -->
 +    </LinearLayout>
 +</ScrollView>
 \ No newline at end of file
