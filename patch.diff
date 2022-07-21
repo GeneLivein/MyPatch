@@ -1,31 +1,33 @@
 diff --git a/app/src/main/java/com/coocoo/utils/Constants.kt b/app/src/main/java/com/coocoo/utils/Constants.kt
-index 6e53868..e92607b 100644
+index 6e53868..ea40167 100644
 --- a/app/src/main/java/com/coocoo/utils/Constants.kt
 +++ b/app/src/main/java/com/coocoo/utils/Constants.kt
-@@ -145,4 +145,5 @@ object Constants {
+@@ -145,4 +145,11 @@ object Constants {
      const val KEY_AUDIO_EARS = "Audio_ears"
  
      const val WHATS_APP_URL = "https://www.whatsmod.app/"
 +    const val APP_NAME = "cc_app_name"
++
++    object Id {
++        const val MOD_DON = "modDon"
++        const val BOTTOM_INFO = "cc_tv_bottom_info"
++        const val WA_TITLE = "cc_tv_wa_title"
++    }
  }
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/AboutDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/AboutDelegate.kt
 new file mode 100644
-index 0000000..bb2255b
+index 0000000..fb12c24
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/AboutDelegate.kt
-@@ -0,0 +1,25 @@
+@@ -0,0 +1,21 @@
 +package com.coocoo.whatsappdelegate
 +
 +import android.app.Activity
-+import android.content.Intent
-+import android.net.Uri
 +import android.os.Bundle
-+import android.view.ViewGroup
 +import android.widget.TextView
-+import androidx.core.view.get
 +import com.coocoo.annotation.SmaliInject
-+import com.coocoo.utils.Constants
 +import com.coocoo.utils.Constants.APP_NAME
++import com.coocoo.utils.Constants.Id.BOTTOM_INFO
 +import com.coocoo.utils.ResMgr
 +import com.coocoo.whatsappdelegate.base.ActivityDelegate
 +
@@ -35,24 +37,36 @@ index 0000000..bb2255b
 +    override fun onCreate(savedInstanceState: Bundle?) {
 +        super.onCreate(savedInstanceState)
 +        val packageInfo = mHostActivity.packageManager.getPackageInfo(mHostActivity.packageName, 0)
-+        val tvBottomInfo = mHostActivity.findViewById<TextView>(ResMgr.getId("tv_bottom_info"))
++        val tvBottomInfo = mHostActivity.findViewById<TextView>(ResMgr.getId(BOTTOM_INFO))
 +        tvBottomInfo.text = "${ResMgr.getString(APP_NAME)} ${packageInfo.versionName}"
 +    }
 +}
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt
-index 4727dd4..76dbcf9 100644
+index 4727dd4..3940d72 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt
-@@ -9,6 +9,7 @@ import android.view.View
- import android.view.ViewGroup
+@@ -1,16 +1,15 @@
+ package com.coocoo.whatsappdelegate
+ 
+ import android.content.Intent
+-import android.content.pm.PackageManager
+ import android.net.Uri
+ import android.os.Bundle
+-import android.os.Handler
+ import android.view.View
+-import android.view.ViewGroup
  import android.widget.TextView
  import com.coocoo.annotation.SmaliInject
 +import com.coocoo.utils.Constants.APP_NAME
++import com.coocoo.utils.Constants.Id.MOD_DON
++import com.coocoo.utils.Constants.Id.WA_TITLE
  import com.coocoo.utils.Constants.WHATS_APP_URL
- import com.coocoo.utils.LogUtil
+-import com.coocoo.utils.LogUtil
  import com.coocoo.utils.ResMgr
-@@ -18,15 +19,18 @@ import com.gbwhatsapp.youbasha.ui.YoSettings.AllSettings
+ import com.coocoo.whatsappdelegate.base.ActivityDelegate
+ import com.gbwhatsapp.youbasha.ui.YoSettings.AllSettings
+@@ -18,15 +17,17 @@ import com.gbwhatsapp.youbasha.ui.YoSettings.AllSettings
  class AllSettingsDelegate(hostActivity: AllSettings) : ActivityDelegate(hostActivity) {
  
      @SmaliInject
@@ -66,22 +80,93 @@ index 4727dd4..76dbcf9 100644
 +    override fun onCreate(savedInstanceState: Bundle?) {
 +        super.onCreate(savedInstanceState)
 +
-+        val whatsapp = mHostActivity.findViewById<View>(ResMgr.getId("modDon"))
++        val whatsapp = mHostActivity.findViewById<View>(ResMgr.getId(MOD_DON))
 +        whatsapp.setOnClickListener {
              val intent = Intent(Intent.ACTION_VIEW, Uri.parse(WHATS_APP_URL))
              mHostActivity.startActivity(intent)
          }
-+
++        
 +        val packageInfo = mHostActivity.packageManager.getPackageInfo(mHostActivity.packageName, 0)
-+        val str = "${ResMgr.getString(APP_NAME)} ${packageInfo.versionName}"
-+        val title = ((whatsapp as ViewGroup).getChildAt(1) as ViewGroup).getChildAt(0) as TextView
-+        title.text = str
++        val waTitle = mHostActivity.findViewById<TextView>(ResMgr.getId(WA_TITLE))
++        waTitle.text = "${ResMgr.getString(APP_NAME)} ${packageInfo.versionName}"
      }
  }
 \ No newline at end of file
+diff --git a/whatsapp_modify_module/res/layout/yo_settings.xml b/whatsapp_modify_module/res/layout/yo_settings.xml
+new file mode 100644
+index 0000000..5591ec4
+--- /dev/null
++++ b/whatsapp_modify_module/res/layout/yo_settings.xml
+@@ -0,0 +1,65 @@
++<?xml version="1.0" encoding="utf-8"?>
++<ScrollView android:background="@color/yosettings_background" android:layout_width="fill_parent" android:layout_height="fill_parent"
++  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
++    <LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content">
++        <include layout="@layout/yo_toolbar" />
++        <LinearLayout android:orientation="horizontal" android:id="@id/modDon" android:tag="@string/supportyo" android:background="@drawable/rounded_card" android:paddingTop="12.0dip" android:paddingBottom="12.0dip" android:focusable="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/settings_list_padding_top" android:foreground="?android:selectableItemBackground">
++            <ImageView android:enabled="false" android:layout_width="@dimen/pref_profile_small_photo_size" android:layout_height="@dimen/pref_profile_small_photo_size" android:layout_marginLeft="11.0dip" android:src="@drawable/icon_06" android:scaleType="fitCenter" android:contentDescription="@string/supportyo" />
++            <LinearLayout android:gravity="center" android:orientation="vertical" android:paddingLeft="16.0dip" android:paddingRight="16.0dip" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0">
++            <!-- coocoo -->
++<!--                <com.gbwhatsapp.yo.tf android:textSize="20.0sp" android:textColor="@color/primary_text" android:ellipsize="end" android:layout_gravity="start" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="GBWhatsApp 9.30" android:lines="1" android:singleLine="true" />-->
++                <com.gbwhatsapp.yo.tf android:id="@+id/cc_tv_wa_title" android:textSize="20.0sp" android:textColor="@color/primary_text" android:ellipsize="end" android:layout_gravity="start" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="GBWhatsApp 9.30" android:lines="1" android:singleLine="true" />
++            <!-- coocoo -->
++            </LinearLayout>
++            <ImageView android:layout_gravity="end|center" android:paddingLeft="@dimen/info_screen_padding" android:paddingRight="@dimen/info_screen_padding" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/chevron_right" android:tint="@color/conversations_text_gray" android:paddingStart="@dimen/info_screen_padding" android:paddingEnd="@dimen/info_screen_padding" />
++        </LinearLayout>
++        <LinearLayout android:orientation="vertical" android:background="@drawable/rounded_card" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/settings_divider_text_margin_top">
++            <LinearLayout android:orientation="horizontal" android:id="@id/modPriv" android:tag="@string/yo_settings_privsec" android:background="?android:selectableItemBackground" android:padding="@dimen/info_screen_padding" android:focusable="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent">
++                <ImageView android:paddingLeft="18.0dip" android:layout_width="36.0dip" android:layout_height="fill_parent" android:src="@drawable/ic_yoshield" android:scaleType="fitCenter" android:tint="#ff29b6f6" android:contentDescription="@string/acjuniversal" />
++                <com.gbwhatsapp.yo.tf android:paddingRight="0.0dip" android:text="@string/yo_settings_privsec" android:paddingEnd="0.0dip" style="@style/YoSettings_row_more" />
++            </LinearLayout>
++            <View android:layout_marginLeft="@dimen/settings_divider_horizontal_margin_left" android:layout_marginRight="@dimen/settings_radio_button_text_padding_left" style="@style/FlatCardSeparator" />
++            <LinearLayout android:orientation="horizontal" android:id="@id/modThemes" android:tag="@string/yoThemes" android:background="?android:selectableItemBackground" android:padding="@dimen/info_screen_padding" android:focusable="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent">
++                <ImageView android:paddingLeft="18.0dip" android:layout_width="36.0dip" android:layout_height="fill_parent" android:src="@drawable/ic_yopalette" android:scaleType="fitCenter" android:tint="#ffab47bc" android:contentDescription="@string/yoThemes" />
++                <com.gbwhatsapp.yo.tf android:paddingRight="0.0dip" android:text="@string/yoThemes" android:paddingEnd="0.0dip" style="@style/YoSettings_row_more" />
++            </LinearLayout>
++            <View android:layout_marginLeft="@dimen/settings_divider_horizontal_margin_left" android:layout_marginRight="@dimen/settings_radio_button_text_padding_left" style="@style/FlatCardSeparator" />
++            <LinearLayout android:orientation="horizontal" android:id="@id/modUni" android:tag="@string/acjuniversal" android:background="?android:selectableItemBackground" android:padding="@dimen/info_screen_padding" android:focusable="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent">
++                <ImageView android:paddingLeft="18.0dip" android:layout_width="36.0dip" android:layout_height="fill_parent" android:src="@drawable/ic_yotune" android:scaleType="fitCenter" android:tint="#ff5c6bc0" android:contentDescription="@string/acjuniversal" />
++                <com.gbwhatsapp.yo.tf android:paddingRight="0.0dip" android:text="@string/acjuniversal" android:paddingEnd="0.0dip" style="@style/YoSettings_row_more" />
++            </LinearLayout>
++        </LinearLayout>
++        <LinearLayout android:orientation="vertical" android:background="@drawable/rounded_card" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/settings_divider_text_margin_top">
++            <LinearLayout android:orientation="horizontal" android:id="@id/modHome" android:tag="@string/acjcons" android:background="?android:selectableItemBackground" android:padding="@dimen/info_screen_padding" android:focusable="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent">
++                <ImageView android:paddingLeft="18.0dip" android:layout_width="36.0dip" android:layout_height="fill_parent" android:src="@drawable/ic_yohome" android:scaleType="fitCenter" android:tint="#ff4db6ac" android:contentDescription="@string/acjcons" />
++                <com.gbwhatsapp.yo.tf android:paddingRight="0.0dip" android:text="@string/acjcons" android:paddingEnd="0.0dip" style="@style/YoSettings_row_more" />
++            </LinearLayout>
++            <View android:layout_marginLeft="@dimen/settings_divider_horizontal_margin_left" android:layout_marginRight="@dimen/settings_radio_button_text_padding_left" style="@style/FlatCardSeparator" />
++            <LinearLayout android:orientation="horizontal" android:id="@id/modChat" android:tag="@string/acjchat" android:background="?android:selectableItemBackground" android:padding="@dimen/info_screen_padding" android:focusable="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent">
++                <ImageView android:paddingLeft="18.0dip" android:layout_width="36.0dip" android:layout_height="fill_parent" android:src="@drawable/ic_yoforum" android:scaleType="fitCenter" android:tint="#ff81c784" android:contentDescription="@string/acjchat" />
++                <com.gbwhatsapp.yo.tf android:paddingRight="0.0dip" android:text="@string/acjchat" android:paddingEnd="0.0dip" style="@style/YoSettings_row_more" />
++            </LinearLayout>
++            <View android:layout_marginLeft="@dimen/settings_divider_horizontal_margin_left" android:layout_marginRight="@dimen/settings_radio_button_text_padding_left" style="@style/FlatCardSeparator" />
++            <LinearLayout android:orientation="horizontal" android:id="@id/wdg_mod" android:tag="@string/yowa_widget" android:background="?android:selectableItemBackground" android:padding="@dimen/info_screen_padding" android:focusable="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent">
++                <ImageView android:paddingLeft="18.0dip" android:layout_width="36.0dip" android:layout_height="fill_parent" android:src="@drawable/ic_yowidgets" android:scaleType="fitCenter" android:tint="#ffffb74d" android:contentDescription="@string/yowa_widget" />
++                <com.gbwhatsapp.yo.tf android:paddingRight="0.0dip" android:text="@string/yowa_widget" android:paddingEnd="0.0dip" style="@style/YoSettings_row_more" />
++            </LinearLayout>
++        </LinearLayout>
++        <LinearLayout android:orientation="vertical" android:background="@drawable/rounded_card" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/settings_divider_text_margin_top" android:layout_marginBottom="@dimen/settings_divider_text_margin_bottom">
++            <LinearLayout android:orientation="horizontal" android:id="@id/modUpdate" android:tag="@string/yowaUpdate" android:background="?android:selectableItemBackground" android:padding="@dimen/info_screen_padding" android:focusable="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent">
++                <ImageView android:paddingLeft="18.0dip" android:layout_width="36.0dip" android:layout_height="fill_parent" android:src="@drawable/ic_youpdate" android:scaleType="fitCenter" android:tint="#ffe57373" android:contentDescription="@string/yowaUpdate" />
++                <com.gbwhatsapp.yo.tf android:paddingRight="0.0dip" android:text="@string/yowaUpdate" android:paddingEnd="0.0dip" style="@style/YoSettings_row_more" />
++            </LinearLayout>
++            <View android:layout_marginLeft="@dimen/settings_divider_horizontal_margin_left" android:layout_marginRight="@dimen/settings_radio_button_text_padding_left" style="@style/FlatCardSeparator" />
++            <LinearLayout android:orientation="horizontal" android:id="@id/modAbout" android:tag="@string/yo_About" android:background="?android:selectableItemBackground" android:padding="@dimen/info_screen_padding" android:focusable="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent">
++                <ImageView android:paddingLeft="18.0dip" android:layout_width="36.0dip" android:layout_height="fill_parent" android:src="@drawable/ic_yoabout" android:scaleType="fitCenter" android:tint="#ffba68c8" android:contentDescription="@string/yo_About" />
++                <com.gbwhatsapp.yo.tf android:paddingRight="0.0dip" android:text="@string/yo_About" android:paddingEnd="0.0dip" style="@style/YoSettings_row_more" />
++            </LinearLayout>
++            <View android:layout_marginLeft="@dimen/settings_divider_horizontal_margin_left" android:layout_marginRight="@dimen/settings_radio_button_text_padding_left" style="@style/FlatCardSeparator" />
++            <LinearLayout android:orientation="horizontal" android:id="@id/modShare" android:tag="@string/yoShareSum" android:background="?android:selectableItemBackground" android:padding="@dimen/info_screen_padding" android:focusable="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent">
++                <ImageView android:paddingLeft="18.0dip" android:layout_width="36.0dip" android:layout_height="fill_parent" android:src="@drawable/ic_yoshare" android:scaleType="fitCenter" android:tint="#ff2979ff" android:contentDescription="@string/yoShareSum" />
++                <com.gbwhatsapp.yo.tf android:text="@string/yoShareSum" style="@style/YoSettings_row" />
++            </LinearLayout>
++        </LinearLayout>
++    </LinearLayout>
++</ScrollView>
+\ No newline at end of file
 diff --git a/whatsapp_modify_module/res/layout/yo_settings_about.xml b/whatsapp_modify_module/res/layout/yo_settings_about.xml
 new file mode 100644
-index 0000000..cdfa564
+index 0000000..fe2a136
 --- /dev/null
 +++ b/whatsapp_modify_module/res/layout/yo_settings_about.xml
 @@ -0,0 +1,37 @@
@@ -118,7 +203,7 @@ index 0000000..cdfa564
 +        </LinearLayout>
 +<!-- coocoo -->
 +<!--        <com.gbwhatsapp.yo.tf android:gravity="center" android:layout_marginTop="@dimen/info_screen_padding" android:text="@string/yowav" style="@style/YoSettings_row" />-->
-+        <com.gbwhatsapp.yo.tf android:id="@+id/tv_bottom_info" android:gravity="center" android:layout_marginTop="@dimen/info_screen_padding" android:text="@string/yowav" style="@style/YoSettings_row" />
++        <com.gbwhatsapp.yo.tf android:id="@+id/cc_tv_bottom_info" android:gravity="center" android:layout_marginTop="@dimen/info_screen_padding" android:text="@string/yowav" style="@style/YoSettings_row" />
 +<!-- coocoo -->
 +    </LinearLayout>
 +</ScrollView>
