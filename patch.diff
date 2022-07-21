@@ -1,14 +1,28 @@
-diff --git a/app/src/main/java/com/coocoo/utils/ResMgr.java b/app/src/main/java/com/coocoo/utils/ResMgr.java
-deleted file mode 100644
-index e69de29..0000000
-diff --git a/whatsapp_modify_module/AndroidManifest.xml b/whatsapp_modify_module/AndroidManifest.xml
-index 000db72..37ff5cd 100644
---- a/whatsapp_modify_module/AndroidManifest.xml
-+++ b/whatsapp_modify_module/AndroidManifest.xml
-@@ -1,5 +1,5 @@
- <?xml version='1.0' encoding='UTF-8'?>
--<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:compileSdkVersion="23" android:compileSdkVersionCodename="6.0-2438415" package="com.gbwhatsapp" platformBuildVersionCode="31" platformBuildVersionName="12" android:versionCode="900000" android:versionName="9.0.0">
-+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:compileSdkVersion="23" android:compileSdkVersionCodename="6.0-2438415" package="com.gbwhatsapp" platformBuildVersionCode="31" platformBuildVersionName="12" android:versionCode="9000000" android:versionName="9.0.0">
-     <uses-feature android:name="android.hardware.bluetooth" android:required="false"/>
-     <uses-feature android:name="android.hardware.location" android:required="false"/>
-     <uses-feature android:name="android.hardware.location.network" android:required="false"/>
+diff --git a/app/src/main/java/com/coocoo/CooCooAppShell.kt b/app/src/main/java/com/coocoo/CooCooAppShell.kt
+index ed84640..13138e2 100644
+--- a/app/src/main/java/com/coocoo/CooCooAppShell.kt
++++ b/app/src/main/java/com/coocoo/CooCooAppShell.kt
+@@ -5,11 +5,14 @@ import android.os.Bundle
+ import com.coocoo.coocoosp.SPDelegate
+ import com.coocoo.manager.PerformanceAnalyticsManager
+ import com.coocoo.report.Report
++import com.coocoo.utils.LogUtil
+ import com.coocoo.utils.ResMgr
+ import com.gbwhatsapp.AppShell
+-import com.gbwhatsapp.yo.yo
+ 
+ class CooCooAppShell : AppShell() {
++    companion object {
++        private const val FLURRY_APP_KEY = "4G4SG6ZXQ6PJ5HK9PNFG"
++    }
+ 
+     override fun onCreate() {
+         CooCoo.context = this
+@@ -53,5 +56,6 @@ class CooCooAppShell : AppShell() {
+         Report.init(this)
+         SPDelegate.getInstance().init(this)
+         ResMgr.init(this)
++        LogUtil.d(FLURRY_APP_KEY)
+     }
+ }
+\ No newline at end of file
