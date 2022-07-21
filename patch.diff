@@ -1,5 +1,5 @@
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt
-index 4727dd4..325f3f4 100644
+index 4727dd4..8902498 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt
 @@ -18,15 +18,21 @@ import com.gbwhatsapp.youbasha.ui.YoSettings.AllSettings
@@ -28,7 +28,7 @@ index 4727dd4..325f3f4 100644
 +        title.text = str
 +
 +        val updateBtn = mHostActivity.findViewById<View>(ResMgr.getId("modUpdate"))
-+        updateBtn.isEnabled = false
++//        updateBtn.isEnabled = false
      }
  }
 \ No newline at end of file
