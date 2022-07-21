@@ -1,8 +1,8 @@
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt
-index 4727dd4..8902498 100644
+index 4727dd4..de5eb7d 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/AllSettingsDelegate.kt
-@@ -18,15 +18,21 @@ import com.gbwhatsapp.youbasha.ui.YoSettings.AllSettings
+@@ -18,15 +18,18 @@ import com.gbwhatsapp.youbasha.ui.YoSettings.AllSettings
  class AllSettingsDelegate(hostActivity: AllSettings) : ActivityDelegate(hostActivity) {
  
      @SmaliInject
@@ -26,11 +26,31 @@ index 4727dd4..8902498 100644
 +        val str = "${ResMgr.getString("cc_app_name")} ${packageInfo.versionName}"
 +        val title = ((whatsapp as ViewGroup).getChildAt(1) as ViewGroup).getChildAt(0) as TextView
 +        title.text = str
-+
-+        val updateBtn = mHostActivity.findViewById<View>(ResMgr.getId("modUpdate"))
-+//        updateBtn.isEnabled = false
      }
  }
+\ No newline at end of file
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/UpdatesDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/UpdatesDelegate.kt
+new file mode 100644
+index 0000000..31f0fb3
+--- /dev/null
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/UpdatesDelegate.kt
+@@ -0,0 +1,16 @@
++package com.coocoo.whatsappdelegate
++
++import android.app.Activity
++import android.os.Bundle
++import com.coocoo.annotation.SmaliInject
++import com.coocoo.utils.LogUtil
++import com.coocoo.whatsappdelegate.base.ActivityDelegate
++
++class UpdatesDelegate(hostActivity: Activity) : ActivityDelegate(hostActivity) {
++
++    @SmaliInject
++    override fun onCreate(savedInstanceState: Bundle?) {
++        super.onCreate(savedInstanceState)
++        LogUtil.d("onCreate")
++    }
++}
 \ No newline at end of file
 diff --git a/whatsapp_modify_module/smali_classes4/com/gbwhatsapp/youbasha/ui/YoSettings/AllSettings.smali b/whatsapp_modify_module/smali_classes4/com/gbwhatsapp/youbasha/ui/YoSettings/AllSettings.smali
 index 9e92727..dc0d8cf 100644
@@ -77,3 +97,105 @@ index 9e92727..dc0d8cf 100644
      return-void
  .end method
  
+diff --git a/whatsapp_modify_module/smali_classes4/com/gbwhatsapp/youbasha/ui/YoSettings/Updates.smali b/whatsapp_modify_module/smali_classes4/com/gbwhatsapp/youbasha/ui/YoSettings/Updates.smali
+new file mode 100644
+index 0000000..bf43849
+--- /dev/null
++++ b/whatsapp_modify_module/smali_classes4/com/gbwhatsapp/youbasha/ui/YoSettings/Updates.smali
+@@ -0,0 +1,96 @@
++.class public Lcom/gbwhatsapp/youbasha/ui/YoSettings/Updates;
++.super Lcom/gbwhatsapp/youbasha/ui/YoSettings/BaseSettingsActivity;
++.source "SourceFile"
++
++#coocoo
++.field public final delegate:Lcom/coocoo/whatsappdelegate/UpdatesDelegate;
++#coocoo
++
++
++# direct methods
++.method public constructor <init>()V
++#coocoo
++    #.locals 0
++    .locals 1
++#coocoo
++    invoke-direct {p0}, Lcom/gbwhatsapp/youbasha/ui/YoSettings/BaseSettingsActivity;-><init>()V
++
++#coocoo
++    new-instance v0, Lcom/coocoo/whatsappdelegate/UpdatesDelegate;
++    invoke-direct {v0, p0},  Lcom/coocoo/whatsappdelegate/UpdatesDelegate;-><init>(Landroid/app/Activity;)V
++    iput-object v0, p0, Lcom/gbwhatsapp/youbasha/ui/YoSettings/Updates;->delegate:Lcom/coocoo/whatsappdelegate/UpdatesDelegate;
++#coocoo
++    return-void
++.end method
++
++
++# virtual methods
++.method public checkForUpdates(Landroid/view/View;)V
++    .locals 1
++
++    invoke-static {}, Lcom/gbwhatsapp/youbasha/app;->checkInternetNow()Z
++
++    move-result p1
++
++    if-eqz p1, :cond_0
++
++    const/4 p1, 0x1
++
++    invoke-static {p0, p1}, Lcom/gbwhatsapp/yo/yo;->checkV(Landroid/app/Activity;Z)V
++
++    goto :goto_0
++
++    :cond_0
++    const-string p1, "network_required"
++
++    invoke-static {p1}, Lcom/gbwhatsapp/yo/yo;->getString(Ljava/lang/String;)Ljava/lang/String;
++
++    move-result-object p1
++
++    const/4 v0, 0x0
++
++    invoke-static {p0, p1, v0}, Landroid/widget/Toast;->makeText(Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;
++
++    move-result-object p1
++
++    invoke-virtual {p1}, Landroid/widget/Toast;->show()V
++
++    :goto_0
++    return-void
++.end method
++
++.method public onCreate(Landroid/os/Bundle;)V
++#coocoo
++    #.locals 1
++    .locals 2
++    move-object v1, p1
++#coocoo
++    invoke-super {p0, p1}, Lcom/gbwhatsapp/youbasha/ui/YoSettings/BaseSettingsActivity;->onCreate(Landroid/os/Bundle;)V
++
++    const-string p1, "yo_settings_updates"
++
++    const-string v0, "layout"
++
++    invoke-static {p1, v0}, Lcom/gbwhatsapp/yo/yo;->getID(Ljava/lang/String;Ljava/lang/String;)I
++
++    move-result p1
++
++    invoke-virtual {p0, p1}, Landroid/app/Activity;->setContentView(I)V
++
++#coocoo
++    iget-object v0, p0, Lcom/gbwhatsapp/youbasha/ui/YoSettings/Updates;->delegate:Lcom/coocoo/whatsappdelegate/UpdatesDelegate;
++    invoke-virtual {v0, v1}, Lcom/coocoo/whatsappdelegate/UpdatesDelegate;->onCreate(Landroid/os/Bundle;)V
++#coocoo
++
++    return-void
++.end method
++
++.method public openChangelog(Landroid/view/View;)V
++    .locals 0
++
++    new-instance p1, Lcom/gbwhatsapp/youbasha/task/changelog;
++
++    invoke-direct {p1, p0}, Lcom/gbwhatsapp/youbasha/task/changelog;-><init>(Landroid/app/Activity;)V
++
++    return-void
++.end method
