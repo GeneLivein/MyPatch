@@ -1,12 +1,13 @@
-diff --git a/app/src/main/java/com/coocoo/CooCooAppShell.kt b/app/src/main/java/com/coocoo/CooCooAppShell.kt
-index 901a94e..ae3da60 100644
---- a/app/src/main/java/com/coocoo/CooCooAppShell.kt
-+++ b/app/src/main/java/com/coocoo/CooCooAppShell.kt
-@@ -52,5 +52,6 @@ class CooCooAppShell : AppShell() {
-         Report.init(this)
-         SPDelegate.getInstance().init(this)
-         ResMgr.init(this)
-+        throw Exception()
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
+index dac76e7..f26590d 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
+@@ -20,6 +20,8 @@ public class HomeActivityDelegate extends ActivityDelegate {
+     @Override
+     public void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
++        String str = null;
++        str.length();
+         Log.d(TAG, "onCreate");
      }
- }
-\ No newline at end of file
+ 
