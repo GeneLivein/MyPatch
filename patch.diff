@@ -1,3 +1,15 @@
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+index 0e82a34..1f60130 100644
+--- a/app/src/main/AndroidManifest.xml
++++ b/app/src/main/AndroidManifest.xml
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+-    package="com.coocoo">
++    package="com.coocoowhatsapp">
+ 
+     <application
+         android:allowBackup="true"
 diff --git a/app/src/main/java/com/coocoo/CooCooAppShell.kt b/app/src/main/java/com/coocoo/CooCooAppShell.kt
 index ed84640..901a94e 100644
 --- a/app/src/main/java/com/coocoo/CooCooAppShell.kt
@@ -10,6 +22,36 @@ index ed84640..901a94e 100644
  
  class CooCooAppShell : AppShell() {
  
+diff --git a/app/src/main/java/com/coocoo/MainActivity.kt b/app/src/main/java/com/coocoo/MainActivity.kt
+deleted file mode 100644
+index 0709fe7..0000000
+--- a/app/src/main/java/com/coocoo/MainActivity.kt
++++ /dev/null
+@@ -1,11 +0,0 @@
+-package com.coocoo
+-
+-import androidx.appcompat.app.AppCompatActivity
+-import android.os.Bundle
+-
+-class MainActivity : AppCompatActivity() {
+-    override fun onCreate(savedInstanceState: Bundle?) {
+-        super.onCreate(savedInstanceState)
+-        setContentView(R.layout.activity_main)
+-    }
+-}
+\ No newline at end of file
+diff --git a/app/src/main/java/com/coocoo/report/ReportConversationScreen.kt b/app/src/main/java/com/coocoo/report/ReportConversationScreen.kt
+index 1277cdd..cda4e8a 100644
+--- a/app/src/main/java/com/coocoo/report/ReportConversationScreen.kt
++++ b/app/src/main/java/com/coocoo/report/ReportConversationScreen.kt
+@@ -1,7 +1,6 @@
+ package com.coocoo.report
+ 
+ import android.util.Log
+-import com.coocoo.BuildConfig
+ import com.coocoo.report.ReportConstant.EVENT_FM_CS_ACBAR
+ import com.coocoo.report.ReportConstant.EVENT_FM_CS_BUBTICK
+ import com.coocoo.report.ReportConstant.EVENT_FM_CS_CON
 diff --git a/app/src/main/java/com/coocoo/report/ReportDaily.kt b/app/src/main/java/com/coocoo/report/ReportDaily.kt
 index d849ddf..869633f 100644
 --- a/app/src/main/java/com/coocoo/report/ReportDaily.kt
