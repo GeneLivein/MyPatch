@@ -26,6 +26,43 @@ index ed84640..13138e2 100644
      }
  }
 \ No newline at end of file
+diff --git a/app/src/main/java/com/coocoo/conversation/ConversationManager.kt b/app/src/main/java/com/coocoo/conversation/ConversationManager.kt
+index b9dfe72..4ff47a3 100644
+--- a/app/src/main/java/com/coocoo/conversation/ConversationManager.kt
++++ b/app/src/main/java/com/coocoo/conversation/ConversationManager.kt
+@@ -3,7 +3,6 @@ package com.coocoo.conversation
+ import X.c1_2nC
+ import com.coocoo.annotation.SmaliInject
+ import com.coocoo.report.Report
+-import com.coocoo.utils.AppExecutors
+ 
+ object ConversationManager {
+ 
+diff --git a/app/src/main/java/com/coocoo/report/ReportDaily.kt b/app/src/main/java/com/coocoo/report/ReportDaily.kt
+index d849ddf..869633f 100644
+--- a/app/src/main/java/com/coocoo/report/ReportDaily.kt
++++ b/app/src/main/java/com/coocoo/report/ReportDaily.kt
+@@ -1,20 +1,5 @@
+ package com.coocoo.report
+ 
+-import android.graphics.Color
+-import android.util.Log
+-import com.coocoo.BuildConfig
+-import com.coocoo.coocoosp.SPDelegate
+-import com.coocoo.utils.AppExecutors
+-import com.coocoo.utils.Constants
+-import com.coocoo.utils.DateUtil
+-import com.coocoo.whatsappdelegate.*
+-import com.coocoo.whatsappdelegate.settings.ColorPrefDelegate
+-import com.coocoo.whatsappdelegate.settings.HomeDelegate
+-import com.gbwhatsapp.yo.shp
+-import com.gbwhatsapp.youbasha.others
+-import com.gbwhatsapp.youbasha.ui.YoSettings.UniversalSettings
+-import java.lang.Exception
+-
+ object ReportDaily {
+ 
+     fun reportAsync() {
 diff --git a/app/src/main/java/com/coocoo/utils/AbstractMainThreadExecutor.java b/app/src/main/java/com/coocoo/utils/AbstractMainThreadExecutor.java
 deleted file mode 100644
 index 993e287..0000000
@@ -55,3 +92,208 @@ index 993e287..0000000
 -    public abstract void postDelayed(@NonNull Runnable command, long delayMillis);
 -}
 -
+diff --git a/app/src/main/java/com/coocoo/utils/AppExecutors.java b/app/src/main/java/com/coocoo/utils/AppExecutors.java
+deleted file mode 100644
+index 2d6671e..0000000
+--- a/app/src/main/java/com/coocoo/utils/AppExecutors.java
++++ /dev/null
+@@ -1,199 +0,0 @@
+-package com.coocoo.utils;
+-
+-import android.os.Handler;
+-import android.os.Looper;
+-
+-import androidx.annotation.NonNull;
+-
+-import java.util.concurrent.Executor;
+-import java.util.concurrent.ExecutorService;
+-import java.util.concurrent.LinkedBlockingQueue;
+-import java.util.concurrent.RejectedExecutionHandler;
+-import java.util.concurrent.ScheduledExecutorService;
+-import java.util.concurrent.ScheduledThreadPoolExecutor;
+-import java.util.concurrent.ThreadFactory;
+-import java.util.concurrent.ThreadPoolExecutor;
+-import java.util.concurrent.TimeUnit;
+-
+-public class AppExecutors {
+-    private static final String TAG = AppExecutors.class.getSimpleName();
+-
+-    private static final String EXECUTOR_NAME_SCHEDULED = "app_scheduled_executor";
+-    private static final String EXECUTOR_NAME_NORMAL_IO = "app_normal_io_executor";
+-    private static final String EXECUTOR_NAME_DISK_IO = "app_disk_io_executor";
+-    private static final String EXECUTOR_NAME_NETWORK = "app_network_executor";
+-    private static final String EXECUTOR_NAME_AD = "app_ad_executor";
+-
+-    private final Executor mNormalIO;
+-    private final Executor mDiskIO;
+-    private final Executor mNetworkIO;
+-    private final Executor mAdIO;
+-    private final MainThreadExecutor mMainThread;
+-
+-    private AppExecutors(Executor normalIO, Executor diskIO, Executor networkIO, Executor adIO, MainThreadExecutor mainThread) {
+-        this.mNormalIO = normalIO;
+-        this.mDiskIO = diskIO;
+-        this.mNetworkIO = networkIO;
+-        this.mAdIO = adIO;
+-        this.mMainThread = mainThread;
+-    }
+-
+-    private AppExecutors() {
+-        this(normalIoExecutor(), diskIoExecutor(), networkExecutor(), adExecutor(), new MainThreadExecutor());
+-    }
+-
+-    public static AppExecutors getInstance() {
+-        return InstanceHolder.INSTANCE;
+-    }
+-
+-    private static ScheduledExecutorService scheduledThreadPoolExecutor() {
+-        return new ScheduledThreadPoolExecutor(16,
+-                new ThreadFactory() {
+-                    @Override
+-                    public Thread newThread(@NonNull Runnable r) {
+-                        return new Thread(r, EXECUTOR_NAME_SCHEDULED);
+-                    }
+-                },
+-                new RejectedExecutionHandler() {
+-                    @Override
+-                    public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+-                    }
+-                });
+-    }
+-
+-    private static ExecutorService normalIoExecutor() {
+-        return new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS,
+-                new LinkedBlockingQueue<Runnable>(1024),
+-                new ThreadFactory() {
+-                    @Override
+-                    public Thread newThread(@NonNull Runnable r) {
+-                        return new Thread(r, EXECUTOR_NAME_NORMAL_IO);
+-                    }
+-                },
+-                new RejectedExecutionHandler() {
+-                    @Override
+-                    public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+-                    }
+-                });
+-    }
+-
+-    private static ExecutorService diskIoExecutor() {
+-        return new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS,
+-                new LinkedBlockingQueue<Runnable>(1024),
+-                new ThreadFactory() {
+-                    @Override
+-                    public Thread newThread(@NonNull Runnable r) {
+-                        return new Thread(r, EXECUTOR_NAME_DISK_IO);
+-                    }
+-                },
+-                new RejectedExecutionHandler() {
+-                    @Override
+-                    public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+-                    }
+-                });
+-    }
+-
+-    private static ExecutorService networkExecutor() {
+-        return new ThreadPoolExecutor(3, 6, 1000, TimeUnit.MILLISECONDS,
+-                new LinkedBlockingQueue<Runnable>(40),
+-                new ThreadFactory() {
+-                    @Override
+-                    public Thread newThread(@NonNull Runnable r) {
+-                        return new Thread(r, EXECUTOR_NAME_NETWORK);
+-                    }
+-                },
+-                new RejectedExecutionHandler() {
+-                    @Override
+-                    public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+-                    }
+-                });
+-    }
+-
+-    private static ExecutorService adExecutor() {
+-        return new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS,
+-                new LinkedBlockingQueue<Runnable>(1024),
+-                new ThreadFactory() {
+-                    @Override
+-                    public Thread newThread(@NonNull Runnable r) {
+-                        return new Thread(r, EXECUTOR_NAME_AD);
+-                    }
+-                },
+-                new RejectedExecutionHandler() {
+-                    @Override
+-                    public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+-                    }
+-                });
+-    }
+-
+-    public Executor normalIO() {
+-        return mNormalIO;
+-    }
+-
+-    /**
+-     * 磁盘IO线程池（单线程）
+-     * <p>
+-     * 和磁盘操作有关的进行使用此线程(如读写数据库,读写文件)
+-     * 禁止延迟,避免等待
+-     * 此线程不用考虑同步问题
+-     */
+-    public Executor diskIO() {
+-        return mDiskIO;
+-    }
+-
+-    /**
+-     * 操作Database專用线程池
+-     */
+-    public Executor dbIO() {
+-        return mDiskIO;
+-    }
+-
+-    /**
+-     * 网络IO线程池
+-     * <p>
+-     * 网络请求,异步任务等适用此线程
+-     * 不建议在这个线程 sleep 或者 wait
+-     */
+-    public Executor networkIO() {
+-        return mNetworkIO;
+-    }
+-
+-    /**
+-     * 操作Ad專用线程池
+-     */
+-    public Executor adIO() {
+-        return mAdIO;
+-    }
+-
+-    /**
+-     * UI线程
+-     * <p>
+-     * Android 的MainThread
+-     * UI线程不能做的事情这个都不能做
+-     */
+-    public MainThreadExecutor mainThread() {
+-        return mMainThread;
+-    }
+-
+-    private static class InstanceHolder {
+-        private static final AppExecutors INSTANCE = new AppExecutors();
+-    }
+-
+-    public static class MainThreadExecutor extends AbstractMainThreadExecutor {
+-        private Handler mainThreadHandler = new Handler(Looper.getMainLooper());
+-
+-        @Override
+-        public void execute(@NonNull Runnable command) {
+-            mainThreadHandler.post(command);
+-        }
+-
+-        @Override
+-        public void removeCallbacks(@NonNull Runnable command) {
+-            mainThreadHandler.removeCallbacks(command);
+-        }
+-
+-        @Override
+-        public void postDelayed(@NonNull Runnable command, long delayMillis) {
+-            mainThreadHandler.postDelayed(command, delayMillis);
+-        }
+-    }
+-}
