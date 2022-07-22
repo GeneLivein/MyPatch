@@ -1,42 +1,14 @@
 diff --git a/app/src/main/java/com/coocoo/CooCooAppShell.kt b/app/src/main/java/com/coocoo/CooCooAppShell.kt
-index ed84640..13138e2 100644
+index ed84640..901a94e 100644
 --- a/app/src/main/java/com/coocoo/CooCooAppShell.kt
 +++ b/app/src/main/java/com/coocoo/CooCooAppShell.kt
-@@ -5,11 +5,14 @@ import android.os.Bundle
- import com.coocoo.coocoosp.SPDelegate
- import com.coocoo.manager.PerformanceAnalyticsManager
+@@ -7,7 +7,6 @@ import com.coocoo.manager.PerformanceAnalyticsManager
  import com.coocoo.report.Report
-+import com.coocoo.utils.LogUtil
  import com.coocoo.utils.ResMgr
  import com.gbwhatsapp.AppShell
 -import com.gbwhatsapp.yo.yo
  
  class CooCooAppShell : AppShell() {
-+    companion object {
-+        private const val FLURRY_APP_KEY = "4G4SG6ZXQ6PJ5HK9PNFG"
-+    }
- 
-     override fun onCreate() {
-         CooCoo.context = this
-@@ -53,5 +56,6 @@ class CooCooAppShell : AppShell() {
-         Report.init(this)
-         SPDelegate.getInstance().init(this)
-         ResMgr.init(this)
-+        LogUtil.d(FLURRY_APP_KEY)
-     }
- }
-\ No newline at end of file
-diff --git a/app/src/main/java/com/coocoo/conversation/ConversationManager.kt b/app/src/main/java/com/coocoo/conversation/ConversationManager.kt
-index b9dfe72..4ff47a3 100644
---- a/app/src/main/java/com/coocoo/conversation/ConversationManager.kt
-+++ b/app/src/main/java/com/coocoo/conversation/ConversationManager.kt
-@@ -3,7 +3,6 @@ package com.coocoo.conversation
- import X.c1_2nC
- import com.coocoo.annotation.SmaliInject
- import com.coocoo.report.Report
--import com.coocoo.utils.AppExecutors
- 
- object ConversationManager {
  
 diff --git a/app/src/main/java/com/coocoo/report/ReportDaily.kt b/app/src/main/java/com/coocoo/report/ReportDaily.kt
 index d849ddf..869633f 100644
@@ -297,3 +269,140 @@ index 2d6671e..0000000
 -        }
 -    }
 -}
+diff --git a/common-module/src/main/java/com/coocoo/utils/AppExecutors.java b/common-module/src/main/java/com/coocoo/utils/AppExecutors.java
+index 8212740..2d6671e 100644
+--- a/common-module/src/main/java/com/coocoo/utils/AppExecutors.java
++++ b/common-module/src/main/java/com/coocoo/utils/AppExecutors.java
+@@ -19,33 +19,31 @@ public class AppExecutors {
+     private static final String TAG = AppExecutors.class.getSimpleName();
+ 
+     private static final String EXECUTOR_NAME_SCHEDULED = "app_scheduled_executor";
++    private static final String EXECUTOR_NAME_NORMAL_IO = "app_normal_io_executor";
+     private static final String EXECUTOR_NAME_DISK_IO = "app_disk_io_executor";
+     private static final String EXECUTOR_NAME_NETWORK = "app_network_executor";
+     private static final String EXECUTOR_NAME_AD = "app_ad_executor";
+-    private static final String EXECUTOR_NAME_BACKGROUND_THREAD = "app_background_process_thread";
+ 
++    private final Executor mNormalIO;
+     private final Executor mDiskIO;
+     private final Executor mNetworkIO;
+     private final Executor mAdIO;
+-    private final Executor mBackgroundThread;
+     private final MainThreadExecutor mMainThread;
+ 
+-    private AppExecutors(Executor diskIO, Executor networkIO, Executor adIO,
+-                         Executor backgroundThread, MainThreadExecutor mainThread) {
++    private AppExecutors(Executor normalIO, Executor diskIO, Executor networkIO, Executor adIO, MainThreadExecutor mainThread) {
++        this.mNormalIO = normalIO;
+         this.mDiskIO = diskIO;
+         this.mNetworkIO = networkIO;
+         this.mAdIO = adIO;
+-        this.mBackgroundThread = backgroundThread;
+         this.mMainThread = mainThread;
+     }
+ 
+     private AppExecutors() {
+-        this(diskIoExecutor(), networkExecutor(), adExecutor(),
+-                backgroundThreadExecutor(), new MainThreadExecutor());
++        this(normalIoExecutor(), diskIoExecutor(), networkExecutor(), adExecutor(), new MainThreadExecutor());
+     }
+ 
+     public static AppExecutors getInstance() {
+-        return AppExecutors.InstanceHolder.INSTANCE;
++        return InstanceHolder.INSTANCE;
+     }
+ 
+     private static ScheduledExecutorService scheduledThreadPoolExecutor() {
+@@ -63,13 +61,13 @@ public class AppExecutors {
+                 });
+     }
+ 
+-    private static ExecutorService diskIoExecutor() {
++    private static ExecutorService normalIoExecutor() {
+         return new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS,
+                 new LinkedBlockingQueue<Runnable>(1024),
+                 new ThreadFactory() {
+                     @Override
+                     public Thread newThread(@NonNull Runnable r) {
+-                        return new Thread(r, EXECUTOR_NAME_DISK_IO);
++                        return new Thread(r, EXECUTOR_NAME_NORMAL_IO);
+                     }
+                 },
+                 new RejectedExecutionHandler() {
+@@ -79,13 +77,13 @@ public class AppExecutors {
+                 });
+     }
+ 
+-    private static ExecutorService networkExecutor() {
+-        return new ThreadPoolExecutor(3, 6, 1000, TimeUnit.MILLISECONDS,
+-                new LinkedBlockingQueue<Runnable>(40),
++    private static ExecutorService diskIoExecutor() {
++        return new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS,
++                new LinkedBlockingQueue<Runnable>(1024),
+                 new ThreadFactory() {
+                     @Override
+                     public Thread newThread(@NonNull Runnable r) {
+-                        return new Thread(r, EXECUTOR_NAME_NETWORK);
++                        return new Thread(r, EXECUTOR_NAME_DISK_IO);
+                     }
+                 },
+                 new RejectedExecutionHandler() {
+@@ -95,13 +93,13 @@ public class AppExecutors {
+                 });
+     }
+ 
+-    private static ExecutorService adExecutor() {
+-        return new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS,
+-                new LinkedBlockingQueue<Runnable>(1024),
++    private static ExecutorService networkExecutor() {
++        return new ThreadPoolExecutor(3, 6, 1000, TimeUnit.MILLISECONDS,
++                new LinkedBlockingQueue<Runnable>(40),
+                 new ThreadFactory() {
+                     @Override
+                     public Thread newThread(@NonNull Runnable r) {
+-                        return new Thread(r, EXECUTOR_NAME_AD);
++                        return new Thread(r, EXECUTOR_NAME_NETWORK);
+                     }
+                 },
+                 new RejectedExecutionHandler() {
+@@ -111,13 +109,13 @@ public class AppExecutors {
+                 });
+     }
+ 
+-    private static ExecutorService backgroundThreadExecutor() {
++    private static ExecutorService adExecutor() {
+         return new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS,
+                 new LinkedBlockingQueue<Runnable>(1024),
+                 new ThreadFactory() {
+                     @Override
+                     public Thread newThread(@NonNull Runnable r) {
+-                        return new Thread(r, EXECUTOR_NAME_BACKGROUND_THREAD);
++                        return new Thread(r, EXECUTOR_NAME_AD);
+                     }
+                 },
+                 new RejectedExecutionHandler() {
+@@ -127,6 +125,10 @@ public class AppExecutors {
+                 });
+     }
+ 
++    public Executor normalIO() {
++        return mNormalIO;
++    }
++
+     /**
+      * 磁盘IO线程池（单线程）
+      * <p>
+@@ -162,13 +164,6 @@ public class AppExecutors {
+         return mAdIO;
+     }
+ 
+-    /**
+-     * Common background thread pool
+-     */
+-    public Executor backgroundThread() {
+-        return mBackgroundThread;
+-    }
+-
+     /**
+      * UI线程
+      * <p>
