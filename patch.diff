@@ -1,13 +1,32 @@
-diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
-index dac76e7..f26590d 100644
---- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
-+++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
-@@ -20,6 +20,8 @@ public class HomeActivityDelegate extends ActivityDelegate {
-     @Override
-     public void onCreate(Bundle savedInstanceState) {
-         super.onCreate(savedInstanceState);
-+        String str = null;
-+        str.length();
-         Log.d(TAG, "onCreate");
-     }
- 
+diff --git a/whatsapp_modify_module/res/layout/yo_settings_updates.xml b/whatsapp_modify_module/res/layout/yo_settings_updates.xml
+new file mode 100644
+index 0000000..5039508
+--- /dev/null
++++ b/whatsapp_modify_module/res/layout/yo_settings_updates.xml
+@@ -0,0 +1,25 @@
++<?xml version="1.0" encoding="utf-8"?>
++<ScrollView android:orientation="vertical" android:background="@color/yosettings_background" android:layout_width="fill_parent" android:layout_height="fill_parent"
++  xmlns:android="http://schemas.android.com/apk/res/android">
++    <LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content">
++        <include layout="@layout/yo_toolbar" />
++        <LinearLayout android:orientation="vertical" android:background="@drawable/rounded_card" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/settings_divider_text_margin_top">
++<!--            #coocoo-->
++<!--            <LinearLayout android:orientation="vertical" android:background="?android:selectableItemBackground" android:padding="@dimen/info_screen_padding" android:focusable="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent" android:onClick="checkForUpdates">-->
++<!--                <com.gbwhatsapp.yo.tf android:text="@string/yo_CUpdates" style="@style/YoSettings_row" />-->
++<!--                <com.gbwhatsapp.yo.tf android:text="@string/yo_UpInfo" style="@style/YoSettings_row_subtitle" />-->
++<!--            </LinearLayout>-->
++
++<!--            #coocoo-->
++            <View android:layout_marginLeft="@dimen/settings_row_horizontal_padding" android:layout_marginRight="@dimen/settings_row_horizontal_padding" android:layout_marginStart="@dimen/settings_row_horizontal_padding" android:layout_marginEnd="@dimen/settings_row_horizontal_padding" style="@style/FlatCardSeparator" />
++            <LinearLayout android:orientation="vertical" android:background="?android:selectableItemBackground" android:padding="@dimen/info_screen_padding" android:focusable="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent" android:onClick="openChangelog">
++                <com.gbwhatsapp.yo.tf android:text="@string/yo_changelog" style="@style/YoSettings_row" />
++                <com.gbwhatsapp.yo.tf android:text="@string/yo_changelogS" style="@style/YoSettings_row_subtitle" />
++            </LinearLayout>
++        </LinearLayout>
++        <LinearLayout android:orientation="vertical" android:background="@drawable/rounded_card" android:padding="@dimen/info_screen_padding" android:focusable="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_marginTop="@dimen/settings_divider_text_margin_top" android:foreground="?android:selectableItemBackground" android:onClick="openWebsite">
++            <com.gbwhatsapp.yo.tf android:text="@string/yo_webdl" style="@style/YoSettings_row" />
++            <com.gbwhatsapp.yo.tf android:text="@string/yo_webdlS" style="@style/YoSettings_row_subtitle" />
++        </LinearLayout>
++    </LinearLayout>
++</ScrollView>
+\ No newline at end of file
