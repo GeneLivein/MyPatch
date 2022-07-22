@@ -26,3 +26,32 @@ index ed84640..13138e2 100644
      }
  }
 \ No newline at end of file
+diff --git a/app/src/main/java/com/coocoo/utils/AbstractMainThreadExecutor.java b/app/src/main/java/com/coocoo/utils/AbstractMainThreadExecutor.java
+deleted file mode 100644
+index 993e287..0000000
+--- a/app/src/main/java/com/coocoo/utils/AbstractMainThreadExecutor.java
++++ /dev/null
+@@ -1,23 +0,0 @@
+-package com.coocoo.utils;
+-
+-import androidx.annotation.NonNull;
+-
+-import java.util.concurrent.Executor;
+-
+-public abstract class AbstractMainThreadExecutor implements Executor {
+-    /**
+-     * remove {@link Runnable} from main thread
+-     *
+-     * @param command {@link Runnable} to remove
+-     */
+-    public abstract void removeCallbacks(@NonNull Runnable command);
+-
+-    /**
+-     * post {@link Runnable} to execute after delayMillis
+-     *
+-     * @param command     {@link Runnable} to post
+-     * @param delayMillis execute delay
+-     */
+-    public abstract void postDelayed(@NonNull Runnable command, long delayMillis);
+-}
+-
