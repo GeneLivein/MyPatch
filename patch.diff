@@ -129,6 +129,20 @@ index cadd075..358b8c4 100644
      }
  }
 \ No newline at end of file
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/MainDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/MainDelegate.kt
+index 4bb5c44..e6de7cc 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/MainDelegate.kt
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/MainDelegate.kt
+@@ -27,8 +27,7 @@ class MainDelegate(activity: Activity) : ActivityDelegate(activity) {
+                     AppExecutors.getInstance().adIO().execute {
+                         val sdk = StatusTrafficSdk.getInstance()
+                         if (!activity.isDestroyed && !activity.isFinishing) {
+-                            sdk.loadAdBlock(activity)
+-                            sdk.loadMainSplashAdRemoteConfig(activity)
++//                            sdk.loadAdBlock(activity)
+                         }
+                     }
+                 } else {
 diff --git a/whatsapp_modify_module/res/layout/home_stock.xml b/whatsapp_modify_module/res/layout/home_stock.xml
 index 511274a..6fc39df 100644
 --- a/whatsapp_modify_module/res/layout/home_stock.xml
