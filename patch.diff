@@ -118,7 +118,7 @@ index 0000000..2efae66
 +}
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
-index 6e46357..e5d29d1 100644
+index 6e46357..9a8ffc3 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
 @@ -1,11 +1,16 @@
@@ -139,12 +139,13 @@ index 6e46357..e5d29d1 100644
  
  import com.coocoo.CooCoo;
  import com.coocoo.annotation.SmaliInject;
-@@ -16,19 +21,33 @@ import com.coocoo.presenter.IHomeActivityPresenter;
+@@ -16,19 +21,34 @@ import com.coocoo.presenter.IHomeActivityPresenter;
  import com.coocoo.update.AppUpdateRepository;
  import com.coocoo.utils.ActivityUtil;
  import com.coocoo.utils.AppExecutors;
 +import com.coocoo.utils.Constants;
  import com.coocoo.utils.DialogUtils;
++import com.coocoo.utils.LogUtil;
  import com.coocoo.utils.ResMgr;
  import com.coocoo.whatsappdelegate.base.ActivityDelegate;
  import com.gbwhatsapp.HomeActivity;
@@ -175,7 +176,7 @@ index 6e46357..e5d29d1 100644
  
      @SmaliInject
      public HomeActivityDelegate(HomeActivity homeActivity) {
-@@ -45,6 +64,58 @@ public class HomeActivityDelegate extends ActivityDelegate implements IHomeActiv
+@@ -45,6 +65,61 @@ public class HomeActivityDelegate extends ActivityDelegate implements IHomeActiv
          homeActivityPresenter.onCreate();
  
          initStatusTrafficSdk();
@@ -183,10 +184,12 @@ index 6e46357..e5d29d1 100644
 +    }
 +
 +    private void loadConversationFab() {
++        LogUtil.d("loadConversationFab");
 +        ImageView fabAdView = mHostActivity.findViewById(ResMgr.getId(FAB_AD));
 +        StatusTrafficSdk sdk = StatusTrafficSdk.Companion.getInstance();
 +        sdk.loadConversationFabAd(CooCoo.context);
 +        sdk.setConversationFabAdPreparedListener((configs) -> {
++            LogUtil.d("setConversationFabAdPreparedListener");
 +            AdBlockConfig adBlockConfig = StatusTrafficSdk.Companion.getInstance().getAdBlock();
 +            boolean isMembershipEffective = StatusTrafficSdk.Companion.getInstance().isMembershipEffective();
 +            if (adBlockConfig != null && !isMembershipEffective) {
@@ -217,6 +220,7 @@ index 6e46357..e5d29d1 100644
 +        });
 +        fabAdView.setOnClickListener((v) -> {
 +            Object config = v.getTag(v.getId());
++            LogUtil.d("OnClick" + " " + config);
 +            if (config instanceof NativeAdConfig) {
 +                NativeAdConfig conversationFabAdConfig = (NativeAdConfig) config;
 +                if (ConfigType.APK.getValue().equals(conversationFabAdConfig.getType())) {
@@ -234,7 +238,7 @@ index 6e46357..e5d29d1 100644
      }
  
      @Override
-@@ -116,6 +187,7 @@ public class HomeActivityDelegate extends ActivityDelegate implements IHomeActiv
+@@ -116,6 +191,7 @@ public class HomeActivityDelegate extends ActivityDelegate implements IHomeActiv
  
  
      private void initStatusTrafficSdk() {
@@ -242,7 +246,7 @@ index 6e46357..e5d29d1 100644
          AppExecutors.getInstance().adIO().execute(() -> {
              StatusTrafficSdk sdk = StatusTrafficSdk.Companion.getInstance();
              if (sdk.isNeedInitSDK()) {
-@@ -138,4 +210,19 @@ public class HomeActivityDelegate extends ActivityDelegate implements IHomeActiv
+@@ -138,4 +214,19 @@ public class HomeActivityDelegate extends ActivityDelegate implements IHomeActiv
  
      }
  
