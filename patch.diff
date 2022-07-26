@@ -266,10 +266,10 @@ index 6e46357..0000000
 -}
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
 new file mode 100644
-index 0000000..a23f209
+index 0000000..a17b9a1
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
-@@ -0,0 +1,241 @@
+@@ -0,0 +1,240 @@
 +package com.coocoo.whatsappdelegate
 +
 +import android.R
@@ -292,7 +292,6 @@ index 0000000..a23f209
 +import com.coocoo.presenter.HomeActivityPresenter
 +import com.coocoo.presenter.IHomeActivityPresenter
 +import com.coocoo.presenter.IHomeActivityPresenter.IHomeActivityContainer
-+import com.coocoo.transform.CircleTransform
 +import com.coocoo.utils.*
 +import com.coocoo.utils.Constants.Id.FAB_AD
 +import com.coocoo.utils.DialogUtils.dismissDialogSafely
@@ -352,7 +351,7 @@ index 0000000..a23f209
 +                Glide.with(fabAdView.context)
 +                    .load(fabAdConfig.avatar)
 +                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-+                    .transform(CircleTransform(fabAdView.context))
++//                    .transform(CircleTransform(fabAdView.context))
 +                    .listener(object : RequestListener<String?, GlideDrawable?> {
 +                        override fun onException(
 +                            e: Exception?,
