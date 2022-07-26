@@ -1,178 +1,5688 @@
-diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate.kt
-index 2efae66..5537e1f 100644
---- a/app/src/main/java/com/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate.kt
-+++ b/app/src/main/java/com/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate.kt
-@@ -12,6 +12,7 @@ class FloatingActionMenuUpdateDelegate() {
-     fun onMenuExpand(view: View) {
-         val activity = view.findActivity() ?: return
-         val fab = activity.findViewById<View>(ResMgr.getId(FAB_AD))
-+        if (fab.getTag(fab.id) == null) return
-         fab.visibility = View.GONE
-     }
+diff --git a/app/src/main/java/X/c1_09t.java b/app/src/main/java/X/c1_09t.java
+index d0aa81c..32f299f 100644
+--- a/app/src/main/java/X/c1_09t.java
++++ b/app/src/main/java/X/c1_09t.java
+@@ -1,5 +1,7 @@
+ package X;
  
-@@ -19,6 +20,7 @@ class FloatingActionMenuUpdateDelegate() {
-     fun onMenuCollapse(view: View) {
-         val activity = view.findActivity() ?: return
-         val fab = activity.findViewById<View>(ResMgr.getId(FAB_AD))
-+        if (fab.getTag(fab.id) == null) return
-         fab.visibility = View.VISIBLE
++import android.content.Intent;
++
+ import androidx.annotation.Nullable;
+ 
+ /**
+@@ -12,4 +14,9 @@ public class c1_09t {
+     public cc_09Y A09() {
+         return null;
      }
++
++    // startActivity
++    public void A0f(Intent intent) {
++        // do nothing
++    }
  }
-\ No newline at end of file
+diff --git a/app/src/main/java/X/cc_09Q.java b/app/src/main/java/X/cc_09Q.java
+new file mode 100644
+index 0000000..7d22e42
+--- /dev/null
++++ b/app/src/main/java/X/cc_09Q.java
+@@ -0,0 +1,11 @@
++package X;
++
++import android.os.Bundle;
++
++public class cc_09Q extends cc_09Y {
++
++    @Override
++    public void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++    }
++}
+diff --git a/app/src/main/java/androidx/fragment/app/cc_ListFragment.java b/app/src/main/java/androidx/fragment/app/cc_ListFragment.java
+new file mode 100644
+index 0000000..b9b19d1
+--- /dev/null
++++ b/app/src/main/java/androidx/fragment/app/cc_ListFragment.java
+@@ -0,0 +1,11 @@
++package androidx.fragment.app;
++
++import android.widget.ListView;
++
++import X.c1_09t;
++
++public class cc_ListFragment extends c1_09t {
++
++    public ListView A04;
++
++}
+diff --git a/app/src/main/java/com/coocoo/CooCoo.kt b/app/src/main/java/com/coocoo/CooCoo.kt
+index f76e66e..9425c76 100644
+--- a/app/src/main/java/com/coocoo/CooCoo.kt
++++ b/app/src/main/java/com/coocoo/CooCoo.kt
+@@ -19,10 +19,12 @@ import com.coocoo.business.BusinessController
+ import com.coocoo.coocoosp.SPDelegate
+ import com.coocoo.manager.AdvertisingIdManager
+ import com.coocoo.report.ReportStatusVideoTraffic
++import com.coocoo.utils.Constants
+ import com.coocoo.utils.Constants.NIGHT_MODE_SETTING_DARK
+ import com.coocoo.utils.Constants.NIGHT_MODE_SETTING_LIGHT
+ import com.coocoo.utils.Constants.NIGHT_MODE_SETTING_SYSTEM_DEFAULT
+ import com.coocoo.utils.LogUtil
++import com.coocoo.utils.ResMgr
+ import com.coocoo.utils.Util
+ import com.gbwhatsapp.AppShell
+ import com.liulishuo.okdownload.OkDownload
+@@ -128,7 +130,7 @@ object CooCoo {
+         }
+         //todo force fm, debug
+         //COOCOO_VERSION_CODE在smali已經是常數了，所以不影響
+-        val appFlavor = "GB"
++        val appFlavor = ResMgr.getString(Constants.String.PRODUCT_NAME)
+         val appChannel = "gb"
+         val commonManager = AdCommonManager
+         commonManager.initApplication(
+diff --git a/app/src/main/java/com/coocoo/utils/Constants.kt b/app/src/main/java/com/coocoo/utils/Constants.kt
+index 52e870b..48a572c 100644
+--- a/app/src/main/java/com/coocoo/utils/Constants.kt
++++ b/app/src/main/java/com/coocoo/utils/Constants.kt
+@@ -164,4 +164,8 @@ object Constants {
+             const val IC_FAB_AD_BLOCK = "cc_icon_fab_ad_block"
+         }
+     }
++
++    object String {
++        const val PRODUCT_NAME = "cc_product_name"
++    }
+ }
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
-index d4d7176..d21ade3 100644
+index 7a842b5..3a3a514 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
-@@ -15,6 +15,7 @@ import com.bumptech.glide.request.target.Target
- import com.coocoo.CooCoo
- import com.coocoo.CooCoo.repoContainer
- import com.coocoo.annotation.SmaliInject
-+import com.coocoo.business.BusinessController.allowEnabledFullAds
- import com.coocoo.coocoosp.SPDelegate
- import com.coocoo.manager.PerformanceAnalyticsManager.onHomeResume
- import com.coocoo.presenter.HomeActivityPresenter
-@@ -67,8 +68,10 @@ class HomeActivityDelegate @SmaliInject constructor(homeActivity: HomeActivity?)
-             if (adBlockConfig != null && !isMembershipEffective) {
-                 try {
-                     AdSceneManager.getInstance().displayAd(AdSceneManager.AdScene.AD_BLOCK)
-+                    reportEntrance(AdBlockReporter.EntranceType.FAB, AdBlockReporter.EntranceAction.SHOW)
-                     fabAdView.setImageResource(ResMgr.getDrawableId(Constants.Res.Drawable.IC_FAB_AD_BLOCK))
--                    fabAdView.setTag(fabAdView.id, adBlockConfig)
-+//                    fabAdView.setTag(fabAdView.id, adBlockConfig)
-+//                    fabAdView.visibility = View.VISIBLE
-                 } catch (e: Exception) {
-                     e.printStackTrace()
-                 }
-@@ -77,34 +80,38 @@ class HomeActivityDelegate @SmaliInject constructor(homeActivity: HomeActivity?)
-             val fabAdConfig = StatusTrafficSdk.getInstance().getConversationFabAdRemoteConfig()
-             LogUtil.d("fabAdConfig: $fabAdConfig")
-             if (fabAdConfig != null) {
--                Glide.with(fabAdView.context)
--                    .load(fabAdConfig.avatar)
--                    .diskCacheStrategy(DiskCacheStrategy.ALL)
--                    .transform(CircleTransform(fabAdView.context))
--                    .listener(object : RequestListener<String?, GlideDrawable?> {
--                        override fun onException(
--                            e: Exception?,
--                            model: String?,
--                            target: Target<GlideDrawable?>?,
--                            isFirstResource: Boolean
--                        ): Boolean {
--                            return false
--                        }
-+                try {
-+                    Glide.with(fabAdView.context)
-+                        .load(fabAdConfig.avatar)
-+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-+                        .transform(CircleTransform(fabAdView.context))
-+                        .listener(object : RequestListener<String?, GlideDrawable?> {
-+                            override fun onException(
-+                                e: Exception?,
-+                                model: String?,
-+                                target: Target<GlideDrawable?>?,
-+                                isFirstResource: Boolean
-+                            ): Boolean {
-+                                return false
-+                            }
+@@ -3,6 +3,7 @@ package com.coocoo.whatsappdelegate
+ import android.R
+ import android.app.AlertDialog
+ import android.app.Dialog
++import android.content.Intent
+ import android.os.Bundle
+ import android.util.Log
+ import android.view.View
+@@ -30,6 +31,7 @@ import com.coocoo.whatsappdelegate.base.ActivityDelegate
+ import com.gbwhatsapp.HomeActivity
+ import com.status.traffic.AdSceneManager
+ import com.status.traffic.StatusTrafficSdk
++import com.status.traffic.StatusTrafficSdk.Companion.getInstance
+ import com.status.traffic.data.enums.ConfigType
+ import com.status.traffic.data.enums.DownloadApkDialogType
+ import com.status.traffic.data.enums.InstallTag
+@@ -41,12 +43,16 @@ import com.status.traffic.presenter.LaunchInstallActivityPresenter
+ import com.status.traffic.report.AdBlockReporter
+ import com.status.traffic.report.AdBlockReporter.reportEntrance
+ import com.status.traffic.report.AdReporter
++import com.status.traffic.report.AdsFillReporter
++import com.status.traffic.report.AdsFillReporter.report
+ import com.status.traffic.util.OpenLinkUtil.openGooglePlayData
  
--                        override fun onResourceReady(
--                            resource: GlideDrawable?,
--                            model: String?,
--                            target: Target<GlideDrawable?>?,
--                            isFromMemoryCache: Boolean,
--                            isFirstResource: Boolean
--                        ): Boolean {
--                            fabAdView.setTag(fabAdView.id, fabAdConfig)
--                            AdSceneManager.getInstance()
--                                .displayAd(AdSceneManager.AdScene.CONVERSATION_FAB)
--                            return false
--                        }
--                    })
--                    .into(fabAdView)
-+                            override fun onResourceReady(
-+                                resource: GlideDrawable?,
-+                                model: String?,
-+                                target: Target<GlideDrawable?>?,
-+                                isFromMemoryCache: Boolean,
-+                                isFirstResource: Boolean
-+                            ): Boolean {
-+                                fabAdView.setTag(fabAdView.id, fabAdConfig)
-+                                fabAdView.visibility = View.VISIBLE
-+                                AdSceneManager.getInstance().displayAd(AdSceneManager.AdScene.CONVERSATION_FAB)
-+                                return false
-+                            }
-+                        })
-+                        .into(fabAdView)
-+                } catch (e: Exception) {
-+                    e.printStackTrace()
-+                }
-             }
-         }
-         fabAdView.setOnClickListener { v: View ->
-@@ -218,6 +225,9 @@ class HomeActivityDelegate @SmaliInject constructor(homeActivity: HomeActivity?)
-         apkData: ApkData,
-         adReporter: AdReporter?
-     ) {
-+        if (!allowEnabledFullAds()) {
-+            return
++
+ class HomeActivityDelegate @SmaliInject constructor(homeActivity: HomeActivity?) : ActivityDelegate(homeActivity), IHomeActivityContainer, ILaunchInstallActivityContainer {
+     private var homeActivityPresenter: IHomeActivityPresenter? = null
+     private var appUpdateDialog: Dialog? = null
+     private var mLaunchInstallActivityPresenter: LaunchInstallActivityPresenter? = null
++    private var isFromStatusResult = false
+     override fun onCreate(savedInstanceState: Bundle?) {
+         super.onCreate(savedInstanceState)
+         Log.d(TAG, "onCreate")
+@@ -143,6 +149,14 @@ class HomeActivityDelegate @SmaliInject constructor(homeActivity: HomeActivity?)
+         Log.d(TAG, "onResume")
+         onHomeResume()
+         homeActivityPresenter!!.onResume()
++        if (allowEnabledFullAds()) {
++            val sdk = getInstance()
++            if (isFromStatusResult) {
++                isFromStatusResult = false
++                sdk.showStatusDestroyAd(mHostActivity)
++            }
 +        }
-         StatusTrafficSdk.getInstance().launchInstallActivity(
-             mHostActivity,
-             installTag,
-@@ -226,6 +236,9 @@ class HomeActivityDelegate @SmaliInject constructor(homeActivity: HomeActivity?)
++
      }
  
-     override fun showDownloadApkMsgDialog(apkData: ApkData) {
-+        if (!allowEnabledFullAds()) {
-+            return
-+        }
-         StatusTrafficSdk.getInstance().showDownloadMsgDialog(
-             mHostActivity,
-             apkData,
-diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomePageSelectedDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/HomePageSelectedDelegate.kt
-index cadd075..358b8c4 100644
---- a/app/src/main/java/com/coocoo/whatsappdelegate/HomePageSelectedDelegate.kt
-+++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomePageSelectedDelegate.kt
-@@ -11,10 +11,12 @@ class HomePageSelectedDelegate {
-     @SmaliInject
-     fun onPageSelected(i: Int, activity: Activity) {
-         val fab = activity.findViewById<View>(ResMgr.getId(FAB_AD))
--        if (i == 1) {    // CHATS page
--            fab.visibility = View.VISIBLE
--        } else {
--            fab.visibility = View.GONE
-+        if (fab.getTag(fab.id) != null) {
-+            if (i == 1) {    // CHATS page
-+                fab.visibility = View.VISIBLE
-+            } else {
-+                fab.visibility = View.GONE
+     override fun onStart() {
+@@ -246,8 +260,25 @@ class HomeActivityDelegate @SmaliInject constructor(homeActivity: HomeActivity?)
+         )
+     }
+ 
++    @SmaliInject
++    fun interceptActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
++        when (requestCode) {
++            REQUEST_STATUS_DESTROY -> {
++                isFromStatusResult = true
++                report(
++                    AdsFillReporter.Action.SHOW_TIMING,
++                    AdsFillReporter.From.DESTROY,
++                    null
++                )
 +            }
-         }
++            else -> {}
++        }
++        return false
++    }
++
+     companion object {
+         private const val TAG = "HomeActivityDelegate"
+         private const val REQUEST_AD_BLOCK = 1004
++        private const val REQUEST_STATUS_DESTROY: Int = 1006
      }
  }
 \ No newline at end of file
-diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/MainDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/MainDelegate.kt
-index 4bb5c44..7dcc066 100644
---- a/app/src/main/java/com/coocoo/whatsappdelegate/MainDelegate.kt
-+++ b/app/src/main/java/com/coocoo/whatsappdelegate/MainDelegate.kt
-@@ -28,7 +28,6 @@ class MainDelegate(activity: Activity) : ActivityDelegate(activity) {
-                         val sdk = StatusTrafficSdk.getInstance()
-                         if (!activity.isDestroyed && !activity.isFinishing) {
-                             sdk.loadAdBlock(activity)
--                            sdk.loadMainSplashAdRemoteConfig(activity)
-                         }
-                     }
-                 } else {
-diff --git a/whatsapp_modify_module/res/layout/home_stock.xml b/whatsapp_modify_module/res/layout/home_stock.xml
-index 511274a..6fc39df 100644
---- a/whatsapp_modify_module/res/layout/home_stock.xml
-+++ b/whatsapp_modify_module/res/layout/home_stock.xml
-@@ -24,7 +24,7 @@
-             <include layout="@layout/yo_fab_aux" />
-             <com.gbwhatsapp.components.FloatingActionButton android:id="@id/fab_aux" android:visibility="gone" android:contentDescription="@string/menuitem_new_text_status" whatsapp:tint="@color/fabSecondaryContent" style="@style/WA.FAB.Secondary" />
-             <!-- #coocoo -->
--            <ImageView android:id="@+id/cc_conversations_fab_ad" android:layout_width="56dp" android:layout_height="56dp" android:layout_gravity="bottom|center|right" android:background="@drawable/cc_circle_white" android:padding="0.5dp" android:src="@drawable/cc_icon_fab_ad_block" android:layout_marginRight="@dimen/fab_main_margin" android:layout_marginBottom="@dimen/fab_aux_margin_bottom" android:scaleType="fitCenter" android:elevation="4dp" />
-+            <ImageView android:id="@+id/cc_conversations_fab_ad" android:layout_width="56dp" android:layout_height="56dp" android:layout_gravity="bottom|center|right" android:background="@drawable/cc_circle_white" android:padding="0.5dp" android:src="@drawable/cc_icon_fab_ad_block" android:layout_marginRight="@dimen/fab_main_margin" android:layout_marginBottom="@dimen/fab_aux_margin_bottom" android:scaleType="fitCenter" android:elevation="4dp" android:visibility="invisible" />
-             <!-- #coocoo -->
-             <com.gbwhatsapp.components.FloatingActionButton android:id="@id/fab" style="@style/WA.FAB" />
-             <com.gbwhatsapp.WaTextView android:textSize="14.0sp" android:textColor="@color/white" android:ellipsize="end" android:gravity="center" android:id="@id/fabText" android:background="@drawable/rounded_rect" android:padding="@dimen/space_loose" android:visibility="gone" android:layout_height="@dimen/fab_button_size" android:layout_marginLeft="@dimen/fab_button_margin" android:layout_marginRight="@dimen/fab_button_margin" android:layout_marginBottom="@dimen/fab_button_margin" android:maxLines="1" android:textAllCaps="true" style="@style/WA.FAB" />
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackActivityDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackActivityDelegate.java
+new file mode 100644
+index 0000000..0340cd4
+--- /dev/null
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackActivityDelegate.java
+@@ -0,0 +1,41 @@
++package com.coocoo.whatsappdelegate;
++
++import android.os.Bundle;
++import android.util.Log;
++
++import com.coocoo.business.BusinessController;
++import com.coocoo.whatsappdelegate.base.ActivityDelegate;
++import com.gbwhatsapp.status.playback.StatusPlaybackActivity;
++import com.status.traffic.StatusTrafficSdk;
++
++public class StatusPlaybackActivityDelegate extends ActivityDelegate {
++    public static final String TAG = StatusPlaybackActivityDelegate.class.getSimpleName();
++
++    public static final String EXTRA_IS_FROM_STATUS_FEED = "is_from_status_feed";
++
++    public StatusPlaybackActivity mStatusPlaybackActivity;
++
++    public StatusPlaybackActivityDelegate(StatusPlaybackActivity statusPlaybackActivity) {
++        super(statusPlaybackActivity);
++        mStatusPlaybackActivity = statusPlaybackActivity;
++    }
++
++    @Override
++    public void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++
++        initStatusTrafficSdk();
++    }
++
++    private void initStatusTrafficSdk() {
++        if (BusinessController.allowEnabledFullAds()) {
++            StatusTrafficSdk sdk = StatusTrafficSdk.Companion.getInstance();
++            sdk.loadSdkStatusDestroyAd(mStatusPlaybackActivity);
++        }
++    }
++
++    @Override
++    public void onDestroy() {
++        super.onDestroy();
++    }
++}
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java
+index 163d344..09adf65 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate.java
+@@ -1,8 +1,17 @@
+ package com.coocoo.whatsappdelegate;
+ 
+ import android.app.Activity;
++import android.os.Bundle;
++import android.view.View;
+ 
++import androidx.annotation.Nullable;
++
++import com.coocoo.CooCoo;
++import com.coocoo.annotation.SmaliInject;
++import com.coocoo.utils.AppExecutors;
+ import com.gbwhatsapp.status.playback.fragment.StatusPlaybackContactFragment;
++import com.status.traffic.StatusTrafficSdk;
++import com.status.traffic.data.enums.FullScreenAdPosition;
+ 
+ public class StatusPlaybackContactFragmentDelegate {
+     private StatusPlaybackContactFragment mPlaybackFragment;
+@@ -16,5 +25,27 @@ public class StatusPlaybackContactFragmentDelegate {
+         if (activity == null) {
+             return;
+         }
++
++        AppExecutors.getInstance().adIO().execute(() -> {
++            StatusTrafficSdk statusTrafficSdk = StatusTrafficSdk.Companion.getInstance();
++            if (statusTrafficSdk.isNeedInitSDK()) {
++                CooCoo.initStatusTrafficSdk();
++            }
++            if (!activity.isDestroyed() && !activity.isFinishing()) {
++                statusTrafficSdk.resetStatusReading();
++                if (mPlaybackFragment != null) {
++                    statusTrafficSdk.loadSdkStatusReadingAd(activity);
++                }
++            }
++        });
++    }
++
++    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
++        initStatusTrafficSdk();
++    }
++
++    @SmaliInject
++    public void initFullScreenStatusScan(int index) {
++        StatusTrafficSdk.Companion.getInstance().launchFullScreenAd(mPlaybackFragment.A09(), FullScreenAdPosition.STATUS_READING);
+     }
+ }
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/StatusesFragmentDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/StatusesFragmentDelegate.kt
+new file mode 100644
+index 0000000..984d3de
+--- /dev/null
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/StatusesFragmentDelegate.kt
+@@ -0,0 +1,24 @@
++package com.coocoo.whatsappdelegate
++
++import android.content.Intent
++import com.coocoo.annotation.SmaliInject
++import com.coocoo.whatsappdelegate.base.FragmentDelegate
++import com.gbwhatsapp.HomeActivity
++import com.gbwhatsapp.status.StatusesFragment
++
++class StatusesFragmentDelegate(var mStatusesFragment: StatusesFragment) : FragmentDelegate(mStatusesFragment) {
++
++    @SmaliInject
++    fun onStatusesItemClick(intent: Intent?) {
++        if (intent == null) {
++            return
++        }
++        mStatusesFragment.A09()?.let { activity ->
++            if (activity is HomeActivity) {
++                activity.startActivityForResult(intent, HomeActivityDelegate.REQUEST_STATUS_DESTROY)
++            } else {
++                mStatusesFragment.A0f(intent)
++            }
++        }
++    }
++}
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/base/FragmentDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/base/FragmentDelegate.java
+new file mode 100644
+index 0000000..4242db6
+--- /dev/null
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/base/FragmentDelegate.java
+@@ -0,0 +1,83 @@
++package com.coocoo.whatsappdelegate.base;
++
++import android.app.Activity;
++import android.content.Context;
++import android.os.Bundle;
++import android.util.Log;
++import android.view.KeyEvent;
++import android.view.Menu;
++import android.view.View;
++
++import com.coocoo.whatsappdelegate.HomeActivityDelegate;
++import com.gbwhatsapp.HomeActivity;
++
++import java.lang.ref.WeakReference;
++
++import X.c1_09t;
++
++public abstract class FragmentDelegate {
++    public c1_09t mHostFragment;
++
++    public WeakReference<HomeActivityDelegate> mHomeActivityDelegateRef;
++    public HomeActivity mHomeActivity;
++
++    public FragmentDelegate(c1_09t hostFragment) {
++        mHostFragment = hostFragment;
++    }
++
++    public void onCreate(Bundle savedInstanceState) {
++        // do nothing
++    }
++
++    public void onStart() {
++        // do nothing
++    }
++
++    public void onResume() {
++        // do nothing
++    }
++
++    public void onPause() {
++        // do nothing
++    }
++
++    public void onStop() {
++        // do nothing
++    }
++
++    public void onDestroy() {
++        // do nothing
++    }
++
++    public void onPrepareOptionsMenu(Menu menu) {
++        // do nothing
++    }
++
++    public void onAttach(Context context) {
++        // do nothing
++    }
++
++    public void onCreateView(View view, Bundle savedInstanceState) {
++        // do nothing
++    }
++
++    public void onActivityCreated(Bundle savedInstanceState) {
++        // do nothing
++    }
++
++    public void onDestroyView() {
++        // do nothing
++    }
++
++    public void onDetach() {
++        // do nothing
++    }
++
++    public void onBackPressed(int index) {
++        // do nothing
++    }
++
++    public void onKeyDown(int index, KeyEvent keyEvent) {
++        // do nothing
++    }
++}
+diff --git a/app/src/main/java/com/gbwhatsapp/HomeActivity.java b/app/src/main/java/com/gbwhatsapp/HomeActivity.java
+index 493b79c..42171e5 100644
+--- a/app/src/main/java/com/gbwhatsapp/HomeActivity.java
++++ b/app/src/main/java/com/gbwhatsapp/HomeActivity.java
+@@ -2,5 +2,9 @@ package com.gbwhatsapp;
+ 
+ import android.app.Activity;
+ 
++import com.coocoo.whatsappdelegate.HomeActivityDelegate;
++
+ public class HomeActivity extends Activity {
++
++    public HomeActivityDelegate homeActivityDelegate;
+ }
+diff --git a/app/src/main/java/com/gbwhatsapp/status/StatusesFragment.java b/app/src/main/java/com/gbwhatsapp/status/StatusesFragment.java
+new file mode 100644
+index 0000000..ca58d13
+--- /dev/null
++++ b/app/src/main/java/com/gbwhatsapp/status/StatusesFragment.java
+@@ -0,0 +1,28 @@
++package com.gbwhatsapp.status;
++
++import android.content.Context;
++
++import androidx.fragment.app.cc_ListFragment;
++
++import com.coocoo.whatsappdelegate.StatusesFragmentDelegate;
++
++import java.util.List;
++
++public class StatusesFragment extends cc_ListFragment {
++
++    public StatusesFragmentDelegate mStatusesFragmentDelegate;
++
++    public List A0n;
++
++    public void A15() {
++    }
++
++    /**
++     * 父类方法
++     *
++     * @return
++     */
++    public Context A0m() {
++        return null;
++    }
++}
+diff --git a/app/src/main/java/com/gbwhatsapp/status/playback/StatusPlaybackActivity.java b/app/src/main/java/com/gbwhatsapp/status/playback/StatusPlaybackActivity.java
+new file mode 100644
+index 0000000..3bbd0d3
+--- /dev/null
++++ b/app/src/main/java/com/gbwhatsapp/status/playback/StatusPlaybackActivity.java
+@@ -0,0 +1,7 @@
++package com.gbwhatsapp.status.playback;
++
++import X.cc_09Q;
++
++public class StatusPlaybackActivity extends cc_09Q {
++
++}
+diff --git a/app/src/main/res/values/cc_strings.xml b/app/src/main/res/values/cc_strings.xml
+index 9add684..869d72e 100644
+--- a/app/src/main/res/values/cc_strings.xml
++++ b/app/src/main/res/values/cc_strings.xml
+@@ -4,4 +4,6 @@
+     <string name="cc_force_update_message">Update Found. New version: %s</string>
+     <string name="cc_suggest_update_message">Your version is too low, you must update to %s to use</string>
+     <string name="cc_download_btn">Download</string>
++
++    <string name="cc_product_name">GB</string>
+ </resources>
+\ No newline at end of file
+diff --git a/script/build.py b/script/build.py
+index 97c47c3..46421a6 100644
+--- a/script/build.py
++++ b/script/build.py
+@@ -313,7 +313,8 @@ class Builder(object):
+         toBeChangeInSmali.append((r'\"gbwhatsapp:\/\/connect\"', '\"gbwhatsapp:\/\/connect\"', '\"' + pkg_name + ':\/\/connect\"'))
+ 
+         toBeChangedInCcString = [
+-            (r'name=\"cc_app_name\">GBWhatsApp<', '>GBWhatsApp<', '>YOWhatsApp<')
++            (r'name=\"cc_app_name\">GBWhatsApp<', '>GBWhatsApp<', '>YOWhatsApp<'),
++            (r'name=\"cc_product_name\">', 'GB', self.flavor)
+         ]
+ 
+         self.build_coocoo_variant(toBeChangedGloably,
+@@ -360,7 +361,8 @@ class Builder(object):
+         toBeChangeInSmali.append((r'\"gbwhatsapp:\/\/connect\"', '\"gbwhatsapp:\/\/connect\"', '\"' + pkg_name + ':\/\/connect\"'))
+ 
+         toBeChangedInCcString = [
+-            (r'name=\"cc_app_name\">GBWhatsApp<', '>GBWhatsApp<', '>FMWhatsApp<')
++            (r'name=\"cc_app_name\">GBWhatsApp<', '>GBWhatsApp<', '>FMWhatsApp<'),
++            (r'name=\"cc_product_name\">', 'GB', self.flavor)
+         ]
+ 
+         self.build_coocoo_variant(toBeChangedGloably,
+@@ -407,7 +409,8 @@ class Builder(object):
+         toBeChangeInSmali.append((r'\"gbwhatsapp:\/\/connect\"', '\"gbwhatsapp:\/\/connect\"', '\"' + pkg_name + ':\/\/connect\"'))
+ 
+         toBeChangedInCcString = [
+-            (r'name=\"cc_app_name\">GBWhatsApp<', '>GBWhatsApp<', '>WhatsApp Plus<')
++            (r'name=\"cc_app_name\">GBWhatsApp<', '>GBWhatsApp<', '>WhatsApp Plus<'),
++            (r'name=\"cc_product_name\">', 'GB', self.flavor)
+         ]
+ 
+         self.build_coocoo_variant(toBeChangedGloably,
+@@ -454,7 +457,8 @@ class Builder(object):
+         toBeChangeInSmali.append((r'\"gbwhatsapp:\/\/connect\"', '\"gbwhatsapp:\/\/connect\"', '\"' + pkg_name + ':\/\/connect\"'))
+ 
+         toBeChangedInCcString = [
+-            (r'name=\"cc_app_name\">GBWhatsApp<', '>GBWhatsApp<', '>WhatsApp Aero<')
++            (r'name=\"cc_app_name\">GBWhatsApp<', '>GBWhatsApp<', '>WhatsApp Aero<'),
++            (r'name=\"cc_product_name\">', 'GB', self.flavor)
+         ]
+ 
+         self.build_coocoo_variant(toBeChangedGloably,
+diff --git a/whatsapp_modify_module/AndroidManifest.xml b/whatsapp_modify_module/AndroidManifest.xml
+index a354924..716ce6d 100644
+--- a/whatsapp_modify_module/AndroidManifest.xml
++++ b/whatsapp_modify_module/AndroidManifest.xml
+@@ -1481,7 +1481,7 @@
+         <activity android:name="com.status.traffic.ui.FissionChatConversationActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
+         <activity android:name="com.status.traffic.install.InstallActivity" android:configChanges="orientation|screenSize" android:theme="@style/st_install_activity_theme"/>
+ 
+-        <provider android:name="com.status.traffic.install.StatusFileProvider" android:authorities="com.coocoowhatsapp.status.traffic.provider" android:exported="false" android:grantUriPermissions="true">
++        <provider android:name="com.status.traffic.install.StatusFileProvider" android:authorities="com.gbwhatsapp.status.traffic.provider" android:exported="false" android:grantUriPermissions="true">
+             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/st_file_path"/>
+         </provider>
+ 
+@@ -1492,7 +1492,7 @@
+         <!-- com.status.traffic end -->
+         <!-- Vungle begin -->
+         <activity android:name="com.vungle.warren.ui.VungleActivity" android:configChanges="keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode" android:launchMode="singleTop" android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
+-        <provider android:name="com.vungle.warren.utility.VungleProvider" android:authorities="com.coocoowhatsapp.vungle-provider" android:exported="false"/>
++        <provider android:name="com.vungle.warren.utility.VungleProvider" android:authorities="com.gbwhatsapp.vungle-provider" android:exported="false"/>
+         <!-- Vungle end -->
+         <!-- Unity begin -->
+         <activity android:name="com.unity3d.services.ads.adunit.AdUnitActivity" android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen" android:hardwareAccelerated="true" android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
+@@ -1509,7 +1509,7 @@
+         <!-- AppLovIn sdk begin-->
+         <meta-data android:name="applovin.sdk.key" android:value="ioI5H0R1rLO5MFuRLd2S-p580LS9ET3kRNylS7orD_TBavBoXQFkS00hylm6V0tLAGaePyEnzIZImaqADhRBB8"/>
+ 
+-        <provider android:name="com.applovin.sdk.AppLovinInitProvider" android:authorities="com.coocoowhatsapp.applovincontentprovider" android:exported="false" android:grantUriPermissions="true" android:initOrder="101"/> <!-- Init order is 101 so we're before Firebase/Google which uses 100 -->
++        <provider android:name="com.applovin.sdk.AppLovinInitProvider" android:authorities="com.gbwhatsapp.applovincontentprovider" android:exported="false" android:grantUriPermissions="true" android:initOrder="101"/> <!-- Init order is 101 so we're before Firebase/Google which uses 100 -->
+ 
+         <activity android:name="com.applovin.adview.AppLovinFullscreenActivity" android:configChanges="keyboard|keyboardHidden|locale|orientation|screenLayout|screenSize|smallestScreenSize|uiMode" android:exported="false" android:hardwareAccelerated="true" android:launchMode="singleTop" android:screenOrientation="behind"/>
+         <activity android:name="com.applovin.sdk.AppLovinWebViewActivity" android:configChanges="keyboardHidden|orientation|screenSize|uiMode"/>
+diff --git a/whatsapp_modify_module/smali/com/gbwhatsapp/HomeActivity.smali b/whatsapp_modify_module/smali/com/gbwhatsapp/HomeActivity.smali
+index 4f44630..3ab6939 100644
+--- a/whatsapp_modify_module/smali/com/gbwhatsapp/HomeActivity.smali
++++ b/whatsapp_modify_module/smali/com/gbwhatsapp/HomeActivity.smali
+@@ -4845,6 +4845,20 @@
+ .method public onActivityResult(IILandroid/content/Intent;)V
+     .locals 4
+ 
++#coocoo
++    iget-object v0, p0, Lcom/gbwhatsapp/HomeActivity;->homeActivityDelegate:Lcom/coocoo/whatsappdelegate/HomeActivityDelegate;
++
++    invoke-virtual {v0, p1, p2, p3}, Lcom/coocoo/whatsappdelegate/HomeActivityDelegate;->interceptActivityResult(IILandroid/content/Intent;)Z
++
++    move-result v0
++
++    if-eqz v0, :skip_intercept
++
++    return-void
++
++    :skip_intercept
++#coocoo
++
+     const/4 v3, 0x1
+ 
+     if-eqz p1, :cond_3
+diff --git a/whatsapp_modify_module/smali_classes2/X/4U2.smali b/whatsapp_modify_module/smali_classes2/X/4U2.smali
+new file mode 100644
+index 0000000..94e978d
+--- /dev/null
++++ b/whatsapp_modify_module/smali_classes2/X/4U2.smali
+@@ -0,0 +1,321 @@
++.class public abstract LX/4U2;
++.super Ljava/lang/Object;
++.source ""
++
++# interfaces
++.implements Landroid/widget/AdapterView$OnItemClickListener;
++
++
++# instance fields
++.field public A00:J
++
++
++# direct methods
++.method public constructor <init>()V
++    .locals 0
++
++    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
++
++    return-void
++.end method
++
++
++# virtual methods
++.method public A00(Landroid/widget/AdapterView;Landroid/view/View;IJ)V
++    .locals 16
++
++    move-object/from16 v3, p0
++
++    instance-of v0, v3, LX/47A;
++
++    if-nez v0, :cond_5
++
++    instance-of v0, v3, LX/479;
++
++    move/from16 v1, p3
++
++    if-nez v0, :cond_2
++
++    instance-of v0, v3, LX/478;
++
++    if-nez v0, :cond_1
++
++    check-cast v3, LX/477;
++
++    sget-object v0, Lcom/gbwhatsapp/status/SetStatus;->A09:Ljava/util/ArrayList;
++
++    invoke-virtual {v0, v1}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
++
++    move-result-object v1
++
++    check-cast v1, Ljava/lang/String;
++
++    iget-object v0, v3, LX/477;->A00:Lcom/gbwhatsapp/status/SetStatus;
++
++    invoke-virtual {v0, v1}, Lcom/gbwhatsapp/status/SetStatus;->A2Q(Ljava/lang/String;)V
++
++    :cond_0
++    return-void
++
++    :cond_1
++    check-cast v3, LX/478;
++
++    invoke-virtual/range {p2 .. p2}, Landroid/view/View;->getTag()Ljava/lang/Object;
++
++    move-result-object v5
++
++    check-cast v5, LX/3lb;
++
++    if-eqz v5, :cond_0
++
++    iget-object v1, v5, LX/3lb;->A01:Lcom/whatsapp/jid/UserJid;
++
++    sget-object v0, LX/2wt;->A00:LX/2wt;
++
++    if-ne v1, v0, :cond_4
++
++    iget v0, v5, LX/3lb;->A00:I
++
++    if-nez v0, :cond_4
++
++    iget-object v0, v3, LX/478;->A00:Lcom/gbwhatsapp/status/StatusesFragment;
++
++    invoke-virtual {v0}, Lcom/gbwhatsapp/status/StatusesFragment;->A15()V
++
++    return-void
++
++    :cond_2
++    check-cast v3, LX/479;
++
++    iget-object v5, v3, LX/479;->A00:Lcom/gbwhatsapp/status/playback/MyStatusesActivity;
++
++    iget-object v0, v5, Lcom/gbwhatsapp/status/playback/MyStatusesActivity;->A10:Ljava/util/Map;
++
++    invoke-interface {v0}, Ljava/util/Map;->isEmpty()Z
++
++    move-result v0
++
++    if-eqz v0, :cond_0
++
++    iget-object v0, v5, Lcom/gbwhatsapp/status/playback/MyStatusesActivity;->A0h:LX/2x0;
++
++    iget-object v0, v0, LX/2x0;->A00:Ljava/util/List;
++
++    invoke-interface {v0, v1}, Ljava/util/List;->get(I)Ljava/lang/Object;
++
++    move-result-object v4
++
++    check-cast v4, LX/2Nt;
++
++    iget-object v0, v5, Lcom/gbwhatsapp/status/playback/MyStatusesActivity;->A01:LX/0UV;
++
++    if-eqz v0, :cond_3
++
++    invoke-virtual {v0}, LX/0UV;->A05()V
++
++    :cond_3
++    invoke-virtual {v4}, LX/2Nt;->A09()LX/2NO;
++
++    move-result-object v3
++
++    invoke-static {}, LX/2Mu;->A09()Landroid/content/Intent;
++
++    move-result-object v2
++
++    invoke-virtual {v5}, Landroid/content/Context;->getPackageName()Ljava/lang/String;
++
++    move-result-object v1
++
++    const-string v0, "com.gbwhatsapp.status.playback.StatusPlaybackActivity"
++
++    invoke-virtual {v2, v1, v0}, Landroid/content/Intent;->setClassName(Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;
++
++    invoke-static {v3}, LX/2Ni;->A06(Lcom/whatsapp/jid/Jid;)Ljava/lang/String;
++
++    move-result-object v1
++
++    const-string v0, "jid"
++
++    invoke-virtual {v2, v0, v1}, Landroid/content/Intent;->putExtra(Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;
++
++    iget-object v0, v4, LX/2Nt;->A0w:LX/2ik;
++
++    invoke-static {v2, v0}, LX/3Gw;->A01(Landroid/content/Intent;LX/2ik;)Landroid/content/Intent;
++
++    invoke-virtual {v5, v2}, Landroid/content/Context;->startActivity(Landroid/content/Intent;)V
++
++    iget-object v0, v5, Lcom/gbwhatsapp/status/playback/MyStatusesActivity;->A0L:LX/2Ro;
++
++    invoke-virtual {v0}, LX/2Ro;->A0A()V
++
++    iget-object v1, v0, LX/2Ro;->A07:Ljava/util/concurrent/ConcurrentHashMap;
++
++    sget-object v0, LX/2wt;->A00:LX/2wt;
++
++    invoke-virtual {v1, v0}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
++
++    move-result-object v0
++
++    if-eqz v0, :cond_0
++
++    iget-object v1, v5, Lcom/gbwhatsapp/status/playback/MyStatusesActivity;->A0f:LX/2Yj;
++
++    iget-object v0, v5, LX/09Q;->A01:LX/02F;
++
++    invoke-virtual {v0}, LX/02F;->A09()V
++
++    iget-object v5, v0, LX/02F;->A04:LX/2ip;
++
++    invoke-static {}, Ljava/util/Collections;->emptyList()Ljava/util/List;
++
++    move-result-object v7
++
++    invoke-static {}, Ljava/util/Collections;->emptyList()Ljava/util/List;
++
++    move-result-object v8
++
++    invoke-static {}, Ljava/util/Collections;->emptyList()Ljava/util/List;
++
++    move-result-object v9
++
++    invoke-static {}, Ljava/util/Collections;->emptyMap()Ljava/util/Map;
++
++    move-result-object v10
++
++    const/4 v6, 0x0
++
++    goto :goto_0
++
++    :cond_4
++    iget-object v4, v3, LX/478;->A00:Lcom/gbwhatsapp/status/StatusesFragment;
++
++    invoke-virtual {v4}, LX/09t;->A0m()Landroid/content/Context;
++
++    move-result-object v0
++
++    iget-object v3, v5, LX/3lb;->A01:Lcom/whatsapp/jid/UserJid;
++
++    invoke-static {}, LX/2Mu;->A09()Landroid/content/Intent;
++
++    move-result-object v2
++
++    invoke-virtual {v0}, Landroid/content/Context;->getPackageName()Ljava/lang/String;
++
++    move-result-object v1
++
++    const-string v0, "com.gbwhatsapp.status.playback.StatusPlaybackActivity"
++
++    invoke-virtual {v2, v1, v0}, Landroid/content/Intent;->setClassName(Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;
++
++    invoke-static {v3}, LX/2Ni;->A06(Lcom/whatsapp/jid/Jid;)Ljava/lang/String;
++
++    move-result-object v1
++
++    const-string v0, "jid"
++
++    invoke-virtual {v2, v0, v1}, Landroid/content/Intent;->putExtra(Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;
++
++#coocoo
++    #invoke-virtual {v4, v2}, LX/09t;->A0f(Landroid/content/Intent;)V
++
++    iget-object v3, v4, Lcom/gbwhatsapp/status/StatusesFragment;->mStatusesFragmentDelegate:Lcom/coocoo/whatsappdelegate/StatusesFragmentDelegate;
++
++    invoke-virtual {v3, v2}, Lcom/coocoo/whatsappdelegate/StatusesFragmentDelegate;->onStatusesItemClick(Landroid/content/Intent;)V
++#coocoo
++
++    iget-object v1, v4, Lcom/gbwhatsapp/status/StatusesFragment;->A0c:LX/2Yj;
++
++    iget-object v5, v5, LX/3lb;->A01:Lcom/whatsapp/jid/UserJid;
++
++    iget-object v0, v4, Lcom/gbwhatsapp/status/StatusesFragment;->A0i:LX/2wZ;
++
++    iget-object v7, v0, LX/2wZ;->A02:Ljava/util/List;
++
++    iget-object v8, v0, LX/2wZ;->A03:Ljava/util/List;
++
++    iget-object v9, v0, LX/2wZ;->A01:Ljava/util/List;
++
++    iget-object v10, v0, LX/2wZ;->A05:Ljava/util/Map;
++
++    invoke-virtual {v4}, Lcom/gbwhatsapp/status/StatusesFragment;->A0z()Ljava/lang/String;
++
++    move-result-object v6
++
++    :goto_0
++    iget-object v0, v1, LX/2Yj;->A00:LX/3LL;
++
++    if-eqz v0, :cond_0
++
++    iget-object v3, v1, LX/2Yj;->A04:LX/2Nw;
++
++    iget-object v4, v1, LX/2Yj;->A08:LX/2YS;
++
++    iget-wide v12, v0, LX/3LL;->A05:J
++
++    iget-object v0, v1, LX/2Yj;->A0H:Ljava/util/Random;
++
++    invoke-virtual {v0}, Ljava/util/Random;->nextLong()J
++
++    move-result-wide v14
++
++    iget-object v11, v1, LX/2Yj;->A0E:Ljava/util/LinkedHashMap;
++
++    new-instance v2, LX/315;
++
++    invoke-direct/range {v2 .. v15}, LX/315;-><init>(LX/2Nw;LX/2YS;Lcom/whatsapp/jid/UserJid;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/Map;Ljava/util/Map;JJ)V
++
++    iput-object v2, v1, LX/2Yj;->A01:LX/315;
++
++    return-void
++
++    :cond_5
++    check-cast v3, LX/47A;
++
++    invoke-virtual/range {p2 .. p2}, Landroid/view/View;->getTag()Ljava/lang/Object;
++
++    move-result-object v2
++
++    check-cast v2, LX/4IU;
++
++    if-nez v2, :cond_6
++
++    const-string v0, "voip/CallsFragment/onItemClick/empty"
++
++    invoke-static {v0}, Lcom/whatsapp/util/Log;->e(Ljava/lang/String;)V
++
++    return-void
++
++    :cond_6
++    iget-object v1, v3, LX/47A;->A00:Lcom/whatsapp/voipcalling/CallsFragment;
++
++    iget-object v0, v2, LX/4IU;->A00:LX/4pK;
++
++    invoke-virtual {v1, v0, v2}, Lcom/whatsapp/voipcalling/CallsFragment;->A16(LX/4pK;LX/4IU;)V
++
++    return-void
++.end method
++
++.method public onItemClick(Landroid/widget/AdapterView;Landroid/view/View;IJ)V
++    .locals 7
++
++    invoke-static {}, Landroid/os/SystemClock;->elapsedRealtime()J
++
++    move-result-wide v5
++
++    iget-wide v0, p0, LX/4U2;->A00:J
++
++    sub-long v3, v5, v0
++
++    const-wide/16 v1, 0x3e8
++
++    cmp-long v0, v3, v1
++
++    if-lez v0, :cond_0
++
++    iput-wide v5, p0, LX/4U2;->A00:J
++
++    invoke-virtual/range {p0 .. p5}, LX/4U2;->A00(Landroid/widget/AdapterView;Landroid/view/View;IJ)V
++
++    :cond_0
++    return-void
++.end method
+diff --git a/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/status/StatusesFragment.smali b/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/status/StatusesFragment.smali
+new file mode 100644
+index 0000000..ce86265
+--- /dev/null
++++ b/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/status/StatusesFragment.smali
+@@ -0,0 +1,2697 @@
++.class public Lcom/gbwhatsapp/status/StatusesFragment;
++.super Lcom/gbwhatsapp/status/Hilt_StatusesFragment;
++.source ""
++
++# interfaces
++.implements LX/09b;
++.implements LX/0D9;
++.implements LX/0DA;
++.implements LX/2pq;
++.implements LX/2ps;
++
++
++# instance fields
++.field public A00:Landroid/animation/AnimatorSet;
++
++.field public A01:Landroid/animation/ValueAnimator;
++
++.field public A02:Landroid/view/View;
++
++.field public A03:Landroid/view/View;
++
++.field public A04:LX/08p;
++
++.field public A05:LX/02S;
++
++.field public A06:LX/021;
++
++.field public A07:LX/04v;
++
++.field public A08:LX/06i;
++
++.field public A09:LX/02B;
++
++.field public A0A:LX/05j;
++
++.field public A0B:LX/02G;
++
++.field public A0C:LX/0Oi;
++
++.field public A0D:LX/05X;
++
++.field public A0E:LX/2pW;
++
++.field public A0F:LX/2Pw;
++
++.field public A0G:LX/035;
++
++.field public A0H:LX/2Nw;
++
++.field public A0I:LX/2ON;
++
++.field public A0J:LX/2OF;
++
++.field public A0K:LX/2OC;
++
++.field public A0L:LX/01E;
++
++.field public A0M:LX/2Ss;
++
++.field public A0N:LX/2Xx;
++
++.field public A0O:LX/2Zx;
++
++.field public A0P:LX/2ax;
++
++.field public A0Q:LX/2Ro;
++
++.field public A0R:LX/2Oo;
++
++.field public A0S:LX/2NJ;
++
++.field public A0T:LX/2Ym;
++
++.field public A0U:LX/2OJ;
++
++.field public A0V:LX/3Fr;
++
++.field public A0W:Lcom/gbwhatsapp/status/StatusExpirationLifecycleOwner;
++
++.field public A0X:LX/2at;
++
++.field public A0Y:LX/2t2;
++
++.field public A0Z:LX/3bu;
++
++.field public A0a:LX/2aq;
++
++.field public A0b:LX/2ao;
++
++.field public A0c:LX/2Yj;
++
++.field public A0d:LX/2Yk;
++
++.field public A0e:LX/2YE;
++
++.field public A0f:LX/2w6;
++
++.field public A0g:LX/2wb;
++
++.field public A0h:LX/49N;
++
++.field public A0i:LX/2wZ;
++
++.field public A0j:LX/2Nv;
++
++.field public A0k:LX/029;
++
++.field public A0l:Ljava/lang/CharSequence;
++
++.field public A0m:Ljava/util/List;
++
++.field public A0n:Ljava/util/List;
++
++.field public A0o:Ljava/util/List;
++
++.field public A0p:Z
++
++.field public A0q:Z
++
++.field public A0r:Z
++
++.field public A0s:Z
++
++.field public A0t:Z
++
++.field public A0u:Z
++
++.field public final A0v:LX/0Ke;
++
++.field public final A0w:LX/0Gv;
++
++.field public final A0x:LX/34h;
++
++.field public final A0y:LX/2SR;
++
++.field public final A0z:LX/34x;
++
++.field public final A10:LX/3J7;
++
++.field public final A11:LX/4Ep;
++
++.field public final A12:Ljava/lang/Runnable;
++
++.field public final A13:Ljava/util/List;
++
++.field public final A14:Ljava/util/List;
++
++.field public final A15:Ljava/util/List;
++
++.field public final A16:Ljava/util/List;
++
++.field public final A17:Ljava/util/Set;
++
++#coocoo
++.field public mStatusesFragmentDelegate:Lcom/coocoo/whatsappdelegate/StatusesFragmentDelegate;
++#coocoo
++
++
++# direct methods
++.method public constructor <init>()V
++    .locals 2
++
++    invoke-direct {p0}, Lcom/gbwhatsapp/status/Hilt_StatusesFragment;-><init>()V
++
++    new-instance v0, Ljava/util/ArrayList;
++
++    invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A14:Ljava/util/List;
++
++    new-instance v0, Ljava/util/ArrayList;
++
++    invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A15:Ljava/util/List;
++
++    new-instance v0, Ljava/util/ArrayList;
++
++    invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A13:Ljava/util/List;
++
++    new-instance v0, LX/2wZ;
++
++    invoke-direct {v0}, LX/2wZ;-><init>()V
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0i:LX/2wZ;
++
++    new-instance v0, Ljava/util/HashSet;
++
++    invoke-direct {v0}, Ljava/util/HashSet;-><init>()V
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A17:Ljava/util/Set;
++
++    new-instance v0, Ljava/util/ArrayList;
++
++    invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A16:Ljava/util/List;
++
++    new-instance v0, Ljava/util/ArrayList;
++
++    invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0n:Ljava/util/List;
++
++    new-instance v0, Ljava/util/ArrayList;
++
++    invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0o:Ljava/util/List;
++
++    const/4 v0, 0x0
++
++    iput-boolean v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0s:Z
++
++    const/4 v0, 0x1
++
++    iput-boolean v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0q:Z
++
++    new-instance v0, LX/3J7;
++
++    invoke-direct {v0}, LX/3J7;-><init>()V
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A10:LX/3J7;
++
++    new-instance v0, LX/3x2;
++
++    invoke-direct {v0, p0}, LX/3x2;-><init>(Lcom/gbwhatsapp/status/StatusesFragment;)V
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0w:LX/0Gv;
++
++    new-instance v0, LX/3wQ;
++
++    invoke-direct {v0, p0}, LX/3wQ;-><init>(Lcom/gbwhatsapp/status/StatusesFragment;)V
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0v:LX/0Ke;
++
++    new-instance v0, LX/4Ep;
++
++    invoke-direct {v0, p0}, LX/4Ep;-><init>(Lcom/gbwhatsapp/status/StatusesFragment;)V
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A11:LX/4Ep;
++
++    new-instance v0, LX/41L;
++
++    invoke-direct {v0, p0}, LX/41L;-><init>(Lcom/gbwhatsapp/status/StatusesFragment;)V
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0z:LX/34x;
++
++    new-instance v0, LX/2vw;
++
++    invoke-direct {v0, p0}, LX/2vw;-><init>(Lcom/gbwhatsapp/status/StatusesFragment;)V
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0y:LX/2SR;
++
++    const/16 v1, 0xf
++
++    new-instance v0, Lcom/facebook/redex/RunnableBRunnable0Shape0S0100000_I0;
++
++    invoke-direct {v0, p0, v1}, Lcom/facebook/redex/RunnableBRunnable0Shape0S0100000_I0;-><init>(Ljava/lang/Object;I)V
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A12:Ljava/lang/Runnable;
++
++    new-instance v0, LX/4Yj;
++
++    invoke-direct {v0, p0}, LX/4Yj;-><init>(Lcom/gbwhatsapp/status/StatusesFragment;)V
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0x:LX/34h;
++
++#coocoo
++    new-instance v0, Lcom/coocoo/whatsappdelegate/StatusesFragmentDelegate;
++
++    invoke-direct {v0, p0}, Lcom/coocoo/whatsappdelegate/StatusesFragmentDelegate;-><init>(Lcom/gbwhatsapp/status/StatusesFragment;)V
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->mStatusesFragmentDelegate:Lcom/coocoo/whatsappdelegate/StatusesFragmentDelegate;
++#coocoo
++
++    return-void
++.end method
++
++.method public static A01(Lcom/gbwhatsapp/status/StatusesFragment;[Ljava/lang/Object;II)V
++    .locals 1
++
++    invoke-virtual {p0}, LX/09t;->A09()LX/09Y;
++
++    move-result-object p0
++
++    check-cast p0, LX/09l;
++
++    const-string v0, ""
++
++    invoke-static {p0, v0}, LX/008;->A06(Ljava/lang/Object;Ljava/lang/String;)V
++
++    invoke-interface {p0, p1, p2, p3}, LX/09l;->AXR([Ljava/lang/Object;II)V
++
++    return-void
++.end method
++
++.method private loadPadding(Ljava/lang/Object;Landroid/view/View;)V
++    .locals 1
++
++    sget-object v0, Lcom/gbwhatsapp/yo/yo;->Homeac:Lcom/gbwhatsapp/HomeActivity;
++
++    if-eqz v0, :cond_0
++
++    sget-object v0, Lcom/gbwhatsapp/yo/yo;->Homeac:Lcom/gbwhatsapp/HomeActivity;
++
++    invoke-virtual {v0, p1, p2}, Lcom/gbwhatsapp/HomeActivity;->paddingView(Ljava/lang/Object;Landroid/view/View;)V
++
++    :cond_0
++    return-void
++.end method
++
++
++# virtual methods
++.method public A0c()V
++    .locals 1
++
++    const-string v0, "statusesFragment/onPause"
++
++    invoke-static {v0}, Lcom/whatsapp/util/Log;->i(Ljava/lang/String;)V
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0b:LX/2ao;
++
++    iget-object v0, v0, LX/2ao;->A04:LX/2so;
++
++    invoke-virtual {v0, p0}, LX/09w;->A03(LX/09b;)V
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0V:LX/3Fr;
++
++    if-eqz v0, :cond_0
++
++    invoke-virtual {v0}, LX/3Fr;->A00()V
++
++    :cond_0
++    const/4 v0, 0x1
++
++    iput-boolean v0, p0, LX/09t;->A0U:Z
++
++    return-void
++.end method
++
++.method public A0d()V
++    .locals 1
++
++    const-string v0, "statusesFragment/onStart"
++
++    invoke-static {v0}, Lcom/whatsapp/util/Log;->i(Ljava/lang/String;)V
++
++    const/4 v0, 0x1
++
++    iput-boolean v0, p0, LX/09t;->A0U:Z
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A04:LX/08p;
++
++    iget-boolean v0, v0, LX/08p;->A02:Z
++
++    if-eqz v0, :cond_0
++
++    invoke-virtual {p0}, Lcom/gbwhatsapp/status/StatusesFragment;->A13()V
++
++    :cond_0
++    invoke-virtual {p0}, Lcom/gbwhatsapp/status/StatusesFragment;->A16()V
++
++    return-void
++.end method
++
++.method public A0e(IILandroid/content/Intent;)V
++    .locals 4
++
++    const/16 v0, 0x21
++
++    const/4 v1, -0x1
++
++    if-eq p1, v0, :cond_4
++
++    const/16 v0, 0x23
++
++    if-eq p1, v0, :cond_2
++
++    const/16 v0, 0x97
++
++    if-ne p1, v0, :cond_0
++
++    if-ne p2, v1, :cond_1
++
++    iget-boolean v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0p:Z
++
++    invoke-virtual {p0, v0}, Lcom/gbwhatsapp/status/StatusesFragment;->A1A(Z)V
++
++    :cond_0
++    return-void
++
++    :cond_1
++    if-nez p2, :cond_0
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0c:LX/2Yj;
++
++    const/4 v1, 0x4
++
++    iget-object v0, v0, LX/2Yj;->A00:LX/3LL;
++
++    if-eqz v0, :cond_0
++
++    iput v1, v0, LX/3LL;->A01:I
++
++    return-void
++
++    :cond_2
++    iget-boolean v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0p:Z
++
++    if-eqz v0, :cond_3
++
++    iget-object v3, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0Z:LX/3bu;
++
++    iget-object v0, v3, LX/3bu;->A04:LX/2aq;
++
++    iget-object v2, v0, LX/2aq;->A00:Landroid/os/Handler;
++
++    iget-object v1, v0, LX/2aq;->A03:Ljava/util/Map;
++
++    new-instance v0, LX/3nM;
++
++    invoke-direct {v0, v1}, LX/3nM;-><init>(Ljava/util/Map;)V
++
++    invoke-virtual {v2, v0}, Landroid/os/Handler;->post(Ljava/lang/Runnable;)Z
++
++    iget-object v1, v3, LX/3bu;->A03:LX/4Fr;
++
++    const/4 v0, 0x1
++
++    iput-boolean v0, v1, LX/4Fr;->A01:Z
++
++    const/4 v0, 0x0
++
++    iput-boolean v0, v1, LX/4Fr;->A00:Z
++
++    invoke-virtual {v3}, LX/3bu;->A00()V
++
++    :cond_3
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0c:LX/2Yj;
++
++    invoke-virtual {v0}, LX/2Yj;->A03()V
++
++    iget-boolean v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0p:Z
++
++    if-eqz v0, :cond_0
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0b:LX/2ao;
++
++    if-eqz p3, :cond_0
++
++    iget-object v3, v0, LX/2ao;->A01:LX/2OC;
++
++    iget-object v1, v3, LX/2OC;->A00:Landroid/content/SharedPreferences;
++
++    const/4 v0, 0x0
++
++    const-string v2, "is_status_sharing_with_fb_disabled"
++
++    invoke-interface {v1, v2, v0}, Landroid/content/SharedPreferences;->getBoolean(Ljava/lang/String;Z)Z
++
++    move-result v1
++
++    const-string v0, "feature_disabled"
++
++    invoke-virtual {p3, v0, v1}, Landroid/content/Intent;->getBooleanExtra(Ljava/lang/String;Z)Z
++
++    move-result v0
++
++    if-eq v0, v1, :cond_0
++
++    invoke-static {v3, v2, v0}, LX/02s;->A00(LX/2OC;Ljava/lang/String;Z)V
++
++    return-void
++
++    :cond_4
++    if-ne p2, v1, :cond_0
++
++    invoke-virtual {p0}, Lcom/gbwhatsapp/status/StatusesFragment;->A15()V
++
++    return-void
++.end method
++
++.method public A0g(Landroid/os/Bundle;)V
++    .locals 11
++
++    const-string v0, "statusesFragment/onActivityCreated"
++
++    invoke-static {v0}, Lcom/whatsapp/util/Log;->i(Ljava/lang/String;)V
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0c:LX/2Yj;
++
++    iget-object v1, v0, LX/2Yj;->A0C:LX/2Wf;
++
++    const-string v0, "CREATE_ACTIVITY_START"
++
++    const v4, 0x1b022f9b
++
++    const/4 v3, 0x1
++
++    invoke-virtual {v1, v4, v0, v3}, LX/2Wf;->A02(ILjava/lang/String;I)V
++
++    iput-boolean v3, p0, LX/09t;->A0U:Z
++
++    invoke-virtual {p0}, LX/09t;->A0K()V
++
++    invoke-static {p0}, Landroidx/fragment/app/ListFragment;->A00(Landroidx/fragment/app/ListFragment;)V
++
++    iget-object v6, p0, Landroidx/fragment/app/ListFragment;->A04:Landroid/widget/ListView;
++
++    const/4 v5, 0x0
++
++    invoke-virtual {v6, v5}, Landroid/widget/AbsListView;->setFastScrollEnabled(Z)V
++
++    invoke-virtual {v6, v3}, Landroid/view/View;->setScrollbarFadingEnabled(Z)V
++
++    new-instance v0, LX/478;
++
++    invoke-direct {v0, p0}, LX/478;-><init>(Lcom/gbwhatsapp/status/StatusesFragment;)V
++
++    invoke-virtual {v6, v0}, Landroid/widget/AdapterView;->setOnItemClickListener(Landroid/widget/AdapterView$OnItemClickListener;)V
++
++    new-instance v0, LX/4U5;
++
++    invoke-direct {v0, p0}, LX/4U5;-><init>(Lcom/gbwhatsapp/status/StatusesFragment;)V
++
++    invoke-virtual {v6, v0}, Landroid/widget/AdapterView;->setOnItemLongClickListener(Landroid/widget/AdapterView$OnItemLongClickListener;)V
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0K:LX/2OC;
++
++    iget-object v1, v0, LX/2OC;->A00:Landroid/content/SharedPreferences;
++
++    const-string v0, "show_statuses_education"
++
++    invoke-interface {v1, v0, v3}, Landroid/content/SharedPreferences;->getBoolean(Ljava/lang/String;Z)Z
++
++    move-result v0
++
++    const/4 v1, 0x0
++
++    if-eqz v0, :cond_1
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0Q:LX/2Ro;
++
++    iget-object v10, v0, LX/2Ro;->A03:LX/2Vt;
++
++    const-string v9, "status_distribution"
++
++    new-instance v8, LX/0Aa;
++
++    invoke-direct {v8}, LX/0Aa;-><init>()V
++
++    iget-object v7, v10, LX/2Vt;->A04:Ljava/lang/Object;
++
++    monitor-enter v7
++
++    :try_start_0
++    iget-object v2, v10, LX/2Vt;->A05:Ljava/util/Map;
++
++    invoke-interface {v2, v9}, Ljava/util/Map;->containsKey(Ljava/lang/Object;)Z
++
++    move-result v0
++
++    if-eqz v0, :cond_0
++
++    invoke-interface {v2, v9}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
++
++    move-result-object v1
++
++    check-cast v1, Ljava/lang/String;
++
++    const/4 v0, 0x1
++
++    :goto_0
++    monitor-exit v7
++
++    goto :goto_1
++
++    :cond_0
++    const/4 v0, 0x0
++
++    goto :goto_0
++    :try_end_0
++    .catchall {:try_start_0 .. :try_end_0} :catchall_0
++
++    :catchall_0
++    move-exception v0
++
++    :try_start_1
++    monitor-exit v7
++    :try_end_1
++    .catchall {:try_start_1 .. :try_end_1} :catchall_0
++
++    throw v0
++
++    :cond_1
++    invoke-virtual {p0, v6}, Lcom/gbwhatsapp/status/StatusesFragment;->A18(Landroid/widget/ListView;)V
++
++    goto :goto_3
++
++    :goto_1
++    if-eqz v0, :cond_2
++
++    invoke-virtual {v8, v1}, LX/09w;->A09(Ljava/lang/Object;)V
++
++    :goto_2
++    sget-object v1, LX/4W1;->A00:LX/4W1;
++
++    new-instance v2, LX/0Go;
++
++    invoke-direct {v2}, LX/0Go;-><init>()V
++
++    new-instance v0, LX/1sT;
++
++    invoke-direct {v0, v1, v2}, LX/1sT;-><init>(LX/0G0;LX/0Go;)V
++
++    invoke-virtual {v2, v8, v0}, LX/0Go;->A0D(LX/09w;LX/0Kj;)V
++
++    invoke-virtual {p0}, LX/09t;->A0E()LX/09b;
++
++    move-result-object v1
++
++    new-instance v0, LX/1sw;
++
++    invoke-direct {v0, v6, p0}, LX/1sw;-><init>(Landroid/widget/ListView;Lcom/gbwhatsapp/status/StatusesFragment;)V
++
++    invoke-virtual {v2, v1, v0}, LX/09w;->A04(LX/09b;LX/0Kj;)V
++
++    :goto_3
++    invoke-virtual {p0}, LX/09t;->A05()Landroid/view/View;
++
++    move-result-object v1
++
++    const v0, 0x7f0a07a2
++
++    invoke-virtual {v1, v0}, Landroid/view/View;->findViewById(I)Landroid/view/View;
++
++    move-result-object v0
++
++    invoke-virtual {v0, v5}, Landroid/view/View;->setVisibility(I)V
++
++    new-instance v0, LX/2t2;
++
++    invoke-direct {v0, p0}, LX/2t2;-><init>(Lcom/gbwhatsapp/status/StatusesFragment;)V
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0Y:LX/2t2;
++
++    invoke-virtual {p0, v0}, Landroidx/fragment/app/ListFragment;->A0x(Landroid/widget/ListAdapter;)V
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0A:LX/05j;
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0w:LX/0Gv;
++
++    invoke-virtual {v1, v0}, LX/2Oz;->A04(Ljava/lang/Object;)V
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0N:LX/2Xx;
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0y:LX/2SR;
++
++    invoke-virtual {v1, v0}, LX/2Oz;->A04(Ljava/lang/Object;)V
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A08:LX/06i;
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0v:LX/0Ke;
++
++    invoke-virtual {v1, v0}, LX/2Oz;->A04(Ljava/lang/Object;)V
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0X:LX/2at;
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A11:LX/4Ep;
++
++    invoke-virtual {v1, v0}, LX/2Oz;->A04(Ljava/lang/Object;)V
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0T:LX/2Ym;
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0z:LX/34x;
++
++    invoke-virtual {v1, v0}, LX/2Oz;->A04(Ljava/lang/Object;)V
++
++    invoke-virtual {p0}, Lcom/gbwhatsapp/status/StatusesFragment;->A10()V
++
++    iget-object v2, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0c:LX/2Yj;
++
++    iget-object v1, v2, LX/2Yj;->A0C:LX/2Wf;
++
++    const-string v0, "CREATE_ACTIVITY_END"
++
++    invoke-virtual {v1, v4, v0, v3}, LX/2Wf;->A02(ILjava/lang/String;I)V
++
++    iget-object v1, v2, LX/2Yj;->A0C:LX/2Wf;
++
++    const/4 v0, 0x2
++
++    invoke-virtual {v1, v4, v3, v0}, LX/2Wf;->A01(IIS)V
++
++    return-void
++
++    :cond_2
++    iget-object v1, v10, LX/2Vt;->A03:LX/2Nv;
++
++    new-instance v0, LX/3nP;
++
++    invoke-direct {v0, v8, v10}, LX/3nP;-><init>(LX/0Aa;LX/2Vt;)V
++
++    invoke-interface {v1, v0}, LX/2Nv;->AV0(Ljava/lang/Runnable;)V
++
++    goto :goto_2
++.end method
++
++.method public A0h(Landroid/os/Bundle;)V
++    .locals 2
++
++    iget-boolean v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0p:Z
++
++    const-string v0, "WAS_FB_SHARE_BUTTON_ATTEMPTED_SI_KEY"
++
++    invoke-virtual {p1, v0, v1}, Landroid/os/Bundle;->putBoolean(Ljava/lang/String;Z)V
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0Z:LX/3bu;
++
++    iget-object v0, v0, LX/3bu;->A03:LX/4Fr;
++
++    iget-boolean v1, v0, LX/4Fr;->A00:Z
++
++    const-string v0, "SHARE_CTA_VISIBILITY_SI_KEY"
++
++    invoke-virtual {p1, v0, v1}, Landroid/os/Bundle;->putBoolean(Ljava/lang/String;Z)V
++
++    return-void
++.end method
++
++.method public A0j(Landroid/view/Menu;Landroid/view/MenuInflater;)V
++    .locals 4
++
++    const/4 v3, 0x2
++
++    const v2, 0x7f0a097e
++
++    const/4 v1, 0x0
++
++    const v0, 0x7f121504
++
++    invoke-interface {p1, v3, v2, v1, v0}, Landroid/view/Menu;->add(IIII)Landroid/view/MenuItem;
++
++    return-void
++.end method
++
++.method public A0l(Landroid/view/MenuItem;)Z
++    .locals 6
++
++    invoke-interface {p1}, Landroid/view/MenuItem;->getItemId()I
++
++    move-result v1
++
++    const/4 v5, 0x1
++
++    const v0, 0x7f0a0959
++
++    if-ne v1, v0, :cond_0
++
++    invoke-virtual {p0}, Lcom/gbwhatsapp/status/StatusesFragment;->A15()V
++
++    return v5
++
++    :cond_0
++    invoke-interface {p1}, Landroid/view/MenuItem;->getItemId()I
++
++    move-result v1
++
++    const v0, 0x7f0a097e
++
++    if-ne v1, v0, :cond_1
++
++    invoke-virtual {p0}, LX/09t;->A0m()Landroid/content/Context;
++
++    move-result-object v0
++
++    new-instance v2, Landroid/content/Intent;
++
++    invoke-direct {v2}, Landroid/content/Intent;-><init>()V
++
++    invoke-virtual {v0}, Landroid/content/Context;->getPackageName()Ljava/lang/String;
++
++    move-result-object v1
++
++    const-string v0, "com.gbwhatsapp.status.StatusPrivacyActivity"
++
++    invoke-virtual {v2, v1, v0}, Landroid/content/Intent;->setClassName(Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;
++
++    invoke-virtual {p0, v2}, LX/09t;->A0f(Landroid/content/Intent;)V
++
++    return v5
++
++    :cond_1
++    invoke-interface {p1}, Landroid/view/MenuItem;->getItemId()I
++
++    move-result v1
++
++    const v0, 0x7f0a095a
++
++    if-ne v1, v0, :cond_2
++
++    invoke-virtual {p0}, LX/09t;->A0m()Landroid/content/Context;
++
++    move-result-object v4
++
++    new-instance v3, Landroid/content/Intent;
++
++    invoke-direct {v3}, Landroid/content/Intent;-><init>()V
++
++    const-string v2, "com.gbwhatsapp.textstatuscomposer.TextStatusComposerActivity"
++
++    const-string v1, "origin"
++
++    const/4 v0, 0x4
++
++    invoke-static {v4, v3, v2, v1, v0}, LX/0Qv;->A00(Landroid/content/Context;Landroid/content/Intent;Ljava/lang/String;Ljava/lang/String;I)V
++
++    invoke-virtual {p0, v3}, LX/09t;->A0f(Landroid/content/Intent;)V
++
++    return v5
++
++    :cond_2
++    const/4 v0, 0x0
++
++    return v0
++.end method
++
++.method public A0o(Landroid/os/Bundle;Landroid/view/LayoutInflater;Landroid/view/ViewGroup;)Landroid/view/View;
++    .locals 5
++
++    const v1, 0x7f0d04cc
++
++    const/4 v0, 0x0
++
++    invoke-virtual {p2, v1, p3, v0}, Landroid/view/LayoutInflater;->inflate(ILandroid/view/ViewGroup;Z)Landroid/view/View;
++
++    move-result-object v4
++
++    invoke-direct {p0, p0, v4}, Lcom/gbwhatsapp/status/StatusesFragment;->loadPadding(Ljava/lang/Object;Landroid/view/View;)V
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0c:LX/2Yj;
++
++    iget-object v1, v0, LX/2Yj;->A0C:LX/2Wf;
++
++    const v3, 0x1b022f9b
++
++    const/4 v2, 0x1
++
++    const-string v0, "CREATE_VIEW_START"
++
++    invoke-virtual {v1, v3, v0, v2}, LX/2Wf;->A02(ILjava/lang/String;I)V
++
++    const v0, 0x102000a
++
++    invoke-static {v4, v0}, LX/09K;->A09(Landroid/view/View;I)Landroid/view/View;
++
++    move-result-object v1
++
++    check-cast v1, Landroid/widget/ListView;
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0E:LX/2pW;
++
++    invoke-virtual {v0, v1, p0}, LX/2pW;->A00(Landroid/widget/ListView;LX/09t;)V
++
++    invoke-virtual {p0}, LX/09t;->A02()Landroid/content/res/Resources;
++
++    move-result-object v1
++
++    const v0, 0x7f070622
++
++    invoke-virtual {v1, v0}, Landroid/content/res/Resources;->getDimensionPixelSize(I)I
++
++    move-result v0
++
++    invoke-static {v4, p0, v0}, Lcom/gbwhatsapp/HomeActivity;->A09(Landroid/view/View;LX/09t;I)V
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0c:LX/2Yj;
++
++    iget-object v1, v0, LX/2Yj;->A0C:LX/2Wf;
++
++    const-string v0, "CREATE_VIEW_END"
++
++    invoke-virtual {v1, v3, v0, v2}, LX/2Wf;->A02(ILjava/lang/String;I)V
++
++    return-object v4
++.end method
++
++.method public A0p()V
++    .locals 2
++
++    const-string v0, "statusesFragment/onDestroy"
++
++    invoke-static {v0}, Lcom/whatsapp/util/Log;->i(Ljava/lang/String;)V
++
++    const/4 v0, 0x1
++
++    iput-boolean v0, p0, LX/09t;->A0U:Z
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0Z:LX/3bu;
++
++    iget-object v0, v1, LX/3bu;->A04:LX/2aq;
++
++    iget-object v1, v1, LX/3bu;->A02:LX/4Eq;
++
++    iget-object v0, v0, LX/2aq;->A01:LX/2ap;
++
++    invoke-virtual {v0, v1}, LX/2Oz;->A05(Ljava/lang/Object;)V
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0C:LX/0Oi;
++
++    invoke-virtual {v0}, LX/0Oi;->A00()V
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0A:LX/05j;
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0w:LX/0Gv;
++
++    invoke-virtual {v1, v0}, LX/2Oz;->A05(Ljava/lang/Object;)V
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0N:LX/2Xx;
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0y:LX/2SR;
++
++    invoke-virtual {v1, v0}, LX/2Oz;->A05(Ljava/lang/Object;)V
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A08:LX/06i;
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0v:LX/0Ke;
++
++    invoke-virtual {v1, v0}, LX/2Oz;->A05(Ljava/lang/Object;)V
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0X:LX/2at;
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A11:LX/4Ep;
++
++    invoke-virtual {v1, v0}, LX/2Oz;->A05(Ljava/lang/Object;)V
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0T:LX/2Ym;
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0z:LX/34x;
++
++    invoke-virtual {v1, v0}, LX/2Oz;->A05(Ljava/lang/Object;)V
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A05:LX/02S;
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A12:Ljava/lang/Runnable;
++
++    iget-object v0, v0, LX/02S;->A02:Landroid/os/Handler;
++
++    invoke-virtual {v0, v1}, Landroid/os/Handler;->removeCallbacks(Ljava/lang/Runnable;)V
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0h:LX/49N;
++
++    if-eqz v1, :cond_0
++
++    const/4 v0, 0x1
++
++    invoke-virtual {v1, v0}, LX/2hK;->A03(Z)V
++
++    :cond_0
++    iget-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0g:LX/2wb;
++
++    if-eqz v1, :cond_1
++
++    const/4 v0, 0x1
++
++    invoke-virtual {v1, v0}, LX/2hK;->A03(Z)V
++
++    :cond_1
++    invoke-virtual {p0}, Lcom/gbwhatsapp/status/StatusesFragment;->A14()V
++
++    return-void
++.end method
++
++.method public A0r()V
++    .locals 2
++
++    const-string v0, "statusesFragment/onResume"
++
++    invoke-static {v0}, Lcom/whatsapp/util/Log;->i(Ljava/lang/String;)V
++
++    const/4 v0, 0x1
++
++    iput-boolean v0, p0, LX/09t;->A0U:Z
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0b:LX/2ao;
++
++    iget-object v1, v0, LX/2ao;->A04:LX/2so;
++
++    new-instance v0, LX/3Nq;
++
++    invoke-direct {v0, p0}, LX/3Nq;-><init>(Lcom/gbwhatsapp/status/StatusesFragment;)V
++
++    invoke-virtual {v1, p0, v0}, LX/09w;->A04(LX/09b;LX/0Kj;)V
++
++    return-void
++.end method
++
++.method public A0s()V
++    .locals 1
++
++    const-string v0, "statusesFragment/onStop"
++
++    invoke-static {v0}, Lcom/whatsapp/util/Log;->i(Ljava/lang/String;)V
++
++    const/4 v0, 0x1
++
++    iput-boolean v0, p0, LX/09t;->A0U:Z
++
++    return-void
++.end method
++
++.method public A0v(Landroid/os/Bundle;)V
++    .locals 12
++
++    const-string v0, "statusesFragment/onCreate"
++
++    invoke-static {v0}, Lcom/whatsapp/util/Log;->i(Ljava/lang/String;)V
++
++    move-object v7, p0
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0c:LX/2Yj;
++
++    iget-object v0, v1, LX/2Yj;->A0C:LX/2Wf;
++
++    const v3, 0x1b022f9b
++
++    const/4 v2, 0x1
++
++    invoke-virtual {v0, v3, v2}, LX/2Wf;->A00(II)V
++
++    iget-object v1, v1, LX/2Yj;->A0C:LX/2Wf;
++
++    const-string v0, "CREATE_START"
++
++    invoke-virtual {v1, v3, v0, v2}, LX/2Wf;->A02(ILjava/lang/String;I)V
++
++    iget-object v4, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0D:LX/05X;
++
++    invoke-virtual {p0}, LX/09t;->A0m()Landroid/content/Context;
++
++    move-result-object v1
++
++    const-string v0, "status-fragment"
++
++    invoke-virtual {v4, v1, v0}, LX/05X;->A04(Landroid/content/Context;Ljava/lang/String;)LX/0Oi;
++
++    move-result-object v0
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0C:LX/0Oi;
++
++    invoke-super {p0, p1}, LX/09t;->A0v(Landroid/os/Bundle;)V
++
++    iget-object v8, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A05:LX/02S;
++
++    iget-object v11, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0j:LX/2Nv;
++
++    iget-object v10, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0Q:LX/2Ro;
++
++    iget-object v9, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0O:LX/2Zx;
++
++    new-instance v6, Lcom/gbwhatsapp/status/StatusExpirationLifecycleOwner;
++
++    invoke-direct/range {v6 .. v11}, Lcom/gbwhatsapp/status/StatusExpirationLifecycleOwner;-><init>(LX/09b;LX/02S;LX/2Zx;LX/2Ro;LX/2Nv;)V
++
++    iput-object v6, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0W:Lcom/gbwhatsapp/status/StatusExpirationLifecycleOwner;
++
++    iput-boolean v2, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0u:Z
++
++    const/4 v6, 0x0
++
++    if-eqz p1, :cond_0
++
++    const-string v0, "SHARE_CTA_VISIBILITY_SI_KEY"
++
++    invoke-virtual {p1, v0, v6}, Landroid/os/Bundle;->getBoolean(Ljava/lang/String;Z)Z
++
++    move-result v0
++
++    const/4 v5, 0x1
++
++    if-nez v0, :cond_1
++
++    :cond_0
++    const/4 v5, 0x0
++
++    :cond_1
++    iget-object v4, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0a:LX/2aq;
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0c:LX/2Yj;
++
++    new-instance v0, LX/3bu;
++
++    invoke-direct {v0, v4, v1, v6, v5}, LX/3bu;-><init>(LX/2aq;LX/2Yj;IZ)V
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0Z:LX/3bu;
++
++    iget-object v1, v0, LX/3bu;->A02:LX/4Eq;
++
++    iget-object v0, v4, LX/2aq;->A01:LX/2ap;
++
++    invoke-virtual {v0, v1}, LX/2Oz;->A04(Ljava/lang/Object;)V
++
++    if-eqz p1, :cond_2
++
++    const-string v0, "WAS_FB_SHARE_BUTTON_ATTEMPTED_SI_KEY"
++
++    invoke-virtual {p1, v0, v6}, Landroid/os/Bundle;->getBoolean(Ljava/lang/String;Z)Z
++
++    move-result v0
++
++    iput-boolean v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0p:Z
++
++    :cond_2
++    iget-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0R:LX/2Oo;
++
++    const/16 v0, 0x2d3
++
++    invoke-virtual {v1, v0}, LX/2Oo;->A05(I)Z
++
++    move-result v0
++
++    iput-boolean v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0t:Z
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0c:LX/2Yj;
++
++    iget-object v1, v0, LX/2Yj;->A0C:LX/2Wf;
++
++    const-string v0, "CREATE_END"
++
++    invoke-virtual {v1, v3, v0, v2}, LX/2Wf;->A02(ILjava/lang/String;I)V
++
++    return-void
++.end method
++
++.method public final A0z()Ljava/lang/String;
++    .locals 2
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0i:LX/2wZ;
++
++    if-eqz v0, :cond_0
++
++    iget-object v0, v0, LX/2wZ;->A05:Ljava/util/Map;
++
++    invoke-interface {v0}, Ljava/util/Map;->isEmpty()Z
++
++    move-result v0
++
++    if-nez v0, :cond_0
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0i:LX/2wZ;
++
++    iget-object v0, v0, LX/2wZ;->A05:Ljava/util/Map;
++
++    invoke-interface {v0}, Ljava/util/Map;->keySet()Ljava/util/Set;
++
++    move-result-object v1
++
++    const/4 v0, 0x0
++
++    new-array v0, v0, [Ljava/lang/String;
++
++    invoke-interface {v1, v0}, Ljava/util/Set;->toArray([Ljava/lang/Object;)[Ljava/lang/Object;
++
++    move-result-object v1
++
++    check-cast v1, [Ljava/lang/String;
++
++    const-string v0, ","
++
++    invoke-static {v0, v1}, LX/2xv;->A09(Ljava/lang/CharSequence;[Ljava/lang/CharSequence;)Ljava/lang/String;
++
++    move-result-object v0
++
++    return-object v0
++
++    :cond_0
++    const/4 v0, 0x0
++
++    return-object v0
++.end method
++
++.method public A10()V
++    .locals 9
++
++    move-object v7, p0
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0h:LX/49N;
++
++    if-eqz v1, :cond_0
++
++    const/4 v0, 0x1
++
++    invoke-virtual {v1, v0}, LX/2hK;->A03(Z)V
++
++    :cond_0
++    iget-object v5, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0Q:LX/2Ro;
++
++    iget-object v6, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0U:LX/2OJ;
++
++    iget-object v3, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0O:LX/2Zx;
++
++    iget-object v8, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0c:LX/2Yj;
++
++    iget-object v4, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0P:LX/2ax;
++
++    new-instance v2, LX/49N;
++
++    invoke-direct/range {v2 .. v8}, LX/49N;-><init>(LX/2Zx;LX/2ax;LX/2Ro;LX/2OJ;Lcom/gbwhatsapp/status/StatusesFragment;LX/2Yj;)V
++
++    iput-object v2, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0h:LX/49N;
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0j:LX/2Nv;
++
++    const/4 v0, 0x0
++
++    new-array v0, v0, [Ljava/lang/Void;
++
++    invoke-interface {v1, v2, v0}, LX/2Nv;->AUx(LX/2hK;[Ljava/lang/Object;)V
++
++    return-void
++.end method
++
++.method public A11()V
++    .locals 7
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A03:Landroid/view/View;
++
++    const/4 v3, 0x0
++
++    if-nez v0, :cond_0
++
++    invoke-static {p0}, Landroidx/fragment/app/ListFragment;->A00(Landroidx/fragment/app/ListFragment;)V
++
++    iget-object v4, p0, Landroidx/fragment/app/ListFragment;->A04:Landroid/widget/ListView;
++
++    invoke-virtual {p0}, LX/09t;->A0A()LX/09Y;
++
++    move-result-object v0
++
++    invoke-virtual {v0}, Landroid/app/Activity;->getLayoutInflater()Landroid/view/LayoutInflater;
++
++    move-result-object v1
++
++    const v0, 0x7f0d04c1
++
++    invoke-virtual {v1, v0, v4, v3}, Landroid/view/LayoutInflater;->inflate(ILandroid/view/ViewGroup;Z)Landroid/view/View;
++
++    move-result-object v1
++
++    invoke-direct {p0, p0, v1}, Lcom/gbwhatsapp/status/StatusesFragment;->loadPadding(Ljava/lang/Object;Landroid/view/View;)V
++
++    iput-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A03:Landroid/view/View;
++
++    const v0, 0x7f0a103e
++
++    invoke-virtual {v1, v0}, Landroid/view/View;->findViewById(I)Landroid/view/View;
++
++    move-result-object v6
++
++    check-cast v6, Landroid/widget/TextView;
++
++    const v5, 0x7f1214ff
++
++    const/4 v2, 0x1
++
++    new-array v1, v2, [Ljava/lang/Object;
++
++    const/16 v0, 0x18
++
++    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
++
++    move-result-object v0
++
++    aput-object v0, v1, v3
++
++    invoke-virtual {p0, v5, v1}, LX/09t;->A0H(I[Ljava/lang/Object;)Ljava/lang/String;
++
++    move-result-object v0
++
++    invoke-virtual {v6, v0}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A03:Landroid/view/View;
++
++    const v0, 0x7f0a0287
++
++    invoke-virtual {v1, v0}, Landroid/view/View;->findViewById(I)Landroid/view/View;
++
++    move-result-object v1
++
++    new-instance v0, Lcom/facebook/redex/ViewOnClickCListenerShape0S0101000_I0;
++
++    invoke-direct {v0, p0}, Lcom/facebook/redex/ViewOnClickCListenerShape0S0101000_I0;-><init>(Lcom/gbwhatsapp/status/StatusesFragment;)V
++
++    invoke-virtual {v1, v0}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A03:Landroid/view/View;
++
++    const v0, 0x7f0a0c80
++
++    invoke-virtual {v1, v0}, Landroid/view/View;->findViewById(I)Landroid/view/View;
++
++    move-result-object v1
++
++    new-instance v0, LX/3nn;
++
++    invoke-direct {v0, p0}, LX/3nn;-><init>(Lcom/gbwhatsapp/status/StatusesFragment;)V
++
++    invoke-virtual {v1, v0}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    invoke-virtual {p0}, LX/09t;->A01()Landroid/content/Context;
++
++    move-result-object v0
++
++    new-instance v1, Landroid/widget/FrameLayout;
++
++    invoke-direct {v1, v0}, Landroid/widget/FrameLayout;-><init>(Landroid/content/Context;)V
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A03:Landroid/view/View;
++
++    invoke-virtual {v1, v0}, Landroid/view/ViewGroup;->addView(Landroid/view/View;)V
++
++    const/4 v0, 0x0
++
++    invoke-virtual {v4, v1, v0, v2}, Landroid/widget/ListView;->addHeaderView(Landroid/view/View;Ljava/lang/Object;Z)V
++
++    :cond_0
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A03:Landroid/view/View;
++
++    invoke-virtual {v0, v3}, Landroid/view/View;->setVisibility(I)V
++
++    return-void
++.end method
++
++.method public final A12()V
++    .locals 12
++
++    iget-object v6, p0, LX/09t;->A0A:Landroid/view/View;
++
++    if-eqz v6, :cond_0
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0i:LX/2wZ;
++
++    invoke-virtual {v0}, LX/2wZ;->A00()Z
++
++    move-result v0
++
++    const/4 v11, 0x1
++
++    const v10, 0x7f0a07a2
++
++    const v9, 0x7f0a03bd
++
++    const v5, 0x7f0a0f9d
++
++    const v7, 0x7f0a1218
++
++    const v3, 0x7f0a0e34
++
++    const/4 v8, 0x0
++
++    const/16 v4, 0x8
++
++    if-eqz v0, :cond_6
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0h:LX/49N;
++
++    if-eqz v0, :cond_1
++
++    invoke-static {v6, v10, v8, v3, v4}, LX/1KM;->A00(Landroid/view/View;IIII)V
++
++    invoke-static {v6, v7, v4, v5, v4}, LX/1KM;->A00(Landroid/view/View;IIII)V
++
++    invoke-virtual {v6, v9}, Landroid/view/View;->findViewById(I)Landroid/view/View;
++
++    move-result-object v0
++
++    :goto_0
++    invoke-virtual {v0, v4}, Landroid/view/View;->setVisibility(I)V
++
++    :cond_0
++    return-void
++
++    :cond_1
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A09:LX/02B;
++
++    invoke-virtual {v0}, LX/02B;->A03()I
++
++    move-result v0
++
++    if-lez v0, :cond_2
++
++    invoke-static {v6, v10, v4, v3, v4}, LX/1KM;->A00(Landroid/view/View;IIII)V
++
++    invoke-static {v6, v7, v8, v5, v4}, LX/1KM;->A00(Landroid/view/View;IIII)V
++
++    invoke-virtual {v6, v9}, Landroid/view/View;->findViewById(I)Landroid/view/View;
++
++    move-result-object v0
++
++    invoke-virtual {v0, v4}, Landroid/view/View;->setVisibility(I)V
++
++    invoke-virtual {v6, v7}, Landroid/view/View;->findViewById(I)Landroid/view/View;
++
++    move-result-object v4
++
++    check-cast v4, Landroid/widget/TextView;
++
++    invoke-virtual {v4}, Landroid/view/View;->getContext()Landroid/content/Context;
++
++    move-result-object v3
++
++    const v0, 0x7f12195c
++
++    invoke-virtual {p0, v0}, LX/09t;->A0G(I)Ljava/lang/String;
++
++    move-result-object v2
++
++    const v0, 0x7f0804bf
++
++    invoke-static {v3, v0}, LX/01O;->A03(Landroid/content/Context;I)Landroid/graphics/drawable/Drawable;
++
++    move-result-object v1
++
++    const-string v0, ""
++
++    invoke-static {v1, v0}, LX/008;->A06(Ljava/lang/Object;Ljava/lang/String;)V
++
++    const v0, 0x7f060457
++
++    invoke-static {v3, v0}, LX/01O;->A00(Landroid/content/Context;I)I
++
++    move-result v0
++
++    invoke-static {v1, v0}, LX/2Ol;->A02(Landroid/graphics/drawable/Drawable;I)Landroid/graphics/drawable/Drawable;
++
++    move-result-object v1
++
++    invoke-virtual {v4}, Landroid/widget/TextView;->getPaint()Landroid/text/TextPaint;
++
++    move-result-object v0
++
++    invoke-static {v0, v1, v2}, LX/3fp;->A00(Landroid/graphics/Paint;Landroid/graphics/drawable/Drawable;Ljava/lang/CharSequence;)Ljava/lang/CharSequence;
++
++    move-result-object v0
++
++    invoke-virtual {v4, v0}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
++
++    return-void
++
++    :cond_2
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0J:LX/2OF;
++
++    invoke-virtual {v0}, LX/2OF;->A03()Z
++
++    move-result v0
++
++    if-eqz v0, :cond_4
++
++    invoke-static {v6, v5}, LX/09K;->A09(Landroid/view/View;I)Landroid/view/View;
++
++    move-result-object v2
++
++    check-cast v2, Landroid/view/ViewGroup;
++
++    invoke-virtual {v2}, Landroid/view/ViewGroup;->getChildCount()I
++
++    move-result v0
++
++    if-nez v0, :cond_3
++
++    invoke-virtual {p0}, LX/09t;->A0m()Landroid/content/Context;
++
++    move-result-object v0
++
++    new-instance v1, Lcom/gbwhatsapp/EmptyTellAFriendView;
++
++    invoke-direct {v1, v0}, Lcom/gbwhatsapp/EmptyTellAFriendView;-><init>(Landroid/content/Context;)V
++
++    invoke-virtual {v2, v1}, Landroid/view/ViewGroup;->addView(Landroid/view/View;)V
++
++    new-instance v0, LX/3no;
++
++    invoke-direct {v0, p0}, LX/3no;-><init>(Lcom/gbwhatsapp/status/StatusesFragment;)V
++
++    invoke-virtual {v1, v0}, Lcom/gbwhatsapp/EmptyTellAFriendView;->setInviteButtonClickListener(Landroid/view/View$OnClickListener;)V
++
++    :cond_3
++    invoke-virtual {v2, v8}, Landroid/view/View;->setVisibility(I)V
++
++    invoke-virtual {v6, v9}, Landroid/view/View;->findViewById(I)Landroid/view/View;
++
++    move-result-object v0
++
++    :goto_1
++    invoke-virtual {v0, v4}, Landroid/view/View;->setVisibility(I)V
++
++    invoke-static {v6, v10, v4, v3, v4}, LX/1KM;->A00(Landroid/view/View;IIII)V
++
++    invoke-virtual {v6, v7}, Landroid/view/View;->findViewById(I)Landroid/view/View;
++
++    move-result-object v0
++
++    goto/16 :goto_0
++
++    :cond_4
++    invoke-virtual {v6, v9}, Landroid/view/View;->findViewById(I)Landroid/view/View;
++
++    move-result-object v9
++
++    check-cast v9, Landroid/view/ViewGroup;
++
++    invoke-virtual {v9}, Landroid/view/ViewGroup;->getChildCount()I
++
++    move-result v0
++
++    if-nez v0, :cond_5
++
++    invoke-virtual {p0}, LX/09t;->A0A()LX/09Y;
++
++    move-result-object v0
++
++    invoke-virtual {v0}, Landroid/app/Activity;->getLayoutInflater()Landroid/view/LayoutInflater;
++
++    move-result-object v1
++
++    const v0, 0x7f0d01ec
++
++    invoke-virtual {v1, v0, v9, v11}, Landroid/view/LayoutInflater;->inflate(ILandroid/view/ViewGroup;Z)Landroid/view/View;
++
++    const v0, 0x7f0a022c
++
++    invoke-virtual {v9, v0}, Landroid/view/View;->findViewById(I)Landroid/view/View;
++
++    move-result-object v2
++
++    const/16 v1, 0x1f
++
++    new-instance v0, Lcom/whatsapp/util/ViewOnClickCListenerShape2S0100000_I0_1;
++
++    invoke-direct {v0, p0, v1}, Lcom/whatsapp/util/ViewOnClickCListenerShape2S0100000_I0_1;-><init>(Ljava/lang/Object;I)V
++
++    invoke-virtual {v2, v0}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
++
++    :cond_5
++    invoke-virtual {v9, v8}, Landroid/view/View;->setVisibility(I)V
++
++    invoke-virtual {v6, v5}, Landroid/view/View;->findViewById(I)Landroid/view/View;
++
++    move-result-object v0
++
++    goto :goto_1
++
++    :cond_6
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0l:Ljava/lang/CharSequence;
++
++    invoke-static {v0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
++
++    move-result v0
++
++    if-nez v0, :cond_0
++
++    invoke-static {v6, v10, v4, v3, v8}, LX/1KM;->A00(Landroid/view/View;IIII)V
++
++    invoke-virtual {v6, v3}, Landroid/view/View;->findViewById(I)Landroid/view/View;
++
++    move-result-object v3
++
++    check-cast v3, Landroid/widget/TextView;
++
++    const v2, 0x7f12132d
++
++    new-array v1, v11, [Ljava/lang/Object;
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0l:Ljava/lang/CharSequence;
++
++    aput-object v0, v1, v8
++
++    invoke-virtual {p0, v2, v1}, LX/09t;->A0H(I[Ljava/lang/Object;)Ljava/lang/String;
++
++    move-result-object v0
++
++    invoke-virtual {v3, v0}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
++
++    invoke-virtual {v6, v7}, Landroid/view/View;->findViewById(I)Landroid/view/View;
++
++    move-result-object v0
++
++    invoke-virtual {v0, v4}, Landroid/view/View;->setVisibility(I)V
++
++    invoke-static {v6, v5, v4, v9, v4}, LX/1KM;->A00(Landroid/view/View;IIII)V
++
++    return-void
++.end method
++
++.method public final A13()V
++    .locals 4
++
++    iget-boolean v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0s:Z
++
++    if-eqz v0, :cond_0
++
++    iget-object v3, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0c:LX/2Yj;
++
++    iget-object v0, v3, LX/2Yj;->A0H:Ljava/util/Random;
++
++    invoke-virtual {v0}, Ljava/util/Random;->nextLong()J
++
++    move-result-wide v1
++
++    new-instance v0, LX/3LL;
++
++    invoke-direct {v0, v1, v2}, LX/3LL;-><init>(J)V
++
++    iput-object v0, v3, LX/2Yj;->A00:LX/3LL;
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0h:LX/49N;
++
++    if-nez v0, :cond_0
++
++    iget-object v2, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0c:LX/2Yj;
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0i:LX/2wZ;
++
++    iget-object v0, v0, LX/2wZ;->A02:Ljava/util/List;
++
++    invoke-interface {v0}, Ljava/util/List;->size()I
++
++    move-result v1
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0i:LX/2wZ;
++
++    iget-object v0, v0, LX/2wZ;->A05:Ljava/util/Map;
++
++    invoke-virtual {v2, v0, v1}, LX/2Yj;->A06(Ljava/util/Map;I)V
++
++    :cond_0
++    return-void
++.end method
++
++.method public final A14()V
++    .locals 5
++
++    iget-object v4, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A16:Ljava/util/List;
++
++    invoke-interface {v4}, Ljava/util/List;->iterator()Ljava/util/Iterator;
++
++    move-result-object v3
++
++    :goto_0
++    invoke-interface {v3}, Ljava/util/Iterator;->hasNext()Z
++
++    move-result v0
++
++    if-eqz v0, :cond_0
++
++    invoke-interface {v3}, Ljava/util/Iterator;->next()Ljava/lang/Object;
++
++    move-result-object v2
++
++    check-cast v2, Landroid/net/Uri;
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0I:LX/2ON;
++
++    iget-object v1, v0, LX/2ON;->A00:Landroid/content/Context;
++
++    const/4 v0, 0x1
++
++    invoke-virtual {v1, v2, v0}, Landroid/content/Context;->revokeUriPermission(Landroid/net/Uri;I)V
++
++    goto :goto_0
++
++    :cond_0
++    invoke-interface {v4}, Ljava/util/List;->clear()V
++
++    return-void
++.end method
++
++.method public final A15()V
++    .locals 7
++
++    iget-object v2, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0J:LX/2OF;
++
++    invoke-virtual {p0}, LX/09t;->A0m()Landroid/content/Context;
++
++    move-result-object v0
++
++    const/16 v1, 0x21
++
++    invoke-static {v0, v2, v1}, Lcom/gbwhatsapp/RequestPermissionActivity;->A02(Landroid/content/Context;LX/2OF;I)Landroid/content/Intent;
++
++    move-result-object v0
++
++    if-nez v0, :cond_2
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0F:LX/2Pw;
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0x:LX/34h;
++
++    invoke-virtual {v1, v0}, LX/2Pw;->A05(LX/34h;)Z
++
++    move-result v0
++
++    if-eqz v0, :cond_0
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0M:LX/2Ss;
++
++    invoke-virtual {v0}, LX/2Ss;->A03()J
++
++    move-result-wide v3
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A06:LX/021;
++
++    sget-object v0, LX/022;->A1n:LX/04m;
++
++    invoke-virtual {v1, v0}, LX/022;->A03(LX/04m;)I
++
++    move-result v0
++
++    shl-int/lit8 v0, v0, 0xa
++
++    shl-int/lit8 v0, v0, 0xa
++
++    int-to-long v1, v0
++
++    cmp-long v0, v3, v1
++
++    goto :goto_0
++
++    iget-object v3, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0S:LX/2NJ;
++
++    invoke-virtual {p0}, LX/09t;->A09()LX/09Y;
++
++    move-result-object v2
++
++    move-object v1, v2
++
++    check-cast v1, LX/09l;
++
++    const-string v0, ""
++
++    invoke-static {v1, v0}, LX/008;->A06(Ljava/lang/Object;Ljava/lang/String;)V
++
++    const/4 v0, 0x5
++
++    invoke-static {v2, v1, v3, v0}, LX/3UD;->A03(Landroid/app/Activity;LX/09l;LX/2NJ;I)V
++
++    :cond_0
++    return-void
++
++    :goto_0
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A03:Landroid/view/View;
++
++    if-eqz v0, :cond_1
++
++    iget-object v2, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0K:LX/2OC;
++
++    const/4 v1, 0x0
++
++    const-string v0, "show_statuses_education"
++
++    invoke-static {v2, v0, v1}, LX/02s;->A00(LX/2OC;Ljava/lang/String;Z)V
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A03:Landroid/view/View;
++
++    const/16 v0, 0x8
++
++    invoke-virtual {v1, v0}, Landroid/view/View;->setVisibility(I)V
++
++    :cond_1
++    invoke-virtual {p0}, LX/09t;->A0m()Landroid/content/Context;
++
++    move-result-object v6
++
++    sget-object v0, LX/2x6;->A00:LX/2x6;
++
++    invoke-virtual {v0}, Lcom/whatsapp/jid/Jid;->getRawString()Ljava/lang/String;
++
++    move-result-object v5
++
++    const/4 v4, 0x4
++
++    new-instance v3, Landroid/content/Intent;
++
++    invoke-direct {v3}, Landroid/content/Intent;-><init>()V
++
++    const-string v2, "com.gbwhatsapp.camera.CameraActivity"
++
++    const-string v1, "jid"
++
++    invoke-virtual {v6}, Landroid/content/Context;->getPackageName()Ljava/lang/String;
++
++    move-result-object v0
++
++    invoke-virtual {v3, v0, v2}, Landroid/content/Intent;->setClassName(Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;
++
++    invoke-virtual {v3, v1, v5}, Landroid/content/Intent;->putExtra(Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;
++
++    const-string v0, "origin"
++
++    invoke-virtual {v3, v0, v4}, Landroid/content/Intent;->putExtra(Ljava/lang/String;I)Landroid/content/Intent;
++
++    invoke-virtual {p0, v3}, LX/09t;->A0f(Landroid/content/Intent;)V
++
++    return-void
++
++    :cond_2
++    invoke-virtual {p0, v0, v1}, LX/09t;->startActivityForResult(Landroid/content/Intent;I)V
++
++    return-void
++.end method
++
++.method public final A16()V
++    .locals 9
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A05:LX/02S;
++
++    iget-object v5, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A12:Ljava/lang/Runnable;
++
++    iget-object v0, v0, LX/02S;->A02:Landroid/os/Handler;
++
++    invoke-virtual {v0, v5}, Landroid/os/Handler;->removeCallbacks(Ljava/lang/Runnable;)V
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0i:LX/2wZ;
++
++    invoke-virtual {v0}, LX/2wZ;->A00()Z
++
++    move-result v0
++
++    if-nez v0, :cond_7
++
++    invoke-virtual {p0}, LX/09t;->A09()LX/09Y;
++
++    move-result-object v0
++
++    if-eqz v0, :cond_7
++
++    iget-object v6, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0i:LX/2wZ;
++
++    iget-object v0, v6, LX/2wZ;->A02:Ljava/util/List;
++
++    invoke-interface {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
++
++    move-result-object v4
++
++    const-wide/16 v7, 0x0
++
++    :cond_0
++    :goto_0
++    invoke-interface {v4}, Ljava/util/Iterator;->hasNext()Z
++
++    move-result v0
++
++    if-eqz v0, :cond_1
++
++    invoke-interface {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
++
++    move-result-object v3
++
++    check-cast v3, LX/2wa;
++
++    invoke-virtual {v3}, LX/2wa;->A04()J
++
++    move-result-wide v1
++
++    cmp-long v0, v1, v7
++
++    if-lez v0, :cond_0
++
++    invoke-virtual {v3}, LX/2wa;->A04()J
++
++    move-result-wide v7
++
++    goto :goto_0
++
++    :cond_1
++    iget-object v0, v6, LX/2wZ;->A03:Ljava/util/List;
++
++    invoke-interface {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
++
++    move-result-object v4
++
++    :cond_2
++    :goto_1
++    invoke-interface {v4}, Ljava/util/Iterator;->hasNext()Z
++
++    move-result v0
++
++    if-eqz v0, :cond_3
++
++    invoke-interface {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
++
++    move-result-object v3
++
++    check-cast v3, LX/2wa;
++
++    invoke-virtual {v3}, LX/2wa;->A04()J
++
++    move-result-wide v1
++
++    cmp-long v0, v1, v7
++
++    if-lez v0, :cond_2
++
++    invoke-virtual {v3}, LX/2wa;->A04()J
++
++    move-result-wide v7
++
++    goto :goto_1
++
++    :cond_3
++    iget-object v0, v6, LX/2wZ;->A01:Ljava/util/List;
++
++    invoke-interface {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
++
++    move-result-object v4
++
++    :cond_4
++    :goto_2
++    invoke-interface {v4}, Ljava/util/Iterator;->hasNext()Z
++
++    move-result v0
++
++    if-eqz v0, :cond_5
++
++    invoke-interface {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
++
++    move-result-object v3
++
++    check-cast v3, LX/2wa;
++
++    invoke-virtual {v3}, LX/2wa;->A04()J
++
++    move-result-wide v1
++
++    cmp-long v0, v1, v7
++
++    if-lez v0, :cond_4
++
++    invoke-virtual {v3}, LX/2wa;->A04()J
++
++    move-result-wide v7
++
++    goto :goto_2
++
++    :cond_5
++    iget-object v3, v6, LX/2wZ;->A00:LX/2wa;
++
++    if-eqz v3, :cond_6
++
++    invoke-virtual {v3}, LX/2wa;->A04()J
++
++    move-result-wide v1
++
++    cmp-long v0, v1, v7
++
++    if-lez v0, :cond_6
++
++    invoke-virtual {v3}, LX/2wa;->A04()J
++
++    move-result-wide v7
++
++    :cond_6
++    iget-object v4, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A05:LX/02S;
++
++    invoke-static {v7, v8}, LX/37N;->A01(J)J
++
++    move-result-wide v2
++
++    invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
++
++    move-result-wide v0
++
++    sub-long/2addr v2, v0
++
++    const-wide/16 v0, 0x3e8
++
++    add-long/2addr v2, v0
++
++    iget-object v0, v4, LX/02S;->A02:Landroid/os/Handler;
++
++    invoke-virtual {v0, v5, v2, v3}, Landroid/os/Handler;->postDelayed(Ljava/lang/Runnable;J)Z
++
++    :cond_7
++    return-void
++.end method
++
++.method public final A17(Landroid/animation/Animator$AnimatorListener;Z)V
++    .locals 7
++
++    new-instance v3, Ljava/util/ArrayList;
++
++    invoke-direct {v3}, Ljava/util/ArrayList;-><init>()V
++
++    const/4 v6, 0x0
++
++    const/4 v5, 0x0
++
++    :goto_0
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0Y:LX/2t2;
++
++    invoke-virtual {v0}, LX/2t2;->getCount()I
++
++    move-result v0
++
++    if-ge v5, v0, :cond_3
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0Y:LX/2t2;
++
++    invoke-virtual {v0, v5}, Landroid/widget/BaseAdapter;->getItemViewType(I)I
++
++    move-result v0
++
++    if-nez v0, :cond_1
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0Y:LX/2t2;
++
++    iget-object v0, v0, LX/2t2;->A03:Lcom/gbwhatsapp/status/StatusesFragment;
++
++    iget-object v0, v0, Lcom/gbwhatsapp/status/StatusesFragment;->A0n:Ljava/util/List;
++
++    invoke-interface {v0, v5}, Ljava/util/List;->get(I)Ljava/lang/Object;
++
++    move-result-object v4
++
++    check-cast v4, LX/3cO;
++
++    check-cast v4, LX/4ca;
++
++    iget-object v2, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0U:LX/2OJ;
++
++    iget-object v0, v4, LX/4ca;->A01:LX/2wa;
++
++    iget-object v1, v0, LX/2wa;->A0A:Lcom/whatsapp/jid/UserJid;
++
++    invoke-virtual {v1}, Lcom/whatsapp/jid/Jid;->getRawString()Ljava/lang/String;
++
++    move-result-object v0
++
++    invoke-virtual {v2, v0}, LX/2OJ;->A08(Ljava/lang/String;)LX/2gX;
++
++    move-result-object v0
++
++    iget-boolean v0, v0, LX/2gX;->A0H:Z
++
++    if-eqz v0, :cond_1
++
++    sget-object v0, LX/2wt;->A00:LX/2wt;
++
++    if-eq v1, v0, :cond_1
++
++    iget-object v4, v4, LX/4ca;->A00:Landroid/view/View;
++
++    if-eqz v4, :cond_1
++
++    if-eqz p2, :cond_0
++
++    invoke-virtual {v4, v6, v6}, Landroid/view/View;->measure(II)V
++
++    :cond_0
++    invoke-virtual {v4}, Landroid/view/View;->getMeasuredHeight()I
++
++    move-result v2
++
++    const/4 v0, 0x2
++
++    new-array v1, v0, [I
++
++    const/4 v0, 0x1
++
++    if-eqz p2, :cond_2
++
++    aput v6, v1, v6
++
++    aput v2, v1, v0
++
++    :goto_1
++    invoke-static {v1}, Landroid/animation/ValueAnimator;->ofInt([I)Landroid/animation/ValueAnimator;
++
++    move-result-object v1
++
++    new-instance v0, LX/3dr;
++
++    invoke-direct {v0, v4, v2}, LX/3dr;-><init>(Landroid/view/View;I)V
++
++    invoke-virtual {v1, v0}, Landroid/animation/Animator;->addListener(Landroid/animation/Animator$AnimatorListener;)V
++
++    new-instance v0, LX/4OQ;
++
++    invoke-direct {v0, v4, p2}, LX/4OQ;-><init>(Landroid/view/View;Z)V
++
++    invoke-virtual {v1, v0}, Landroid/animation/ValueAnimator;->addUpdateListener(Landroid/animation/ValueAnimator$AnimatorUpdateListener;)V
++
++    invoke-virtual {v3, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
++
++    :cond_1
++    add-int/lit8 v5, v5, 0x1
++
++    goto :goto_0
++
++    :cond_2
++    aput v2, v1, v6
++
++    aput v6, v1, v0
++
++    goto :goto_1
++
++    :cond_3
++    new-instance v1, Landroid/animation/AnimatorSet;
++
++    invoke-direct {v1}, Landroid/animation/AnimatorSet;-><init>()V
++
++    iput-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A00:Landroid/animation/AnimatorSet;
++
++    new-instance v0, Landroid/view/animation/DecelerateInterpolator;
++
++    invoke-direct {v0}, Landroid/view/animation/DecelerateInterpolator;-><init>()V
++
++    invoke-virtual {v1, v0}, Landroid/animation/Animator;->setInterpolator(Landroid/animation/TimeInterpolator;)V
++
++    iget-object v2, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A00:Landroid/animation/AnimatorSet;
++
++    const-wide/16 v0, 0xfa
++
++    invoke-virtual {v2, v0, v1}, Landroid/animation/AnimatorSet;->setDuration(J)Landroid/animation/AnimatorSet;
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A00:Landroid/animation/AnimatorSet;
++
++    invoke-virtual {v0, p1}, Landroid/animation/Animator;->addListener(Landroid/animation/Animator$AnimatorListener;)V
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A00:Landroid/animation/AnimatorSet;
++
++    invoke-virtual {v0, v3}, Landroid/animation/AnimatorSet;->playTogether(Ljava/util/Collection;)V
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A00:Landroid/animation/AnimatorSet;
++
++    invoke-virtual {v0}, Landroid/animation/Animator;->start()V
++
++    return-void
++.end method
++
++.method public final A18(Landroid/widget/ListView;)V
++    .locals 3
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A02:Landroid/view/View;
++
++    if-nez v0, :cond_0
++
++    invoke-virtual {p0}, LX/09t;->A0m()Landroid/content/Context;
++
++    move-result-object v1
++
++    new-instance v0, Landroid/widget/Space;
++
++    invoke-direct {v0, v1}, Landroid/widget/Space;-><init>(Landroid/content/Context;)V
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A02:Landroid/view/View;
++
++    const/4 v2, -0x1
++
++    invoke-virtual {p0}, LX/09t;->A02()Landroid/content/res/Resources;
++
++    move-result-object v1
++
++    const v0, 0x7f0701bf
++
++    invoke-virtual {v1, v0}, Landroid/content/res/Resources;->getDimensionPixelSize(I)I
++
++    move-result v0
++
++    new-instance v1, Landroid/widget/AbsListView$LayoutParams;
++
++    invoke-direct {v1, v2, v0}, Landroid/widget/AbsListView$LayoutParams;-><init>(II)V
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A02:Landroid/view/View;
++
++    invoke-virtual {v0, v1}, Landroid/view/View;->setLayoutParams(Landroid/view/ViewGroup$LayoutParams;)V
++
++    :cond_0
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A02:Landroid/view/View;
++
++    invoke-virtual {p1, v0}, Landroid/widget/ListView;->removeHeaderView(Landroid/view/View;)Z
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A02:Landroid/view/View;
++
++    invoke-virtual {p1, v0}, Landroid/widget/ListView;->addHeaderView(Landroid/view/View;)V
++
++    return-void
++.end method
++
++.method public final A19(Ljava/util/List;)V
++    .locals 4
++
++    invoke-interface {p1}, Ljava/util/List;->iterator()Ljava/util/Iterator;
++
++    move-result-object v2
++
++    :goto_0
++    invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
++
++    move-result v0
++
++    if-eqz v0, :cond_0
++
++    invoke-interface {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/2wa;
++
++    iget-object v1, v0, LX/2wa;->A0A:Lcom/whatsapp/jid/UserJid;
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0O:LX/2Zx;
++
++    invoke-virtual {v0, v1}, LX/2Zx;->A00(Lcom/whatsapp/jid/UserJid;)LX/2Nt;
++
++    move-result-object v1
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0e:LX/2YE;
++
++    invoke-virtual {v0, v1}, LX/2YE;->A00(LX/2Nt;)V
++
++    goto :goto_0
++
++    :cond_0
++    invoke-interface {p1}, Ljava/util/List;->iterator()Ljava/util/Iterator;
++
++    move-result-object v3
++
++    :cond_1
++    invoke-interface {v3}, Ljava/util/Iterator;->hasNext()Z
++
++    move-result v0
++
++    if-eqz v0, :cond_2
++
++    invoke-interface {v3}, Ljava/util/Iterator;->next()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/2wa;
++
++    iget-object v1, v0, LX/2wa;->A0A:Lcom/whatsapp/jid/UserJid;
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0O:LX/2Zx;
++
++    invoke-virtual {v0, v1}, LX/2Zx;->A01(Lcom/whatsapp/jid/UserJid;)Ljava/util/List;
++
++    move-result-object v0
++
++    check-cast v0, Ljava/util/AbstractCollection;
++
++    invoke-virtual {v0}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
++
++    move-result-object v2
++
++    :goto_1
++    invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
++
++    move-result v0
++
++    if-eqz v0, :cond_1
++
++    invoke-interface {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
++
++    move-result-object v1
++
++    check-cast v1, LX/2Nt;
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0e:LX/2YE;
++
++    invoke-virtual {v0, v1}, LX/2YE;->A00(LX/2Nt;)V
++
++    goto :goto_1
++
++    :cond_2
++    return-void
++.end method
++
++.method public final A1A(Z)V
++    .locals 4
++
++    invoke-virtual {p0}, LX/09t;->A09()LX/09Y;
++
++    move-result-object v3
++
++    if-eqz v3, :cond_0
++
++    iput-boolean p1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0p:Z
++
++    iget-object v2, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0b:LX/2ao;
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0Z:LX/3bu;
++
++    iget-object v0, v0, LX/3bu;->A04:LX/2aq;
++
++    iget-object v0, v0, LX/2aq;->A03:Ljava/util/Map;
++
++    invoke-interface {v0}, Ljava/util/Map;->values()Ljava/util/Collection;
++
++    move-result-object v0
++
++    new-instance v1, Ljava/util/ArrayList;
++
++    invoke-direct {v1, v0}, Ljava/util/ArrayList;-><init>(Ljava/util/Collection;)V
++
++    if-eqz p1, :cond_1
++
++    iget-object v0, v2, LX/2ao;->A02:LX/4cc;
++
++    invoke-virtual {v2, v3, p0, v0, v1}, LX/2ao;->A01(Landroid/app/Activity;LX/09t;LX/4oi;Ljava/util/List;)Z
++
++    move-result v0
++
++    :goto_0
++    if-nez v0, :cond_0
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0b:LX/2ao;
++
++    iget-object v0, v0, LX/2ao;->A00:LX/2OF;
++
++    invoke-virtual {v0}, LX/2OF;->A06()Z
++
++    move-result v0
++
++    if-nez v0, :cond_0
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0c:LX/2Yj;
++
++    const/4 v1, 0x4
++
++    iget-object v0, v0, LX/2Yj;->A00:LX/3LL;
++
++    if-eqz v0, :cond_0
++
++    iput v1, v0, LX/3LL;->A01:I
++
++    :cond_0
++    return-void
++
++    :cond_1
++    iget-object v0, v2, LX/2ao;->A03:LX/4cd;
++
++    invoke-virtual {v2, v3, p0, v0, v1}, LX/2ao;->A01(Landroid/app/Activity;LX/09t;LX/4oi;Ljava/util/List;)Z
++
++    move-result v0
++
++    goto :goto_0
++.end method
++
++.method public synthetic A3o(LX/3Bi;)V
++    .locals 0
++
++    invoke-static {p1}, LX/1KX;->A00(LX/3Bi;)V
++
++    return-void
++.end method
++
++.method public A4C(LX/0bQ;)V
++    .locals 2
++
++    iget-object v0, p1, LX/0bQ;->A01:Ljava/lang/String;
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0l:Ljava/lang/CharSequence;
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0Y:LX/2t2;
++
++    invoke-virtual {v0}, LX/2t2;->getFilter()Landroid/widget/Filter;
++
++    move-result-object v1
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0l:Ljava/lang/CharSequence;
++
++    invoke-virtual {v1, v0}, Landroid/widget/Filter;->filter(Ljava/lang/CharSequence;)V
++
++    return-void
++.end method
++
++.method public A85()Ljava/lang/String;
++    .locals 1
++
++    const v0, 0x7f120b41
++
++    invoke-virtual {p0, v0}, LX/09t;->A0G(I)Ljava/lang/String;
++
++    move-result-object v0
++
++    return-object v0
++.end method
++
++.method public A86()Landroid/graphics/drawable/Drawable;
++    .locals 3
++
++    invoke-virtual {p0}, LX/09t;->A01()Landroid/content/Context;
++
++    move-result-object v2
++
++    const v1, 0x7f080552
++
++    const v0, 0x7f0601ed
++
++    invoke-static {v2, v1, v0}, LX/2Ol;->A00(Landroid/content/Context;II)Landroid/graphics/drawable/Drawable;
++
++    move-result-object v0
++
++    return-object v0
++.end method
++
++.method public AB3()Ljava/lang/String;
++    .locals 1
++
++    const v0, 0x7f120b40
++
++    invoke-virtual {p0, v0}, LX/09t;->A0G(I)Ljava/lang/String;
++
++    move-result-object v0
++
++    return-object v0
++.end method
++
++.method public AB4()Landroid/graphics/drawable/Drawable;
++    .locals 3
++
++    invoke-virtual {p0}, LX/09t;->A01()Landroid/content/Context;
++
++    move-result-object v2
++
++    const v1, 0x7f0803f5
++
++    const v0, 0x7f060634
++
++    invoke-static {v2, v1, v0}, LX/2Ol;->A00(Landroid/content/Context;II)Landroid/graphics/drawable/Drawable;
++
++    move-result-object v0
++
++    return-object v0
++.end method
++
++.method public AB5()Ljava/lang/String;
++    .locals 1
++
++    const/4 v0, 0x0
++
++    return-object v0
++.end method
++
++.method public ADA()LX/00D;
++    .locals 1
++
++    sget-object v0, LX/0AS;->A01:LX/00D;
++
++    return-object v0
++.end method
++
++.method public AIO()V
++    .locals 5
++
++    invoke-virtual {p0}, LX/09t;->A0m()Landroid/content/Context;
++
++    move-result-object v4
++
++    new-instance v3, Landroid/content/Intent;
++
++    invoke-direct {v3}, Landroid/content/Intent;-><init>()V
++
++    const-string v2, "com.gbwhatsapp.textstatuscomposer.TextStatusComposerActivity"
++
++    const-string v1, "origin"
++
++    const/4 v0, 0x4
++
++    invoke-static {v4, v3, v2, v1, v0}, LX/0Qv;->A00(Landroid/content/Context;Landroid/content/Intent;Ljava/lang/String;Ljava/lang/String;I)V
++
++    invoke-virtual {p0, v3}, LX/09t;->A0f(Landroid/content/Intent;)V
++
++    return-void
++.end method
++
++.method public AKa(Landroidx/fragment/app/DialogFragment;Z)V
++    .locals 0
++
++    return-void
++.end method
++
++.method public ANK()V
++    .locals 0
++
++    invoke-virtual {p0}, Lcom/gbwhatsapp/status/StatusesFragment;->A15()V
++
++    return-void
++.end method
++
++.method public AWW(Z)V
++    .locals 2
++
++    iput-boolean p1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0r:Z
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0Y:LX/2t2;
++
++    invoke-virtual {v0}, LX/2t2;->getFilter()Landroid/widget/Filter;
++
++    move-result-object v1
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0l:Ljava/lang/CharSequence;
++
++    invoke-virtual {v1, v0}, Landroid/widget/Filter;->filter(Ljava/lang/CharSequence;)V
++
++    return-void
++.end method
++
++.method public AWX(Z)V
++    .locals 5
++
++    iput-boolean p1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0s:Z
++
++    if-eqz p1, :cond_1
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0K:LX/2OC;
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0H:LX/2Nw;
++
++    invoke-virtual {v0}, LX/2Nw;->A02()J
++
++    move-result-wide v2
++
++    iget-object v0, v1, LX/2OC;->A00:Landroid/content/SharedPreferences;
++
++    invoke-interface {v0}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
++
++    move-result-object v1
++
++    const-string v0, "status_tab_last_opened_time"
++
++    invoke-interface {v1, v0, v2, v3}, Landroid/content/SharedPreferences$Editor;->putLong(Ljava/lang/String;J)Landroid/content/SharedPreferences$Editor;
++
++    move-result-object v0
++
++    invoke-interface {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
++
++    invoke-virtual {p0}, Lcom/gbwhatsapp/status/StatusesFragment;->A13()V
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0R:LX/2Oo;
++
++    const/16 v0, 0xf9
++
++    invoke-virtual {v1, v0}, LX/2Oo;->A05(I)Z
++
++    move-result v0
++
++    if-eqz v0, :cond_0
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0j:LX/2Nv;
++
++    new-instance v0, LX/3c9;
++
++    invoke-direct {v0, p0}, LX/3c9;-><init>(Lcom/gbwhatsapp/status/StatusesFragment;)V
++
++    invoke-interface {v1, v0}, LX/2Nv;->AV0(Ljava/lang/Runnable;)V
++
++    :cond_0
++    return-void
++
++    :cond_1
++    iget-object v4, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0Z:LX/3bu;
++
++    iget-object v0, v4, LX/3bu;->A03:LX/4Fr;
++
++    iget-boolean v0, v0, LX/4Fr;->A00:Z
++
++    const/4 v3, 0x1
++
++    if-eqz v0, :cond_3
++
++    iget-object v0, v4, LX/3bu;->A04:LX/2aq;
++
++    iget-object v2, v0, LX/2aq;->A00:Landroid/os/Handler;
++
++    iget-object v1, v0, LX/2aq;->A03:Ljava/util/Map;
++
++    new-instance v0, LX/3nM;
++
++    invoke-direct {v0, v1}, LX/3nM;-><init>(Ljava/util/Map;)V
++
++    invoke-virtual {v2, v0}, Landroid/os/Handler;->post(Ljava/lang/Runnable;)Z
++
++    iget-object v0, v4, LX/3bu;->A05:LX/2Yj;
++
++    iget-object v0, v0, LX/2Yj;->A00:LX/3LL;
++
++    if-eqz v0, :cond_2
++
++    iput v3, v0, LX/3LL;->A00:I
++
++    :cond_2
++    iget-object v1, v4, LX/3bu;->A03:LX/4Fr;
++
++    const/4 v0, 0x0
++
++    iput-boolean v0, v1, LX/4Fr;->A01:Z
++
++    iput-boolean v0, v1, LX/4Fr;->A00:Z
++
++    invoke-virtual {v4}, LX/3bu;->A00()V
++
++    :cond_3
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0c:LX/2Yj;
++
++    invoke-virtual {v0}, LX/2Yj;->A03()V
++
++    iget-boolean v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0u:Z
++
++    if-eqz v0, :cond_4
++
++    iput-boolean v3, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0q:Z
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0Y:LX/2t2;
++
++    invoke-virtual {v0}, LX/2t2;->getFilter()Landroid/widget/Filter;
++
++    move-result-object v1
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0l:Ljava/lang/CharSequence;
++
++    invoke-virtual {v1, v0}, Landroid/widget/Filter;->filter(Ljava/lang/CharSequence;)V
++
++    :cond_4
++    iget-object v4, p0, Lcom/gbwhatsapp/status/StatusesFragment;->A0d:LX/2Yk;
++
++    const-string v0, "statusdownload/cancel-all-status-downloads"
++
++    invoke-static {v0}, Lcom/whatsapp/util/Log;->i(Ljava/lang/String;)V
++
++    iget-object v3, v4, LX/2Yk;->A02:LX/2YC;
++
++    invoke-virtual {v3}, LX/2YC;->A03()Ljava/util/Collection;
++
++    move-result-object v0
++
++    check-cast v0, Ljava/util/AbstractCollection;
++
++    invoke-virtual {v0}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
++
++    move-result-object v2
++
++    :cond_5
++    :goto_0
++    invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
++
++    move-result v0
++
++    if-eqz v0, :cond_6
++
++    invoke-interface {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
++
++    move-result-object v1
++
++    check-cast v1, LX/2Ns;
++
++    iget-object v0, v1, LX/2Nt;->A0w:LX/2ik;
++
++    iget-object v0, v0, LX/2ik;->A00:LX/2NO;
++
++    invoke-static {v0}, LX/2Ni;->A0S(Lcom/whatsapp/jid/Jid;)Z
++
++    move-result v0
++
++    if-eqz v0, :cond_5
++
++    const/4 v0, 0x0
++
++    invoke-virtual {v3, v1, v0, v0}, LX/2YC;->A09(LX/2Ns;ZZ)V
++
++    goto :goto_0
++
++    :cond_6
++    iget-object v0, v4, LX/2Yk;->A03:Ljava/util/ArrayList;
++
++    invoke-virtual {v0}, Ljava/util/AbstractCollection;->clear()V
++
++    const/4 v0, 0x0
++
++    iput-object v0, v4, LX/2Yk;->A00:LX/2Ns;
++
++    iput-object v0, v4, LX/2Yk;->A01:Ljava/lang/Integer;
++
++    return-void
++.end method
++
++.method public AY4()Z
++    .locals 1
++
++    const/4 v0, 0x1
++
++    return v0
++.end method
+diff --git a/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/status/playback/StatusPlaybackActivity.smali b/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/status/playback/StatusPlaybackActivity.smali
+new file mode 100644
+index 0000000..15f2d0c
+--- /dev/null
++++ b/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/status/playback/StatusPlaybackActivity.smali
+@@ -0,0 +1,1945 @@
++.class public Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;
++.super LX/09Q;
++.source ""
++
++# interfaces
++.implements LX/3Oc;
++
++
++# instance fields
++.field public A00:F
++
++.field public A01:I
++
++.field public A02:I
++
++.field public A03:I
++
++.field public A04:I
++
++.field public A05:I
++
++.field public A06:J
++
++.field public A07:Landroidx/viewpager/widget/ViewPager;
++
++.field public A08:LX/2OF;
++
++.field public A09:LX/2Ro;
++
++.field public A0A:LX/2ik;
++
++.field public A0B:LX/2OJ;
++
++.field public A0C:LX/2Yj;
++
++.field public A0D:LX/4Js;
++
++.field public A0E:LX/3i0;
++
++.field public A0F:LX/2Yg;
++
++.field public A0G:LX/2Yf;
++
++.field public A0H:Ljava/lang/Runnable;
++
++.field public A0I:Z
++
++.field public A0J:Z
++
++.field public A0K:Z
++
++.field public A0L:Z
++
++.field public A0M:Z
++
++.field public final A0N:Landroid/graphics/Rect;
++
++#coocoo
++.field public statusPlaybackActivityDelegate:Lcom/coocoo/whatsappdelegate/StatusPlaybackActivityDelegate;
++#coocoo
++
++# direct methods
++.method public constructor <init>()V
++    .locals 2
++
++    const/4 v1, 0x0
++
++    invoke-direct {p0, v1}, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;-><init>(I)V
++
++    const/4 v0, -0x1
++
++    iput v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A05:I
++
++    new-instance v0, Landroid/graphics/Rect;
++
++    invoke-direct {v0}, Landroid/graphics/Rect;-><init>()V
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0N:Landroid/graphics/Rect;
++
++    const/high16 v0, 0x40600000    # 3.5f
++
++    iput v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A00:F
++
++    iput v1, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A02:I
++
++    iput v1, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A03:I
++
++    iput-boolean v1, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0L:Z
++
++#coocoo
++    new-instance v0, Lcom/coocoo/whatsappdelegate/StatusPlaybackActivityDelegate;
++
++    invoke-direct {v0, p0}, Lcom/coocoo/whatsappdelegate/StatusPlaybackActivityDelegate;-><init>(Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;)V
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->statusPlaybackActivityDelegate:Lcom/coocoo/whatsappdelegate/StatusPlaybackActivityDelegate;
++#coocoo
++
++    return-void
++.end method
++
++.method public constructor <init>(I)V
++    .locals 1
++
++    invoke-direct {p0}, LX/09Q;-><init>()V
++
++    const/4 v0, 0x0
++
++    iput-boolean v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0K:Z
++
++    new-instance v0, LX/4VT;
++
++    invoke-direct {v0, p0}, LX/4VT;-><init>(Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;)V
++
++    invoke-virtual {p0, v0}, LX/09Z;->A11(LX/0A2;)V
++
++    return-void
++.end method
++
++
++# virtual methods
++.method public A1a()V
++    .locals 3
++
++    iget-boolean v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0K:Z
++
++    if-nez v0, :cond_0
++
++    const/4 v0, 0x1
++
++    iput-boolean v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0K:Z
++
++    invoke-virtual {p0}, LX/09W;->generatedComponent()Ljava/lang/Object;
++
++    move-result-object v2
++
++    check-cast v2, LX/0A4;
++
++    iget-object v1, v2, LX/0A4;->A0k:LX/025;
++
++    iget-object v0, v1, LX/025;->A04:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/2Oo;
++
++    iput-object v0, p0, LX/09S;->A0C:LX/2Oo;
++
++    iget-object v0, v1, LX/025;->A7D:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/02S;
++
++    iput-object v0, p0, LX/09S;->A05:LX/02S;
++
++    iget-object v0, v1, LX/025;->A42:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/02P;
++
++    iput-object v0, p0, LX/09S;->A03:LX/02P;
++
++    iget-object v0, v1, LX/025;->A6C:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/02Y;
++
++    iput-object v0, p0, LX/09S;->A04:LX/02Y;
++
++    iget-object v0, v1, LX/025;->A5S:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/2TB;
++
++    iput-object v0, p0, LX/09S;->A0B:LX/2TB;
++
++    iget-object v0, v1, LX/025;->AI6:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/2Ro;
++
++    iput-object v0, p0, LX/09S;->A0A:LX/2Ro;
++
++    iget-object v0, v1, LX/025;->AGP:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/021;
++
++    iput-object v0, p0, LX/09S;->A06:LX/021;
++
++    iget-object v0, v1, LX/025;->AJA:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/035;
++
++    iput-object v0, p0, LX/09S;->A08:LX/035;
++
++    iget-object v0, v1, LX/025;->AKe:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/2U7;
++
++    iput-object v0, p0, LX/09S;->A0D:LX/2U7;
++
++    iget-object v0, v1, LX/025;->AKl:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/2OC;
++
++    iput-object v0, p0, LX/09S;->A09:LX/2OC;
++
++    iget-object v0, v1, LX/025;->A3B:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/2Ox;
++
++    iput-object v0, p0, LX/09S;->A07:LX/2Ox;
++
++    iget-object v0, v1, LX/025;->AJT:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/2Nw;
++
++    iput-object v0, p0, LX/09Q;->A06:LX/2Nw;
++
++    iget-object v0, v1, LX/025;->A7z:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/2Po;
++
++    iput-object v0, p0, LX/09Q;->A0D:LX/2Po;
++
++    iget-object v0, v1, LX/025;->A9Q:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/02F;
++
++    iput-object v0, p0, LX/09Q;->A01:LX/02F;
++
++    iget-object v0, v1, LX/025;->ALI:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/2Nv;
++
++    iput-object v0, p0, LX/09Q;->A0E:LX/2Nv;
++
++    iget-object v0, v1, LX/025;->A64:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/2OE;
++
++    iput-object v0, p0, LX/09Q;->A05:LX/2OE;
++
++    invoke-virtual {v2}, LX/0A4;->A07()LX/2h4;
++
++    move-result-object v0
++
++    iput-object v0, p0, LX/09Q;->A0A:LX/2h4;
++
++    iget-object v0, v1, LX/025;->AId:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/2Ss;
++
++    iput-object v0, p0, LX/09Q;->A07:LX/2Ss;
++
++    iget-object v0, v1, LX/025;->A0H:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/03k;
++
++    iput-object v0, p0, LX/09Q;->A00:LX/03k;
++
++    iget-object v0, v1, LX/025;->AKg:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/06X;
++
++    iput-object v0, p0, LX/09Q;->A03:LX/06X;
++
++    iget-object v0, v1, LX/025;->A0T:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/04W;
++
++    iput-object v0, p0, LX/09Q;->A04:LX/04W;
++
++    iget-object v0, v1, LX/025;->ABL:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/2ej;
++
++    iput-object v0, p0, LX/09Q;->A0B:LX/2ej;
++
++    iget-object v0, v1, LX/025;->AAj:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/2OG;
++
++    iput-object v0, p0, LX/09Q;->A08:LX/2OG;
++
++    iget-object v0, v1, LX/025;->AG5:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/04S;
++
++    iput-object v0, p0, LX/09Q;->A02:LX/04S;
++
++    iget-object v0, v1, LX/025;->AFi:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/2Nc;
++
++    iput-object v0, p0, LX/09Q;->A0C:LX/2Nc;
++
++    iget-object v0, v1, LX/025;->A6q:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/2ep;
++
++    iput-object v0, p0, LX/09Q;->A09:LX/2ep;
++
++    iget-object v0, v1, LX/025;->AI6:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/2Ro;
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A09:LX/2Ro;
++
++    iget-object v0, v1, LX/025;->A2j:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/2OJ;
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0B:LX/2OJ;
++
++    iget-object v0, v1, LX/025;->AFq:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/2Yf;
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0G:LX/2Yf;
++
++    iget-object v0, v1, LX/025;->AKj:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/2OF;
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A08:LX/2OF;
++
++    iget-object v0, v1, LX/025;->AI8:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/2Yj;
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0C:LX/2Yj;
++
++    iget-object v0, v1, LX/025;->AI1:LX/01F;
++
++    invoke-interface {v0}, LX/01F;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/2Yg;
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0F:LX/2Yg;
++
++    :cond_0
++    return-void
++.end method
++
++.method public final A2O(I)Lcom/gbwhatsapp/status/playback/fragment/StatusPlaybackFragment;
++    .locals 2
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0D:LX/4Js;
++
++    const/4 v1, 0x0
++
++    if-eqz v0, :cond_0
++
++    if-ltz p1, :cond_0
++
++    iget-object v0, v0, LX/4Js;->A00:Ljava/util/List;
++
++    invoke-interface {v0}, Ljava/util/List;->size()I
++
++    move-result v0
++
++    if-ge p1, v0, :cond_0
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0D:LX/4Js;
++
++    iget-object v0, v0, LX/4Js;->A00:Ljava/util/List;
++
++    invoke-interface {v0, p1}, Ljava/util/List;->get(I)Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/4Er;
++
++    invoke-virtual {p0, v0}, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A2P(LX/4Er;)Lcom/gbwhatsapp/status/playback/fragment/StatusPlaybackFragment;
++
++    move-result-object v0
++
++    return-object v0
++
++    :cond_0
++    return-object v1
++.end method
++
++.method public final A2P(LX/4Er;)Lcom/gbwhatsapp/status/playback/fragment/StatusPlaybackFragment;
++    .locals 6
++
++    const/4 v5, 0x0
++
++    if-eqz p1, :cond_1
++
++    iget-object v0, p1, LX/4Er;->A00:LX/2wa;
++
++    iget-object v0, v0, LX/2wa;->A0A:Lcom/whatsapp/jid/UserJid;
++
++    invoke-virtual {v0}, Lcom/whatsapp/jid/Jid;->getRawString()Ljava/lang/String;
++
++    move-result-object v4
++
++    if-eqz v4, :cond_1
++
++    invoke-virtual {p0}, LX/09S;->A1r()Ljava/util/List;
++
++    move-result-object v0
++
++    invoke-interface {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
++
++    move-result-object v3
++
++    :cond_0
++    invoke-interface {v3}, Ljava/util/Iterator;->hasNext()Z
++
++    move-result v0
++
++    if-eqz v0, :cond_1
++
++    invoke-interface {v3}, Ljava/util/Iterator;->next()Ljava/lang/Object;
++
++    move-result-object v2
++
++    check-cast v2, LX/09t;
++
++    instance-of v0, v2, Lcom/gbwhatsapp/status/playback/fragment/StatusPlaybackFragment;
++
++    if-eqz v0, :cond_0
++
++    check-cast v2, Lcom/gbwhatsapp/status/playback/fragment/StatusPlaybackFragment;
++
++    move-object v0, v2
++
++    check-cast v0, Lcom/gbwhatsapp/status/playback/fragment/StatusPlaybackContactFragment;
++
++    iget-object v1, v0, Lcom/gbwhatsapp/status/playback/fragment/StatusPlaybackContactFragment;->A0M:Lcom/whatsapp/jid/UserJid;
++
++    const-string v0, ""
++
++    invoke-static {v1, v0}, LX/008;->A06(Ljava/lang/Object;Ljava/lang/String;)V
++
++    invoke-virtual {v1}, Lcom/whatsapp/jid/Jid;->getRawString()Ljava/lang/String;
++
++    move-result-object v0
++
++    invoke-virtual {v4, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
++
++    move-result v0
++
++    if-eqz v0, :cond_0
++
++    return-object v2
++
++    :cond_1
++    return-object v5
++.end method
++
++.method public final A2Q(Ljava/lang/String;II)V
++    .locals 3
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0D:LX/4Js;
++
++    invoke-virtual {v0, p1}, LX/4Js;->A00(Ljava/lang/String;)I
++
++    move-result v2
++
++    if-ltz v2, :cond_0
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0D:LX/4Js;
++
++    iget-object v0, v0, LX/4Js;->A00:Ljava/util/List;
++
++    invoke-interface {v0}, Ljava/util/List;->size()I
++
++    move-result v0
++
++    if-ge v2, v0, :cond_0
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A07:Landroidx/viewpager/widget/ViewPager;
++
++    invoke-virtual {v0}, Landroidx/viewpager/widget/ViewPager;->getCurrentItem()I
++
++    move-result v0
++
++    const/4 v1, 0x1
++
++    if-ne v2, v0, :cond_2
++
++    iget-boolean v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0I:Z
++
++    if-nez v0, :cond_1
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0D:LX/4Js;
++
++    iget-object v0, v0, LX/4Js;->A00:Ljava/util/List;
++
++    invoke-interface {v0}, Ljava/util/List;->size()I
++
++    move-result v0
++
++    sub-int/2addr v0, v1
++
++    if-eq v2, v0, :cond_1
++
++    new-instance v0, Lcom/facebook/redex/RunnableBRunnable0Shape0S0203000_I0;
++
++    invoke-direct {v0, p0, p1, p2, p3}, Lcom/facebook/redex/RunnableBRunnable0Shape0S0203000_I0;-><init>(Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;Ljava/lang/String;II)V
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0H:Ljava/lang/Runnable;
++
++    invoke-virtual {p0, p1, p2, p3, v1}, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->AMc(Ljava/lang/String;IIZ)Z
++
++    :cond_0
++    return-void
++
++    :cond_1
++    invoke-virtual {p0}, Landroid/app/Activity;->finish()V
++
++    return-void
++
++    :cond_2
++    iget-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0D:LX/4Js;
++
++    iget-object v0, v0, LX/4Js;->A00:Ljava/util/List;
++
++    invoke-interface {v0, v2}, Ljava/util/List;->remove(I)Ljava/lang/Object;
++
++    iget v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A01:I
++
++    if-gt v2, v0, :cond_3
++
++    sub-int/2addr v0, v1
++
++    iput v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A01:I
++
++    :cond_3
++    iget v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A05:I
++
++    if-gt v2, v0, :cond_4
++
++    sub-int/2addr v0, v1
++
++    iput v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A05:I
++
++    :cond_4
++    iget-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A07:Landroidx/viewpager/widget/ViewPager;
++
++    iget-object v0, v0, Landroidx/viewpager/widget/ViewPager;->A0V:LX/0bk;
++
++    invoke-virtual {v0}, LX/0bk;->A04()V
++
++    return-void
++.end method
++
++.method public ADA()LX/00D;
++    .locals 1
++
++    sget-object v0, LX/0AS;->A01:LX/00D;
++
++    return-object v0
++.end method
++
++.method public AMc(Ljava/lang/String;IIZ)Z
++    .locals 6
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0D:LX/4Js;
++
++    invoke-virtual {v0, p1}, LX/4Js;->A00(Ljava/lang/String;)I
++
++    move-result v4
++
++    const/4 v3, 0x0
++
++    const/high16 v5, 0x40600000    # 3.5f
++
++    const/4 v2, 0x1
++
++    if-eqz p4, :cond_0
++
++    iput p2, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A03:I
++
++    iput p3, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A02:I
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0D:LX/4Js;
++
++    iget-object v0, v0, LX/4Js;->A00:Ljava/util/List;
++
++    invoke-interface {v0}, Ljava/util/List;->size()I
++
++    move-result v0
++
++    sub-int/2addr v0, v2
++
++    if-ge v4, v0, :cond_1
++
++    iget-boolean v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0I:Z
++
++    if-nez v0, :cond_1
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0E:LX/3i0;
++
++    iget v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A00:F
++
++    iput v0, v1, LX/3i0;->A00:F
++
++    iput v5, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A00:F
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A07:Landroidx/viewpager/widget/ViewPager;
++
++    add-int/2addr v4, v2
++
++    :goto_0
++    invoke-virtual {v0, v4, v2}, Landroidx/viewpager/widget/ViewPager;->A0E(IZ)V
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0E:LX/3i0;
++
++    iput v3, v0, LX/3i0;->A00:F
++
++    return v2
++
++    :cond_0
++    if-lez v4, :cond_2
++
++    iget-boolean v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0I:Z
++
++    if-nez v0, :cond_2
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0E:LX/3i0;
++
++    iget v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A00:F
++
++    iput v0, v1, LX/3i0;->A00:F
++
++    iput v5, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A00:F
++
++    iput p2, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A03:I
++
++    iput p3, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A02:I
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A07:Landroidx/viewpager/widget/ViewPager;
++
++    sub-int/2addr v4, v2
++
++    goto :goto_0
++
++    :cond_1
++    invoke-virtual {p0}, Landroid/app/Activity;->finish()V
++
++    return v2
++
++    :cond_2
++    const/4 v0, 0x0
++
++    return v0
++.end method
++
++.method public dispatchKeyEvent(Landroid/view/KeyEvent;)Z
++    .locals 10
++
++    invoke-virtual {p1}, Landroid/view/KeyEvent;->getKeyCode()I
++
++    move-result v5
++
++    invoke-virtual {p1}, Landroid/view/KeyEvent;->getAction()I
++
++    move-result v0
++
++    if-nez v0, :cond_6
++
++    const/16 v1, 0x18
++
++    if-eq v5, v1, :cond_0
++
++    const/16 v0, 0x19
++
++    if-ne v5, v0, :cond_6
++
++    :cond_0
++    iget-object v9, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0F:LX/2Yg;
++
++    const/4 v4, 0x0
++
++    const/4 v3, 0x1
++
++    const/4 v2, 0x0
++
++    if-ne v5, v1, :cond_1
++
++    const/4 v2, 0x1
++
++    :cond_1
++    iget-object v0, v9, LX/2Yg;->A06:LX/035;
++
++    invoke-virtual {v0}, LX/035;->A0B()Landroid/media/AudioManager;
++
++    move-result-object v8
++
++    if-eqz v8, :cond_4
++
++    const/4 v7, 0x3
++
++    invoke-virtual {v8, v7}, Landroid/media/AudioManager;->getStreamVolume(I)I
++
++    move-result v6
++
++    invoke-virtual {v8, v7}, Landroid/media/AudioManager;->getStreamMaxVolume(I)I
++
++    move-result v5
++
++    const/16 v1, 0x10
++
++    if-eqz v2, :cond_2
++
++    if-ge v6, v5, :cond_3
++
++    add-int/lit8 v2, v6, 0x1
++
++    invoke-virtual {v8, v3, v7, v1}, Landroid/media/AudioManager;->adjustSuggestedStreamVolume(III)V
++
++    :goto_0
++    iget-object v0, v9, LX/2Yg;->A04:Ljava/util/List;
++
++    if-eqz v0, :cond_4
++
++    invoke-interface {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
++
++    move-result-object v1
++
++    :goto_1
++    invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
++
++    move-result v0
++
++    if-eqz v0, :cond_4
++
++    invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/4pF;
++
++    invoke-interface {v0, v6, v2, v5}, LX/4pF;->AIF(III)V
++
++    goto :goto_1
++
++    :cond_2
++    if-lez v6, :cond_3
++
++    add-int/lit8 v2, v6, -0x1
++
++    const/4 v0, -0x1
++
++    invoke-virtual {v8, v0, v7, v1}, Landroid/media/AudioManager;->adjustSuggestedStreamVolume(III)V
++
++    goto :goto_0
++
++    :cond_3
++    move v2, v6
++
++    goto :goto_0
++
++    :cond_4
++    iget-object v1, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0F:LX/2Yg;
++
++    iget-boolean v0, v1, LX/2Yg;->A05:Z
++
++    if-eqz v0, :cond_5
++
++    iput-boolean v4, v1, LX/2Yg;->A05:Z
++
++    iget-object v0, v1, LX/2Yg;->A04:Ljava/util/List;
++
++    if-eqz v0, :cond_5
++
++    invoke-interface {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
++
++    move-result-object v1
++
++    :goto_2
++    invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
++
++    move-result v0
++
++    if-eqz v0, :cond_5
++
++    invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/4pF;
++
++    invoke-interface {v0, v4}, LX/4pF;->AIC(Z)V
++
++    goto :goto_2
++
++    :cond_5
++    return v3
++
++    :cond_6
++    invoke-super {p0, p1}, LX/09X;->dispatchKeyEvent(Landroid/view/KeyEvent;)Z
++
++    move-result v0
++
++    return v0
++.end method
++
++.method public dispatchTouchEvent(Landroid/view/MotionEvent;)Z
++    .locals 5
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0E:LX/3i0;
++
++    invoke-virtual {v0}, Landroid/widget/Scroller;->isFinished()Z
++
++    move-result v0
++
++    if-nez v0, :cond_0
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0E:LX/3i0;
++
++    invoke-virtual {v0}, Landroid/widget/Scroller;->timePassed()I
++
++    move-result v1
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0E:LX/3i0;
++
++    invoke-virtual {v0}, Landroid/widget/Scroller;->getDuration()I
++
++    move-result v0
++
++    shr-int/lit8 v0, v0, 0x1
++
++    if-ge v1, v0, :cond_0
++
++    const/4 v0, 0x0
++
++    return v0
++
++    :cond_0
++    invoke-virtual {p1}, Landroid/view/MotionEvent;->getActionMasked()I
++
++    move-result v0
++
++    if-nez v0, :cond_1
++
++    invoke-virtual {p1}, Landroid/view/InputEvent;->getEventTime()J
++
++    move-result-wide v3
++
++    iget-wide v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A06:J
++
++    sub-long/2addr v3, v0
++
++    const-wide/16 v1, 0x0
++
++    cmp-long v0, v3, v1
++
++    if-eqz v0, :cond_2
++
++    const-wide/16 v1, 0x3e8
++
++    cmp-long v0, v3, v1
++
++    if-gtz v0, :cond_2
++
++    const/high16 v2, 0x3f800000    # 1.0f
++
++    const/high16 v0, 0x40200000    # 2.5f
++
++    long-to-float v1, v3
++
++    mul-float/2addr v1, v0
++
++    const/high16 v0, 0x447a0000    # 1000.0f
++
++    div-float/2addr v1, v0
++
++    add-float/2addr v1, v2
++
++    :goto_0
++    iput v1, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A00:F
++
++    invoke-virtual {p1}, Landroid/view/InputEvent;->getEventTime()J
++
++    move-result-wide v0
++
++    iput-wide v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A06:J
++
++    :cond_1
++    invoke-super {p0, p1}, LX/09S;->dispatchTouchEvent(Landroid/view/MotionEvent;)Z
++
++    move-result v0
++
++    return v0
++
++    :cond_2
++    const/high16 v1, 0x40600000    # 3.5f
++
++    goto :goto_0
++.end method
++
++.method public onActivityResult(IILandroid/content/Intent;)V
++    .locals 2
++
++    const/16 v0, 0x97
++
++    if-eq p1, v0, :cond_0
++
++    invoke-super {p0, p1, p2, p3}, LX/09Y;->onActivityResult(IILandroid/content/Intent;)V
++
++    return-void
++
++    :cond_0
++    const/4 v0, -0x1
++
++    if-ne p2, v0, :cond_1
++
++    const/4 v0, 0x1
++
++    iput-boolean v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0J:Z
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A07:Landroidx/viewpager/widget/ViewPager;
++
++    iget-object v1, v0, Landroidx/viewpager/widget/ViewPager;->A0V:LX/0bk;
++
++    const-string v0, ""
++
++    invoke-static {v1, v0}, LX/008;->A06(Ljava/lang/Object;Ljava/lang/String;)V
++
++    invoke-virtual {v1}, LX/0bk;->A04()V
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A07:Landroidx/viewpager/widget/ViewPager;
++
++    iget v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A04:I
++
++    invoke-virtual {v1, v0}, Landroidx/viewpager/widget/ViewPager;->setCurrentItem(I)V
++
++    return-void
++
++    :cond_1
++    invoke-virtual {p0}, Landroid/app/Activity;->finish()V
++
++    return-void
++.end method
++
++.method public onBackPressed()V
++    .locals 4
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A07:Landroidx/viewpager/widget/ViewPager;
++
++    invoke-virtual {v0}, Landroidx/viewpager/widget/ViewPager;->getCurrentItem()I
++
++    move-result v0
++
++    invoke-virtual {p0, v0}, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A2O(I)Lcom/gbwhatsapp/status/playback/fragment/StatusPlaybackFragment;
++
++    move-result-object v1
++
++    if-eqz v1, :cond_2
++
++    instance-of v0, v1, Lcom/gbwhatsapp/status/playback/fragment/StatusPlaybackContactFragment;
++
++    if-eqz v0, :cond_2
++
++    check-cast v1, Lcom/gbwhatsapp/status/playback/fragment/StatusPlaybackContactFragment;
++
++    invoke-virtual {v1}, Lcom/gbwhatsapp/status/playback/fragment/StatusPlaybackContactFragment;->A17()LX/2wz;
++
++    move-result-object v3
++
++    if-eqz v3, :cond_2
++
++    check-cast v3, LX/2wy;
++
++    iget-object v2, v3, LX/2wy;->A00:Lcom/google/android/material/bottomsheet/BottomSheetBehavior;
++
++    iget v1, v2, Lcom/google/android/material/bottomsheet/BottomSheetBehavior;->A0B:I
++
++    const/4 v0, 0x3
++
++    if-ne v1, v0, :cond_0
++
++    const/4 v0, 0x4
++
++    invoke-virtual {v2, v0}, Lcom/google/android/material/bottomsheet/BottomSheetBehavior;->A0N(I)V
++
++    return-void
++
++    :cond_0
++    invoke-virtual {v3}, LX/2wy;->A0C()LX/2xX;
++
++    move-result-object v2
++
++    iget-object v0, v2, LX/2xX;->A0F:Lcom/gbwhatsapp/ui/media/MediaCaptionTextView;
++
++    invoke-virtual {v0}, Lcom/gbwhatsapp/text/ReadMoreTextView;->A09()Z
++
++    move-result v0
++
++    if-eqz v0, :cond_1
++
++    iget-object v1, v2, LX/2xX;->A0F:Lcom/gbwhatsapp/ui/media/MediaCaptionTextView;
++
++    const/4 v0, 0x0
++
++    invoke-virtual {v1, v0}, Lcom/gbwhatsapp/text/ReadMoreTextView;->setExpanded(Z)V
++
++    iget-object v1, v2, LX/2xX;->A02:Landroid/view/View;
++
++    iget-object v0, v2, LX/2xX;->A0F:Lcom/gbwhatsapp/ui/media/MediaCaptionTextView;
++
++    invoke-virtual {v0}, Landroid/view/View;->getVisibility()I
++
++    move-result v0
++
++    invoke-virtual {v1, v0}, Landroid/view/View;->setVisibility(I)V
++
++    invoke-virtual {v3}, LX/2wy;->A0F()V
++
++    return-void
++
++    :cond_1
++    invoke-virtual {v3}, LX/2wy;->A0B()LX/314;
++
++    move-result-object v1
++
++    instance-of v0, v1, LX/46M;
++
++    if-eqz v0, :cond_2
++
++    check-cast v1, LX/46M;
++
++    iget-object v0, v1, LX/46M;->A00:Landroid/view/View;
++
++    if-eqz v0, :cond_2
++
++    invoke-virtual {v0}, Landroid/view/View;->getVisibility()I
++
++    move-result v0
++
++    if-nez v0, :cond_2
++
++    iget-object v0, v1, LX/46M;->A00:Landroid/view/View;
++
++    invoke-virtual {v0}, Landroid/view/View;->performClick()Z
++
++    return-void
++
++    :cond_2
++    const/4 v0, 0x3
++
++    iput v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A03:I
++
++    invoke-super {p0}, LX/09S;->onBackPressed()V
++
++    return-void
++.end method
++
++.method public onCreate(Landroid/os/Bundle;)V
++    .locals 12
++
++    invoke-super {p0, p1}, LX/09Q;->onCreate(Landroid/os/Bundle;)V
++
++    invoke-virtual {p0}, Landroid/app/Activity;->getWindow()Landroid/view/Window;
++
++    move-result-object v1
++
++    const/16 v0, 0x400
++
++    invoke-virtual {v1, v0, v0}, Landroid/view/Window;->setFlags(II)V
++
++    invoke-virtual {p0}, Landroid/app/Activity;->getWindow()Landroid/view/Window;
++
++    move-result-object v0
++
++    invoke-static {v0}, LX/03k;->A04(Landroid/view/Window;)V
++
++    const v0, 0x7f0d04c3
++
++    invoke-virtual {p0, v0}, LX/09S;->setContentView(I)V
++
++    sget v1, Landroid/os/Build$VERSION;->SDK_INT:I
++
++    const/16 v0, 0x15
++
++    if-lt v1, v0, :cond_0
++
++    invoke-virtual {p0}, Landroid/app/Activity;->getWindow()Landroid/view/Window;
++
++    move-result-object v1
++
++    const/high16 v0, 0x8000000
++
++    invoke-virtual {v1, v0}, Landroid/view/Window;->addFlags(I)V
++
++    const v0, 0x7f0a0dd8
++
++    invoke-virtual {p0, v0}, LX/09X;->findViewById(I)Landroid/view/View;
++
++    move-result-object v1
++
++    new-instance v0, LX/5LD;
++
++    invoke-direct {v0, p0}, LX/5LD;-><init>(Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;)V
++
++    invoke-static {v1, v0}, LX/09K;->A0X(Landroid/view/View;LX/0G1;)V
++
++    :cond_0
++    const v0, 0x7f0a0af7
++
++    invoke-virtual {p0, v0}, LX/09X;->findViewById(I)Landroid/view/View;
++
++    move-result-object v0
++
++    check-cast v0, Landroidx/viewpager/widget/ViewPager;
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A07:Landroidx/viewpager/widget/ViewPager;
++
++    invoke-virtual {v0}, Landroid/view/View;->getContext()Landroid/content/Context;
++
++    move-result-object v2
++
++    new-instance v1, LX/4To;
++
++    invoke-direct {v1}, LX/4To;-><init>()V
++
++    new-instance v0, LX/3i0;
++
++    invoke-direct {v0, v2, v1}, LX/3i0;-><init>(Landroid/content/Context;Landroid/view/animation/Interpolator;)V
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0E:LX/3i0;
++
++    const/4 v6, 0x1
++
++    :try_start_0
++    const-class v1, Landroidx/viewpager/widget/ViewPager;
++
++    const-string v0, "mScroller"
++
++    invoke-virtual {v1, v0}, Ljava/lang/Class;->getDeclaredField(Ljava/lang/String;)Ljava/lang/reflect/Field;
++
++    move-result-object v2
++
++    invoke-virtual {v2, v6}, Ljava/lang/reflect/AccessibleObject;->setAccessible(Z)V
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A07:Landroidx/viewpager/widget/ViewPager;
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0E:LX/3i0;
++
++    invoke-virtual {v2, v1, v0}, Ljava/lang/reflect/Field;->set(Ljava/lang/Object;Ljava/lang/Object;)V
++    :try_end_0
++    .catch Ljava/lang/NoSuchFieldException; {:try_start_0 .. :try_end_0} :catch_0
++    .catch Ljava/lang/IllegalArgumentException; {:try_start_0 .. :try_end_0} :catch_0
++    .catch Ljava/lang/IllegalAccessException; {:try_start_0 .. :try_end_0} :catch_0
++
++    :catch_0
++    invoke-virtual {p0}, Landroid/app/Activity;->getIntent()Landroid/content/Intent;
++
++    move-result-object v1
++
++    const-string v0, "jid"
++
++    invoke-virtual {v1, v0}, Landroid/content/Intent;->getStringExtra(Ljava/lang/String;)Ljava/lang/String;
++
++    move-result-object v0
++
++    invoke-static {v0}, LX/2Ni;->A04(Ljava/lang/String;)Lcom/whatsapp/jid/UserJid;
++
++    move-result-object v5
++
++    invoke-virtual {p0}, Landroid/app/Activity;->getIntent()Landroid/content/Intent;
++
++    move-result-object v0
++
++    invoke-static {v0}, LX/3Gw;->A03(Landroid/content/Intent;)LX/2ik;
++
++    move-result-object v0
++
++    iput-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0A:LX/2ik;
++
++    const/4 v4, 0x0
++
++    iput v4, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A04:I
++
++    new-instance v3, LX/4Js;
++
++    invoke-direct {v3}, LX/4Js;-><init>()V
++
++    if-nez v0, :cond_d
++
++    sget-object v10, LX/2wt;->A00:LX/2wt;
++
++    if-ne v5, v10, :cond_2
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A09:LX/2Ro;
++
++    invoke-virtual {v0}, LX/2Ro;->A0A()V
++
++    iget-object v0, v0, LX/2Ro;->A07:Ljava/util/concurrent/ConcurrentHashMap;
++
++    invoke-virtual {v0, v10}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/2wa;
++
++    :goto_0
++    if-eqz v0, :cond_1
++
++    invoke-virtual {v0}, LX/2wa;->A09()Z
++
++    move-result v1
++
++    if-nez v1, :cond_1
++
++    invoke-virtual {v0}, LX/2wa;->A06()LX/2wa;
++
++    move-result-object v1
++
++    new-instance v0, LX/4Er;
++
++    invoke-direct {v0, v1}, LX/4Er;-><init>(LX/2wa;)V
++
++    invoke-virtual {v3, v0}, LX/4Js;->A01(LX/4Er;)V
++
++    :cond_1
++    :goto_1
++    iget-object v0, v3, LX/4Js;->A00:Ljava/util/List;
++
++    invoke-interface {v0}, Ljava/util/List;->size()I
++
++    move-result v0
++
++    if-nez v0, :cond_e
++
++    const-string v1, "statusplaybackactivity/create/no statuses for "
++
++    new-instance v0, Ljava/lang/StringBuilder;
++
++    invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
++
++    invoke-virtual {v0, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
++
++    invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
++
++    move-result-object v0
++
++    invoke-static {v0}, Lcom/whatsapp/util/Log;->i(Ljava/lang/String;)V
++
++    invoke-virtual {p0}, Landroid/app/Activity;->finish()V
++
++    return-void
++
++    :cond_2
++    iget-object v1, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0B:LX/2OJ;
++
++    invoke-virtual {v5}, Lcom/whatsapp/jid/Jid;->getRawString()Ljava/lang/String;
++
++    move-result-object v0
++
++    invoke-virtual {v1, v0}, LX/2OJ;->A08(Ljava/lang/String;)LX/2gX;
++
++    move-result-object v0
++
++    iget-boolean v0, v0, LX/2gX;->A0H:Z
++
++    if-nez v0, :cond_d
++
++    invoke-virtual {p0}, Landroid/app/Activity;->getIntent()Landroid/content/Intent;
++
++    move-result-object v0
++
++    const-string v2, "sorted_jids"
++
++    invoke-virtual {v0, v2}, Landroid/content/Intent;->hasExtra(Ljava/lang/String;)Z
++
++    move-result v1
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A09:LX/2Ro;
++
++    if-eqz v1, :cond_3
++
++    invoke-virtual {v0}, LX/2Ro;->A0A()V
++
++    iget-object v0, v0, LX/2Ro;->A07:Ljava/util/concurrent/ConcurrentHashMap;
++
++    invoke-static {v0}, Ljava/util/Collections;->unmodifiableMap(Ljava/util/Map;)Ljava/util/Map;
++
++    move-result-object v7
++
++    const-class v1, Lcom/whatsapp/jid/UserJid;
++
++    invoke-virtual {p0}, Landroid/app/Activity;->getIntent()Landroid/content/Intent;
++
++    move-result-object v0
++
++    invoke-virtual {v0, v2}, Landroid/content/Intent;->getStringArrayListExtra(Ljava/lang/String;)Ljava/util/ArrayList;
++
++    move-result-object v0
++
++    invoke-static {v1, v0}, LX/2Ni;->A09(Ljava/lang/Class;Ljava/lang/Iterable;)Ljava/util/List;
++
++    move-result-object v0
++
++    check-cast v0, Ljava/util/AbstractCollection;
++
++    invoke-virtual {v0}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
++
++    move-result-object v2
++
++    :goto_2
++    invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
++
++    move-result v0
++
++    if-eqz v0, :cond_b
++
++    invoke-interface {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
++
++    move-result-object v0
++
++    invoke-interface {v7, v0}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
++
++    move-result-object v1
++
++    check-cast v1, LX/2wa;
++
++    new-instance v0, LX/4Er;
++
++    invoke-direct {v0, v1}, LX/4Er;-><init>(LX/2wa;)V
++
++    invoke-virtual {v3, v0}, LX/4Js;->A01(LX/4Er;)V
++
++    goto :goto_2
++
++    :cond_3
++    invoke-virtual {v0}, LX/2Ro;->A06()Ljava/util/List;
++
++    move-result-object v9
++
++    sget-object v0, LX/4fm;->A03:LX/4fm;
++
++    invoke-static {v9, v0}, Ljava/util/Collections;->sort(Ljava/util/List;Ljava/util/Comparator;)V
++
++    new-instance v8, Ljava/util/ArrayList;
++
++    invoke-direct {v8}, Ljava/util/ArrayList;-><init>()V
++
++    check-cast v9, Ljava/util/AbstractCollection;
++
++    invoke-virtual {v9}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
++
++    move-result-object v2
++
++    :cond_4
++    invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
++
++    move-result v0
++
++    if-eqz v0, :cond_6
++
++    invoke-interface {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
++
++    move-result-object v1
++
++    check-cast v1, LX/2wa;
++
++    iget-object v0, v1, LX/2wa;->A0A:Lcom/whatsapp/jid/UserJid;
++
++    invoke-virtual {v5, v0}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
++
++    move-result v0
++
++    if-eqz v0, :cond_4
++
++    invoke-virtual {v1}, LX/2wa;->A02()I
++
++    move-result v1
++
++    const/4 v0, 0x0
++
++    if-lez v1, :cond_5
++
++    const/4 v0, 0x1
++
++    :cond_5
++    iput-boolean v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0M:Z
++
++    :cond_6
++    invoke-virtual {v9}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
++
++    move-result-object v11
++
++    :cond_7
++    :goto_3
++    invoke-interface {v11}, Ljava/util/Iterator;->hasNext()Z
++
++    move-result v0
++
++    if-eqz v0, :cond_a
++
++    invoke-interface {v11}, Ljava/util/Iterator;->next()Ljava/lang/Object;
++
++    move-result-object v7
++
++    check-cast v7, LX/2wa;
++
++    iget-object v2, v7, LX/2wa;->A0A:Lcom/whatsapp/jid/UserJid;
++
++    if-eq v2, v10, :cond_8
++
++    iget-boolean v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0M:Z
++
++    if-eqz v0, :cond_9
++
++    invoke-virtual {v7}, LX/2wa;->A02()I
++
++    move-result v0
++
++    if-nez v0, :cond_9
++
++    :cond_8
++    :goto_4
++    invoke-virtual {v8, v7}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
++
++    goto :goto_3
++
++    :cond_9
++    iget-object v1, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0B:LX/2OJ;
++
++    invoke-virtual {v2}, Lcom/whatsapp/jid/Jid;->getRawString()Ljava/lang/String;
++
++    move-result-object v0
++
++    invoke-virtual {v1, v0}, LX/2OJ;->A08(Ljava/lang/String;)LX/2gX;
++
++    move-result-object v0
++
++    iget-boolean v0, v0, LX/2gX;->A0H:Z
++
++    if-eqz v0, :cond_7
++
++    goto :goto_4
++
++    :cond_a
++    invoke-virtual {v9, v8}, Ljava/util/AbstractCollection;->removeAll(Ljava/util/Collection;)Z
++
++    invoke-virtual {v9}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
++
++    move-result-object v2
++
++    :goto_5
++    invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
++
++    move-result v0
++
++    if-eqz v0, :cond_c
++
++    invoke-interface {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
++
++    move-result-object v1
++
++    check-cast v1, LX/2wa;
++
++    new-instance v0, LX/4Er;
++
++    invoke-direct {v0, v1}, LX/4Er;-><init>(LX/2wa;)V
++
++    invoke-virtual {v3, v0}, LX/4Js;->A01(LX/4Er;)V
++
++    goto :goto_5
++
++    :cond_b
++    invoke-virtual {p0}, Landroid/app/Activity;->getIntent()Landroid/content/Intent;
++
++    move-result-object v1
++
++    const-string v0, "unseen_only"
++
++    invoke-virtual {v1, v0, v4}, Landroid/content/Intent;->getBooleanExtra(Ljava/lang/String;Z)Z
++
++    move-result v0
++
++    iput-boolean v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0M:Z
++
++    :cond_c
++    iget-boolean v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0M:Z
++
++    xor-int/2addr v0, v6
++
++    iput-boolean v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0I:Z
++
++    invoke-virtual {v5}, Lcom/whatsapp/jid/Jid;->getRawString()Ljava/lang/String;
++
++    move-result-object v0
++
++    invoke-virtual {v3, v0}, LX/4Js;->A00(Ljava/lang/String;)I
++
++    move-result v0
++
++    iput v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A04:I
++
++    goto/16 :goto_1
++
++    :cond_d
++    iget-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A09:LX/2Ro;
++
++    invoke-virtual {v0, v5}, LX/2Ro;->A05(Lcom/whatsapp/jid/UserJid;)LX/2wa;
++
++    move-result-object v0
++
++    goto/16 :goto_0
++
++    :cond_e
++    iget-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A08:LX/2OF;
++
++    invoke-virtual {v0}, LX/2OF;->A06()Z
++
++    move-result v0
++
++    iput-boolean v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0J:Z
++
++    if-nez v0, :cond_10
++
++    const v5, 0x7f121156
++
++    sget v2, Landroid/os/Build$VERSION;->SDK_INT:I
++
++    const/16 v0, 0x1e
++
++    const v1, 0x7f121157
++
++    if-ge v2, v0, :cond_f
++
++    const v1, 0x7f121155
++
++    :cond_f
++    invoke-virtual {p0}, Landroid/app/Activity;->isFinishing()Z
++
++    move-result v0
++
++    if-nez v0, :cond_10
++
++    invoke-static {p0, v5, v1, v6}, Lcom/gbwhatsapp/RequestPermissionActivity;->A01(Landroid/content/Context;IIZ)Landroid/content/Intent;
++
++    move-result-object v1
++
++    const/16 v0, 0x97
++
++    invoke-virtual {p0, v1, v0}, Landroid/app/Activity;->startActivityForResult(Landroid/content/Intent;I)V
++
++    :cond_10
++    iput-object v3, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0D:LX/4Js;
++
++    iget-object v2, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A07:Landroidx/viewpager/widget/ViewPager;
++
++    invoke-virtual {p0}, LX/09Y;->A14()LX/0KA;
++
++    move-result-object v1
++
++    new-instance v0, LX/3wb;
++
++    invoke-direct {v0, v1, p0}, LX/3wb;-><init>(LX/0KA;Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;)V
++
++    invoke-virtual {v2, v0}, Landroidx/viewpager/widget/ViewPager;->setAdapter(LX/0bk;)V
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A07:Landroidx/viewpager/widget/ViewPager;
++
++    iget v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A04:I
++
++    invoke-virtual {v1, v0}, Landroidx/viewpager/widget/ViewPager;->setCurrentItem(I)V
++
++    iget v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A04:I
++
++    iput v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A01:I
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A07:Landroidx/viewpager/widget/ViewPager;
++
++    new-instance v0, LX/4Wr;
++
++    invoke-direct {v0, p0}, LX/4Wr;-><init>(Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;)V
++
++    invoke-virtual {v1, v0}, Landroidx/viewpager/widget/ViewPager;->A0F(LX/0Jn;)V
++
++    iget-object v1, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A07:Landroidx/viewpager/widget/ViewPager;
++
++    new-instance v0, LX/0fQ;
++
++    invoke-direct {v0, p0}, LX/0fQ;-><init>(Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;)V
++
++    invoke-virtual {v1, v0}, Landroid/view/View;->setOnTouchListener(Landroid/view/View$OnTouchListener;)V
++
++    iget-object v2, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0F:LX/2Yg;
++
++    invoke-static {}, Landroid/os/Looper;->getMainLooper()Landroid/os/Looper;
++
++    move-result-object v1
++
++    new-instance v0, Landroid/os/Handler;
++
++    invoke-direct {v0, v1}, Landroid/os/Handler;-><init>(Landroid/os/Looper;)V
++
++    iput-object v0, v2, LX/2Yg;->A02:Landroid/os/Handler;
++
++    iget-object v0, v2, LX/2Yg;->A06:LX/035;
++
++    invoke-virtual {v0}, LX/035;->A0B()Landroid/media/AudioManager;
++
++    move-result-object v0
++
++    if-eqz v0, :cond_11
++
++    invoke-virtual {v0}, Landroid/media/AudioManager;->getRingerMode()I
++
++    move-result v1
++
++    const/4 v0, 0x2
++
++    if-eq v1, v0, :cond_11
++
++    const/4 v4, 0x1
++
++    :cond_11
++    iput-boolean v4, v2, LX/2Yg;->A05:Z
++
++    iget-object v0, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A07:Landroidx/viewpager/widget/ViewPager;
++
++    invoke-virtual {v0, v6}, Landroid/view/View;->setKeepScreenOn(Z)V
++
++#coocoo
++    move-object v0, p0
++
++    iget-object v0, v0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->statusPlaybackActivityDelegate:Lcom/coocoo/whatsappdelegate/StatusPlaybackActivityDelegate;
++
++    move-object/from16 v1, p1
++
++    invoke-virtual {v0, v1}, Lcom/coocoo/whatsappdelegate/StatusPlaybackActivityDelegate;->onCreate(Landroid/os/Bundle;)V
++#coocoo
++
++    return-void
++.end method
++
++.method public onDestroy()V
++    .locals 10
++
++    invoke-super {p0}, LX/09S;->onDestroy()V
++
++    iget-object v2, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0F:LX/2Yg;
++
++    iget-object v1, v2, LX/2Yg;->A02:Landroid/os/Handler;
++
++    if-eqz v1, :cond_0
++
++    iget-object v0, v2, LX/2Yg;->A07:Ljava/lang/Runnable;
++
++    invoke-virtual {v1, v0}, Landroid/os/Handler;->removeCallbacks(Ljava/lang/Runnable;)V
++
++    :cond_0
++    invoke-virtual {v2}, LX/2Yg;->A01()V
++
++    iget-object v0, v2, LX/2Yg;->A04:Ljava/util/List;
++
++    const/4 v6, 0x0
++
++    if-eqz v0, :cond_1
++
++    iput-object v6, v2, LX/2Yg;->A04:Ljava/util/List;
++
++    :cond_1
++    iget-object v5, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0C:LX/2Yj;
++
++    iget-object v0, v5, LX/2Yj;->A00:LX/3LL;
++
++    iget-object v4, v5, LX/2Yj;->A01:LX/315;
++
++    if-eqz v0, :cond_4
++
++    if-eqz v4, :cond_4
++
++    new-instance v3, Ljava/util/ArrayList;
++
++    invoke-direct {v3}, Ljava/util/ArrayList;-><init>()V
++
++    iget-object v0, v4, LX/315;->A0C:Ljava/util/Map;
++
++    invoke-interface {v0}, Ljava/util/Map;->values()Ljava/util/Collection;
++
++    move-result-object v0
++
++    invoke-interface {v0}, Ljava/util/Collection;->iterator()Ljava/util/Iterator;
++
++    move-result-object v9
++
++    :goto_0
++    invoke-interface {v9}, Ljava/util/Iterator;->hasNext()Z
++
++    move-result v0
++
++    if-eqz v0, :cond_3
++
++    invoke-interface {v9}, Ljava/util/Iterator;->next()Ljava/lang/Object;
++
++    move-result-object v7
++
++    check-cast v7, LX/316;
++
++    new-instance v2, LX/2mR;
++
++    invoke-direct {v2}, LX/2mR;-><init>()V
++
++    iget-wide v0, v7, LX/316;->A05:J
++
++    invoke-static {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
++
++    move-result-object v0
++
++    iput-object v0, v2, LX/2mR;->A05:Ljava/lang/Long;
++
++    iget-wide v0, v7, LX/316;->A06:J
++
++    invoke-static {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
++
++    move-result-object v0
++
++    iput-object v0, v2, LX/2mR;->A06:Ljava/lang/Long;
++
++    iget v0, v7, LX/316;->A02:I
++
++    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
++
++    move-result-object v0
++
++    iput-object v0, v2, LX/2mR;->A01:Ljava/lang/Integer;
++
++    iget v0, v7, LX/316;->A01:I
++
++    int-to-long v0, v0
++
++    invoke-static {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
++
++    move-result-object v0
++
++    iput-object v0, v2, LX/2mR;->A02:Ljava/lang/Long;
++
++    iget v0, v7, LX/316;->A00:I
++
++    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
++
++    move-result-object v0
++
++    iput-object v0, v2, LX/2mR;->A00:Ljava/lang/Integer;
++
++    iget v0, v7, LX/316;->A04:I
++
++    int-to-long v0, v0
++
++    invoke-static {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
++
++    move-result-object v0
++
++    iput-object v0, v2, LX/2mR;->A04:Ljava/lang/Long;
++
++    iget v0, v7, LX/316;->A03:I
++
++    int-to-long v0, v0
++
++    invoke-static {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
++
++    move-result-object v0
++
++    iput-object v0, v2, LX/2mR;->A03:Ljava/lang/Long;
++
++    iget-object v0, v7, LX/316;->A07:Ljava/lang/String;
++
++    iput-object v0, v2, LX/2mR;->A07:Ljava/lang/String;
++
++    invoke-static {v0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
++
++    move-result v0
++
++    const/4 v8, 0x1
++
++    iget-object v1, v5, LX/2Yj;->A0A:LX/2NJ;
++
++    if-eqz v0, :cond_2
++
++    invoke-virtual {v1, v2, v8}, LX/2NJ;->A0B(LX/2NV;I)V
++
++    const-string v0, ""
++
++    invoke-static {v2, v0}, LX/2NJ;->A00(LX/2NV;Ljava/lang/String;)V
++
++    :goto_1
++    iget-object v0, v7, LX/316;->A08:Ljava/util/Map;
++
++    invoke-interface {v0}, Ljava/util/Map;->values()Ljava/util/Collection;
++
++    move-result-object v0
++
++    invoke-virtual {v3, v0}, Ljava/util/AbstractCollection;->addAll(Ljava/util/Collection;)Z
++
++    goto :goto_0
++
++    :cond_2
++    sget-object v0, LX/34W;->A00:LX/00D;
++
++    invoke-virtual {v1, v2, v0, v8}, LX/2NJ;->A0D(LX/2NV;LX/00D;Z)V
++
++    goto :goto_1
++
++    :cond_3
++    iget-object v1, v5, LX/2Yj;->A0D:LX/2Nv;
++
++    new-instance v0, LX/3nQ;
++
++    invoke-direct {v0, v4, v5, v3}, LX/3nQ;-><init>(LX/315;LX/2Yj;Ljava/util/List;)V
++
++    invoke-interface {v1, v0}, LX/2Nv;->AV0(Ljava/lang/Runnable;)V
++
++    iput-object v6, v5, LX/2Yj;->A01:LX/315;
++
++    :cond_4
++    iget-object v1, p0, Lcom/gbwhatsapp/status/playback/StatusPlaybackActivity;->A0G:LX/2Yf;
++
++    iget-object v0, v1, LX/2Yf;->A00:LX/3A2;
++
++    if-eqz v0, :cond_5
++
++    invoke-virtual {v0}, LX/2tA;->A08()V
++
++    iput-object v6, v1, LX/2Yf;->A00:LX/3A2;
++
++    :cond_5
++    return-void
++.end method
+diff --git a/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/status/playback/fragment/StatusPlaybackContactFragment.smali b/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/status/playback/fragment/StatusPlaybackContactFragment.smali
+index 1d39d91..dbc8818 100644
+--- a/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/status/playback/fragment/StatusPlaybackContactFragment.smali
++++ b/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/status/playback/fragment/StatusPlaybackContactFragment.smali
+@@ -719,6 +719,14 @@
+ 
+     invoke-virtual {p0}, Lcom/gbwhatsapp/status/playback/fragment/StatusPlaybackContactFragment;->A19()V
+ 
++#coocoo
++    move-object v0, p0
++
++    iget-object v0, v0, Lcom/gbwhatsapp/status/playback/fragment/StatusPlaybackContactFragment;->statusPlaybackContactFragmentDelegate:Lcom/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate;
++
++    invoke-virtual {v0, p2, p1}, Lcom/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate;->onViewCreated(Landroid/view/View;Landroid/os/Bundle;)V
++#coocoo
++
+     invoke-virtual {p0}, LX/09t;->A03()Landroid/os/Bundle;
+ 
+     move-result-object v1
+@@ -1624,6 +1632,16 @@
+ 
+     iget-object v2, v4, LX/2wz;->A00:Landroid/view/View;
+ 
++#coocoo
++    move-object/from16 v0, p0
++
++    iget-object v0, v0, Lcom/gbwhatsapp/status/playback/fragment/StatusPlaybackContactFragment;->statusPlaybackContactFragmentDelegate:Lcom/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate;
++
++    move/from16 v1, p1
++
++    invoke-virtual {v0, v1}, Lcom/coocoo/whatsappdelegate/StatusPlaybackContactFragmentDelegate;->initFullScreenStatusScan(I)V
++#coocoo
++
+     iget-object v1, v6, LX/2wu;->A07:Landroid/view/ViewGroup;
+ 
+     invoke-virtual {v1}, Landroid/view/ViewGroup;->getChildCount()I
+diff --git a/whatsapp_modify_module/smali_classes4/com/vungle/warren/utility/VungleProvider.smali b/whatsapp_modify_module/smali_classes4/com/vungle/warren/utility/VungleProvider.smali
+new file mode 100644
+index 0000000..6906570
+--- /dev/null
++++ b/whatsapp_modify_module/smali_classes4/com/vungle/warren/utility/VungleProvider.smali
+@@ -0,0 +1,102 @@
++.class public final Lcom/vungle/warren/utility/VungleProvider;
++.super Landroid/content/ContentProvider;
++.source "VungleProvider.java"
++
++
++# direct methods
++.method public constructor <init>()V
++    .locals 0
++
++    .line 11
++    invoke-direct {p0}, Landroid/content/ContentProvider;-><init>()V
++
++    return-void
++.end method
++
++
++# virtual methods
++.method public delete(Landroid/net/Uri;Ljava/lang/String;[Ljava/lang/String;)I
++    .locals 1
++    .param p1, "uri"    # Landroid/net/Uri;
++    .param p2, "selection"    # Ljava/lang/String;
++    .param p3, "selectionArgs"    # [Ljava/lang/String;
++
++    .line 38
++    const/4 v0, 0x0
++
++    return v0
++.end method
++
++.method public getType(Landroid/net/Uri;)Ljava/lang/String;
++    .locals 1
++    .param p1, "uri"    # Landroid/net/Uri;
++
++    .line 28
++    const/4 v0, 0x0
++
++    return-object v0
++.end method
++
++.method public insert(Landroid/net/Uri;Landroid/content/ContentValues;)Landroid/net/Uri;
++    .locals 1
++    .param p1, "uri"    # Landroid/net/Uri;
++    .param p2, "values"    # Landroid/content/ContentValues;
++
++    .line 33
++    const/4 v0, 0x0
++
++    return-object v0
++.end method
++
++.method public onCreate()Z
++    .locals 2
++#coocoo
++#    .line 14
++#    invoke-virtual {p0}, Lcom/vungle/warren/utility/VungleProvider;->getContext()Landroid/content/Context;
++#
++#    move-result-object v0
++#
++#    .line 15
++#    .local v0, "ctx":Landroid/content/Context;
++#    if-eqz v0, :cond_0
++#
++#    .line 16
++#    invoke-static {}, Lcom/vungle/warren/utility/ActivityManager;->getInstance()Lcom/vungle/warren/utility/ActivityManager;
++#
++#    move-result-object v1
++#
++#    invoke-virtual {v1, v0}, Lcom/vungle/warren/utility/ActivityManager;->init(Landroid/content/Context;)V
++#coocoo
++    .line 18
++    :cond_0
++    const/4 v1, 0x1
++
++    return v1
++.end method
++
++.method public query(Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;
++    .locals 1
++    .param p1, "uri"    # Landroid/net/Uri;
++    .param p2, "projection"    # [Ljava/lang/String;
++    .param p3, "selection"    # Ljava/lang/String;
++    .param p4, "selectionArgs"    # [Ljava/lang/String;
++    .param p5, "sortOrder"    # Ljava/lang/String;
++
++    .line 23
++    const/4 v0, 0x0
++
++    return-object v0
++.end method
++
++.method public update(Landroid/net/Uri;Landroid/content/ContentValues;Ljava/lang/String;[Ljava/lang/String;)I
++    .locals 1
++    .param p1, "uri"    # Landroid/net/Uri;
++    .param p2, "values"    # Landroid/content/ContentValues;
++    .param p3, "selection"    # Ljava/lang/String;
++    .param p4, "selectionArgs"    # [Ljava/lang/String;
++
++    .line 43
++    const/4 v0, 0x0
++
++    return v0
++.end method
