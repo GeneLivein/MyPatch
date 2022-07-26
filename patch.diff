@@ -138,170 +138,400 @@ index 0000000..2efae66
 +}
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
-index 6e46357..1b446a5 100644
+deleted file mode 100644
+index 6e46357..0000000
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
-+++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
-@@ -1,34 +1,60 @@
- package com.coocoo.whatsappdelegate;
- 
-+import static com.coocoo.utils.Constants.Id.FAB_AD;
-+
- import android.app.AlertDialog;
- import android.app.Dialog;
- import android.content.DialogInterface;
- import android.os.Bundle;
- import android.util.Log;
++++ /dev/null
+@@ -1,141 +0,0 @@
+-package com.coocoo.whatsappdelegate;
+-
+-import android.app.AlertDialog;
+-import android.app.Dialog;
+-import android.content.DialogInterface;
+-import android.os.Bundle;
+-import android.util.Log;
 -import android.view.View;
-+import android.widget.ImageView;
-+
-+import androidx.annotation.NonNull;
-+import androidx.annotation.Nullable;
- 
-+import com.bumptech.glide.Glide;
-+import com.bumptech.glide.load.engine.DiskCacheStrategy;
-+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-+import com.bumptech.glide.request.RequestListener;
-+import com.bumptech.glide.request.target.Target;
- import com.coocoo.CooCoo;
- import com.coocoo.annotation.SmaliInject;
- import com.coocoo.coocoosp.SPDelegate;
- import com.coocoo.manager.PerformanceAnalyticsManager;
- import com.coocoo.presenter.HomeActivityPresenter;
- import com.coocoo.presenter.IHomeActivityPresenter;
-+import com.coocoo.transform.CircleTransform;
- import com.coocoo.update.AppUpdateRepository;
- import com.coocoo.utils.ActivityUtil;
- import com.coocoo.utils.AppExecutors;
- import com.coocoo.utils.DialogUtils;
-+import com.coocoo.utils.LogUtil;
- import com.coocoo.utils.ResMgr;
- import com.coocoo.whatsappdelegate.base.ActivityDelegate;
- import com.gbwhatsapp.HomeActivity;
-+import com.status.traffic.AdSceneManager;
- import com.status.traffic.StatusTrafficSdk;
+-
+-import com.coocoo.CooCoo;
+-import com.coocoo.annotation.SmaliInject;
+-import com.coocoo.coocoosp.SPDelegate;
+-import com.coocoo.manager.PerformanceAnalyticsManager;
+-import com.coocoo.presenter.HomeActivityPresenter;
+-import com.coocoo.presenter.IHomeActivityPresenter;
+-import com.coocoo.update.AppUpdateRepository;
+-import com.coocoo.utils.ActivityUtil;
+-import com.coocoo.utils.AppExecutors;
+-import com.coocoo.utils.DialogUtils;
+-import com.coocoo.utils.ResMgr;
+-import com.coocoo.whatsappdelegate.base.ActivityDelegate;
+-import com.gbwhatsapp.HomeActivity;
+-import com.status.traffic.StatusTrafficSdk;
 -
 -public class HomeActivityDelegate extends ActivityDelegate implements IHomeActivityPresenter.IHomeActivityContainer {
-+import com.status.traffic.data.enums.ConfigType;
-+import com.status.traffic.data.enums.DownloadApkDialogType;
-+import com.status.traffic.data.enums.InstallTag;
-+import com.status.traffic.data.vo.AdBlockConfig;
-+import com.status.traffic.data.vo.ApkData;
-+import com.status.traffic.data.vo.NativeAdConfig;
-+import com.status.traffic.presenter.ILaunchInstallActivityPresenter;
-+import com.status.traffic.presenter.LaunchInstallActivityPresenter;
-+import com.status.traffic.report.AdBlockReporter;
-+import com.status.traffic.report.AdReporter;
-+import com.status.traffic.util.OpenLinkUtil;
+-
+-    private static final String TAG = "HomeActivityDelegate";
+-
+-    private IHomeActivityPresenter homeActivityPresenter;
+-
+-    private Dialog appUpdateDialog;
+-
+-    @SmaliInject
+-    public HomeActivityDelegate(HomeActivity homeActivity) {
+-        super(homeActivity);
+-    }
+-
+-    @Override
+-    public void onCreate(Bundle savedInstanceState) {
+-        super.onCreate(savedInstanceState);
+-        Log.d(TAG, "onCreate");
+-
+-        AppUpdateRepository appUpdateRepo = CooCoo.INSTANCE.getRepoContainer().getAppUpdateRepo();
+-        homeActivityPresenter = new HomeActivityPresenter(this, appUpdateRepo, SPDelegate.getInstance());
+-        homeActivityPresenter.onCreate();
+-
+-        initStatusTrafficSdk();
+-    }
+-
+-    @Override
+-    public void onResume() {
+-        Log.d(TAG, "onResume");
+-        PerformanceAnalyticsManager.onHomeResume();
+-        homeActivityPresenter.onResume();
+-    }
+-
+-    @Override
+-    public void onStart() {
+-        super.onStart();
+-        Log.d(TAG, "onStart");
+-
+-    }
+-
+-    @Override
+-    public void onDestroy() {
+-        super.onDestroy();
+-        homeActivityPresenter.onDestroy();
+-        dismissAppUpdateDialog();
+-    }
+-
+-    private void dismissAppUpdateDialog() {
+-        if (appUpdateDialog != null) {
+-            DialogUtils.dismissDialogSafely(appUpdateDialog);
+-            appUpdateDialog = null;
+-        }
+-    }
+-
+-    /*
+-     * IHomeActivityContainer
+-     */
+-
+-    @Override
+-    public void showSuggestUpdateDialog(String targetVer, String url) {
+-        dismissAppUpdateDialog();
+-
+-        appUpdateDialog = new AlertDialog.Builder(mHostActivity)
+-                .setMessage(ResMgr.getString("cc_suggest_update_message", targetVer))
+-                .setCancelable(true)
+-                .setPositiveButton(ResMgr.getString("cc_download_btn"), new DialogInterface.OnClickListener() {
+-                    @Override
+-                    public void onClick(DialogInterface dialog, int which) {
+-                        ActivityUtil.safeOpenBrowser(mHostActivity, url);
+-                    }
+-                })
+-                .setNegativeButton(android.R.string.cancel, null)
+-                .create();
+-        DialogUtils.showDialogSafely(mHostActivity, appUpdateDialog);
+-    }
+-
+-    @Override
+-    public void showForceUpdateDialog(String targetVer, String url) {
+-        dismissAppUpdateDialog();
+-
+-        appUpdateDialog = new AlertDialog.Builder(mHostActivity)
+-                .setMessage(ResMgr.getString("cc_force_update_message", targetVer))
+-                .setCancelable(false)
+-                .setPositiveButton(ResMgr.getString("cc_download_btn"), new DialogInterface.OnClickListener() {
+-                    @Override
+-                    public void onClick(DialogInterface dialog, int which) {
+-                        ActivityUtil.safeOpenBrowser(mHostActivity, url);
+-                    }
+-                })
+-                .create();
+-        DialogUtils.showDialogSafely(mHostActivity, appUpdateDialog);
+-    }
+-
+-
+-    private void initStatusTrafficSdk() {
+-        AppExecutors.getInstance().adIO().execute(() -> {
+-            StatusTrafficSdk sdk = StatusTrafficSdk.Companion.getInstance();
+-            if (sdk.isNeedInitSDK()) {
+-                CooCoo.initStatusTrafficSdk();
+-            }
+-            if (!mHostActivity.isDestroyed() && !mHostActivity.isFinishing()) {
+-                sdk.loadCarouselConversationAd(mHostActivity);
+-                sdk.loadPushAppAd(mHostActivity);
+-                sdk.loadFissionConversationAd(mHostActivity);
+-                sdk.loadStatusAd(mHostActivity);
+-                sdk.loadHomeCreateAd(mHostActivity);
+-                sdk.loadFissionStatusAd(mHostActivity);
+-                sdk.loadStatusDestroyAd(mHostActivity);
+-                sdk.loadStatusReadingAd(mHostActivity);
+-                sdk.loadStatusKeeperAd(mHostActivity);
+-                sdk.loadHomeTopBannerAd(mHostActivity);
+-                sdk.loadStatusSendAd(mHostActivity);
+-            }
+-        });
+-
+-    }
+-
+-}
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
+new file mode 100644
+index 0000000..a4100d3
+--- /dev/null
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
+@@ -0,0 +1,241 @@
++package com.coocoo.whatsappdelegate
 +
-+public class HomeActivityDelegate extends ActivityDelegate implements IHomeActivityPresenter.IHomeActivityContainer, ILaunchInstallActivityPresenter.ILaunchInstallActivityContainer {
- 
-     private static final String TAG = "HomeActivityDelegate";
-+    private static final int REQUEST_AD_BLOCK = 1004;
- 
-     private IHomeActivityPresenter homeActivityPresenter;
- 
-     private Dialog appUpdateDialog;
-+    private LaunchInstallActivityPresenter mLaunchInstallActivityPresenter;
- 
-     @SmaliInject
-     public HomeActivityDelegate(HomeActivity homeActivity) {
-@@ -45,6 +71,68 @@ public class HomeActivityDelegate extends ActivityDelegate implements IHomeActiv
-         homeActivityPresenter.onCreate();
- 
-         initStatusTrafficSdk();
-+        loadConversationFab();
++import android.R
++import android.app.AlertDialog
++import android.app.Dialog
++import android.os.Bundle
++import android.util.Log
++import android.view.View
++import android.widget.ImageView
++import com.bumptech.glide.Glide
++import com.bumptech.glide.load.engine.DiskCacheStrategy
++import com.bumptech.glide.load.resource.drawable.GlideDrawable
++import com.bumptech.glide.request.RequestListener
++import com.bumptech.glide.request.target.Target
++import com.coocoo.CooCoo
++import com.coocoo.CooCoo.repoContainer
++import com.coocoo.annotation.SmaliInject
++import com.coocoo.coocoosp.SPDelegate
++import com.coocoo.manager.PerformanceAnalyticsManager.onHomeResume
++import com.coocoo.presenter.HomeActivityPresenter
++import com.coocoo.presenter.IHomeActivityPresenter
++import com.coocoo.presenter.IHomeActivityPresenter.IHomeActivityContainer
++import com.coocoo.transform.CircleTransform
++import com.coocoo.utils.*
++import com.coocoo.utils.Constants.Id.FAB_AD
++import com.coocoo.utils.DialogUtils.dismissDialogSafely
++import com.coocoo.utils.DialogUtils.showDialogSafely
++import com.coocoo.whatsappdelegate.base.ActivityDelegate
++import com.gbwhatsapp.HomeActivity
++import com.status.traffic.AdSceneManager
++import com.status.traffic.StatusTrafficSdk
++import com.status.traffic.data.enums.ConfigType
++import com.status.traffic.data.enums.DownloadApkDialogType
++import com.status.traffic.data.enums.InstallTag
++import com.status.traffic.data.vo.AdBlockConfig
++import com.status.traffic.data.vo.ApkData
++import com.status.traffic.data.vo.NativeAdConfig
++import com.status.traffic.presenter.ILaunchInstallActivityPresenter.ILaunchInstallActivityContainer
++import com.status.traffic.presenter.LaunchInstallActivityPresenter
++import com.status.traffic.report.AdBlockReporter
++import com.status.traffic.report.AdBlockReporter.reportEntrance
++import com.status.traffic.report.AdReporter
++import com.status.traffic.util.OpenLinkUtil.openGooglePlayData
++
++class HomeActivityDelegate @SmaliInject constructor(homeActivity: HomeActivity?) : ActivityDelegate(homeActivity), IHomeActivityContainer, ILaunchInstallActivityContainer {
++    private var homeActivityPresenter: IHomeActivityPresenter? = null
++    private var appUpdateDialog: Dialog? = null
++    private var mLaunchInstallActivityPresenter: LaunchInstallActivityPresenter? = null
++    override fun onCreate(savedInstanceState: Bundle) {
++        super.onCreate(savedInstanceState)
++        Log.d(TAG, "onCreate")
++        val appUpdateRepo = repoContainer.appUpdateRepo
++        homeActivityPresenter = HomeActivityPresenter(this, appUpdateRepo, SPDelegate.getInstance())
++        homeActivityPresenter?.onCreate()
++        initStatusTrafficSdk()
++        loadConversationFab()
 +    }
 +
-+    private void loadConversationFab() {
-+        LogUtil.d("loadConversationFab");
-+        ImageView fabAdView = mHostActivity.findViewById(ResMgr.getId(FAB_AD));
-+        StatusTrafficSdk sdk = StatusTrafficSdk.Companion.getInstance();
-+        sdk.loadConversationFabAd(CooCoo.context);
-+        sdk.setConversationFabAdPreparedListener((configs) -> {
-+//            AdBlockConfig adBlockConfig = StatusTrafficSdk.Companion.getInstance().getAdBlock();
-+//            boolean isMembershipEffective = StatusTrafficSdk.Companion.getInstance().isMembershipEffective();
-+//            LogUtil.d("setConversationFabAdPreparedListener " + adBlockConfig + " " + isMembershipEffective);
-+//            if (adBlockConfig != null && !isMembershipEffective) {
-+//                try {
-+//                    AdSceneManager.Companion.getInstance().displayAd(AdSceneManager.AdScene.AD_BLOCK);
-+//                    fabAdView.setImageResource(ResMgr.getDrawableId(Constants.Res.Drawable.IC_FAB_AD_BLOCK));
-+//                    fabAdView.setTag(fabAdView.getId(), adBlockConfig);
-+//                } catch (Exception e) {
-+//                    e.printStackTrace();
-+//                }
-+//                return;
-+//            }
-+            NativeAdConfig fabAdConfig = StatusTrafficSdk.Companion.getInstance().getConversationFabAdRemoteConfig();
-+            LogUtil.d("fabAdConfig: " + fabAdConfig);
-+            if (fabAdConfig != null) {
-+                Glide.with(fabAdView.getContext())
-+                        .load(fabAdConfig.getAvatar())
-+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-+                        .transform(new CircleTransform(fabAdView.getContext()))
-+                        .listener(new RequestListener<String, GlideDrawable>() {
-+                            @Override
-+                            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-+                                return false;
-+                            }
-+
-+                            @Override
-+                            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-+                                fabAdView.setTag(fabAdView.getId(), fabAdConfig);
-+                                AdSceneManager.Companion.getInstance().displayAd(AdSceneManager.AdScene.CONVERSATION_FAB);
-+                                return false;
-+                            }
-+                        })
-+                        .into(fabAdView);
-+            }
-+        });
-+        fabAdView.setOnClickListener((v) -> {
-+            Object config = v.getTag(v.getId());
-+            LogUtil.d("OnClick" + " " + config);
-+            if (config instanceof NativeAdConfig) {
-+                NativeAdConfig conversationFabAdConfig = (NativeAdConfig) config;
-+                if (ConfigType.APK.getValue().equals(conversationFabAdConfig.getType())) {
-+                    if (mLaunchInstallActivityPresenter != null) {
-+                        mLaunchInstallActivityPresenter.launchStatusApkInstall(conversationFabAdConfig.getApkData(), InstallTag.CONVERSATION_FAB, null);
-+                    }
-+                } else if (ConfigType.GOOGLE_PLAY.getValue().equals(conversationFabAdConfig.getType())) {
-+                    OpenLinkUtil.INSTANCE.openGooglePlayData(mHostActivity, conversationFabAdConfig.getGooglePlayData());
++    private fun loadConversationFab() {
++        val fabAdView = mHostActivity.findViewById<ImageView>(ResMgr.getId(FAB_AD))
++        val sdk = StatusTrafficSdk.getInstance()
++        sdk.loadConversationFabAd(CooCoo.context)
++        sdk.setConversationFabAdPreparedListener {
++            val adBlockConfig = StatusTrafficSdk.getInstance().getAdBlock()
++            val isMembershipEffective = StatusTrafficSdk.getInstance().isMembershipEffective()
++            LogUtil.d("setConversationFabAdPreparedListener $adBlockConfig $isMembershipEffective")
++            if (adBlockConfig != null && !isMembershipEffective) {
++                try {
++                    AdSceneManager.getInstance().displayAd(AdSceneManager.AdScene.AD_BLOCK)
++                    fabAdView.setImageResource(ResMgr.getDrawableId(Constants.Res.Drawable.IC_FAB_AD_BLOCK))
++                    fabAdView.setTag(fabAdView.id, adBlockConfig)
++                } catch (e: Exception) {
++                    e.printStackTrace()
 +                }
-+            } else if (config instanceof AdBlockConfig) {
-+                AdBlockReporter.INSTANCE.reportEntrance(AdBlockReporter.EntranceType.FAB, AdBlockReporter.EntranceAction.CLICK);
-+                StatusTrafficSdk.Companion.getInstance().launchAdBlockActivityForResult(mHostActivity, REQUEST_AD_BLOCK);
++                return@setConversationFabAdPreparedListener
 +            }
-+        });
-     }
- 
-     @Override
-@@ -116,6 +204,7 @@ public class HomeActivityDelegate extends ActivityDelegate implements IHomeActiv
- 
- 
-     private void initStatusTrafficSdk() {
-+        mLaunchInstallActivityPresenter = new LaunchInstallActivityPresenter(this);
-         AppExecutors.getInstance().adIO().execute(() -> {
-             StatusTrafficSdk sdk = StatusTrafficSdk.Companion.getInstance();
-             if (sdk.isNeedInitSDK()) {
-@@ -138,4 +227,19 @@ public class HomeActivityDelegate extends ActivityDelegate implements IHomeActiv
- 
-     }
- 
-+    @Override
-+    public void startInstallActivity(@NonNull InstallTag installTag, @NonNull ApkData apkData, @Nullable AdReporter adReporter) {
-+        StatusTrafficSdk.Companion.getInstance().launchInstallActivity(
-+                mHostActivity,
-+                installTag,
-+                apkData, adReporter);
++            val fabAdConfig = StatusTrafficSdk.getInstance().getConversationFabAdRemoteConfig()
++            LogUtil.d("fabAdConfig: $fabAdConfig")
++            if (fabAdConfig != null) {
++                Glide.with(fabAdView.context)
++                    .load(fabAdConfig.avatar)
++                    .diskCacheStrategy(DiskCacheStrategy.ALL)
++                    .transform(CircleTransform(fabAdView.context))
++                    .listener(object : RequestListener<String?, GlideDrawable?> {
++                        override fun onException(
++                            e: Exception?,
++                            model: String?,
++                            target: Target<GlideDrawable?>?,
++                            isFirstResource: Boolean
++                        ): Boolean {
++                            return false
++                        }
++
++                        override fun onResourceReady(
++                            resource: GlideDrawable?,
++                            model: String?,
++                            target: Target<GlideDrawable?>?,
++                            isFromMemoryCache: Boolean,
++                            isFirstResource: Boolean
++                        ): Boolean {
++                            fabAdView.setTag(fabAdView.id, fabAdConfig)
++                            AdSceneManager.getInstance()
++                                .displayAd(AdSceneManager.AdScene.CONVERSATION_FAB)
++                            return false
++                        }
++                    })
++                    .into(fabAdView)
++            }
++        }
++        fabAdView.setOnClickListener { v: View ->
++            val config = v.getTag(v.id)
++            LogUtil.d("OnClick $config")
++            if (config is NativeAdConfig) {
++                if (ConfigType.APK.value == config.type) {
++                    if (mLaunchInstallActivityPresenter != null) {
++                        mLaunchInstallActivityPresenter!!.launchStatusApkInstall(
++                            config.getApkData(),
++                            InstallTag.CONVERSATION_FAB,
++                            null
++                        )
++                    }
++                } else if (ConfigType.GOOGLE_PLAY.value == config.type) {
++                    openGooglePlayData(mHostActivity, config.getGooglePlayData())
++                }
++            } else if (config is AdBlockConfig) {
++                reportEntrance(
++                    AdBlockReporter.EntranceType.FAB,
++                    AdBlockReporter.EntranceAction.CLICK
++                )
++                StatusTrafficSdk.getInstance()
++                    .launchAdBlockActivityForResult(mHostActivity, REQUEST_AD_BLOCK)
++            }
++        }
 +    }
 +
-+    @Override
-+    public void showDownloadApkMsgDialog(@NonNull ApkData apkData) {
-+        StatusTrafficSdk.Companion.getInstance().showDownloadMsgDialog(
-+                mHostActivity,
-+                apkData,
-+                DownloadApkDialogType.DOWNLOADING);
++    override fun onResume() {
++        Log.d(TAG, "onResume")
++        onHomeResume()
++        homeActivityPresenter!!.onResume()
 +    }
- }
++
++    override fun onStart() {
++        super.onStart()
++        Log.d(TAG, "onStart")
++    }
++
++    override fun onDestroy() {
++        super.onDestroy()
++        homeActivityPresenter!!.onDestroy()
++        dismissAppUpdateDialog()
++    }
++
++    private fun dismissAppUpdateDialog() {
++        if (appUpdateDialog != null) {
++            dismissDialogSafely(appUpdateDialog)
++            appUpdateDialog = null
++        }
++    }
++
++    /*
++     * IHomeActivityContainer
++     */
++    override fun showSuggestUpdateDialog(targetVer: String, url: String) {
++        dismissAppUpdateDialog()
++        appUpdateDialog = AlertDialog.Builder(mHostActivity)
++            .setMessage(ResMgr.getString("cc_suggest_update_message", targetVer))
++            .setCancelable(true)
++            .setPositiveButton(ResMgr.getString("cc_download_btn")) { dialog, which ->
++                ActivityUtil.safeOpenBrowser(
++                    mHostActivity,
++                    url
++                )
++            }
++            .setNegativeButton(R.string.cancel, null)
++            .create()
++        showDialogSafely(mHostActivity, appUpdateDialog)
++    }
++
++    override fun showForceUpdateDialog(targetVer: String, url: String) {
++        dismissAppUpdateDialog()
++        appUpdateDialog = AlertDialog.Builder(mHostActivity)
++            .setMessage(ResMgr.getString("cc_force_update_message", targetVer))
++            .setCancelable(false)
++            .setPositiveButton(ResMgr.getString("cc_download_btn")) { dialog, which ->
++                ActivityUtil.safeOpenBrowser(
++                    mHostActivity,
++                    url
++                )
++            }
++            .create()
++        showDialogSafely(mHostActivity, appUpdateDialog)
++    }
++
++    private fun initStatusTrafficSdk() {
++        mLaunchInstallActivityPresenter = LaunchInstallActivityPresenter(this)
++        AppExecutors.getInstance().adIO().execute {
++            val sdk = StatusTrafficSdk.getInstance()
++            if (sdk.isNeedInitSDK()) {
++                CooCoo.initStatusTrafficSdk()
++            }
++            if (!mHostActivity.isDestroyed && !mHostActivity.isFinishing) {
++                sdk.loadCarouselConversationAd(mHostActivity)
++                sdk.loadPushAppAd(mHostActivity)
++                sdk.loadFissionConversationAd(mHostActivity)
++                sdk.loadStatusAd(mHostActivity)
++                sdk.loadHomeCreateAd(mHostActivity)
++                sdk.loadFissionStatusAd(mHostActivity)
++                sdk.loadStatusDestroyAd(mHostActivity)
++                sdk.loadStatusReadingAd(mHostActivity)
++                sdk.loadStatusKeeperAd(mHostActivity)
++                sdk.loadHomeTopBannerAd(mHostActivity)
++                sdk.loadStatusSendAd(mHostActivity)
++            }
++        }
++    }
++
++    override fun startInstallActivity(
++        installTag: InstallTag,
++        apkData: ApkData,
++        adReporter: AdReporter?
++    ) {
++        StatusTrafficSdk.getInstance().launchInstallActivity(
++            mHostActivity,
++            installTag,
++            apkData, adReporter
++        )
++    }
++
++    override fun showDownloadApkMsgDialog(apkData: ApkData) {
++        StatusTrafficSdk.getInstance().showDownloadMsgDialog(
++            mHostActivity,
++            apkData,
++            DownloadApkDialogType.DOWNLOADING
++        )
++    }
++
++    companion object {
++        private const val TAG = "HomeActivityDelegate"
++        private const val REQUEST_AD_BLOCK = 1004
++    }
++}
+\ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomePageSelectedDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/HomePageSelectedDelegate.kt
 new file mode 100644
 index 0000000..cadd075
@@ -394,6 +624,19 @@ index 0000000..19b9149
 +        jabber_id = "";
 +    }
 +}
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
+index 6e4ecf6..f4eada2 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
+@@ -56,7 +56,7 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
+                 .toString()
+     }
+ 
+-    interface BaseRemoteConfigListener<T> {
++    fun interface BaseRemoteConfigListener<T> {
+         fun onPrepared(config: T?)
+     }
+ 
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/ConversationFabAdRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/ConversationFabAdRemoteConfig.kt
 index eff7a3a..bc9942f 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/ConversationFabAdRemoteConfig.kt
