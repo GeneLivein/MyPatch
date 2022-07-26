@@ -118,7 +118,7 @@ index 0000000..2efae66
 +}
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
-index 6e46357..0aa2a1a 100644
+index 6e46357..fce70f6 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
 @@ -1,26 +1,38 @@
@@ -181,7 +181,7 @@ index 6e46357..0aa2a1a 100644
 +            }
 +            NativeAdConfig fabAdConfig = StatusTrafficSdk.Companion.getInstance().getConversationFabAdRemoteConfig();
 +            if (fabAdConfig != null) {
-+                Glide.with(CooCoo.context)
++                Glide.with(mHostActivity)
 +                        .load(fabAdConfig.getAvatar())
 +                        .diskCacheStrategy(DiskCacheStrategy.ALL)
 +                        .transform(new CircleTransform(fabAdView.getContext()))
