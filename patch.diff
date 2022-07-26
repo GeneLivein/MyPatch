@@ -118,10 +118,10 @@ index 0000000..2efae66
 +}
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
-index 6e46357..f205a99 100644
+index 6e46357..e5d29d1 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
-@@ -1,11 +1,13 @@
+@@ -1,11 +1,16 @@
  package com.coocoo.whatsappdelegate;
  
 +import static com.coocoo.utils.Constants.Id.FAB_AD;
@@ -133,10 +133,13 @@ index 6e46357..f205a99 100644
  import android.util.Log;
 -import android.view.View;
 +import android.widget.ImageView;
++
++import androidx.annotation.NonNull;
++import androidx.annotation.Nullable;
  
  import com.coocoo.CooCoo;
  import com.coocoo.annotation.SmaliInject;
-@@ -16,11 +18,14 @@ import com.coocoo.presenter.IHomeActivityPresenter;
+@@ -16,19 +21,33 @@ import com.coocoo.presenter.IHomeActivityPresenter;
  import com.coocoo.update.AppUpdateRepository;
  import com.coocoo.utils.ActivityUtil;
  import com.coocoo.utils.AppExecutors;
@@ -146,12 +149,33 @@ index 6e46357..f205a99 100644
  import com.coocoo.whatsappdelegate.base.ActivityDelegate;
  import com.gbwhatsapp.HomeActivity;
  import com.status.traffic.StatusTrafficSdk;
+-
+-public class HomeActivityDelegate extends ActivityDelegate implements IHomeActivityPresenter.IHomeActivityContainer {
++import com.status.traffic.data.enums.ConfigType;
++import com.status.traffic.data.enums.DownloadApkDialogType;
++import com.status.traffic.data.enums.InstallTag;
 +import com.status.traffic.data.vo.AdBlockConfig;
++import com.status.traffic.data.vo.ApkData;
 +import com.status.traffic.data.vo.NativeAdConfig;
++import com.status.traffic.presenter.ILaunchInstallActivityPresenter;
++import com.status.traffic.presenter.LaunchInstallActivityPresenter;
++import com.status.traffic.report.AdBlockReporter;
++import com.status.traffic.report.AdReporter;
++import com.status.traffic.util.OpenLinkUtil;
++
++public class HomeActivityDelegate extends ActivityDelegate implements IHomeActivityPresenter.IHomeActivityContainer, ILaunchInstallActivityPresenter.ILaunchInstallActivityContainer {
  
- public class HomeActivityDelegate extends ActivityDelegate implements IHomeActivityPresenter.IHomeActivityContainer {
+     private static final String TAG = "HomeActivityDelegate";
++    private static final int REQUEST_AD_BLOCK = 1004;
  
-@@ -45,6 +50,42 @@ public class HomeActivityDelegate extends ActivityDelegate implements IHomeActiv
+     private IHomeActivityPresenter homeActivityPresenter;
+ 
+     private Dialog appUpdateDialog;
++    private LaunchInstallActivityPresenter mLaunchInstallActivityPresenter;
+ 
+     @SmaliInject
+     public HomeActivityDelegate(HomeActivity homeActivity) {
+@@ -45,6 +64,58 @@ public class HomeActivityDelegate extends ActivityDelegate implements IHomeActiv
          homeActivityPresenter.onCreate();
  
          initStatusTrafficSdk();
@@ -191,9 +215,53 @@ index 6e46357..f205a99 100644
 +//                        .into(fabAdView);
 +            }
 +        });
++        fabAdView.setOnClickListener((v) -> {
++            Object config = v.getTag(v.getId());
++            if (config instanceof NativeAdConfig) {
++                NativeAdConfig conversationFabAdConfig = (NativeAdConfig) config;
++                if (ConfigType.APK.getValue().equals(conversationFabAdConfig.getType())) {
++                    if (mLaunchInstallActivityPresenter != null) {
++                        mLaunchInstallActivityPresenter.launchStatusApkInstall(conversationFabAdConfig.getApkData(), InstallTag.CONVERSATION_FAB, null);
++                    }
++                } else if (ConfigType.GOOGLE_PLAY.getValue().equals(conversationFabAdConfig.getType())) {
++                    OpenLinkUtil.INSTANCE.openGooglePlayData(mHostActivity, conversationFabAdConfig.getGooglePlayData());
++                }
++            } else if (config instanceof AdBlockConfig) {
++                AdBlockReporter.INSTANCE.reportEntrance(AdBlockReporter.EntranceType.FAB, AdBlockReporter.EntranceAction.CLICK);
++                StatusTrafficSdk.Companion.getInstance().launchAdBlockActivityForResult(mHostActivity, REQUEST_AD_BLOCK);
++            }
++        });
      }
  
      @Override
+@@ -116,6 +187,7 @@ public class HomeActivityDelegate extends ActivityDelegate implements IHomeActiv
+ 
+ 
+     private void initStatusTrafficSdk() {
++        mLaunchInstallActivityPresenter = new LaunchInstallActivityPresenter(this);
+         AppExecutors.getInstance().adIO().execute(() -> {
+             StatusTrafficSdk sdk = StatusTrafficSdk.Companion.getInstance();
+             if (sdk.isNeedInitSDK()) {
+@@ -138,4 +210,19 @@ public class HomeActivityDelegate extends ActivityDelegate implements IHomeActiv
+ 
+     }
+ 
++    @Override
++    public void startInstallActivity(@NonNull InstallTag installTag, @NonNull ApkData apkData, @Nullable AdReporter adReporter) {
++        StatusTrafficSdk.Companion.getInstance().launchInstallActivity(
++                mHostActivity,
++                installTag,
++                apkData, adReporter);
++    }
++
++    @Override
++    public void showDownloadApkMsgDialog(@NonNull ApkData apkData) {
++        StatusTrafficSdk.Companion.getInstance().showDownloadMsgDialog(
++                mHostActivity,
++                apkData,
++                DownloadApkDialogType.DOWNLOADING);
++    }
+ }
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomePageSelectedDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/HomePageSelectedDelegate.kt
 new file mode 100644
 index 0000000..cadd075
