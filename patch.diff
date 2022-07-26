@@ -118,7 +118,7 @@ index 0000000..2efae66
 +}
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
-index 6e46357..112470d 100644
+index 6e46357..cf4aa84 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
 @@ -1,11 +1,16 @@
@@ -177,7 +177,7 @@ index 6e46357..112470d 100644
  
      @SmaliInject
      public HomeActivityDelegate(HomeActivity homeActivity) {
-@@ -45,6 +66,68 @@ public class HomeActivityDelegate extends ActivityDelegate implements IHomeActiv
+@@ -45,6 +66,69 @@ public class HomeActivityDelegate extends ActivityDelegate implements IHomeActiv
          homeActivityPresenter.onCreate();
  
          initStatusTrafficSdk();
@@ -205,6 +205,7 @@ index 6e46357..112470d 100644
 +            }
 +            NativeAdConfig fabAdConfig = StatusTrafficSdk.Companion.getInstance().getConversationFabAdRemoteConfig();
 +            LogUtil.d("fabAdConfig: " + fabAdConfig);
++            fabAdView.setTag(fabAdView.getId(), fabAdConfig);
 +            if (fabAdConfig != null) {
 +//                Glide.with(fabAdView.getContext())
 +//                        .load(fabAdConfig.getAvatar())
@@ -246,7 +247,7 @@ index 6e46357..112470d 100644
      }
  
      @Override
-@@ -116,6 +199,7 @@ public class HomeActivityDelegate extends ActivityDelegate implements IHomeActiv
+@@ -116,6 +200,7 @@ public class HomeActivityDelegate extends ActivityDelegate implements IHomeActiv
  
  
      private void initStatusTrafficSdk() {
@@ -254,7 +255,7 @@ index 6e46357..112470d 100644
          AppExecutors.getInstance().adIO().execute(() -> {
              StatusTrafficSdk sdk = StatusTrafficSdk.Companion.getInstance();
              if (sdk.isNeedInitSDK()) {
-@@ -138,4 +222,19 @@ public class HomeActivityDelegate extends ActivityDelegate implements IHomeActiv
+@@ -138,4 +223,19 @@ public class HomeActivityDelegate extends ActivityDelegate implements IHomeActiv
  
      }
  
