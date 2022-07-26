@@ -604,6 +604,22 @@ index 0000000..19b9149
 +        jabber_id = "";
 +    }
 +}
+diff --git a/app/src/main/res/drawable/cc_circle_white.xml b/app/src/main/res/drawable/cc_circle_white.xml
+new file mode 100644
+index 0000000..21c8d4c
+--- /dev/null
++++ b/app/src/main/res/drawable/cc_circle_white.xml
+@@ -0,0 +1,10 @@
++<?xml version="1.0" encoding="utf-8"?>
++<inset xmlns:android="http://schemas.android.com/apk/res/android"
++    android:insetLeft="1dp"
++    android:insetRight="1dp"
++    android:insetTop="1dp"
++    android:insetBottom="1dp">
++    <shape android:shape="oval" android:useLevel="false">
++        <solid android:color="@android:color/white" />
++    </shape>
++</inset>
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 index 6e4ecf6..8e41d0d 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
