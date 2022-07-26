@@ -1,5 +1,5 @@
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
-index d4d7176..7a842b5 100644
+index d4d7176..9217c15 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
 @@ -15,6 +15,7 @@ import com.bumptech.glide.request.target.Target
@@ -16,7 +16,8 @@ index d4d7176..7a842b5 100644
                      AdSceneManager.getInstance().displayAd(AdSceneManager.AdScene.AD_BLOCK)
 +                    reportEntrance(AdBlockReporter.EntranceType.FAB, AdBlockReporter.EntranceAction.SHOW)
                      fabAdView.setImageResource(ResMgr.getDrawableId(Constants.Res.Drawable.IC_FAB_AD_BLOCK))
-                     fabAdView.setTag(fabAdView.id, adBlockConfig)
+-                    fabAdView.setTag(fabAdView.id, adBlockConfig)
++//                    fabAdView.setTag(fabAdView.id, adBlockConfig)
 +                    fabAdView.visibility = View.VISIBLE
                  } catch (e: Exception) {
                      e.printStackTrace()
@@ -130,16 +131,14 @@ index cadd075..358b8c4 100644
  }
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/MainDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/MainDelegate.kt
-index 4bb5c44..e6de7cc 100644
+index 4bb5c44..7dcc066 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/MainDelegate.kt
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/MainDelegate.kt
-@@ -27,8 +27,7 @@ class MainDelegate(activity: Activity) : ActivityDelegate(activity) {
-                     AppExecutors.getInstance().adIO().execute {
+@@ -28,7 +28,6 @@ class MainDelegate(activity: Activity) : ActivityDelegate(activity) {
                          val sdk = StatusTrafficSdk.getInstance()
                          if (!activity.isDestroyed && !activity.isFinishing) {
--                            sdk.loadAdBlock(activity)
+                             sdk.loadAdBlock(activity)
 -                            sdk.loadMainSplashAdRemoteConfig(activity)
-+//                            sdk.loadAdBlock(activity)
                          }
                      }
                  } else {
