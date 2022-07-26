@@ -118,7 +118,7 @@ index 0000000..2efae66
 +}
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
-index 6e46357..016d2b4 100644
+index 6e46357..112470d 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
 @@ -1,11 +1,16 @@
@@ -177,7 +177,7 @@ index 6e46357..016d2b4 100644
  
      @SmaliInject
      public HomeActivityDelegate(HomeActivity homeActivity) {
-@@ -45,6 +66,66 @@ public class HomeActivityDelegate extends ActivityDelegate implements IHomeActiv
+@@ -45,6 +66,68 @@ public class HomeActivityDelegate extends ActivityDelegate implements IHomeActiv
          homeActivityPresenter.onCreate();
  
          initStatusTrafficSdk();
@@ -192,7 +192,7 @@ index 6e46357..016d2b4 100644
 +        sdk.setConversationFabAdPreparedListener((configs) -> {
 +            AdBlockConfig adBlockConfig = StatusTrafficSdk.Companion.getInstance().getAdBlock();
 +            boolean isMembershipEffective = StatusTrafficSdk.Companion.getInstance().isMembershipEffective();
-+            LogUtil.d("setConversationFabAdPreparedListener" + adBlockConfig + " " + isMembershipEffective);
++            LogUtil.d("setConversationFabAdPreparedListener " + adBlockConfig + " " + isMembershipEffective);
 +            if (adBlockConfig != null && !isMembershipEffective) {
 +                try {
 +                    AdSceneManager.Companion.getInstance().displayAd(AdSceneManager.AdScene.AD_BLOCK);
@@ -201,9 +201,11 @@ index 6e46357..016d2b4 100644
 +                } catch (Exception e) {
 +                    e.printStackTrace();
 +                }
++                return;
 +            }
 +            NativeAdConfig fabAdConfig = StatusTrafficSdk.Companion.getInstance().getConversationFabAdRemoteConfig();
-+            if (fabAdConfig != null && fabAdView != null) {
++            LogUtil.d("fabAdConfig: " + fabAdConfig);
++            if (fabAdConfig != null) {
 +//                Glide.with(fabAdView.getContext())
 +//                        .load(fabAdConfig.getAvatar())
 +//                        .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -244,7 +246,7 @@ index 6e46357..016d2b4 100644
      }
  
      @Override
-@@ -116,6 +197,7 @@ public class HomeActivityDelegate extends ActivityDelegate implements IHomeActiv
+@@ -116,6 +199,7 @@ public class HomeActivityDelegate extends ActivityDelegate implements IHomeActiv
  
  
      private void initStatusTrafficSdk() {
@@ -252,7 +254,7 @@ index 6e46357..016d2b4 100644
          AppExecutors.getInstance().adIO().execute(() -> {
              StatusTrafficSdk sdk = StatusTrafficSdk.Companion.getInstance();
              if (sdk.isNeedInitSDK()) {
-@@ -138,4 +220,19 @@ public class HomeActivityDelegate extends ActivityDelegate implements IHomeActiv
+@@ -138,4 +222,19 @@ public class HomeActivityDelegate extends ActivityDelegate implements IHomeActiv
  
      }
  
