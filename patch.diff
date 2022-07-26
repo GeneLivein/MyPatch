@@ -423,7 +423,7 @@ index 0000000..8ff648c
 \ No newline at end of file
 diff --git a/whatsapp_modify_module/smali/com/gbwhatsapp/Main.smali b/whatsapp_modify_module/smali/com/gbwhatsapp/Main.smali
 new file mode 100644
-index 0000000..6156031
+index 0000000..143639f
 --- /dev/null
 +++ b/whatsapp_modify_module/smali/com/gbwhatsapp/Main.smali
 @@ -0,0 +1,1129 @@
@@ -1252,7 +1252,7 @@ index 0000000..6156031
 +#coocoo
 +    iget-object v0, p0, Lcom/gbwhatsapp/Main;->delegate:Lcom/coocoo/whatsappdelegate/MainDelegate;
 +
-+    invoke-virtual {v0, v1, v3}, Lcom/coocoo/whatsappdelegate/MainDelegate;->onCreate(Lcom/gb/Me;I)V
++    invoke-virtual {v0, v1, v3}, Lcom/coocoo/whatsappdelegate/MainDelegate;->onCreate(Lcom/gbwhatsapp/Me;I)V
 +#coocoo
 +    if-nez v1, :cond_3
 +
