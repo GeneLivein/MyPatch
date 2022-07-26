@@ -94,7 +94,7 @@ index 52e870b..48a572c 100644
 +    }
  }
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
-index 7a842b5..3a3a514 100644
+index 7a842b5..c40ce38 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
 @@ -3,6 +3,7 @@ package com.coocoo.whatsappdelegate
@@ -168,7 +168,7 @@ index 7a842b5..3a3a514 100644
      companion object {
          private const val TAG = "HomeActivityDelegate"
          private const val REQUEST_AD_BLOCK = 1004
-+        private const val REQUEST_STATUS_DESTROY: Int = 1006
++        const val REQUEST_STATUS_DESTROY: Int = 1006
      }
  }
 \ No newline at end of file
