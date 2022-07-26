@@ -286,7 +286,7 @@ index 6e46357..0000000
 -}
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
 new file mode 100644
-index 0000000..a4100d3
+index 0000000..a23f209
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
 @@ -0,0 +1,241 @@
@@ -338,7 +338,7 @@ index 0000000..a4100d3
 +    private var homeActivityPresenter: IHomeActivityPresenter? = null
 +    private var appUpdateDialog: Dialog? = null
 +    private var mLaunchInstallActivityPresenter: LaunchInstallActivityPresenter? = null
-+    override fun onCreate(savedInstanceState: Bundle) {
++    override fun onCreate(savedInstanceState: Bundle?) {
 +        super.onCreate(savedInstanceState)
 +        Log.d(TAG, "onCreate")
 +        val appUpdateRepo = repoContainer.appUpdateRepo
