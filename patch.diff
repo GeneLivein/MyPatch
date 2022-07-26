@@ -118,10 +118,10 @@ index 0000000..2efae66
 +}
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
-index 6e46357..90d3e4e 100644
+index 6e46357..f205a99 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.java
-@@ -1,26 +1,38 @@
+@@ -1,11 +1,13 @@
  package com.coocoo.whatsappdelegate;
  
 +import static com.coocoo.utils.Constants.Id.FAB_AD;
@@ -134,18 +134,9 @@ index 6e46357..90d3e4e 100644
 -import android.view.View;
 +import android.widget.ImageView;
  
-+import com.bumptech.glide.Glide;
-+import com.bumptech.glide.load.engine.DiskCacheStrategy;
-+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-+import com.bumptech.glide.request.RequestListener;
-+import com.bumptech.glide.request.target.Target;
  import com.coocoo.CooCoo;
  import com.coocoo.annotation.SmaliInject;
- import com.coocoo.coocoosp.SPDelegate;
- import com.coocoo.manager.PerformanceAnalyticsManager;
- import com.coocoo.presenter.HomeActivityPresenter;
- import com.coocoo.presenter.IHomeActivityPresenter;
-+import com.coocoo.transform.CircleTransform;
+@@ -16,11 +18,14 @@ import com.coocoo.presenter.IHomeActivityPresenter;
  import com.coocoo.update.AppUpdateRepository;
  import com.coocoo.utils.ActivityUtil;
  import com.coocoo.utils.AppExecutors;
@@ -154,14 +145,13 @@ index 6e46357..90d3e4e 100644
  import com.coocoo.utils.ResMgr;
  import com.coocoo.whatsappdelegate.base.ActivityDelegate;
  import com.gbwhatsapp.HomeActivity;
-+import com.status.traffic.AdSceneManager;
  import com.status.traffic.StatusTrafficSdk;
 +import com.status.traffic.data.vo.AdBlockConfig;
 +import com.status.traffic.data.vo.NativeAdConfig;
  
  public class HomeActivityDelegate extends ActivityDelegate implements IHomeActivityPresenter.IHomeActivityContainer {
  
-@@ -45,6 +57,41 @@ public class HomeActivityDelegate extends ActivityDelegate implements IHomeActiv
+@@ -45,6 +50,42 @@ public class HomeActivityDelegate extends ActivityDelegate implements IHomeActiv
          homeActivityPresenter.onCreate();
  
          initStatusTrafficSdk();
@@ -180,24 +170,25 @@ index 6e46357..90d3e4e 100644
 +                fabAdView.setTag(fabAdView.getId(), adBlockConfig);
 +            }
 +            NativeAdConfig fabAdConfig = StatusTrafficSdk.Companion.getInstance().getConversationFabAdRemoteConfig();
-+            if (fabAdConfig != null) {
-+                Glide.with(fabAdView.getContext())
-+                        .load(fabAdConfig.getAvatar())
-+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-+                        .transform(new CircleTransform(fabAdView.getContext()))
-+                        .listener(new RequestListener<String, GlideDrawable>() {
-+                            @Override
-+                            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-+                                return false;
-+                            }
-+
-+                            @Override
-+                            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-+                                fabAdView.setTag(fabAdView.getId(), fabAdConfig);
-+                                AdSceneManager.Companion.getInstance().displayAd(AdSceneManager.AdScene.CONVERSATION_FAB);
-+                                return false;
-+                            }
-+                        }).into(fabAdView);
++            if (fabAdConfig != null && fabAdView != null) {
++//                Glide.with(fabAdView.getContext())
++//                        .load(fabAdConfig.getAvatar())
++//                        .diskCacheStrategy(DiskCacheStrategy.ALL)
++//                        .transform(new CircleTransform(fabAdView.getContext()))
++//                        .listener(new RequestListener<String, GlideDrawable>() {
++//                            @Override
++//                            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
++//                                return false;
++//                            }
++//
++//                            @Override
++//                            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
++//                                fabAdView.setTag(fabAdView.getId(), fabAdConfig);
++//                                AdSceneManager.Companion.getInstance().displayAd(AdSceneManager.AdScene.CONVERSATION_FAB);
++//                                return false;
++//                            }
++//                        })
++//                        .into(fabAdView);
 +            }
 +        });
      }
