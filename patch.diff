@@ -1,3 +1,24 @@
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate.kt
+index 2efae66..5537e1f 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate.kt
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/FloatingActionMenuUpdateDelegate.kt
+@@ -12,6 +12,7 @@ class FloatingActionMenuUpdateDelegate() {
+     fun onMenuExpand(view: View) {
+         val activity = view.findActivity() ?: return
+         val fab = activity.findViewById<View>(ResMgr.getId(FAB_AD))
++        if (fab.getTag(fab.id) == null) return
+         fab.visibility = View.GONE
+     }
+ 
+@@ -19,6 +20,7 @@ class FloatingActionMenuUpdateDelegate() {
+     fun onMenuCollapse(view: View) {
+         val activity = view.findActivity() ?: return
+         val fab = activity.findViewById<View>(ResMgr.getId(FAB_AD))
++        if (fab.getTag(fab.id) == null) return
+         fab.visibility = View.VISIBLE
+     }
+ }
+\ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
 index d4d7176..d21ade3 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
