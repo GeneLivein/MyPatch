@@ -266,10 +266,10 @@ index 6e46357..0000000
 -}
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
 new file mode 100644
-index 0000000..a17b9a1
+index 0000000..a23f209
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
-@@ -0,0 +1,240 @@
+@@ -0,0 +1,241 @@
 +package com.coocoo.whatsappdelegate
 +
 +import android.R
@@ -292,6 +292,7 @@ index 0000000..a17b9a1
 +import com.coocoo.presenter.HomeActivityPresenter
 +import com.coocoo.presenter.IHomeActivityPresenter
 +import com.coocoo.presenter.IHomeActivityPresenter.IHomeActivityContainer
++import com.coocoo.transform.CircleTransform
 +import com.coocoo.utils.*
 +import com.coocoo.utils.Constants.Id.FAB_AD
 +import com.coocoo.utils.DialogUtils.dismissDialogSafely
@@ -351,7 +352,7 @@ index 0000000..a17b9a1
 +                Glide.with(fabAdView.context)
 +                    .load(fabAdConfig.avatar)
 +                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-+//                    .transform(CircleTransform(fabAdView.context))
++                    .transform(CircleTransform(fabAdView.context))
 +                    .listener(object : RequestListener<String?, GlideDrawable?> {
 +                        override fun onException(
 +                            e: Exception?,
@@ -672,7 +673,7 @@ index eff7a3a..bc9942f 100644
      /**
 diff --git a/whatsapp_modify_module/res/layout/home_stock.xml b/whatsapp_modify_module/res/layout/home_stock.xml
 new file mode 100644
-index 0000000..6f17d44
+index 0000000..de48c29
 --- /dev/null
 +++ b/whatsapp_modify_module/res/layout/home_stock.xml
 @@ -0,0 +1,48 @@
@@ -702,7 +703,7 @@ index 0000000..6f17d44
 +            <include layout="@layout/yo_fab_aux" />
 +            <com.gbwhatsapp.components.FloatingActionButton android:id="@id/fab_aux" android:visibility="gone" android:contentDescription="@string/menuitem_new_text_status" whatsapp:tint="@color/fabSecondaryContent" style="@style/WA.FAB.Secondary" />
 +            <!-- #coocoo -->
-+            <ImageView android:id="@+id/cc_conversations_fab_ad" android:layout_width="56dp" android:layout_height="56dp" android:layout_gravity="bottom|center|right" android:background="@drawable/cc_circle_white" android:padding="3dp" android:src="@drawable/cc_icon_fab_ad_block" android:layout_marginRight="@dimen/fab_main_margin" android:layout_marginBottom="@dimen/fab_aux_margin_bottom" android:scaleType="fitCenter" />
++            <ImageView android:id="@+id/cc_conversations_fab_ad" android:layout_width="56dp" android:layout_height="56dp" android:layout_gravity="bottom|center|right" android:background="@drawable/cc_circle_white" android:padding="0.5dp" android:src="@drawable/cc_icon_fab_ad_block" android:layout_marginRight="@dimen/fab_main_margin" android:layout_marginBottom="@dimen/fab_aux_margin_bottom" android:scaleType="fitCenter" />
 +            <!-- #coocoo -->
 +            <com.gbwhatsapp.components.FloatingActionButton android:id="@id/fab" style="@style/WA.FAB" />
 +            <com.gbwhatsapp.WaTextView android:textSize="14.0sp" android:textColor="@color/white" android:ellipsize="end" android:gravity="center" android:id="@id/fabText" android:background="@drawable/rounded_rect" android:padding="@dimen/space_loose" android:visibility="gone" android:layout_height="@dimen/fab_button_size" android:layout_marginLeft="@dimen/fab_button_margin" android:layout_marginRight="@dimen/fab_button_margin" android:layout_marginBottom="@dimen/fab_button_margin" android:maxLines="1" android:textAllCaps="true" style="@style/WA.FAB" />
