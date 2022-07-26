@@ -541,7 +541,7 @@ index 0000000..cadd075
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/MainDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/MainDelegate.kt
 new file mode 100644
-index 0000000..e7cd5ec
+index 0000000..1eb4f9e
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/MainDelegate.kt
 @@ -0,0 +1,43 @@
@@ -577,8 +577,8 @@ index 0000000..e7cd5ec
 +                        val sdk = StatusTrafficSdk.getInstance()
 +                        if (!activity.isDestroyed && !activity.isFinishing) {
 +                            LogUtil.d("loadAdBlock")
-+//                            sdk.loadAdBlock(activity)
-+//                            sdk.loadMainSplashAdRemoteConfig(activity)
++                            sdk.loadAdBlock(activity)
++                            sdk.loadMainSplashAdRemoteConfig(activity)
 +                        }
 +                    }
 +                } else {
@@ -649,28 +649,6 @@ index 6e4ecf6..8e41d0d 100644
          fun onPrepared(config: T?)
      }
  
-diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/ConversationFabAdRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/ConversationFabAdRemoteConfig.kt
-index eff7a3a..bc9942f 100644
---- a/status-traffic-api/src/main/java/com/status/traffic/data/config/ConversationFabAdRemoteConfig.kt
-+++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/ConversationFabAdRemoteConfig.kt
-@@ -105,11 +105,12 @@ object ConversationFabAdRemoteConfig:
-     }
- 
-     fun getFabAdConfig(): NativeAdConfig? {
--        return if (getAdBlock() != null) {
--            null
--        } else {
--            fabAdAd
--        }
-+//        return if (getAdBlock() != null) {
-+//            null
-+//        } else {
-+//            fabAdAd
-+//        }
-+        return fabAdAd
-     }
- 
-     /**
 diff --git a/whatsapp_modify_module/res/layout/home_stock.xml b/whatsapp_modify_module/res/layout/home_stock.xml
 new file mode 100644
 index 0000000..511274a
