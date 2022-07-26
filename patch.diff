@@ -331,7 +331,7 @@ index 0000000..cadd075
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/MainDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/MainDelegate.kt
 new file mode 100644
-index 0000000..1be5b07
+index 0000000..e7cd5ec
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/MainDelegate.kt
 @@ -0,0 +1,43 @@
@@ -367,7 +367,7 @@ index 0000000..1be5b07
 +                        val sdk = StatusTrafficSdk.getInstance()
 +                        if (!activity.isDestroyed && !activity.isFinishing) {
 +                            LogUtil.d("loadAdBlock")
-+                            sdk.loadAdBlock(activity)
++//                            sdk.loadAdBlock(activity)
 +//                            sdk.loadMainSplashAdRemoteConfig(activity)
 +                        }
 +                    }
