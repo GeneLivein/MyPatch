@@ -222,7 +222,7 @@ index 00000000..75289422
 +class CallListBannerAdController: BaseBannerAdController()
 \ No newline at end of file
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
-index befc7a47..acb3733a 100644
+index befc7a47..9389c1c6 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 @@ -1,6 +1,7 @@
@@ -233,7 +233,7 @@ index befc7a47..acb3733a 100644
  import com.coocoo.utils.LogUtil
  import com.google.gson.Gson
  import com.google.gson.JsonArray
-@@ -140,8 +141,10 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
+@@ -140,13 +141,15 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
      }
  
      open suspend fun fetch(context: Context): T? = withContext(Dispatchers.IO) {
@@ -243,16 +243,16 @@ index befc7a47..acb3733a 100644
 +                Log.e("Gene", "2 fetch: $apiName")
                  StatusTrafficReporter.report(Constant.Report.ST_FETCH_CONF_START)
                  init(context)
-                 if (false == apiPref?.isNeedUpdate(apiName)) {
-@@ -163,6 +166,7 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
-                 }
+-                if (false == apiPref?.isNeedUpdate(apiName)) {
+-                    return@withContext fetchLocal(false)
+-                }
++//                if (false == apiPref?.isNeedUpdate(apiName)) {
++//                    return@withContext fetchLocal(false)
++//                }
  
-                 // TODO Need a better condition check.
-+                Log.e("Gene", "appFlavor: $appFlavor")
-                 if (appFlavor.isNullOrBlank()) {
-                     return@withContext null
-                 }
-@@ -178,7 +182,7 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
+                 apiQualifiedConfig = null
+                 apiRemoteConfig = null
+@@ -178,7 +181,7 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
                      AdCommonManager.getRAM(),
                      AdCommonManager.getROM(),
                      eTag)
@@ -261,7 +261,7 @@ index befc7a47..acb3733a 100644
                  val response = OkHttpHelper.getResponse(URL(apiUrl), headers)
  
                  if (response?.code == OkHttpHelper.HTTP_CODE_NOT_MODIFIED) {
-@@ -254,6 +258,7 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
+@@ -254,6 +257,7 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
      }
  
      suspend fun fetchLocal(isFromETag: Boolean) = withContext(Dispatchers.IO) {
