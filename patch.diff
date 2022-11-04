@@ -260,7 +260,7 @@ index 00000000..9dcc46ef
 +)
 diff --git a/whatsapp_modify_module/smali_classes2/X/1kY.1.smali b/whatsapp_modify_module/smali_classes2/X/1kY.1.smali
 new file mode 100644
-index 00000000..2cee55a3
+index 00000000..b0f0373e
 --- /dev/null
 +++ b/whatsapp_modify_module/smali_classes2/X/1kY.1.smali
 @@ -0,0 +1,543 @@
@@ -415,7 +415,7 @@ index 00000000..2cee55a3
 +
 +    if-eq v9, v0, :cond_0
 +#coocoo
-+    invoke-static {v9, v2}, CallHistoryDelegate;->getView(ILandroid/view/View;)Landroid/view/View;
++    invoke-static {v9, v2}, Lcom/coocoo/callhistoryCallHistoryDelegate;->getView(ILandroid/view/View;)Landroid/view/View;
 +    move-result v0
 +    if-eqz v0 :cond_continue
 +    return-object v0
