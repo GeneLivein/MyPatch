@@ -323,7 +323,7 @@ index 00000000..9dcc46ef
 +    val waterFall: ArrayList<AdsSDK>? = null,
 +)
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/util/OkHttpHelper.kt b/status-traffic-api/src/main/java/com/status/traffic/util/OkHttpHelper.kt
-index ba786df9..77469a91 100644
+index ba786df9..8ebd92c1 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/util/OkHttpHelper.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/util/OkHttpHelper.kt
 @@ -2,6 +2,7 @@ package com.status.traffic.util
@@ -348,7 +348,7 @@ index ba786df9..77469a91 100644
          try {
 -            val client = OkHttpClient()
 +            val client = OkHttpClient().apply {
-+                interceptors().add(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
++//                interceptors().add(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
 +            }
              val requestBuilder = Request.Builder().url(url)
              if (headers != null) {
