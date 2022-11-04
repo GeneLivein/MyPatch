@@ -267,7 +267,7 @@ index 00000000..9dcc46ef
 +)
 diff --git a/whatsapp_modify_module/smali_classes2/X/1kY.1.smali b/whatsapp_modify_module/smali_classes2/X/1kY.1.smali
 new file mode 100644
-index 00000000..9bfcda34
+index 00000000..537349e4
 --- /dev/null
 +++ b/whatsapp_modify_module/smali_classes2/X/1kY.1.smali
 @@ -0,0 +1,543 @@
@@ -422,7 +422,7 @@ index 00000000..9bfcda34
 +
 +    if-eq v9, v0, :cond_0
 +#coocoo
-+    invoke-static {v9, v2}, Lcom/coocoo/callhistoryCallHistoryDelegate;->getView(ILandroid/view/View;)Landroid/view/View;
++    invoke-static {v9, v2}, Lcom/coocoo/CallhistoryCallHistoryDelegate;->getView(ILandroid/view/View;)Landroid/view/View;
 +    move-result v0
 +    if-eqz v0, :cond_continue
 +    return-object v0
@@ -816,7 +816,7 @@ index 00000000..9bfcda34
 +.end method
 diff --git a/whatsapp_modify_module/smali_classes2/X/1kx.2.smali b/whatsapp_modify_module/smali_classes2/X/1kx.2.smali
 new file mode 100644
-index 00000000..dd27112f
+index 00000000..8ae75bec
 --- /dev/null
 +++ b/whatsapp_modify_module/smali_classes2/X/1kx.2.smali
 @@ -0,0 +1,654 @@
@@ -1433,7 +1433,7 @@ index 00000000..dd27112f
 +
 +    :goto_0
 +#coocoo
-+    invoke-static {v0}, Lcom/coocoo/callhistoryCallHistoryDelegate;->addCallListBannerItem(Ljava/util/ArrayList;)V
++    invoke-static {v0}, Lcom/coocoo/CallhistoryCallHistoryDelegate;->addCallListBannerItem(Ljava/util/ArrayList;)V
 +#coocoo
 +    iput-object v0, v2, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0f:Ljava/util/ArrayList;
 +
