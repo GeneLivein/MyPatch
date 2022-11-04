@@ -323,7 +323,7 @@ index 00000000..9dcc46ef
 +    val waterFall: ArrayList<AdsSDK>? = null,
 +)
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/util/OkHttpHelper.kt b/status-traffic-api/src/main/java/com/status/traffic/util/OkHttpHelper.kt
-index ba786df9..87b81a98 100644
+index ba786df9..77469a91 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/util/OkHttpHelper.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/util/OkHttpHelper.kt
 @@ -2,6 +2,7 @@ package com.status.traffic.util
@@ -342,7 +342,7 @@ index ba786df9..87b81a98 100644
  import java.io.BufferedInputStream
  import java.io.File
  import java.io.FileOutputStream
-@@ -93,12 +95,15 @@ object OkHttpHelper {
+@@ -93,18 +95,23 @@ object OkHttpHelper {
          headers: Headers? = null
      ): Response? {
          try {
@@ -359,6 +359,14 @@ index ba786df9..87b81a98 100644
              val response = client.newCall(request).execute() ?: return null
              val isSuccessful = response.isSuccessful
              val code = response.code()
+             val body = response.body()?.string()
+             return Response(isSuccessful, code, body, response.header(E_TAG))
+         } catch (e: Exception) {
++            Log.e("Gene", "getResponse exception")
++            e.printStackTrace()
+         }
+         return null
+     }
 diff --git a/whatsapp_modify_module/smali_classes2/X/1kY.1.smali b/whatsapp_modify_module/smali_classes2/X/1kY.1.smali
 new file mode 100644
 index 00000000..573208ab
