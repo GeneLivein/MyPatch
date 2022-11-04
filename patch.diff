@@ -110,10 +110,18 @@ index 00000000..e541785d
 +}
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
-index 60ca9443..fee1c84f 100644
+index 60ca9443..9be0e0a2 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
-@@ -372,6 +372,7 @@ class HomeActivityDelegate @SmaliInject constructor(private val homeActivity: Ho
+@@ -110,6 +110,7 @@ class HomeActivityDelegate @SmaliInject constructor(private val homeActivity: Ho
+             // load HomeTopBannerAd first, show HomeTopBannerAd if the view finish loaded
+             val sdk = StatusTrafficSdk.getInstance()
+             sdk.loadSdkHomeTopBannerAd(mHostActivity, Constant.BannerRequest.CREATE_REQUEST)
++            sdk.loadCallListBannerAd(mHostActivity)
+         }
+ 
+         HomeLifecycleAdManager.onCreate(mHostActivity, false)
+@@ -372,6 +373,7 @@ class HomeActivityDelegate @SmaliInject constructor(private val homeActivity: Ho
                  sdk.loadCallDestroyAd(mHostActivity)
                  sdk.loadFabBootEndAd(mHostActivity)
                  sdk.loadConversationRevokeAd(mHostActivity)
