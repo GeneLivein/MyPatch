@@ -222,7 +222,7 @@ index 00000000..75289422
 +class CallListBannerAdController: BaseBannerAdController()
 \ No newline at end of file
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
-index befc7a47..644af9fb 100644
+index befc7a47..d3b46856 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 @@ -1,6 +1,7 @@
@@ -244,7 +244,15 @@ index befc7a47..644af9fb 100644
                  StatusTrafficReporter.report(Constant.Report.ST_FETCH_CONF_START)
                  init(context)
                  if (false == apiPref?.isNeedUpdate(apiName)) {
-@@ -178,7 +181,7 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
+@@ -163,6 +166,7 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
+                 }
+ 
+                 // TODO Need a better condition check.
++                Log.e("Gene", "appFlavor: $appFlavor")
+                 if (appFlavor.isNullOrBlank()) {
+                     return@withContext null
+                 }
+@@ -178,7 +182,7 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
                      AdCommonManager.getRAM(),
                      AdCommonManager.getROM(),
                      eTag)
