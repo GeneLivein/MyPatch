@@ -32,12 +32,13 @@ index 6859204e..f4b05a56 100644
          val c102d: cc_0m6 = componentContainer.AN4.get() as cc_0m6?
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 new file mode 100644
-index 00000000..c503c5a1
+index 00000000..62dcb689
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
-@@ -0,0 +1,30 @@
+@@ -0,0 +1,37 @@
 +package com.coocoo.callhistory
 +
++import X.cc_5WG
 +import android.view.Gravity
 +import android.view.View
 +import android.view.ViewGroup
@@ -64,6 +65,12 @@ index 00000000..c503c5a1
 +        } else {
 +            null
 +        }
++    }
++
++    @JvmStatic
++    @SmaliInject
++    fun addCallListBannerItem(arr: ArrayList<cc_5WG>) {
++        arr.add(CallHistoryItem())
 +    }
 +}
 \ No newline at end of file
@@ -809,7 +816,7 @@ index 00000000..9bfcda34
 +.end method
 diff --git a/whatsapp_modify_module/smali_classes2/X/1kx.2.smali b/whatsapp_modify_module/smali_classes2/X/1kx.2.smali
 new file mode 100644
-index 00000000..5e62d3c5
+index 00000000..dd27112f
 --- /dev/null
 +++ b/whatsapp_modify_module/smali_classes2/X/1kx.2.smali
 @@ -0,0 +1,654 @@
@@ -1426,7 +1433,7 @@ index 00000000..5e62d3c5
 +
 +    :goto_0
 +#coocoo
-+    invoke-static {v0}, Lcom/coocoo/CooCoo;->traceLog4(Ljava/util/ArrayList;)V
++    invoke-static {v0}, Lcom/coocoo/callhistoryCallHistoryDelegate;->addCallListBannerItem(Ljava/util/ArrayList;)V
 +#coocoo
 +    iput-object v0, v2, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0f:Ljava/util/ArrayList;
 +
