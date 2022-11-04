@@ -274,10 +274,18 @@ index 00000000..9dcc46ef
 +    val waterFall: ArrayList<AdsSDK>? = null,
 +)
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/util/OkHttpHelper.kt b/status-traffic-api/src/main/java/com/status/traffic/util/OkHttpHelper.kt
-index ba786df9..36f91110 100644
+index ba786df9..87b81a98 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/util/OkHttpHelper.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/util/OkHttpHelper.kt
-@@ -9,6 +9,7 @@ import com.status.traffic.AdCommonManager
+@@ -2,6 +2,7 @@ package com.status.traffic.util
+ 
+ import android.os.Build
+ import android.text.TextUtils
++import android.util.Log
+ import android.webkit.URLUtil
+ import com.coocoo.utils.LogUtil
+ import com.coocoo.utils.SystemUtil
+@@ -9,6 +10,7 @@ import com.status.traffic.AdCommonManager
  import com.status.traffic.Constant
  import com.status.traffic.report.StatusTrafficReporter
  import okhttp3.*
@@ -285,7 +293,7 @@ index ba786df9..36f91110 100644
  import java.io.BufferedInputStream
  import java.io.File
  import java.io.FileOutputStream
-@@ -93,7 +94,9 @@ object OkHttpHelper {
+@@ -93,12 +95,15 @@ object OkHttpHelper {
          headers: Headers? = null
      ): Response? {
          try {
@@ -296,6 +304,12 @@ index ba786df9..36f91110 100644
              val requestBuilder = Request.Builder().url(url)
              if (headers != null) {
                  requestBuilder.headers(headers)
+             }
+             val request = requestBuilder.build()
++            Log.e("Gene", request.toString())
+             val response = client.newCall(request).execute() ?: return null
+             val isSuccessful = response.isSuccessful
+             val code = response.code()
 diff --git a/whatsapp_modify_module/smali_classes2/X/1kY.1.smali b/whatsapp_modify_module/smali_classes2/X/1kY.1.smali
 new file mode 100644
 index 00000000..573208ab
