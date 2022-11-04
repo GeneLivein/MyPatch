@@ -222,7 +222,7 @@ index 00000000..75289422
 +class CallListBannerAdController: BaseBannerAdController()
 \ No newline at end of file
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
-index befc7a47..d16ccb18 100644
+index befc7a47..acb3733a 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 @@ -1,6 +1,7 @@
@@ -265,7 +265,7 @@ index befc7a47..d16ccb18 100644
      }
  
      suspend fun fetchLocal(isFromETag: Boolean) = withContext(Dispatchers.IO) {
-+        Log.e("Gene", "fetchLocal: $apiName")z
++        Log.e("Gene", "fetchLocal: $apiName")
          val jsonCache = apiPref?.getConfigJson(apiName)
          val adsApi = parserAdsApi(jsonCache)
          if (adsApi != null) {
