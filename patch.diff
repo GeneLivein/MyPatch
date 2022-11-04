@@ -1,79 +1,1478 @@
-diff --git a/app/build.gradle b/app/build.gradle
-index 589ab98c..3c300024 100644
---- a/app/build.gradle
-+++ b/app/build.gradle
-@@ -57,8 +57,8 @@ android {
- //                || cur_flavor == "YoUnclone"
- //                || cur_flavor == "GbUnclone"
- //                || cur_flavor == "WhatsappPlus") {
--            rootProject.ext.version_name = '"19.41.4"' // HeyMods
--            rootProject.ext.version_code = "1941" // HeyMods
-+            rootProject.ext.version_name = '"19.41.5"' // HeyMods
-+            rootProject.ext.version_code = "11941509" // HeyMods
- //        } else if (cur_flavor == "FM") {
- //            rootProject.ext.version_name = '"10.1.0"'
- //            rootProject.ext.version_code = "1001000"
-@@ -99,8 +99,8 @@ android {
- //            rootProject.ext.version_name = '"0.20.197"'
- //            rootProject.ext.version_code = "20197"
- //        }
--            rootProject.ext.version_name = '"19.41.4"' // HeyMods
--            rootProject.ext.version_code = "1941" // HeyMods
-+            rootProject.ext.version_name = '"19.41.5"' // HeyMods
-+            rootProject.ext.version_code = "11941509" // HeyMods
+diff --git a/app/src/main/java/X/cc_5WG.java b/app/src/main/java/X/cc_5WG.java
+new file mode 100644
+index 00000000..886a73de
+--- /dev/null
++++ b/app/src/main/java/X/cc_5WG.java
+@@ -0,0 +1,9 @@
++package X;
++
++import com.whatsapp.jid.UserJid;
++
++public interface cc_5WG {
++    int ADd();
++
++    UserJid ADh();
++}
+diff --git a/app/src/main/java/com/coocoo/CooCoo.kt b/app/src/main/java/com/coocoo/CooCoo.kt
+index 6859204e..f4b05a56 100644
+--- a/app/src/main/java/com/coocoo/CooCoo.kt
++++ b/app/src/main/java/com/coocoo/CooCoo.kt
+@@ -69,6 +69,12 @@ object CooCoo {
+         Log.e(TAG, "-----------------3---------------- // value : $value")
      }
- }
  
-diff --git a/app/build.gradle.bak b/app/build.gradle.bak
-index 58a79b39..3c300024 100644
---- a/app/build.gradle.bak
-+++ b/app/build.gradle.bak
-@@ -57,8 +57,8 @@ android {
- //                || cur_flavor == "YoUnclone"
- //                || cur_flavor == "GbUnclone"
- //                || cur_flavor == "WhatsappPlus") {
--            rootProject.ext.version_name = '"19.41.4"' // HeyMods
--            rootProject.ext.version_code = "1941" // HeyMods
-+            rootProject.ext.version_name = '"19.41.5"' // HeyMods
-+            rootProject.ext.version_code = "11941509" // HeyMods
- //        } else if (cur_flavor == "FM") {
- //            rootProject.ext.version_name = '"10.1.0"'
- //            rootProject.ext.version_code = "1001000"
-@@ -99,8 +99,8 @@ android {
- //            rootProject.ext.version_name = '"0.20.197"'
- //            rootProject.ext.version_code = "20197"
- //        }
--            rootProject.ext.version_name = '"19.41.4"' // HeyMods
--            rootProject.ext.version_code = "1941" // HeyMods
-+            rootProject.ext.version_name = '"19.41.5"' // HeyMods
-+            rootProject.ext.version_code = "11941509" // HeyMods
-     }
- }
- 
-@@ -144,4 +144,5 @@ dependencies {
-     implementation 'androidx.browser:browser:1.3.0'
-     // get gaid for max
-     implementation 'com.google.android.gms:play-services-ads-identifier:17.0.0'
-+    compileOnly 'com.airbnb.android:lottie:5.2.0'
- }
++    @JvmStatic
++    fun traceLog4(value: ArrayList<*>) {
++        Log.e(TAG, "size: ${value.size}")
++        Log.e(TAG, "-----------------4---------------- // value : ${value[0]}")
++    }
++
+     @JvmStatic
+     fun getNightMode(): Boolean {
+         val c102d: cc_0m6 = componentContainer.AN4.get() as cc_0m6?
+diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
+new file mode 100644
+index 00000000..c503c5a1
+--- /dev/null
++++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
+@@ -0,0 +1,30 @@
++package com.coocoo.callhistory
++
++import android.view.Gravity
++import android.view.View
++import android.view.ViewGroup
++import android.view.ViewParent
++import android.widget.RelativeLayout
++import com.coocoo.annotation.SmaliInject
++
++object CallHistoryDelegate {
++    @JvmStatic
++    @SmaliInject
++    fun getView(viewType: Int, view: View?, parent: ViewGroup): View? {
++        return if (viewType == CallHistoryItem.VIEW_TYPE) {
++            if (view == null) {
++                val banner = RelativeLayout(parent.context).apply {
++                    layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200)
++                    gravity = Gravity.CENTER
++                }
++                val item = CallHistoryItem()
++                item.bindView(banner)
++                banner
++            } else {
++                view
++            }
++        } else {
++            null
++        }
++    }
++}
 \ No newline at end of file
-diff --git a/whatsapp_modify_module/AndroidManifest.xml b/whatsapp_modify_module/AndroidManifest.xml
-index 42a4cf9b..19f49df7 100644
---- a/whatsapp_modify_module/AndroidManifest.xml
-+++ b/whatsapp_modify_module/AndroidManifest.xml
-@@ -1,5 +1,5 @@
- <?xml version='1.0' encoding='UTF-8'?>
--<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" android:compileSdkVersion="23" android:compileSdkVersionCodename="6.0-2438415" package="com.gbwhatsapp" platformBuildVersionCode="31" platformBuildVersionName="12" android:versionCode="1941" android:versionName="19.41.4">
-+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" android:compileSdkVersion="23" android:compileSdkVersionCodename="6.0-2438415" package="com.gbwhatsapp" platformBuildVersionCode="31" platformBuildVersionName="12" android:versionCode="11941509" android:versionName="19.41.5">
-     <uses-feature android:name="android.hardware.bluetooth" android:required="false"/>
-     <uses-feature android:name="android.hardware.location" android:required="false"/>
-     <uses-feature android:name="android.hardware.location.network" android:required="false"/>
+diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryItem.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryItem.kt
+new file mode 100644
+index 00000000..e541785d
+--- /dev/null
++++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryItem.kt
+@@ -0,0 +1,28 @@
++package com.coocoo.callhistory
++
++import X.cc_5WG
++import android.view.View
++import android.widget.RelativeLayout
++import com.status.traffic.ads.AdSdkManager
++import com.whatsapp.jid.UserJid
++
++class CallHistoryItem : cc_5WG {
++
++    private val sdk: AdSdkManager = AdSdkManager
++
++    override fun ADd(): Int {
++        return VIEW_TYPE
++    }
++
++    override fun ADh(): UserJid? {
++        return null
++    }
++
++    companion object {
++        const val VIEW_TYPE = 4;
++    }
++
++    fun bindView(targetView: RelativeLayout) {
++        sdk.showCallListBannerAd(targetView)
++    }
++}
+\ No newline at end of file
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
+index 60ca9443..fee1c84f 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
+@@ -372,6 +372,7 @@ class HomeActivityDelegate @SmaliInject constructor(private val homeActivity: Ho
+                 sdk.loadCallDestroyAd(mHostActivity)
+                 sdk.loadFabBootEndAd(mHostActivity)
+                 sdk.loadConversationRevokeAd(mHostActivity)
++                sdk.loadCallListBannerAd(mHostActivity)
+                 sdk.setPushAppInterstitialListener { interstitialAd: PushAppConfig? ->
+                     sdk.launchPushAppInterstitialAdActivity(mHostActivity, interstitialAd)
+                     if (homeActivity != null) {
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/Constant.kt b/status-traffic-api/src/main/java/com/status/traffic/Constant.kt
+index ed5df496..0307a489 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/Constant.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/Constant.kt
+@@ -53,6 +53,7 @@ object Constant {
+             const val CALL_DESTROY_AD = "/CallDestroyAd"
+             const val FAB_BOOT_END_AD = "/FabBootEndAd"
+             const val CHATWINDOW_TOP_BANNER_AD = "/ChatWindowTopBannerAd"
++            const val CALL_LIST_BANNER_AD = "/CallListBannerAd"
+ 
+             const val STATUS_TRAFFIC_MAXIMUM_DATA_VOLUME = 2
+             const val STATUS_TRAFFIC_A_PIECE_OF_DATA = 1
+@@ -431,7 +432,7 @@ object Constant {
+     }
+ 
+     object BannerRequest {
+-        const val DEFAULT_REQUEST = 0
++        const val DEFAULT_REQUEST = 0 // onResume
+         const val CREATE_REQUEST = 1
+         const val START_REQUEST = 2
+     }
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/StatusTrafficSdk.kt b/status-traffic-api/src/main/java/com/status/traffic/StatusTrafficSdk.kt
+index 4493eb03..6423bae9 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/StatusTrafficSdk.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/StatusTrafficSdk.kt
+@@ -341,6 +341,10 @@ class StatusTrafficSdk private constructor() {
+         AdSdkManager.loadFabBootEndAd(activity, configs)
+     }
+ 
++    fun loadCallListBannerAd(activity: Context) {
++        ApiRemoteConfigService.init(CallListBannerAdRemoteConfig, activity)
++    }
++
+     fun isStatusSdkBannerAdReady(): Boolean {
+         return AdSdkManager.isStatusSdkBannerAdReady()
+     }
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
+index 81259243..2b07728b 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
+@@ -11,6 +11,7 @@ import com.status.traffic.data.config.MainSplashAdRemoteConfig
+ import com.status.traffic.data.config.StatusSendAdRemoteConfig
+ import com.status.traffic.data.enums.SDK
+ import com.status.traffic.data.vo.AdsSDK
++import com.status.traffic.data.vo.CallListBannerAdConfig
+ import com.status.traffic.report.AdsFillReporter
+ import kotlinx.coroutines.CoroutineScope
+ import kotlinx.coroutines.Job
+@@ -31,6 +32,7 @@ object AdSdkManager {
+     private var callDestroyAd: CallDestroyAdController? = null
+     private var fabBootEndAd:FabBootEndAdController?=null
+     private var chatWindowTopBannerAd: ChatWindowTopBannerAdController? = null
++    private var callListBannerAdController: CallListBannerAdController? = null
+ 
+     private val scope = CoroutineScope(Job())
+     private var sdkController: ISdkController? = null
+@@ -331,6 +333,15 @@ object AdSdkManager {
+         })
+     }
+ 
++    fun loadCallListBannerAd(activity: Activity, configs: ArrayList<AdsSDK>,) {
++        if (configs.isEmpty()) return
++        callListBannerAdController?.loadAd(activity, configs)
++    }
++
++    fun showCallListBannerAd(container: RelativeLayout, onClickAd: (() -> Unit)? = null) {
++        callListBannerAdController?.getAd()?.showAd(container, onClickAd)
++    }
++
+     fun release() {
+         scope.coroutineContext.cancelChildren()
+         statusDestroyAd?.release()
+@@ -347,6 +358,8 @@ object AdSdkManager {
+         conversationBannerAd = null
+         statusSendAd?.release()
+         statusSendAd = null
++        callListBannerAdController?.release()
++        callListBannerAdController = null
+     }
+ 
+     // check single sdk can be enabled
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/CallListBannerAdController.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/CallListBannerAdController.kt
+new file mode 100644
+index 00000000..75289422
+--- /dev/null
++++ b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/CallListBannerAdController.kt
+@@ -0,0 +1,3 @@
++package com.status.traffic.ads.ad
++
++class CallListBannerAdController: BaseBannerAdController()
+\ No newline at end of file
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt
+new file mode 100644
+index 00000000..4b3b7b21
+--- /dev/null
++++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt
+@@ -0,0 +1,28 @@
++package com.status.traffic.data.config
++
++import com.google.gson.JsonArray
++import com.google.gson.JsonObject
++import com.status.traffic.Constant.Api.Config.CALL_LIST_BANNER_AD
++import com.status.traffic.data.vo.CallListBannerAdConfig
++import com.status.traffic.data.vo.HomeTopBannerConfig
++
++object CallListBannerAdRemoteConfig : BaseAdRemoteConfig<List<CallListBannerAdConfig>, Void>(CALL_LIST_BANNER_AD) {
++    override fun parserAdsInfo(json: JsonArray?): List<CallListBannerAdConfig>? {
++        try {
++            return getGson().fromJson(json, Array<CallListBannerAdConfig>::class.java).toList()
++        } catch (e: Exception) {
++        }
++        return null
++    }
++
++    override fun parserCommon(json: JsonObject?): Void? {
++        return null
++    }
++
++    override suspend fun preDownloadApk() {
++    }
++
++    fun getCallListBannerAd(): CallListBannerAdConfig? {
++        return apiRemoteConfig?.get(0)
++    }
++}
+\ No newline at end of file
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/vo/CallListBannerAdConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/vo/CallListBannerAdConfig.kt
+new file mode 100644
+index 00000000..9dcc46ef
+--- /dev/null
++++ b/status-traffic-api/src/main/java/com/status/traffic/data/vo/CallListBannerAdConfig.kt
+@@ -0,0 +1,12 @@
++package com.status.traffic.data.vo
++
++import com.google.gson.annotations.SerializedName
++
++data class CallListBannerAdConfig(
++    @SerializedName("key")
++    val key: String? = null,
++    @SerializedName("type")
++    val type: String? = null,
++    @SerializedName("water_fall")
++    val waterFall: ArrayList<AdsSDK>? = null,
++)
+diff --git a/whatsapp_modify_module/smali_classes2/X/1kY.1.smali b/whatsapp_modify_module/smali_classes2/X/1kY.1.smali
+new file mode 100644
+index 00000000..68df0a1e
+--- /dev/null
++++ b/whatsapp_modify_module/smali_classes2/X/1kY.1.smali
+@@ -0,0 +1,543 @@
++.class public LX/1kY;
++.super Landroid/widget/BaseAdapter;
++.source ""
++
++# interfaces
++.implements Landroid/widget/Filterable;
++
++
++# instance fields
++.field public A00:Landroid/widget/Filter;
++
++.field public final synthetic A01:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++
++
++# direct methods
++.method public constructor <init>(Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;)V
++    .locals 0
++
++    iput-object p1, p0, LX/1kY;->A01:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++
++    invoke-direct {p0}, Landroid/widget/BaseAdapter;-><init>()V
++
++    return-void
++.end method
++
++
++# virtual methods
++.method public getCount()I
++    .locals 1
++
++    iget-object v0, p0, LX/1kY;->A01:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++
++    iget-object v0, v0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0f:Ljava/util/ArrayList;
++
++    invoke-virtual {v0}, Ljava/util/AbstractCollection;->size()I
++
++    move-result v0
++
++    return v0
++.end method
++
++.method public getFilter()Landroid/widget/Filter;
++    .locals 2
++
++    iget-object v1, p0, LX/1kY;->A00:Landroid/widget/Filter;
++
++    if-nez v1, :cond_0
++
++    iget-object v0, p0, LX/1kY;->A01:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++
++    new-instance v1, LX/1kx;
++
++    invoke-direct {v1, v0}, LX/1kx;-><init>(Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;)V
++
++    iput-object v1, p0, LX/1kY;->A00:Landroid/widget/Filter;
++
++    :cond_0
++    return-object v1
++.end method
++
++.method public bridge synthetic getItem(I)Ljava/lang/Object;
++    .locals 1
++
++    iget-object v0, p0, LX/1kY;->A01:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++
++    iget-object v0, v0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0f:Ljava/util/ArrayList;
++
++    invoke-virtual {v0, p1}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
++
++    move-result-object v0
++
++    return-object v0
++.end method
++
++.method public getItemId(I)J
++    .locals 2
++
++    iget-object v0, p0, LX/1kY;->A01:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++
++    iget-object v0, v0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0f:Ljava/util/ArrayList;
++
++    invoke-virtual {v0, p1}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
++
++    move-result-object v0
++
++    invoke-virtual {v0}, Ljava/lang/Object;->hashCode()I
++
++    move-result v0
++
++    int-to-long v0, v0
++
++    return-wide v0
++.end method
++
++.method public getItemViewType(I)I
++    .locals 1
++
++    iget-object v0, p0, LX/1kY;->A01:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++
++    iget-object v0, v0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0f:Ljava/util/ArrayList;
++
++    invoke-virtual {v0, p1}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/5WG;
++
++    invoke-interface {v0}, LX/5WG;->ADd()I
++
++    move-result v0
++
++    return v0
++.end method
++
++.method public getView(ILandroid/view/View;Landroid/view/ViewGroup;)Landroid/view/View;
++    .locals 32
++
++    move-object/from16 v2, p2
++
++    move-object/from16 v8, p0
++
++    iget-object v4, v8, LX/1kY;->A01:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++
++    iget-object v0, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0f:Ljava/util/ArrayList;
++
++    move/from16 v1, p1
++
++    invoke-virtual {v0, v1}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
++
++    move-result-object v3
++
++    check-cast v3, LX/5WG;
++
++    invoke-interface {v3}, LX/5WG;->ADd()I
++
++    move-result v9
++
++    const/4 v5, 0x0
++
++    move-object/from16 v6, p3
++
++    if-eqz v9, :cond_7
++
++    const/4 v7, 0x1
++
++    if-eq v9, v7, :cond_0
++
++    const/4 v0, 0x2
++
++    if-eq v9, v0, :cond_0
++#coocoo
++    invoke-static {v9, v2} CallHistoryDelegate;->getView(ILandroid/view/View;)Landroid/view/View;
++    move-result v0
++    if-eqz v0 :cond_continue
++    return-object v0
++    :cond_continue
++#coocoo
++    const/4 v0, 0x3
++
++    if-eq v9, v0, :cond_4
++
++    const-string v0, "callsfragment/callsadapter/getview Unknown list item type "
++
++    invoke-static {v0}, Lcom/whatsapp/util/Log;->e(Ljava/lang/String;)V
++
++    const-string v0, "Unknown list item type"
++
++    invoke-static {v0, v5}, LX/009;->A0A(Ljava/lang/String;Z)V
++
++    const/4 v2, 0x0
++
++    return-object v2
++
++    :cond_0
++    if-nez p2, :cond_3
++
++    iget-object v2, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0P:LX/0m9;
++
++    const/16 v0, 0x16f
++
++    invoke-virtual {v2, v0}, LX/0m9;->A07(I)Z
++
++    move-result v0
++
++    const v2, 0x7f0d00cc
++
++    if-eqz v0, :cond_1
++
++    const v2, 0x7f0d00cb
++
++    :cond_1
++    invoke-virtual {v4}, LX/01E;->A04()Landroid/view/LayoutInflater;
++
++    move-result-object v0
++
++    invoke-virtual {v0, v2, v6, v5}, Landroid/view/LayoutInflater;->inflate(ILandroid/view/ViewGroup;Z)Landroid/view/View;
++
++    move-result-object v2
++
++    if-ne v9, v7, :cond_2
++
++    iget-object v11, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0P:LX/0m9;
++
++    iget-object v10, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0Z:LX/19Z;
++
++    iget-object v9, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0B:LX/0nR;
++
++    iget-object v7, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0D:LX/0nY;
++
++    iget-object v6, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0T:LX/12F;
++
++    iget-object v0, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0F:LX/1J1;
++
++    new-instance v5, LX/2w7;
++
++    move-object v12, v5
++
++    move-object v13, v2
++
++    move-object v14, v4
++
++    move-object v15, v9
++
++    move-object/from16 v16, v7
++
++    move-object/from16 v17, v0
++
++    move-object/from16 v18, v11
++
++    move-object/from16 v19, v6
++
++    move-object/from16 v20, v10
++
++    invoke-direct/range {v12 .. v20}, LX/2w7;-><init>(Landroid/view/View;Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;LX/0nR;LX/0nY;LX/1J1;LX/0m9;LX/12F;LX/19Z;)V
++
++    :goto_0
++    invoke-virtual {v2, v5}, Landroid/view/View;->setTag(Ljava/lang/Object;)V
++
++    :goto_1
++    new-instance v0, LX/2eZ;
++
++    invoke-direct {v0, v8, v3}, LX/2eZ;-><init>(LX/1kY;LX/5WG;)V
++
++    invoke-static {v2, v0}, LX/028;->A0g(Landroid/view/View;LX/04v;)V
++
++    iput-object v3, v5, LX/4VA;->A00:LX/5WG;
++
++    goto/16 :goto_3
++
++    :cond_2
++    iget-object v0, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0J:LX/0m7;
++
++    move-object/from16 v25, v0
++
++    iget-object v0, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0P:LX/0m9;
++
++    move-object/from16 v28, v0
++
++    iget-object v0, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A05:LX/0nH;
++
++    move-object/from16 v18, v0
++
++    iget-object v15, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0O:LX/0x7;
++
++    iget-object v14, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0Z:LX/19Z;
++
++    iget-object v13, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0B:LX/0nR;
++
++    iget-object v12, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0I:LX/01d;
++
++    iget-object v11, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0D:LX/0nY;
++
++    iget-object v10, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0K:LX/018;
++
++    iget-object v9, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0Q:LX/0wC;
++
++    iget-object v7, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0T:LX/12F;
++
++    iget-object v6, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0F:LX/1J1;
++
++    iget-object v0, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0E:LX/1J1;
++
++    new-instance v5, LX/2w9;
++
++    move-object/from16 v16, v5
++
++    move-object/from16 v17, v2
++
++    move-object/from16 v19, v4
++
++    move-object/from16 v20, v13
++
++    move-object/from16 v21, v11
++
++    move-object/from16 v22, v6
++
++    move-object/from16 v23, v0
++
++    move-object/from16 v24, v12
++
++    move-object/from16 v26, v10
++
++    move-object/from16 v27, v15
++
++    move-object/from16 v29, v9
++
++    move-object/from16 v30, v7
++
++    move-object/from16 v31, v14
++
++    invoke-direct/range {v16 .. v31}, LX/2w9;-><init>(Landroid/view/View;LX/0nH;Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;LX/0nR;LX/0nY;LX/1J1;LX/1J1;LX/01d;LX/0m7;LX/018;LX/0x7;LX/0m9;LX/0wC;LX/12F;LX/19Z;)V
++
++    goto :goto_0
++
++    :cond_3
++    invoke-virtual {v2}, Landroid/view/View;->getTag()Ljava/lang/Object;
++
++    move-result-object v5
++
++    check-cast v5, LX/4VA;
++
++    goto :goto_1
++
++    :cond_4
++    if-nez p2, :cond_6
++
++    invoke-virtual {v4}, LX/01E;->A04()Landroid/view/LayoutInflater;
++
++    move-result-object v2
++
++    const v0, 0x7f0d031a
++
++    invoke-virtual {v2, v0, v6, v5}, Landroid/view/LayoutInflater;->inflate(ILandroid/view/ViewGroup;Z)Landroid/view/View;
++
++    move-result-object v2
++
++    iget-object v0, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0P:LX/0m9;
++
++    move-object/from16 v17, v0
++
++    iget-object v0, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A05:LX/0nH;
++
++    move-object/from16 v18, v0
++
++    iget-object v0, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0O:LX/0x7;
++
++    move-object/from16 v16, v0
++
++    iget-object v15, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0Z:LX/19Z;
++
++    iget-object v14, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0K:LX/018;
++
++    iget-object v13, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0B:LX/0nR;
++
++    iget-object v12, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0D:LX/0nY;
++
++    iget-object v11, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0Q:LX/0wC;
++
++    iget-object v10, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0T:LX/12F;
++
++    iget-object v9, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0M:LX/0nX;
++
++    iget-object v7, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0E:LX/1J1;
++
++    iget-object v6, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0F:LX/1J1;
++
++    iget-object v0, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A04:LX/0nT;
++
++    new-instance v5, LX/2w8;
++
++    move-object/from16 v25, v9
++
++    move-object/from16 v26, v16
++
++    move-object/from16 v27, v17
++
++    move-object/from16 v28, v11
++
++    move-object/from16 v29, v10
++
++    move-object/from16 v30, v15
++
++    move-object v15, v5
++
++    move-object/from16 v16, v2
++
++    move-object/from16 v17, v0
++
++    move-object/from16 v19, v4
++
++    move-object/from16 v20, v13
++
++    move-object/from16 v21, v12
++
++    move-object/from16 v22, v7
++
++    move-object/from16 v23, v6
++
++    move-object/from16 v24, v14
++
++    invoke-direct/range {v15 .. v30}, LX/2w8;-><init>(Landroid/view/View;LX/0nT;LX/0nH;Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;LX/0nR;LX/0nY;LX/1J1;LX/1J1;LX/018;LX/0nX;LX/0x7;LX/0m9;LX/0wC;LX/12F;LX/19Z;)V
++
++    invoke-virtual {v2, v5}, Landroid/view/View;->setTag(Ljava/lang/Object;)V
++
++    :goto_2
++    iput-object v3, v5, LX/4VA;->A00:LX/5WG;
++
++    add-int/lit8 v3, p1, 0x1
++
++    invoke-virtual {v8}, LX/1kY;->getCount()I
++
++    move-result v0
++
++    if-ge v3, v0, :cond_5
++
++    iget-object v0, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0f:Ljava/util/ArrayList;
++
++    invoke-virtual {v0, v3}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/5WG;
++
++    if-eqz v0, :cond_5
++
++    invoke-interface {v0}, LX/5WG;->ADd()I
++
++    move-result v3
++
++    const/4 v0, 0x3
++
++    if-ne v3, v0, :cond_5
++
++    invoke-virtual {v4}, LX/01E;->A02()Landroid/content/res/Resources;
++
++    move-result-object v3
++
++    const v0, 0x7f07040b
++
++    invoke-virtual {v3, v0}, Landroid/content/res/Resources;->getDimensionPixelSize(I)I
++
++    move-result v11
++
++    const v0, 0x7f0a02b4
++
++    invoke-static {v2, v0}, LX/028;->A0D(Landroid/view/View;I)Landroid/view/View;
++
++    move-result-object v6
++
++    invoke-virtual {v6}, Landroid/view/View;->getLayoutParams()Landroid/view/ViewGroup$LayoutParams;
++
++    move-result-object v0
++
++    check-cast v0, Landroid/view/ViewGroup$MarginLayoutParams;
++
++    iget-object v7, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0K:LX/018;
++
++    iget v8, v0, Landroid/view/ViewGroup$MarginLayoutParams;->leftMargin:I
++
++    iget v9, v0, Landroid/view/ViewGroup$MarginLayoutParams;->topMargin:I
++
++    iget v10, v0, Landroid/view/ViewGroup$MarginLayoutParams;->rightMargin:I
++
++    invoke-static/range {v6 .. v11}, LX/1w9;->A09(Landroid/view/View;LX/018;IIII)V
++
++    :cond_5
++    :goto_3
++    invoke-virtual {v5, v1}, LX/4VA;->A00(I)V
++
++    return-object v2
++
++    :cond_6
++    invoke-virtual {v2}, Landroid/view/View;->getTag()Ljava/lang/Object;
++
++    move-result-object v5
++
++    check-cast v5, LX/4VA;
++
++    goto :goto_2
++
++    :cond_7
++    if-nez p2, :cond_8
++
++    invoke-virtual {v4}, LX/01E;->A04()Landroid/view/LayoutInflater;
++
++    move-result-object v1
++
++    const v0, 0x7f0d00cd
++
++    invoke-virtual {v1, v0, v6, v5}, Landroid/view/LayoutInflater;->inflate(ILandroid/view/ViewGroup;Z)Landroid/view/View;
++
++    move-result-object v2
++
++    invoke-virtual {v2, v5}, Landroid/view/View;->setEnabled(Z)V
++
++    :cond_8
++    invoke-virtual {v2}, Landroid/view/View;->getLayoutParams()Landroid/view/ViewGroup$LayoutParams;
++
++    move-result-object v1
++
++    check-cast v1, Landroid/widget/AbsListView$LayoutParams;
++
++    check-cast v3, LX/54w;
++
++    const/4 v0, -0x1
++
++    iput v0, v1, Landroid/widget/AbsListView$LayoutParams;->height:I
++
++    invoke-virtual {v2, v1}, Landroid/view/View;->setLayoutParams(Landroid/view/ViewGroup$LayoutParams;)V
++
++    const v0, 0x7f0a11e9
++
++    invoke-virtual {v2, v0}, Landroid/view/View;->findViewById(I)Landroid/view/View;
++
++    move-result-object v1
++
++    check-cast v1, Landroid/widget/TextView;
++
++    invoke-static {v1}, LX/1Hw;->A06(Landroid/widget/TextView;)V
++
++    iget-object v0, v3, LX/54w;->A00:Ljava/lang/String;
++
++    invoke-virtual {v1, v0}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
++
++    return-object v2
++.end method
++
++.method public getViewTypeCount()I
++    .locals 1
++#coocoo
++    #const/4 v0, 0x4
++    const/4 v0, 0x5
++#coocoo
++    return v0
++.end method
++
++.method public hasStableIds()Z
++    .locals 1
++
++    const/4 v0, 0x1
++
++    return v0
++.end method
+diff --git a/whatsapp_modify_module/smali_classes2/X/1kx.2.smali b/whatsapp_modify_module/smali_classes2/X/1kx.2.smali
+new file mode 100644
+index 00000000..5e62d3c5
+--- /dev/null
++++ b/whatsapp_modify_module/smali_classes2/X/1kx.2.smali
+@@ -0,0 +1,654 @@
++.class public LX/1kx;
++.super Landroid/widget/Filter;
++.source ""
++
++
++# instance fields
++.field public A00:Ljava/util/ArrayList;
++
++.field public A01:Z
++
++.field public final A02:Ljava/lang/Object;
++
++.field public final synthetic A03:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++
++
++# direct methods
++.method public synthetic constructor <init>(Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;)V
++    .locals 1
++
++    iput-object p1, p0, LX/1kx;->A03:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++
++    invoke-direct {p0}, Landroid/widget/Filter;-><init>()V
++
++    new-instance v0, Ljava/lang/Object;
++
++    invoke-direct {v0}, Ljava/lang/Object;-><init>()V
++
++    iput-object v0, p0, LX/1kx;->A02:Ljava/lang/Object;
++
++    return-void
++.end method
++
++.method public static synthetic A00(LX/1kx;)V
++    .locals 2
++
++    iget-object v1, p0, LX/1kx;->A02:Ljava/lang/Object;
++
++    monitor-enter v1
++
++    const/4 v0, 0x0
++
++    :try_start_0
++    iput-object v0, p0, LX/1kx;->A00:Ljava/util/ArrayList;
++
++    monitor-exit v1
++
++    return-void
++
++    :catchall_0
++    move-exception v0
++
++    monitor-exit v1
++    :try_end_0
++    .catchall {:try_start_0 .. :try_end_0} :catchall_0
++
++    throw v0
++.end method
++
++
++# virtual methods
++.method public final A01(Ljava/util/Collection;)Ljava/util/ArrayList;
++    .locals 7
++
++    new-instance v6, Ljava/util/ArrayList;
++
++    invoke-direct {v6}, Ljava/util/ArrayList;-><init>()V
++
++    new-instance v5, Ljava/util/ArrayList;
++
++    invoke-direct {v5}, Ljava/util/ArrayList;-><init>()V
++
++    invoke-interface {p1}, Ljava/util/Collection;->iterator()Ljava/util/Iterator;
++
++    move-result-object v4
++
++    :goto_0
++    invoke-interface {v4}, Ljava/util/Iterator;->hasNext()Z
++
++    move-result v0
++
++    if-eqz v0, :cond_1
++
++    invoke-interface {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
++
++    move-result-object v3
++
++    check-cast v3, LX/3Fr;
++
++    iget-object v2, v3, LX/3Fr;->A03:Ljava/util/ArrayList;
++
++    invoke-virtual {v2}, Ljava/util/AbstractCollection;->isEmpty()Z
++
++    move-result v1
++
++    const/4 v0, 0x0
++
++    if-nez v1, :cond_0
++
++    invoke-virtual {v2, v0}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/1YT;
++
++    iget-object v0, v0, LX/1YT;->A06:LX/1YS;
++
++    if-eqz v0, :cond_0
++
++    new-instance v0, LX/54v;
++
++    invoke-direct {v0, v3}, LX/54v;-><init>(LX/3Fr;)V
++
++    invoke-virtual {v5, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
++
++    goto :goto_0
++
++    :cond_0
++    new-instance v0, LX/54t;
++
++    invoke-direct {v0, v3}, LX/54t;-><init>(LX/3Fr;)V
++
++    invoke-virtual {v6, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
++
++    goto :goto_0
++
++    :cond_1
++    invoke-virtual {v5}, Ljava/util/AbstractCollection;->isEmpty()Z
++
++    move-result v0
++
++    if-nez v0, :cond_2
++
++    const/4 v0, 0x0
++
++    invoke-virtual {v6, v0, v5}, Ljava/util/AbstractList;->addAll(ILjava/util/Collection;)Z
++
++    :cond_2
++    return-object v6
++.end method
++
++.method public performFiltering(Ljava/lang/CharSequence;)Landroid/widget/Filter$FilterResults;
++    .locals 15
++
++    new-instance v4, Landroid/widget/Filter$FilterResults;
++
++    invoke-direct {v4}, Landroid/widget/Filter$FilterResults;-><init>()V
++
++    const/4 v0, 0x1
++
++    iput-boolean v0, p0, LX/1kx;->A01:Z
++
++    invoke-static/range {p1 .. p1}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
++
++    move-result v0
++
++    if-nez v0, :cond_e
++
++    new-instance v8, Ljava/util/ArrayList;
++
++    invoke-direct {v8}, Ljava/util/ArrayList;-><init>()V
++
++    invoke-interface/range {p1 .. p1}, Ljava/lang/CharSequence;->toString()Ljava/lang/String;
++
++    move-result-object v1
++
++    iget-object v7, p0, LX/1kx;->A03:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++
++    iget-object v0, v7, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0K:LX/018;
++
++    invoke-static {v0, v1}, LX/1cg;->A02(LX/018;Ljava/lang/String;)Ljava/util/ArrayList;
++
++    move-result-object v6
++
++    new-instance v5, Ljava/util/HashSet;
++
++    invoke-direct {v5}, Ljava/util/HashSet;-><init>()V
++
++    new-instance v9, Ljava/util/ArrayList;
++
++    invoke-direct {v9}, Ljava/util/ArrayList;-><init>()V
++
++    iget-object v0, v7, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0g:Ljava/util/LinkedHashMap;
++
++    invoke-virtual {v0}, Ljava/util/AbstractMap;->values()Ljava/util/Collection;
++
++    move-result-object v0
++
++    invoke-interface {v0}, Ljava/util/Collection;->iterator()Ljava/util/Iterator;
++
++    move-result-object v14
++
++    :cond_0
++    :goto_0
++    invoke-interface {v14}, Ljava/util/Iterator;->hasNext()Z
++
++    move-result v0
++
++    if-eqz v0, :cond_9
++
++    invoke-interface {v14}, Ljava/util/Iterator;->next()Ljava/lang/Object;
++
++    move-result-object v3
++
++    check-cast v3, LX/3Fr;
++
++    iget-object v13, v7, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0P:LX/0m9;
++
++    iget-object v10, v7, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0B:LX/0nR;
++
++    iget-object v2, v7, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0O:LX/0x7;
++
++    iget-object v1, v7, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0Q:LX/0wC;
++
++    invoke-virtual {v3}, LX/3Fr;->A04()Z
++
++    move-result v0
++
++    if-eqz v0, :cond_7
++
++    iget-object v12, v3, LX/3Fr;->A03:Ljava/util/ArrayList;
++
++    const/4 v11, 0x0
++
++    invoke-virtual {v12, v11}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/1YT;
++
++    invoke-static {v10, v2, v13, v1, v0}, LX/1SF;->A01(LX/0nR;LX/0x7;LX/0m9;LX/0wC;LX/1YT;)LX/0n3;
++
++    move-result-object v2
++
++    if-eqz v2, :cond_4
++
++    iget-object v1, v3, LX/3Fr;->A01:LX/0nY;
++
++    const/4 v0, 0x1
++
++    invoke-virtual {v1, v2, v6, v0}, LX/0nY;->A0M(LX/0n3;Ljava/util/List;Z)Z
++
++    move-result v0
++
++    if-eqz v0, :cond_4
++
++    :goto_1
++    if-eqz v2, :cond_0
++
++    iget-object v10, v3, LX/3Fr;->A03:Ljava/util/ArrayList;
++
++    invoke-virtual {v10}, Ljava/util/AbstractCollection;->isEmpty()Z
++
++    move-result v0
++
++    const/4 v1, 0x0
++
++    if-nez v0, :cond_1
++
++    invoke-virtual {v10, v1}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/1YT;
++
++    iget-object v0, v0, LX/1YT;->A06:LX/1YS;
++
++    if-eqz v0, :cond_1
++
++    const/4 v1, 0x1
++
++    :cond_1
++    if-eqz v1, :cond_3
++
++    new-instance v0, LX/54v;
++
++    invoke-direct {v0, v3}, LX/54v;-><init>(LX/3Fr;)V
++
++    invoke-virtual {v9, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
++
++    :goto_2
++    invoke-virtual {v10}, Ljava/util/AbstractCollection;->isEmpty()Z
++
++    move-result v0
++
++    const/4 v1, 0x0
++
++    if-nez v0, :cond_2
++
++    invoke-virtual {v10, v1}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/1YT;
++
++    iget-object v0, v0, LX/1YT;->A04:Lcom/whatsapp/jid/GroupJid;
++
++    if-eqz v0, :cond_2
++
++    const/4 v1, 0x1
++
++    :cond_2
++    if-nez v1, :cond_0
++
++    const-class v0, Lcom/whatsapp/jid/UserJid;
++
++    invoke-virtual {v2, v0}, LX/0n3;->A0B(Ljava/lang/Class;)Lcom/whatsapp/jid/Jid;
++
++    move-result-object v0
++
++    invoke-static {v0}, LX/009;->A05(Ljava/lang/Object;)V
++
++    invoke-virtual {v5, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
++
++    goto :goto_0
++
++    :cond_3
++    new-instance v0, LX/54t;
++
++    invoke-direct {v0, v3}, LX/54t;-><init>(LX/3Fr;)V
++
++    invoke-virtual {v8, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
++
++    goto :goto_2
++
++    :cond_4
++    new-instance v10, Ljava/util/ArrayList;
++
++    invoke-direct {v10}, Ljava/util/ArrayList;-><init>()V
++
++    invoke-virtual {v12}, Ljava/util/AbstractCollection;->isEmpty()Z
++
++    move-result v0
++
++    if-nez v0, :cond_5
++
++    invoke-virtual {v12, v11}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/1YT;
++
++    invoke-virtual {v0}, LX/1YT;->A04()Ljava/util/List;
++
++    move-result-object v0
++
++    invoke-interface {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
++
++    move-result-object v2
++
++    :goto_3
++    invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
++
++    move-result v0
++
++    if-eqz v0, :cond_5
++
++    invoke-interface {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, LX/1YV;
++
++    iget-object v1, v3, LX/3Fr;->A00:LX/0nR;
++
++    iget-object v0, v0, LX/1YV;->A02:Lcom/whatsapp/jid/UserJid;
++
++    invoke-virtual {v1, v0}, LX/0nR;->A0B(LX/0lm;)LX/0n3;
++
++    move-result-object v0
++
++    invoke-virtual {v10, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
++
++    goto :goto_3
++
++    :cond_5
++    invoke-virtual {v10}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
++
++    move-result-object v10
++
++    :cond_6
++    invoke-interface {v10}, Ljava/util/Iterator;->hasNext()Z
++
++    move-result v0
++
++    if-eqz v0, :cond_8
++
++    invoke-interface {v10}, Ljava/util/Iterator;->next()Ljava/lang/Object;
++
++    move-result-object v2
++
++    check-cast v2, LX/0n3;
++
++    iget-object v1, v3, LX/3Fr;->A01:LX/0nY;
++
++    const/4 v0, 0x1
++
++    invoke-virtual {v1, v2, v6, v0}, LX/0nY;->A0M(LX/0n3;Ljava/util/List;Z)Z
++
++    move-result v0
++
++    if-eqz v0, :cond_6
++
++    goto/16 :goto_1
++
++    :cond_7
++    invoke-virtual {v3}, LX/3Fr;->A02()LX/0n3;
++
++    move-result-object v2
++
++    iget-object v1, v3, LX/3Fr;->A01:LX/0nY;
++
++    const/4 v0, 0x1
++
++    invoke-virtual {v1, v2, v6, v0}, LX/0nY;->A0M(LX/0n3;Ljava/util/List;Z)Z
++
++    move-result v0
++
++    if-eqz v0, :cond_8
++
++    goto/16 :goto_1
++
++    :cond_8
++    const/4 v2, 0x0
++
++    goto/16 :goto_1
++
++    :cond_9
++    const/4 v3, 0x0
++
++    invoke-virtual {v8, v3, v9}, Ljava/util/AbstractList;->addAll(ILjava/util/Collection;)Z
++
++    iget-object v2, p0, LX/1kx;->A02:Ljava/lang/Object;
++
++    monitor-enter v2
++
++    :try_start_0
++    iget-object v0, p0, LX/1kx;->A00:Ljava/util/ArrayList;
++
++    if-nez v0, :cond_a
++
++    new-instance v1, Ljava/util/ArrayList;
++
++    invoke-direct {v1}, Ljava/util/ArrayList;-><init>()V
++
++    iput-object v1, p0, LX/1kx;->A00:Ljava/util/ArrayList;
++
++    iget-object v0, v7, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0B:LX/0nR;
++
++    iget-object v0, v0, LX/0nR;->A06:LX/0xe;
++
++    invoke-virtual {v0, v1, v3, v3, v3}, LX/0xe;->A0S(Ljava/util/List;IZZ)V
++
++    :cond_a
++    iget-object v0, p0, LX/1kx;->A00:Ljava/util/ArrayList;
++
++    monitor-exit v2
++    :try_end_0
++    .catchall {:try_start_0 .. :try_end_0} :catchall_0
++
++    invoke-virtual {v0}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
++
++    move-result-object v10
++
++    :cond_b
++    :goto_4
++    invoke-interface {v10}, Ljava/util/Iterator;->hasNext()Z
++
++    move-result v0
++
++    if-eqz v0, :cond_f
++
++    invoke-interface {v10}, Ljava/util/Iterator;->next()Ljava/lang/Object;
++
++    move-result-object v9
++
++    check-cast v9, LX/0n3;
++
++    invoke-static {}, Lcom/pluswhatsapp/yo/yo;->showHiddenInForward()Z
++
++    move-result v0
++
++    if-nez v0, :cond_c
++
++    iget-object v0, v9, LX/0n3;->A0D:Lcom/whatsapp/jid/Jid;
++
++    invoke-static {v0}, Lcom/pluswhatsapp/yo/yo;->H3T(Lcom/whatsapp/jid/Jid;)Z
++
++    move-result v0
++
++    if-nez v0, :cond_b
++
++    :cond_c
++    iget-object v0, v9, LX/0n3;->A0C:LX/1Pc;
++
++    if-eqz v0, :cond_b
++
++    const-class v0, Lcom/whatsapp/jid/UserJid;
++
++    invoke-virtual {v9, v0}, LX/0n3;->A0B(Ljava/lang/Class;)Lcom/whatsapp/jid/Jid;
++
++    move-result-object v2
++
++    check-cast v2, Lcom/whatsapp/jid/UserJid;
++
++    if-eqz v2, :cond_b
++
++    invoke-virtual {v5, v2}, Ljava/util/AbstractCollection;->contains(Ljava/lang/Object;)Z
++
++    move-result v0
++
++    if-nez v0, :cond_b
++
++    iget-object v1, v7, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0D:LX/0nY;
++
++    const/4 v0, 0x1
++
++    invoke-virtual {v1, v9, v6, v0}, LX/0nY;->A0M(LX/0n3;Ljava/util/List;Z)Z
++
++    move-result v0
++
++    if-eqz v0, :cond_b
++
++    iget-boolean v0, p0, LX/1kx;->A01:Z
++
++    if-eqz v0, :cond_d
++
++    invoke-virtual {v7}, LX/01E;->A0B()LX/00k;
++
++    move-result-object v1
++
++    const v0, 0x7f121502
++
++    invoke-virtual {v1, v0}, Landroid/content/Context;->getString(I)Ljava/lang/String;
++
++    move-result-object v1
++
++    new-instance v0, LX/54w;
++
++    invoke-direct {v0, v1}, LX/54w;-><init>(Ljava/lang/String;)V
++
++    invoke-virtual {v8, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
++
++    iput-boolean v3, p0, LX/1kx;->A01:Z
++
++    :cond_d
++    new-instance v0, LX/54u;
++
++    invoke-direct {v0, v2}, LX/54u;-><init>(Lcom/whatsapp/jid/UserJid;)V
++
++    invoke-virtual {v8, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
++
++    goto :goto_4
++
++    :catchall_0
++    :try_start_1
++    move-exception v0
++
++    monitor-exit v2
++    :try_end_1
++    .catchall {:try_start_1 .. :try_end_1} :catchall_0
++
++    throw v0
++
++    :cond_e
++    iget-object v0, p0, LX/1kx;->A03:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++
++    iget-object v0, v0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0g:Ljava/util/LinkedHashMap;
++
++    invoke-virtual {v0}, Ljava/util/AbstractMap;->values()Ljava/util/Collection;
++
++    move-result-object v0
++
++    invoke-virtual {p0, v0}, LX/1kx;->A01(Ljava/util/Collection;)Ljava/util/ArrayList;
++
++    move-result-object v8
++
++    :cond_f
++    iput-object v8, v4, Landroid/widget/Filter$FilterResults;->values:Ljava/lang/Object;
++
++    invoke-virtual {v8}, Ljava/util/AbstractCollection;->size()I
++
++    move-result v0
++
++    iput v0, v4, Landroid/widget/Filter$FilterResults;->count:I
++
++    return-object v4
++.end method
++
++.method public publishResults(Ljava/lang/CharSequence;Landroid/widget/Filter$FilterResults;)V
++    .locals 3
++
++    iget-object v0, p2, Landroid/widget/Filter$FilterResults;->values:Ljava/lang/Object;
++
++    if-nez v0, :cond_1
++
++    const-string/jumbo v0, "voip/CallsFragment/publishResults got null values: exception in performFiltering?"
++
++    invoke-static {v0}, Lcom/whatsapp/util/Log;->e(Ljava/lang/String;)V
++
++    iget-object v2, p0, LX/1kx;->A03:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++
++    iget-object v0, v2, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0g:Ljava/util/LinkedHashMap;
++
++    invoke-virtual {v0}, Ljava/util/AbstractMap;->values()Ljava/util/Collection;
++
++    move-result-object v0
++
++    invoke-virtual {p0, v0}, LX/1kx;->A01(Ljava/util/Collection;)Ljava/util/ArrayList;
++
++    move-result-object v0
++
++    :goto_0
++#coocoo
++    invoke-static {v0}, Lcom/coocoo/CooCoo;->traceLog4(Ljava/util/ArrayList;)V
++#coocoo
++    iput-object v0, v2, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0f:Ljava/util/ArrayList;
++
++    iput-object p1, v2, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0d:Ljava/lang/CharSequence;
++
++    if-nez p1, :cond_0
++
++    const/4 v1, 0x0
++
++    :goto_1
++    iget-object v0, v2, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0K:LX/018;
++
++    invoke-static {v0, v1}, LX/1cg;->A02(LX/018;Ljava/lang/String;)Ljava/util/ArrayList;
++
++    move-result-object v0
++
++    iput-object v0, v2, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0e:Ljava/util/ArrayList;
++
++    invoke-virtual {v2}, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A1D()V
++
++    iget-object v0, v2, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A07:LX/1kY;
++
++    invoke-virtual {v0}, Landroid/widget/BaseAdapter;->notifyDataSetChanged()V
++
++    return-void
++
++    :cond_0
++    invoke-interface {p1}, Ljava/lang/CharSequence;->toString()Ljava/lang/String;
++
++    move-result-object v1
++
++    goto :goto_1
++
++    :cond_1
++    iget-object v2, p0, LX/1kx;->A03:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++
++    check-cast v0, Ljava/util/ArrayList;
++
++    goto :goto_0
++.end method
 diff --git a/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/calling/callhistory/CallsHistoryFragment.smali b/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/calling/callhistory/CallsHistoryFragment.smali
 new file mode 100644
-index 00000000..eab49214
+index 00000000..a052e9dd
 --- /dev/null
 +++ b/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/calling/callhistory/CallsHistoryFragment.smali
-@@ -0,0 +1,2230 @@
+@@ -0,0 +1,2225 @@
 +.class public Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
 +.super Lcom/pluswhatsapp/calling/callhistory/Hilt_CallsHistoryFragment;
 +.source ""
@@ -85,7 +1484,7 @@ index 00000000..eab49214
 +.implements LX/110;
 +
 +
-+# instance fields
++# instance fieldsF
 +.field public A00:Landroid/view/MenuItem;
 +
 +.field public A01:LX/04t;
@@ -563,11 +1962,6 @@ index 00000000..eab49214
 +
 +.method public A0r()V
 +    .locals 1
-+
-+#coocoo
-+    const-string v0, "gene CallsHistoryFragment"
-+    invoke-static {v0}, Lcom/coocoo/CooCoo;->traceLog3(Ljava/lang/String;)V
-+#coocoo
 +
 +    const-string/jumbo v0, "voip/CallsFragment/onPause"
 +
