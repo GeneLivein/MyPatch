@@ -273,6 +273,29 @@ index 00000000..9dcc46ef
 +    @SerializedName("water_fall")
 +    val waterFall: ArrayList<AdsSDK>? = null,
 +)
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/util/OkHttpHelper.kt b/status-traffic-api/src/main/java/com/status/traffic/util/OkHttpHelper.kt
+index ba786df9..28e45a4f 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/util/OkHttpHelper.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/util/OkHttpHelper.kt
+@@ -9,6 +9,7 @@ import com.status.traffic.AdCommonManager
+ import com.status.traffic.Constant
+ import com.status.traffic.report.StatusTrafficReporter
+ import okhttp3.*
++import okhttp3.logging.HttpLoggingInterceptor
+ import java.io.BufferedInputStream
+ import java.io.File
+ import java.io.FileOutputStream
+@@ -93,7 +94,9 @@ object OkHttpHelper {
+         headers: Headers? = null
+     ): Response? {
+         try {
+-            val client = OkHttpClient()
++            val client = OkHttpClient().apply {
++                interceptors().add(HttpLoggingInterceptor())
++            }
+             val requestBuilder = Request.Builder().url(url)
+             if (headers != null) {
+                 requestBuilder.headers(headers)
 diff --git a/whatsapp_modify_module/smali_classes2/X/1kY.1.smali b/whatsapp_modify_module/smali_classes2/X/1kY.1.smali
 new file mode 100644
 index 00000000..573208ab
