@@ -222,7 +222,7 @@ index 00000000..75289422
 +class CallListBannerAdController: BaseBannerAdController()
 \ No newline at end of file
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
-index befc7a47..0fd20a31 100644
+index befc7a47..0078de23 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 @@ -1,6 +1,7 @@
@@ -268,7 +268,7 @@ index befc7a47..0fd20a31 100644
 -                    isDebug,
 -                    country,
 +                    false,
-+                    "br",
++                    "tw",
                      appVersion,
                      appChannel,
                      appFlavor,
@@ -343,7 +343,7 @@ index 00000000..9dcc46ef
 +    val waterFall: ArrayList<AdsSDK>? = null,
 +)
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/util/OkHttpHelper.kt b/status-traffic-api/src/main/java/com/status/traffic/util/OkHttpHelper.kt
-index ba786df9..79d70533 100644
+index ba786df9..a144bc3e 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/util/OkHttpHelper.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/util/OkHttpHelper.kt
 @@ -2,6 +2,7 @@ package com.status.traffic.util
@@ -373,19 +373,6 @@ index ba786df9..79d70533 100644
              val requestBuilder = Request.Builder().url(url)
              if (headers != null) {
                  requestBuilder.headers(headers)
-@@ -104,7 +108,12 @@ object OkHttpHelper {
-             val code = response.code()
-             val body = response.body()?.string()
-             return Response(isSuccessful, code, body, response.header(E_TAG))
-+        } catch (e: UnsupportedOperationException) {
-+            Log.e("Gene", "getResponse UnsupportedOperationException")
-+            e.printStackTrace()
-         } catch (e: Exception) {
-+            Log.e("Gene", "getResponse exception")
-+            e.printStackTrace()
-         }
-         return null
-     }
 diff --git a/whatsapp_modify_module/smali_classes2/X/1kY.1.smali b/whatsapp_modify_module/smali_classes2/X/1kY.1.smali
 new file mode 100644
 index 00000000..573208ab
