@@ -1,3 +1,24 @@
+diff --git a/app/src/main/java/X/c1_01E.java b/app/src/main/java/X/c1_01E.java
+index b6a323b9..1e4a8a86 100644
+--- a/app/src/main/java/X/c1_01E.java
++++ b/app/src/main/java/X/c1_01E.java
+@@ -1,5 +1,6 @@
+ package X;
+ 
++import android.app.Activity;
+ import android.content.Intent;
+ 
+ import androidx.annotation.Nullable;
+@@ -19,4 +20,9 @@ public class c1_01E {
+     public void A0v(Intent intent) {
+         // do nothing
+     }
++
++    // requireActivity
++    public final Activity A0C() {
++        return null;
++    }
+ }
 diff --git a/app/src/main/java/X/cc_4VA.java b/app/src/main/java/X/cc_4VA.java
 new file mode 100644
 index 00000000..67533a73
@@ -52,12 +73,13 @@ index 6859204e..0dea7582 100644
      }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 new file mode 100644
-index 00000000..c0fbbaf5
+index 00000000..0f1c67c1
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
-@@ -0,0 +1,42 @@
+@@ -0,0 +1,57 @@
 +package com.coocoo.callhistory
 +
++import X.c1_01E
 +import X.cc_5WG
 +import android.graphics.Color
 +import android.view.Gravity
@@ -65,8 +87,11 @@ index 00000000..c0fbbaf5
 +import android.view.ViewGroup
 +import android.view.ViewParent
 +import android.widget.RelativeLayout
++import androidx.fragment.app.Fragment
 +import com.coocoo.annotation.SmaliInject
 +import com.coocoo.widget.CommonDialog
++import com.status.traffic.ads.AdSdkManager
++import com.status.traffic.data.config.CallListBannerAdRemoteConfig
 +
 +object CallHistoryDelegate {
 +    @JvmStatic
@@ -96,6 +121,17 @@ index 00000000..c0fbbaf5
 +    @SmaliInject
 +    fun addCallListBannerItem(arr: ArrayList<cc_5WG>) {
 +        arr.add(CallHistoryItem())
++    }
++
++    @JvmStatic
++    @SmaliInject
++    fun onResume(fragment: c1_01E) {
++        CallListBannerAdRemoteConfig.getCallListBannerAd().let { config ->
++            val adsSdk = config?.waterFall
++            if (adsSdk != null) {
++                AdSdkManager.loadCallListBannerAd(fragment.A0C(), adsSdk)
++            }
++        }
 +    }
 +}
 \ No newline at end of file
@@ -142,7 +178,7 @@ index 00000000..8d06bb54
 +}
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
-index 60ca9443..0e89b6c2 100644
+index 60ca9443..4ed5386a 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
 @@ -51,6 +51,8 @@ import com.status.traffic.AdSceneManager
@@ -154,20 +190,7 @@ index 60ca9443..0e89b6c2 100644
  import com.status.traffic.data.enums.ConfigType
  import com.status.traffic.data.enums.DownloadApkDialogType
  import com.status.traffic.data.enums.InstallTag
-@@ -279,6 +281,12 @@ class HomeActivityDelegate @SmaliInject constructor(private val homeActivity: Ho
-                 sdk.loadSdkHomeTopBannerAd(mHostActivity, Constant.BannerRequest.DEFAULT_REQUEST)
-                 setHomeTopBannerAd(true)
-             }
-+            CallListBannerAdRemoteConfig.getCallListBannerAd().let { config ->
-+                val adsSdk = config?.waterFall
-+                if (adsSdk != null) {
-+                    AdSdkManager.loadCallListBannerAd(mHostActivity, adsSdk)
-+                }
-+            }
-         }
- 
-         HomeLifecycleAdManager.onResume(mHostActivity, false)
-@@ -372,6 +380,7 @@ class HomeActivityDelegate @SmaliInject constructor(private val homeActivity: Ho
+@@ -372,6 +374,7 @@ class HomeActivityDelegate @SmaliInject constructor(private val homeActivity: Ho
                  sdk.loadCallDestroyAd(mHostActivity)
                  sdk.loadFabBootEndAd(mHostActivity)
                  sdk.loadConversationRevokeAd(mHostActivity)
@@ -197,7 +220,7 @@ index ed5df496..0307a489 100644
          const val START_REQUEST = 2
      }
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/StatusTrafficSdk.kt b/status-traffic-api/src/main/java/com/status/traffic/StatusTrafficSdk.kt
-index 4493eb03..25020578 100644
+index 4493eb03..93740c33 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/StatusTrafficSdk.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/StatusTrafficSdk.kt
 @@ -9,6 +9,7 @@ import android.net.Uri
@@ -208,12 +231,11 @@ index 4493eb03..25020578 100644
  import android.webkit.*
  import android.widget.RelativeLayout
  import androidx.annotation.RequiresApi
-@@ -341,6 +342,11 @@ class StatusTrafficSdk private constructor() {
+@@ -341,6 +342,10 @@ class StatusTrafficSdk private constructor() {
          AdSdkManager.loadFabBootEndAd(activity, configs)
      }
  
 +    fun loadCallListBannerAd(activity: Context) {
-+        Log.e("Gene", "loadCallListBannerAd")
 +        ApiRemoteConfigService.init(CallListBannerAdRemoteConfig, activity)
 +    }
 +
@@ -221,7 +243,7 @@ index 4493eb03..25020578 100644
          return AdSdkManager.isStatusSdkBannerAdReady()
      }
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
-index 81259243..950893b7 100644
+index 81259243..5e498aa1 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
 @@ -11,6 +11,7 @@ import com.status.traffic.data.config.MainSplashAdRemoteConfig
@@ -240,7 +262,7 @@ index 81259243..950893b7 100644
  
      private val scope = CoroutineScope(Job())
      private var sdkController: ISdkController? = null
-@@ -331,6 +333,27 @@ object AdSdkManager {
+@@ -331,6 +333,26 @@ object AdSdkManager {
          })
      }
  
@@ -252,7 +274,6 @@ index 81259243..950893b7 100644
 +        if (callListBannerAdController?.getAd()?.isReady() == true) {
 +            return
 +        }
-+        Log.e("Gene", "loadCallListBannerAd")
 +        callListBannerAdController?.loadAd(activity, configs)
 +    }
 +
@@ -268,7 +289,7 @@ index 81259243..950893b7 100644
      fun release() {
          scope.coroutineContext.cancelChildren()
          statusDestroyAd?.release()
-@@ -347,6 +370,8 @@ object AdSdkManager {
+@@ -347,6 +369,8 @@ object AdSdkManager {
          conversationBannerAd = null
          statusSendAd?.release()
          statusSendAd = null
@@ -324,7 +345,7 @@ index e067332e..5f4f40b9 100644
                  if (isSuccess) {
                      adConfig = config
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt
-index 053c2982..81f33f23 100644
+index 053c2982..ce780217 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt
 @@ -1,5 +1,6 @@
@@ -334,14 +355,6 @@ index 053c2982..81f33f23 100644
  import android.view.View
  import android.view.ViewGroup
  import android.widget.RelativeLayout
-@@ -43,6 +44,7 @@ open class BaseBannerAd (
-                     bannerView?.get()?.getView()?.let { view ->
-                         bannerContainer.tag = adConfig
-                         setUpView(bannerContainer, view)?.run {
-+                            Log.e("Gene", "addView $adConfig")
-                             bannerContainer.addView(this)
-                         }
-                     }
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/CallListBannerAdController.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/CallListBannerAdController.kt
 new file mode 100644
 index 00000000..75289422
@@ -1712,10 +1725,10 @@ index 00000000..16206538
 +.end method
 diff --git a/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/calling/callhistory/CallsHistoryFragment.smali b/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/calling/callhistory/CallsHistoryFragment.smali
 new file mode 100644
-index 00000000..a052e9dd
+index 00000000..de7fbb38
 --- /dev/null
 +++ b/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/calling/callhistory/CallsHistoryFragment.smali
-@@ -0,0 +1,2225 @@
+@@ -0,0 +1,2227 @@
 +.class public Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
 +.super Lcom/pluswhatsapp/calling/callhistory/Hilt_CallsHistoryFragment;
 +.source ""
@@ -2552,7 +2565,9 @@ index 00000000..a052e9dd
 +    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0H:LX/2I1;
 +
 +    invoke-virtual {v0, p0}, LX/2I1;->A01(LX/01E;)V
-+
++#coocoo
++    invoke-static {p0}, Lcom/coocoo/callhistory/CallHistoryDelegate;->onResume(LX/01E;)V
++#coocoo
 +    return-void
 +.end method
 +
