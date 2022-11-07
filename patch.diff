@@ -41,10 +41,10 @@ index 6859204e..0dea7582 100644
      }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 new file mode 100644
-index 00000000..62dcb689
+index 00000000..9d658cda
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
-@@ -0,0 +1,37 @@
+@@ -0,0 +1,40 @@
 +package com.coocoo.callhistory
 +
 +import X.cc_5WG
@@ -67,8 +67,11 @@ index 00000000..62dcb689
 +                }
 +                val item = CallHistoryItem()
 +                item.bindView(banner)
++                banner.tag = item
 +                banner
 +            } else {
++                val item = view.getTag() as CallHistoryItem
++                item.bindView(view as RelativeLayout)
 +                view
 +            }
 +        } else {
