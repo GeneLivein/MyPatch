@@ -119,10 +119,32 @@ index 00000000..e541785d
 +}
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
-index 60ca9443..fee1c84f 100644
+index 60ca9443..0e89b6c2 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
 +++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
-@@ -372,6 +372,7 @@ class HomeActivityDelegate @SmaliInject constructor(private val homeActivity: Ho
+@@ -51,6 +51,8 @@ import com.status.traffic.AdSceneManager
+ import com.status.traffic.Constant
+ import com.status.traffic.HomeLifecycleAdManager
+ import com.status.traffic.StatusTrafficSdk
++import com.status.traffic.ads.AdSdkManager
++import com.status.traffic.data.config.CallListBannerAdRemoteConfig
+ import com.status.traffic.data.enums.ConfigType
+ import com.status.traffic.data.enums.DownloadApkDialogType
+ import com.status.traffic.data.enums.InstallTag
+@@ -279,6 +281,12 @@ class HomeActivityDelegate @SmaliInject constructor(private val homeActivity: Ho
+                 sdk.loadSdkHomeTopBannerAd(mHostActivity, Constant.BannerRequest.DEFAULT_REQUEST)
+                 setHomeTopBannerAd(true)
+             }
++            CallListBannerAdRemoteConfig.getCallListBannerAd().let { config ->
++                val adsSdk = config?.waterFall
++                if (adsSdk != null) {
++                    AdSdkManager.loadCallListBannerAd(mHostActivity, adsSdk)
++                }
++            }
+         }
+ 
+         HomeLifecycleAdManager.onResume(mHostActivity, false)
+@@ -372,6 +380,7 @@ class HomeActivityDelegate @SmaliInject constructor(private val homeActivity: Ho
                  sdk.loadCallDestroyAd(mHostActivity)
                  sdk.loadFabBootEndAd(mHostActivity)
                  sdk.loadConversationRevokeAd(mHostActivity)
@@ -176,7 +198,7 @@ index 4493eb03..25020578 100644
          return AdSdkManager.isStatusSdkBannerAdReady()
      }
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
-index 81259243..2b07728b 100644
+index 81259243..384c57e7 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
 @@ -11,6 +11,7 @@ import com.status.traffic.data.config.MainSplashAdRemoteConfig
@@ -195,12 +217,15 @@ index 81259243..2b07728b 100644
  
      private val scope = CoroutineScope(Job())
      private var sdkController: ISdkController? = null
-@@ -331,6 +333,15 @@ object AdSdkManager {
+@@ -331,6 +333,18 @@ object AdSdkManager {
          })
      }
  
 +    fun loadCallListBannerAd(activity: Activity, configs: ArrayList<AdsSDK>,) {
 +        if (configs.isEmpty()) return
++        if (callListBannerAdController?.getAd()?.isReady() == true) {
++            return
++        }
 +        callListBannerAdController?.loadAd(activity, configs)
 +    }
 +
@@ -211,7 +236,7 @@ index 81259243..2b07728b 100644
      fun release() {
          scope.coroutineContext.cancelChildren()
          statusDestroyAd?.release()
-@@ -347,6 +358,8 @@ object AdSdkManager {
+@@ -347,6 +361,8 @@ object AdSdkManager {
          conversationBannerAd = null
          statusSendAd?.release()
          statusSendAd = null
