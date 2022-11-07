@@ -278,7 +278,7 @@ index 81259243..950893b7 100644
  
      // check single sdk can be enabled
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
-index e067332e..899d6670 100644
+index e067332e..5f4f40b9 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
 @@ -3,6 +3,7 @@ package com.status.traffic.ads.ad
@@ -306,7 +306,15 @@ index e067332e..899d6670 100644
                  null
              }
              val sdk = config.sdk
-@@ -194,7 +196,7 @@ abstract class BaseAdController <T: BaseAdController.BaseAd?> {
+@@ -64,6 +66,7 @@ abstract class BaseAdController <T: BaseAdController.BaseAd?> {
+             var loadAdTimeElapsed: Long
+             AdsSdkReporter.reportBannerRequest(config, AdsSdkReporter.Action.LOAD_AD, config.bannerRequest)
+             if (id.isNullOrEmpty() || sdk.isNullOrEmpty()) {
++                Log.e("Gene", "loadAd $config is null")
+                 continue
+             }
+ 
+@@ -194,7 +197,7 @@ abstract class BaseAdController <T: BaseAdController.BaseAd?> {
                          AdSdkManager.LoadAdResult(false, "SDK[$sdk] not supported.")
                      }
                  }
