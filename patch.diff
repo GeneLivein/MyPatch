@@ -52,13 +52,14 @@ index 6859204e..0dea7582 100644
      }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 new file mode 100644
-index 00000000..9d658cda
+index 00000000..f896aa3b
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
-@@ -0,0 +1,40 @@
+@@ -0,0 +1,42 @@
 +package com.coocoo.callhistory
 +
 +import X.cc_5WG
++import android.graphics.Color
 +import android.view.Gravity
 +import android.view.View
 +import android.view.ViewGroup
@@ -75,14 +76,15 @@ index 00000000..9d658cda
 +                val banner = RelativeLayout(parent.context).apply {
 +                    layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200)
 +                    gravity = Gravity.CENTER
++                    setBackgroundColor(Color.CYAN)
 +                }
 +                val item = CallHistoryItem()
 +                item.bindView(banner)
 +                banner.tag = item
 +                banner
 +            } else {
-+                val item = view.getTag() as CallHistoryItem
-+                item.bindView(view as RelativeLayout)
++//                val item = view.getTag() as CallHistoryItem
++//                item.bindView(view as RelativeLayout)
 +                view
 +            }
 +        } else {
@@ -99,7 +101,7 @@ index 00000000..9d658cda
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryItem.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryItem.kt
 new file mode 100644
-index 00000000..8d06bb54
+index 00000000..5eef43de
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryItem.kt
 @@ -0,0 +1,35 @@
@@ -135,7 +137,7 @@ index 00000000..8d06bb54
 +
 +    fun bindView(targetView: RelativeLayout) {
 +        Log.e("Gene", "CallHistoryItem ShowAd")
-+        sdk.showCallListBannerAd(targetView)
++//        sdk.showCallListBannerAd(targetView)
 +    }
 +}
 \ No newline at end of file
