@@ -222,7 +222,7 @@ index 00000000..75289422
 +class CallListBannerAdController: BaseBannerAdController()
 \ No newline at end of file
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
-index befc7a47..0078de23 100644
+index befc7a47..766e6930 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 @@ -1,6 +1,7 @@
@@ -272,16 +272,15 @@ index befc7a47..0078de23 100644
                      appVersion,
                      appChannel,
                      appFlavor,
-@@ -178,7 +181,7 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
-                     AdCommonManager.getRAM(),
-                     AdCommonManager.getROM(),
-                     eTag)
--
-+                Log.e("Gene", "3 fetch: $apiName")
-                 val response = OkHttpHelper.getResponse(URL(apiUrl), headers)
- 
-                 if (response?.code == OkHttpHelper.HTTP_CODE_NOT_MODIFIED) {
-@@ -254,6 +257,7 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
+@@ -236,6 +239,7 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
+                 apiQualifiedConfig = configCache
+                 apiRemoteConfig = checkApkFileExists(configCache)
+                 onPrepared(apiRemoteConfig)
++                Log.e("Gene", "$apiName $apiRemoteConfig")
+                 return@withContext apiRemoteConfig
+             } catch (e: Exception) {
+                 apiQualifiedConfig = null
+@@ -254,6 +258,7 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
      }
  
      suspend fun fetchLocal(isFromETag: Boolean) = withContext(Dispatchers.IO) {
