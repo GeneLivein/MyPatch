@@ -267,6 +267,27 @@ index 81259243..08e0b3fa 100644
      }
  
      // check single sdk can be enabled
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
+index e067332e..0895777a 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
+@@ -3,6 +3,7 @@ package com.status.traffic.ads.ad
+ import android.app.Activity
+ import android.os.SystemClock
+ import android.util.Base64
++import android.util.Log
+ import com.coocoo.utils.AESCipherUtil
+ import com.status.traffic.ads.*
+ import com.status.traffic.data.enums.AdsSDKFormat
+@@ -194,7 +195,7 @@ abstract class BaseAdController <T: BaseAdController.BaseAd?> {
+                         AdSdkManager.LoadAdResult(false, "SDK[$sdk] not supported.")
+                     }
+                 }
+-
++                Log.e("Gene", "config: $config, LoadResult: $loadAdResult")
+                 val isSuccess = loadAdResult.isSuccess
+                 if (isSuccess) {
+                     adConfig = config
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/CallListBannerAdController.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/CallListBannerAdController.kt
 new file mode 100644
 index 00000000..75289422
