@@ -24,6 +24,86 @@ index 6859204e..0dea7582 100644
          )
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
+diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
+index 90056bbc..f9efde90 100644
+--- a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
++++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
+@@ -16,20 +16,17 @@ object CallHistoryDelegate {
+     @SmaliInject
+     fun getView(viewType: Int, view: View?, parent: ViewGroup): View? {
+         return if (viewType == CallHistoryItem.VIEW_TYPE) {
+-            if (view == null) {
+-                val banner = RelativeLayout(parent.context).apply {
++            var itemView = view
++            if (itemView == null) {
++                itemView = RelativeLayout(parent.context).apply {
+                     layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, CommonDialog.dpToPx(50f))
+                     gravity = Gravity.CENTER
+                 }
+-                val item = CallHistoryItem()
+-                item.bindView(banner)
+-                banner.tag = item
+-                banner
+-            } else {
+-                val item = view.getTag() as CallHistoryItem
+-                item.bindView(view as RelativeLayout)
+-                view
++                val vh = CallHistoryViewHolder(itemView)
++                itemView.tag = vh
+             }
++            (itemView.tag as CallHistoryViewHolder).loadAd()
++            itemView
+         } else {
+             null
+         }
+diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryItem.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryItem.kt
+index 223cdda8..eb2a8bb1 100644
+--- a/app/src/main/java/com/coocoo/callhistory/CallHistoryItem.kt
++++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryItem.kt
+@@ -1,16 +1,11 @@
+ package com.coocoo.callhistory
+ 
+-import X.cc_4VA
+ import X.cc_5WG
+ import android.widget.RelativeLayout
+ import com.status.traffic.ads.AdSdkManager
+ import com.whatsapp.jid.UserJid
+ 
+-class CallHistoryItem : cc_4VA(), cc_5WG {
+-
+-    init {
+-        A00 = this
+-    }
++class CallHistoryItem : cc_5WG {
+ 
+     private val sdk: AdSdkManager = AdSdkManager
+ 
+diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
+new file mode 100644
+index 00000000..4b93fa0c
+--- /dev/null
++++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
+@@ -0,0 +1,19 @@
++package com.coocoo.callhistory
++
++import X.cc_4VA
++import X.cc_5WG
++import android.widget.RelativeLayout
++import com.startapp.cc
++import com.status.traffic.ads.AdSdkManager
++
++class CallHistoryViewHolder(private val targetView: RelativeLayout) : cc_4VA() {
++
++    init {
++        A00 = CallHistoryItem()
++    }
++
++    fun loadAd() {
++        AdSdkManager.showCallListBannerAd(targetView)
++        targetView.tag = this
++    }
++}
+\ No newline at end of file
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 index befc7a47..89287a8d 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
