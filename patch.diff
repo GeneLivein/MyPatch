@@ -323,7 +323,7 @@ index 00000000..9dcc46ef
 +    val waterFall: ArrayList<AdsSDK>? = null,
 +)
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/util/OkHttpHelper.kt b/status-traffic-api/src/main/java/com/status/traffic/util/OkHttpHelper.kt
-index ba786df9..77469a91 100644
+index ba786df9..c3866b68 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/util/OkHttpHelper.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/util/OkHttpHelper.kt
 @@ -2,6 +2,7 @@ package com.status.traffic.util
@@ -342,7 +342,7 @@ index ba786df9..77469a91 100644
  import java.io.BufferedInputStream
  import java.io.File
  import java.io.FileOutputStream
-@@ -93,18 +95,23 @@ object OkHttpHelper {
+@@ -93,18 +95,26 @@ object OkHttpHelper {
          headers: Headers? = null
      ): Response? {
          try {
@@ -361,6 +361,9 @@ index ba786df9..77469a91 100644
              val code = response.code()
              val body = response.body()?.string()
              return Response(isSuccessful, code, body, response.header(E_TAG))
++        } catch (e: UnsupportedOperationException) {
++            Log.e("Gene", "getResponse UnsupportedOperationException")
++            e.printStackTrace()
          } catch (e: Exception) {
 +            Log.e("Gene", "getResponse exception")
 +            e.printStackTrace()
