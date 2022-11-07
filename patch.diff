@@ -14,7 +14,7 @@ index 00000000..886a73de
 +    UserJid ADh();
 +}
 diff --git a/app/src/main/java/com/coocoo/CooCoo.kt b/app/src/main/java/com/coocoo/CooCoo.kt
-index 6859204e..f4b05a56 100644
+index 6859204e..0dea7582 100644
 --- a/app/src/main/java/com/coocoo/CooCoo.kt
 +++ b/app/src/main/java/com/coocoo/CooCoo.kt
 @@ -69,6 +69,12 @@ object CooCoo {
@@ -30,6 +30,15 @@ index 6859204e..f4b05a56 100644
      @JvmStatic
      fun getNightMode(): Boolean {
          val c102d: cc_0m6 = componentContainer.AN4.get() as cc_0m6?
+@@ -137,7 +143,7 @@ object CooCoo {
+             appFlavor,
+             com.coocoo.config.BuildConfig.COOCOO_VERSION_CODE,
+             appChannel,
+-            com.coocoo.config.BuildConfig.IS_DEBUG,
++            false,
+         )
+         AdCommonManager.injectReporter(ReportStatusVideoTraffic)
+     }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 new file mode 100644
 index 00000000..62dcb689
@@ -222,7 +231,7 @@ index 00000000..75289422
 +class CallListBannerAdController: BaseBannerAdController()
 \ No newline at end of file
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
-index befc7a47..766e6930 100644
+index befc7a47..89287a8d 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 @@ -1,6 +1,7 @@
@@ -261,13 +270,11 @@ index befc7a47..766e6930 100644
  
                  apiQualifiedConfig = null
                  apiRemoteConfig = null
-@@ -168,8 +171,8 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
-                 }
+@@ -169,7 +172,7 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
  
                  val headers = OkHttpHelper.getRemoteConfigHeaders(
--                    isDebug,
+                     isDebug,
 -                    country,
-+                    false,
 +                    "tw",
                      appVersion,
                      appChannel,
