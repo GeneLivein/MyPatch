@@ -222,7 +222,7 @@ index 00000000..75289422
 +class CallListBannerAdController: BaseBannerAdController()
 \ No newline at end of file
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
-index befc7a47..f862d351 100644
+index befc7a47..b5e5a758 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 @@ -1,6 +1,7 @@
@@ -242,7 +242,7 @@ index befc7a47..f862d351 100644
                  .toString()
      }
  
-@@ -140,19 +141,22 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
+@@ -140,13 +141,15 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
      }
  
      open suspend fun fetch(context: Context): T? = withContext(Dispatchers.IO) {
@@ -261,15 +261,16 @@ index befc7a47..f862d351 100644
  
                  apiQualifiedConfig = null
                  apiRemoteConfig = null
-                 apiCommon = null
+@@ -169,7 +172,7 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
  
--                val country = MccUtil.getDeviceCountry(context).toLowerCase(Locale.ENGLISH)
-+//                val country = MccUtil.getDeviceCountry(context).toLowerCase(Locale.ENGLISH)
-+                val country = "tw"
- 
-                 val appList: ArrayList<String>? = fetchInstallApp(context)
- 
-@@ -178,7 +182,7 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
+                 val headers = OkHttpHelper.getRemoteConfigHeaders(
+                     isDebug,
+-                    country,
++                    "tw",
+                     appVersion,
+                     appChannel,
+                     appFlavor,
+@@ -178,7 +181,7 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
                      AdCommonManager.getRAM(),
                      AdCommonManager.getROM(),
                      eTag)
@@ -278,7 +279,7 @@ index befc7a47..f862d351 100644
                  val response = OkHttpHelper.getResponse(URL(apiUrl), headers)
  
                  if (response?.code == OkHttpHelper.HTTP_CODE_NOT_MODIFIED) {
-@@ -254,6 +258,7 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
+@@ -254,6 +257,7 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
      }
  
      suspend fun fetchLocal(isFromETag: Boolean) = withContext(Dispatchers.IO) {
