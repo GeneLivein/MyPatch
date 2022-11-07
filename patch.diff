@@ -278,7 +278,7 @@ index 81259243..950893b7 100644
  
      // check single sdk can be enabled
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
-index e067332e..f762ee02 100644
+index e067332e..899d6670 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
 @@ -3,6 +3,7 @@ package com.status.traffic.ads.ad
@@ -298,7 +298,15 @@ index e067332e..f762ee02 100644
          ad = null
          adConfig = null
          loadAdJob =  scope.launch(Dispatchers.IO) {
-@@ -194,7 +195,7 @@ abstract class BaseAdController <T: BaseAdController.BaseAd?> {
+@@ -56,6 +57,7 @@ abstract class BaseAdController <T: BaseAdController.BaseAd?> {
+             val id = try {
+                 AESCipherUtil.decryptString(AdSdkManager.AES_KEY, config.adId, Base64.URL_SAFE)
+             } catch (e: Exception) {
++                e.printStackTrace()
+                 null
+             }
+             val sdk = config.sdk
+@@ -194,7 +196,7 @@ abstract class BaseAdController <T: BaseAdController.BaseAd?> {
                          AdSdkManager.LoadAdResult(false, "SDK[$sdk] not supported.")
                      }
                  }
