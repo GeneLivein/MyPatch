@@ -221,7 +221,7 @@ index 4493eb03..25020578 100644
          return AdSdkManager.isStatusSdkBannerAdReady()
      }
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
-index 81259243..e15994ff 100644
+index 81259243..950893b7 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
 @@ -11,6 +11,7 @@ import com.status.traffic.data.config.MainSplashAdRemoteConfig
@@ -240,12 +240,15 @@ index 81259243..e15994ff 100644
  
      private val scope = CoroutineScope(Job())
      private var sdkController: ISdkController? = null
-@@ -331,6 +333,24 @@ object AdSdkManager {
+@@ -331,6 +333,27 @@ object AdSdkManager {
          })
      }
  
 +    fun loadCallListBannerAd(activity: Activity, configs: ArrayList<AdsSDK>,) {
 +        if (configs.isEmpty()) return
++        if (callListBannerAdController == null) {
++            callListBannerAdController = CallListBannerAdController()
++        }
 +        if (callListBannerAdController?.getAd()?.isReady() == true) {
 +            return
 +        }
@@ -265,7 +268,7 @@ index 81259243..e15994ff 100644
      fun release() {
          scope.coroutineContext.cancelChildren()
          statusDestroyAd?.release()
-@@ -347,6 +367,8 @@ object AdSdkManager {
+@@ -347,6 +370,8 @@ object AdSdkManager {
          conversationBannerAd = null
          statusSendAd?.release()
          statusSendAd = null
@@ -275,7 +278,7 @@ index 81259243..e15994ff 100644
  
      // check single sdk can be enabled
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
-index e067332e..0895777a 100644
+index e067332e..f762ee02 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
 @@ -3,6 +3,7 @@ package com.status.traffic.ads.ad
@@ -286,6 +289,15 @@ index e067332e..0895777a 100644
  import com.coocoo.utils.AESCipherUtil
  import com.status.traffic.ads.*
  import com.status.traffic.data.enums.AdsSDKFormat
+@@ -30,7 +31,7 @@ abstract class BaseAdController <T: BaseAdController.BaseAd?> {
+         if (loadAdJob?.isActive == true) {
+             return
+         }
+-
++        configs.forEach { Log.e("Gene", "$it") }
+         ad = null
+         adConfig = null
+         loadAdJob =  scope.launch(Dispatchers.IO) {
 @@ -194,7 +195,7 @@ abstract class BaseAdController <T: BaseAdController.BaseAd?> {
                          AdSdkManager.LoadAdResult(false, "SDK[$sdk] not supported.")
                      }
