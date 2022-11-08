@@ -131,7 +131,7 @@ index 4f1cd110..f35cc9d1 100644
      }
  
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
-index e067332e..6d7411ec 100644
+index e067332e..d5ed49db 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
 @@ -3,6 +3,7 @@ package com.status.traffic.ads.ad
@@ -142,7 +142,32 @@ index e067332e..6d7411ec 100644
  import com.coocoo.utils.AESCipherUtil
  import com.status.traffic.ads.*
  import com.status.traffic.data.enums.AdsSDKFormat
-@@ -194,7 +195,7 @@ abstract class BaseAdController <T: BaseAdController.BaseAd?> {
+@@ -30,7 +31,7 @@ abstract class BaseAdController <T: BaseAdController.BaseAd?> {
+         if (loadAdJob?.isActive == true) {
+             return
+         }
+-
++        Log.e("Gene", "onResume 4")
+         ad = null
+         adConfig = null
+         loadAdJob =  scope.launch(Dispatchers.IO) {
+@@ -52,6 +53,7 @@ abstract class BaseAdController <T: BaseAdController.BaseAd?> {
+     private suspend fun loadAd(activity: Activity,
+                                configs: ArrayList<AdsSDK>,
+                                onLoadAdListener: OnLoadAdListener? = null) = scope.launch(Dispatchers.IO) {
++        Log.e("Gene", "onResume 5")
+         for (config in configs) {
+             val id = try {
+                 AESCipherUtil.decryptString(AdSdkManager.AES_KEY, config.adId, Base64.URL_SAFE)
+@@ -68,6 +70,7 @@ abstract class BaseAdController <T: BaseAdController.BaseAd?> {
+             }
+ 
+             try {
++                Log.e("Gene", "onResume 6")
+                 val loadAdResult = when {
+                     sdk == SDK.VUNGLE.value && AdSdkManager.allowEnableAd(SDK.VUNGLE) -> {
+                         when (format) {
+@@ -194,7 +197,7 @@ abstract class BaseAdController <T: BaseAdController.BaseAd?> {
                          AdSdkManager.LoadAdResult(false, "SDK[$sdk] not supported.")
                      }
                  }
