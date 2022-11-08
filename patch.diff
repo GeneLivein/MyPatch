@@ -106,6 +106,36 @@ index 2acd15d1..9cb1f5c3 100644
  import com.status.traffic.ads.AdSdkManager
  
  class CallHistoryViewHolder(private val targetView: RelativeLayout) : cc_4VA() {
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/HomeLifecycleAdManager.kt b/status-traffic-api/src/main/java/com/status/traffic/HomeLifecycleAdManager.kt
+index 92d85adc..bbc88bf5 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/HomeLifecycleAdManager.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/HomeLifecycleAdManager.kt
+@@ -55,15 +55,16 @@ object HomeLifecycleAdManager {
+     }
+ 
+     fun getCarouselConversationAd(isGroup: Boolean): NativeAdConfig? {
+-        return if (isGroup) {
+-            if (carouselConversationGroupAd === carouselConversationAd) {
+-                null
+-            } else {
+-                carouselConversationGroupAd
+-            }
+-        } else {
+-            carouselConversationAd
+-        }
++//        return if (isGroup) {
++//            if (carouselConversationGroupAd === carouselConversationAd) {
++//                null
++//            } else {
++//                carouselConversationGroupAd
++//            }
++//        } else {
++//            carouselConversationAd
++//        }
++        return null
+     }
+ 
+     fun isSdkConversationAdReady(): Boolean {
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
 index 4f1cd110..443f64a7 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
