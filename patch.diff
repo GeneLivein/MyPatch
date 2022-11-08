@@ -137,9 +137,18 @@ index 92d85adc..bbc88bf5 100644
  
      fun isSdkConversationAdReady(): Boolean {
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
-index 4f1cd110..443f64a7 100644
+index 4f1cd110..35028e9d 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
+@@ -285,7 +285,7 @@ object AdSdkManager {
+         if (statusSdkBannerAd?.getAd()?.isReady() == true) {
+             return
+         }
+-        statusSdkBannerAd?.loadAd(activity, configs)
++//        statusSdkBannerAd?.loadAd(activity, configs)
+     }
+ 
+     fun showStatusSdkBannerAd(container: RelativeLayout, onClickAd: (() -> Unit)? = null) {
 @@ -347,6 +347,8 @@ object AdSdkManager {
          callListBannerAdController?.getAd()?.showAd(container)
      }
