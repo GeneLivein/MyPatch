@@ -25,10 +25,18 @@ index 6859204e..0dea7582 100644
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
-index ab8eb94f..d95772a5 100644
+index ab8eb94f..a3c42087 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
-@@ -35,6 +35,11 @@ object CallHistoryDelegate {
+@@ -2,6 +2,7 @@ package com.coocoo.callhistory
+ 
+ import X.c1_01E
+ import X.cc_5WG
++import android.util.Log
+ import android.view.Gravity
+ import android.view.View
+ import android.view.ViewGroup
+@@ -35,15 +36,22 @@ object CallHistoryDelegate {
      @JvmStatic
      @SmaliInject
      fun addCallListBannerItem(arr: ArrayList<cc_5WG>) {
@@ -40,19 +48,64 @@ index ab8eb94f..d95772a5 100644
          arr.add(CallHistoryItem())
      }
  
+     @JvmStatic
+     @SmaliInject
+     fun onResume(fragment: c1_01E) {
+-        CallListBannerAdRemoteConfig.getCallListBannerAd().let { config ->
+-            val adsSdk = config?.waterFall
++        CallListBannerAdRemoteConfig.getCallListBannerAd()?.let { config ->
++            val adsSdk = config.waterFall
++            Log.e("Gene", "onResume 1")
+             if (adsSdk != null) {
++                Log.e("Gene", "onResume 2")
+                 AdSdkManager.loadCallListBannerAd(fragment.A0C(), adsSdk)
+             }
+         }
+diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryItem.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryItem.kt
+index eb2a8bb1..7d5fe148 100644
+--- a/app/src/main/java/com/coocoo/callhistory/CallHistoryItem.kt
++++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryItem.kt
+@@ -1,14 +1,10 @@
+ package com.coocoo.callhistory
+ 
+ import X.cc_5WG
+-import android.widget.RelativeLayout
+-import com.status.traffic.ads.AdSdkManager
+ import com.whatsapp.jid.UserJid
+ 
+ class CallHistoryItem : cc_5WG {
+ 
+-    private val sdk: AdSdkManager = AdSdkManager
+-
+     override fun ADd(): Int {
+         return VIEW_TYPE
+     }
+@@ -20,8 +16,4 @@ class CallHistoryItem : cc_5WG {
+     companion object {
+         const val VIEW_TYPE = 4;
+     }
+-
+-    fun bindView(targetView: RelativeLayout) {
+-        sdk.showCallListBannerAd(targetView)
+-    }
+ }
+\ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
-index 2acd15d1..6205dab9 100644
+index 2acd15d1..3b0de5d9 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
-@@ -2,6 +2,7 @@ package com.coocoo.callhistory
+@@ -1,9 +1,8 @@
+ package com.coocoo.callhistory
  
  import X.cc_4VA
- import X.cc_5WG
+-import X.cc_5WG
 +import android.view.View
  import android.widget.RelativeLayout
- import com.startapp.cc
+-import com.startapp.cc
  import com.status.traffic.ads.AdSdkManager
-@@ -14,6 +15,11 @@ class CallHistoryViewHolder(private val targetView: RelativeLayout) : cc_4VA() {
+ 
+ class CallHistoryViewHolder(private val targetView: RelativeLayout) : cc_4VA() {
+@@ -14,6 +13,11 @@ class CallHistoryViewHolder(private val targetView: RelativeLayout) : cc_4VA() {
  
      fun bindAd() {
          AdSdkManager.showCallListBannerAd(targetView)
@@ -65,6 +118,18 @@ index 2acd15d1..6205dab9 100644
      }
  }
 \ No newline at end of file
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
+index 4f1cd110..f35cc9d1 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
+@@ -340,6 +340,7 @@ object AdSdkManager {
+         if (callListBannerAdController?.getAd()?.isReady() == true) {
+             return
+         }
++        Log.e("Gene", "onResume 3")
+         callListBannerAdController?.loadAd(activity, configs)
+     }
+ 
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
 index e067332e..6d7411ec 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
