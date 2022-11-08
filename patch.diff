@@ -25,7 +25,7 @@ index 6859204e..0dea7582 100644
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
-index ab8eb94f..774ec699 100644
+index ab8eb94f..3d93684a 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 @@ -2,6 +2,7 @@ package com.coocoo.callhistory
@@ -40,13 +40,14 @@ index ab8eb94f..774ec699 100644
      @JvmStatic
      @SmaliInject
      fun addCallListBannerItem(arr: ArrayList<cc_5WG>) {
-+        Log.e("Gene", "addCallListBannerItem")
-+        if (arr.size > 1) {
-+            arr.add(1, CallHistoryItem())
-+        } else {
-+            arr.add(CallHistoryItem())
+-        arr.add(CallHistoryItem())
++        if (AdSdkManager.isCallListBannerAdReady()) {
++            if (arr.size > 1) {
++                arr.add(1, CallHistoryItem())
++            } else {
++                arr.add(CallHistoryItem())
++            }
 +        }
-         arr.add(CallHistoryItem())
      }
  
      @JvmStatic
@@ -92,45 +93,32 @@ index eb2a8bb1..7d5fe148 100644
  }
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
-index 2acd15d1..3b0de5d9 100644
+index 2acd15d1..9cb1f5c3 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
-@@ -1,9 +1,8 @@
+@@ -1,9 +1,7 @@
  package com.coocoo.callhistory
  
  import X.cc_4VA
 -import X.cc_5WG
-+import android.view.View
  import android.widget.RelativeLayout
 -import com.startapp.cc
  import com.status.traffic.ads.AdSdkManager
  
  class CallHistoryViewHolder(private val targetView: RelativeLayout) : cc_4VA() {
-@@ -14,6 +13,11 @@ class CallHistoryViewHolder(private val targetView: RelativeLayout) : cc_4VA() {
- 
-     fun bindAd() {
-         AdSdkManager.showCallListBannerAd(targetView)
-+        targetView.visibility = if (targetView.childCount == 0) {
-+            View.GONE
-+        } else {
-+            View.VISIBLE
-+        }
-         targetView.tag = this
-     }
- }
-\ No newline at end of file
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
-index 4f1cd110..f35cc9d1 100644
+index 4f1cd110..443f64a7 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
-@@ -340,6 +340,7 @@ object AdSdkManager {
-         if (callListBannerAdController?.getAd()?.isReady() == true) {
-             return
-         }
-+        Log.e("Gene", "onResume 3")
-         callListBannerAdController?.loadAd(activity, configs)
+@@ -347,6 +347,8 @@ object AdSdkManager {
+         callListBannerAdController?.getAd()?.showAd(container)
      }
  
++    fun isCallListBannerAdReady(): Boolean = callListBannerAdController?.getAd() != null
++
+     fun release() {
+         scope.coroutineContext.cancelChildren()
+         statusDestroyAd?.release()
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
 index e067332e..865fb695 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
