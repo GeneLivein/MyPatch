@@ -65,6 +65,27 @@ index 2acd15d1..6205dab9 100644
      }
  }
 \ No newline at end of file
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
+index e067332e..6d7411ec 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
+@@ -3,6 +3,7 @@ package com.status.traffic.ads.ad
+ import android.app.Activity
+ import android.os.SystemClock
+ import android.util.Base64
++import android.util.Log
+ import com.coocoo.utils.AESCipherUtil
+ import com.status.traffic.ads.*
+ import com.status.traffic.data.enums.AdsSDKFormat
+@@ -194,7 +195,7 @@ abstract class BaseAdController <T: BaseAdController.BaseAd?> {
+                         AdSdkManager.LoadAdResult(false, "SDK[$sdk] not supported.")
+                     }
+                 }
+-
++                Log.e("Gene", "${config.adId} $loadAdResult")
+                 val isSuccess = loadAdResult.isSuccess
+                 if (isSuccess) {
+                     adConfig = config
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 index befc7a47..89287a8d 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
