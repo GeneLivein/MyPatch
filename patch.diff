@@ -40,6 +40,31 @@ index ab8eb94f..d95772a5 100644
          arr.add(CallHistoryItem())
      }
  
+diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
+index 2acd15d1..6205dab9 100644
+--- a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
++++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
+@@ -2,6 +2,7 @@ package com.coocoo.callhistory
+ 
+ import X.cc_4VA
+ import X.cc_5WG
++import android.view.View
+ import android.widget.RelativeLayout
+ import com.startapp.cc
+ import com.status.traffic.ads.AdSdkManager
+@@ -14,6 +15,11 @@ class CallHistoryViewHolder(private val targetView: RelativeLayout) : cc_4VA() {
+ 
+     fun bindAd() {
+         AdSdkManager.showCallListBannerAd(targetView)
++        targetView.visibility = if (targetView.childCount == 0) {
++            View.GONE
++        } else {
++            View.VISIBLE
++        }
+         targetView.tag = this
+     }
+ }
+\ No newline at end of file
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 index befc7a47..89287a8d 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
