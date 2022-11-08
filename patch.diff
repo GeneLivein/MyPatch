@@ -131,7 +131,7 @@ index 4f1cd110..f35cc9d1 100644
      }
  
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
-index e067332e..83b60fb9 100644
+index e067332e..865fb695 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
 @@ -3,6 +3,7 @@ package com.status.traffic.ads.ad
@@ -176,10 +176,11 @@ index e067332e..83b60fb9 100644
                  val isSuccess = loadAdResult.isSuccess
                  if (isSuccess) {
                      adConfig = config
-@@ -208,6 +211,7 @@ abstract class BaseAdController <T: BaseAdController.BaseAd?> {
+@@ -208,6 +211,8 @@ abstract class BaseAdController <T: BaseAdController.BaseAd?> {
                      AdsSdkReporter.report(config, AdsSdkReporter.Action.LOAD_AD_FAILED, loadAdResult.errorMessage, loadAdTimeElapsed = loadAdTimeElapsed)
                  }
              } catch (e: Exception) {
++                e.printStackTrace()
 +                Log.e("Gene", "${e.message}")
                  loadAdTimeElapsed = SystemClock.elapsedRealtime() - loadStartTime
                  AdsSdkReporter.report(config, AdsSdkReporter.Action.LOAD_AD_FAILED, e.message, loadAdTimeElapsed = loadAdTimeElapsed)
@@ -249,3 +250,68 @@ index befc7a47..89287a8d 100644
          val jsonCache = apiPref?.getConfigJson(apiName)
          val adsApi = parserAdsApi(jsonCache)
          if (adsApi != null) {
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/HomeTopBannerAdRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/HomeTopBannerAdRemoteConfig.kt
+index 7981948b..bd0cb19c 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/data/config/HomeTopBannerAdRemoteConfig.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/HomeTopBannerAdRemoteConfig.kt
+@@ -66,33 +66,33 @@ object HomeTopBannerAdRemoteConfig:
+     }
+ 
+     fun getHomeTopBannerWaterFall(): HomeTopBannerConfig? {
+-        if (isMembershipEffective()) {
+-            return null
+-        }
+-        val configPref = preferences ?: return null
+-        var homeTopIndex = configPref.homeTopIndex
+-        val config = apiRemoteConfig ?: return null
+-
+-        val openRTBAd = config.firstOrNull {
+-            ConfigType.OPEN_RTB.value == it.type
+-        }
+-        if (openRTBAd != null) {
+-            val bannerAd = HomeTopBannerOpenRTB.getBannerHtml()
+-            val isPostImpTrackers = HomeTopBannerOpenRTB.isPostImpTrackers()
+-            if (bannerAd?.isNotEmpty() == true && !isPostImpTrackers) {
+-                return openRTBAd
+-            }
+-        }
+-
+-        if (config.size > homeTopIndex + 1) {
+-            homeTopIndex++
+-            configPref.homeTopIndex = homeTopIndex
+-            return config[homeTopIndex]
+-        } else if (config.isNotEmpty()) {
+-            homeTopIndex = 0
+-            configPref.homeTopIndex = homeTopIndex
+-            return config[homeTopIndex]
+-        }
++//        if (isMembershipEffective()) {
++//            return null
++//        }
++//        val configPref = preferences ?: return null
++//        var homeTopIndex = configPref.homeTopIndex
++//        val config = apiRemoteConfig ?: return null
++//
++//        val openRTBAd = config.firstOrNull {
++//            ConfigType.OPEN_RTB.value == it.type
++//        }
++//        if (openRTBAd != null) {
++//            val bannerAd = HomeTopBannerOpenRTB.getBannerHtml()
++//            val isPostImpTrackers = HomeTopBannerOpenRTB.isPostImpTrackers()
++//            if (bannerAd?.isNotEmpty() == true && !isPostImpTrackers) {
++//                return openRTBAd
++//            }
++//        }
++//
++//        if (config.size > homeTopIndex + 1) {
++//            homeTopIndex++
++//            configPref.homeTopIndex = homeTopIndex
++//            return config[homeTopIndex]
++//        } else if (config.isNotEmpty()) {
++//            homeTopIndex = 0
++//            configPref.homeTopIndex = homeTopIndex
++//            return config[homeTopIndex]
++//        }
+         return null
+ 
+     }
