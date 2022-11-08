@@ -91,7 +91,7 @@ index eb2a8bb1..7d5fe148 100644
  }
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
-index 2acd15d1..3b0de5d9 100644
+index 2acd15d1..becd4fa0 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
 @@ -1,9 +1,8 @@
@@ -105,19 +105,6 @@ index 2acd15d1..3b0de5d9 100644
  import com.status.traffic.ads.AdSdkManager
  
  class CallHistoryViewHolder(private val targetView: RelativeLayout) : cc_4VA() {
-@@ -14,6 +13,11 @@ class CallHistoryViewHolder(private val targetView: RelativeLayout) : cc_4VA() {
- 
-     fun bindAd() {
-         AdSdkManager.showCallListBannerAd(targetView)
-+        targetView.visibility = if (targetView.childCount == 0) {
-+            View.GONE
-+        } else {
-+            View.VISIBLE
-+        }
-         targetView.tag = this
-     }
- }
-\ No newline at end of file
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
 index 4f1cd110..f35cc9d1 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
