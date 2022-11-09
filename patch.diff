@@ -1,6 +1,30 @@
+diff --git a/app/src/main/java/com/coocoo/CooCoo.kt b/app/src/main/java/com/coocoo/CooCoo.kt
+index 6859204e..c4cf8130 100644
+--- a/app/src/main/java/com/coocoo/CooCoo.kt
++++ b/app/src/main/java/com/coocoo/CooCoo.kt
+@@ -5,6 +5,7 @@ import X.cc_0m6
+ import android.annotation.SuppressLint
+ import android.content.Context
+ import android.content.res.Configuration
++import android.net.Uri
+ import android.os.Build
+ import android.util.Log
+ import android.widget.ImageView
+@@ -69,6 +70,11 @@ object CooCoo {
+         Log.e(TAG, "-----------------3---------------- // value : $value")
+     }
+ 
++    @JvmStatic
++    fun traceLogUri(value: Uri) {
++        Log.e(TAG, "-----------------Uri---------------- // value : $value")
++    }
++
+     @JvmStatic
+     fun getNightMode(): Boolean {
+         val c102d: cc_0m6 = componentContainer.AN4.get() as cc_0m6?
 diff --git a/whatsapp_modify_module/smali_classes2/X/18U.smali b/whatsapp_modify_module/smali_classes2/X/18U.smali
 new file mode 100644
-index 00000000..d8b2e6a6
+index 00000000..8d5288c6
 --- /dev/null
 +++ b/whatsapp_modify_module/smali_classes2/X/18U.smali
 @@ -0,0 +1,194 @@
@@ -74,13 +98,13 @@ index 00000000..d8b2e6a6
 +    return-void
 +
 +    :cond_1
++#coocoo
++    invoke-static {v3}, Lcom/coocoo/CooCoo;->traceLogUri(Landroid/net/Uri;)V
++#coocoo
++
 +    invoke-static {p2}, Lcom/gbwhatsapp/acceptinvitelink/AcceptInviteLinkActivity;->A02(Landroid/net/Uri;)Ljava/lang/String;
 +
 +    move-result-object v3
-+
-+#coocoo
-+    invoke-static {v3}, Lcom/coocoo/CooCoo;->traceLog3(Ljava/lang/String;)V
-+#coocoo
 +
 +    invoke-static {v3}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
 +
