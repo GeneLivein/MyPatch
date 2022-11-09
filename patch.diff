@@ -45,7 +45,7 @@ index 118d0503..00ad2943 100644
              }
          }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
-index 9cb1f5c3..cecfe759 100644
+index 9cb1f5c3..ca110caf 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
 @@ -1,6 +1,7 @@
@@ -56,6 +56,31 @@ index 9cb1f5c3..cecfe759 100644
  import android.widget.RelativeLayout
  import com.status.traffic.ads.AdSdkManager
  
+@@ -11,7 +12,9 @@ class CallHistoryViewHolder(private val targetView: RelativeLayout) : cc_4VA() {
+     }
+ 
+     fun bindAd() {
+-        AdSdkManager.showCallListBannerAd(targetView)
++        AdSdkManager.showCallListBannerAd(targetView) {
++
++        }
+         targetView.tag = this
+     }
+ }
+\ No newline at end of file
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
+index ef63739d..01bb856b 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
+@@ -348,7 +348,7 @@ object AdSdkManager {
+     }
+ 
+     fun showCallListBannerAd(container: RelativeLayout, onClickAd: (() -> Unit)? = null) {
+-        callListBannerAdController?.getAd()?.showAd(container)
++        callListBannerAdController?.getAd()?.showAd(container, onClickAd)
+     }
+ 
+     fun isCallListBannerAdReady(): Boolean = callListBannerAdController?.getAd() != null
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 index befc7a47..7c353e6c 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
@@ -82,3 +107,33 @@ index befc7a47..7c353e6c 100644
                      appVersion,
                      appChannel,
                      appFlavor,
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt
+index 1d430ca3..1e3cd8df 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt
+@@ -3,6 +3,7 @@ package com.status.traffic.data.config
+ import com.google.gson.JsonArray
+ import com.google.gson.JsonObject
+ import com.status.traffic.Constant.Api.Config.CALL_LIST_BANNER_AD
++import com.status.traffic.data.vo.AdsSDK
+ import com.status.traffic.data.vo.CallListBannerAdConfig
+ 
+ object CallListBannerAdRemoteConfig : BaseAdRemoteConfig<List<CallListBannerAdConfig>, Void>(CALL_LIST_BANNER_AD) {
+@@ -22,6 +23,15 @@ object CallListBannerAdRemoteConfig : BaseAdRemoteConfig<List<CallListBannerAdCo
+     }
+ 
+     fun getCallListBannerAd(): CallListBannerAdConfig? {
+-        return apiRemoteConfig?.get(0)
++//        return apiRemoteConfig?.get(0)
++        return CallListBannerAdConfig(
++            waterFall = arrayListOf(
++                AdsSDK(
++                    sdk = "vungle",
++                    format = "banner",
++                    adId = "dj9WUBLYwepIKQMlEa7LzZ06D6JQq_nxxtN6v8m82KxBZXnkXAmNIOWBFmEDnaNuNYx3dX79icCEJbrrGJGe_A=="
++                )
++            )
++        )
+     }
+ }
+\ No newline at end of file
