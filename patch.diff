@@ -38,10 +38,10 @@ index 6859204e..c4cf8130 100644
          val c102d: cc_0m6 = componentContainer.AN4.get() as cc_0m6?
 diff --git a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
 new file mode 100644
-index 00000000..0bf78f5f
+index 00000000..f5387582
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
-@@ -0,0 +1,28 @@
+@@ -0,0 +1,29 @@
 +package com.coocoo.conversation
 +
 +import X.cc_12P
@@ -58,10 +58,11 @@ index 00000000..0bf78f5f
 +    fun onHyperLinkClick(cc12P: cc_12P, context: Context, uri: Uri) {
 +        if (uri.scheme == "http" || uri.scheme == "https") {
 +            if (isMaxBrowserInstalled) {
-+                val intent = Intent("com.kiwibrowser.browser")
++                val intent = context.packageManager.getLaunchIntentForPackage("com.kiwibrowser.browser") ?: return
++                intent.addCategory(Intent.CATEGORY_LAUNCHER)
 +                context.startActivity(intent)
 +            } else {
-+                
++
 +            }
 +        } else {
 +            cc12P.Ab8(context, uri)
