@@ -12,7 +12,7 @@ index 6859204e..bf5ca0a6 100644
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
-index befc7a47..f6fb965e 100644
+index befc7a47..7c353e6c 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 @@ -144,9 +144,9 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
@@ -33,7 +33,7 @@ index befc7a47..f6fb965e 100644
                  val headers = OkHttpHelper.getRemoteConfigHeaders(
                      isDebug,
 -                    country,
-+                    "tw",
++                    "cn",
                      appVersion,
                      appChannel,
                      appFlavor,
