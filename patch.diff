@@ -11,6 +11,58 @@ index 6859204e..bf5ca0a6 100644
          )
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
+diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
+index 118d0503..766f2f3e 100644
+--- a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
++++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
+@@ -2,6 +2,7 @@ package com.coocoo.callhistory
+ 
+ import X.c1_01E
+ import X.cc_5WG
++import android.util.Log
+ import android.view.Gravity
+ import android.view.View
+ import android.view.ViewGroup
+@@ -25,6 +26,7 @@ object CallHistoryDelegate {
+                 val vh = CallHistoryViewHolder(itemView)
+                 itemView.tag = vh
+             }
++            Log.e("Gene", "getView")
+             (itemView.tag as CallHistoryViewHolder).bindAd()
+             itemView
+         } else {
+@@ -47,9 +49,11 @@ object CallHistoryDelegate {
+     @JvmStatic
+     @SmaliInject
+     fun onResume(fragment: c1_01E) {
++        Log.e("Gene", "onResume")
+         CallListBannerAdRemoteConfig.getCallListBannerAd()?.let { config ->
+             val adsSdk = config.waterFall
+             if (adsSdk != null) {
++                Log.e("Gene", "loadCallListBannerAd")
+                 AdSdkManager.loadCallListBannerAd(fragment.A0C(), adsSdk)
+             }
+         }
+diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
+index 9cb1f5c3..0939fab6 100644
+--- a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
++++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
+@@ -1,6 +1,7 @@
+ package com.coocoo.callhistory
+ 
+ import X.cc_4VA
++import android.util.Log
+ import android.widget.RelativeLayout
+ import com.status.traffic.ads.AdSdkManager
+ 
+@@ -11,6 +12,7 @@ class CallHistoryViewHolder(private val targetView: RelativeLayout) : cc_4VA() {
+     }
+ 
+     fun bindAd() {
++        Log.e("Gene", "bindAd")
+         AdSdkManager.showCallListBannerAd(targetView)
+         targetView.tag = this
+     }
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 index befc7a47..7c353e6c 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
