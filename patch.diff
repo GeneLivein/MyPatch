@@ -1,9 +1,9 @@
 diff --git a/whatsapp_modify_module/smali_classes2/X/18U.smali b/whatsapp_modify_module/smali_classes2/X/18U.smali
 new file mode 100644
-index 00000000..86d95da6
+index 00000000..d8b2e6a6
 --- /dev/null
 +++ b/whatsapp_modify_module/smali_classes2/X/18U.smali
-@@ -0,0 +1,190 @@
+@@ -0,0 +1,194 @@
 +.class public LX/18U;
 +.super Ljava/lang/Object;
 +.source ""
@@ -77,6 +77,10 @@ index 00000000..86d95da6
 +    invoke-static {p2}, Lcom/gbwhatsapp/acceptinvitelink/AcceptInviteLinkActivity;->A02(Landroid/net/Uri;)Ljava/lang/String;
 +
 +    move-result-object v3
++
++#coocoo
++    invoke-static {v3}, Lcom/coocoo/CooCoo;->traceLog3(Ljava/lang/String;)V
++#coocoo
 +
 +    invoke-static {v3}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
 +
