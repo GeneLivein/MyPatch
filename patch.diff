@@ -24,7 +24,7 @@ index 6859204e..c4cf8130 100644
          val c102d: cc_0m6 = componentContainer.AN4.get() as cc_0m6?
 diff --git a/whatsapp_modify_module/smali_classes2/X/18U.smali b/whatsapp_modify_module/smali_classes2/X/18U.smali
 new file mode 100644
-index 00000000..4dce94d6
+index 00000000..d7406974
 --- /dev/null
 +++ b/whatsapp_modify_module/smali_classes2/X/18U.smali
 @@ -0,0 +1,194 @@
@@ -191,9 +191,9 @@ index 00000000..4dce94d6
 +    if-nez v0, :cond_0
 +
 +    iget-object v0, p0, LX/18U;->A00:LX/12P;
-+
-+    invoke-virtual {v0, p1, p2}, LX/12P;->Ab8(Landroid/content/Context;Landroid/net/Uri;)V
-+
++#coocoo
++    #invoke-virtual {v0, p1, p2}, LX/12P;->Ab8(Landroid/content/Context;Landroid/net/Uri;)V
++#coocoo
 +    return-void
 +
 +    :cond_4
