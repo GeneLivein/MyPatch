@@ -44,7 +44,7 @@ index 118d0503..766f2f3e 100644
              }
          }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
-index 9cb1f5c3..0939fab6 100644
+index 9cb1f5c3..199d21e5 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
 @@ -1,6 +1,7 @@
@@ -55,14 +55,21 @@ index 9cb1f5c3..0939fab6 100644
  import android.widget.RelativeLayout
  import com.status.traffic.ads.AdSdkManager
  
-@@ -11,6 +12,7 @@ class CallHistoryViewHolder(private val targetView: RelativeLayout) : cc_4VA() {
+@@ -11,7 +12,11 @@ class CallHistoryViewHolder(private val targetView: RelativeLayout) : cc_4VA() {
      }
  
      fun bindAd() {
+-        AdSdkManager.showCallListBannerAd(targetView)
+-        targetView.tag = this
 +        Log.e("Gene", "bindAd")
-         AdSdkManager.showCallListBannerAd(targetView)
-         targetView.tag = this
++        if (targetView.childCount == 0) {
++            AdSdkManager.showCallListBannerAd(targetView)
++
++            targetView.tag = this
++        }
      }
+ }
+\ No newline at end of file
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 index befc7a47..7c353e6c 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
