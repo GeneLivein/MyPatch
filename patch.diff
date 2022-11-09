@@ -45,7 +45,7 @@ index 118d0503..00ad2943 100644
              }
          }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
-index 9cb1f5c3..199d21e5 100644
+index 9cb1f5c3..383972e0 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
 @@ -1,6 +1,7 @@
@@ -62,10 +62,10 @@ index 9cb1f5c3..199d21e5 100644
      fun bindAd() {
 -        AdSdkManager.showCallListBannerAd(targetView)
 -        targetView.tag = this
-+        Log.e("Gene", "bindAd")
++        Log.e("Gene", "bindAd 1")
 +        if (targetView.childCount == 0) {
 +            AdSdkManager.showCallListBannerAd(targetView)
-+
++            Log.e("Gene", "bindAd 2")
 +            targetView.tag = this
 +        }
      }
