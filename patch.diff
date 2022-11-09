@@ -222,6 +222,427 @@ index 00000000..d7406974
 +#coocoo
 +    return-void
 +.end method
+diff --git a/whatsapp_modify_module/smali_classes2/X/1kY.1.smali b/whatsapp_modify_module/smali_classes2/X/1kY.1.smali
+index 573208ab..7272f8d0 100644
+--- a/whatsapp_modify_module/smali_classes2/X/1kY.1.smali
++++ b/whatsapp_modify_module/smali_classes2/X/1kY.1.smali
+@@ -9,14 +9,14 @@
+ # instance fields
+ .field public A00:Landroid/widget/Filter;
+ 
+-.field public final synthetic A01:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++.field public final synthetic A01:Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;
+ 
+ 
+ # direct methods
+-.method public constructor <init>(Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;)V
++.method public constructor <init>(Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;)V
+     .locals 0
+ 
+-    iput-object p1, p0, LX/1kY;->A01:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++    iput-object p1, p0, LX/1kY;->A01:Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;
+ 
+     invoke-direct {p0}, Landroid/widget/BaseAdapter;-><init>()V
+ 
+@@ -28,9 +28,9 @@
+ .method public getCount()I
+     .locals 1
+ 
+-    iget-object v0, p0, LX/1kY;->A01:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++    iget-object v0, p0, LX/1kY;->A01:Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;
+ 
+-    iget-object v0, v0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0f:Ljava/util/ArrayList;
++    iget-object v0, v0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0f:Ljava/util/ArrayList;
+ 
+     invoke-virtual {v0}, Ljava/util/AbstractCollection;->size()I
+ 
+@@ -46,11 +46,11 @@
+ 
+     if-nez v1, :cond_0
+ 
+-    iget-object v0, p0, LX/1kY;->A01:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++    iget-object v0, p0, LX/1kY;->A01:Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;
+ 
+     new-instance v1, LX/1kx;
+ 
+-    invoke-direct {v1, v0}, LX/1kx;-><init>(Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;)V
++    invoke-direct {v1, v0}, LX/1kx;-><init>(Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;)V
+ 
+     iput-object v1, p0, LX/1kY;->A00:Landroid/widget/Filter;
+ 
+@@ -61,9 +61,9 @@
+ .method public bridge synthetic getItem(I)Ljava/lang/Object;
+     .locals 1
+ 
+-    iget-object v0, p0, LX/1kY;->A01:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++    iget-object v0, p0, LX/1kY;->A01:Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;
+ 
+-    iget-object v0, v0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0f:Ljava/util/ArrayList;
++    iget-object v0, v0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0f:Ljava/util/ArrayList;
+ 
+     invoke-virtual {v0, p1}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+ 
+@@ -75,9 +75,9 @@
+ .method public getItemId(I)J
+     .locals 2
+ 
+-    iget-object v0, p0, LX/1kY;->A01:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++    iget-object v0, p0, LX/1kY;->A01:Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;
+ 
+-    iget-object v0, v0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0f:Ljava/util/ArrayList;
++    iget-object v0, v0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0f:Ljava/util/ArrayList;
+ 
+     invoke-virtual {v0, p1}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+ 
+@@ -95,9 +95,9 @@
+ .method public getItemViewType(I)I
+     .locals 1
+ 
+-    iget-object v0, p0, LX/1kY;->A01:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++    iget-object v0, p0, LX/1kY;->A01:Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;
+ 
+-    iget-object v0, v0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0f:Ljava/util/ArrayList;
++    iget-object v0, v0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0f:Ljava/util/ArrayList;
+ 
+     invoke-virtual {v0, p1}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+ 
+@@ -119,9 +119,9 @@
+ 
+     move-object/from16 v8, p0
+ 
+-    iget-object v4, v8, LX/1kY;->A01:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++    iget-object v4, v8, LX/1kY;->A01:Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;
+ 
+-    iget-object v0, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0f:Ljava/util/ArrayList;
++    iget-object v0, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0f:Ljava/util/ArrayList;
+ 
+     move/from16 v1, p1
+ 
+@@ -174,7 +174,7 @@
+     :cond_0
+     if-nez p2, :cond_3
+ 
+-    iget-object v2, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0P:LX/0m9;
++    iget-object v2, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0P:LX/0m9;
+ 
+     const/16 v0, 0x16f
+ 
+@@ -199,17 +199,17 @@
+ 
+     if-ne v9, v7, :cond_2
+ 
+-    iget-object v11, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0P:LX/0m9;
++    iget-object v11, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0P:LX/0m9;
+ 
+-    iget-object v10, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0Z:LX/19Z;
++    iget-object v10, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0Z:LX/19Z;
+ 
+-    iget-object v9, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0B:LX/0nR;
++    iget-object v9, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0B:LX/0nR;
+ 
+-    iget-object v7, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0D:LX/0nY;
++    iget-object v7, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0D:LX/0nY;
+ 
+-    iget-object v6, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0T:LX/12F;
++    iget-object v6, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0T:LX/12F;
+ 
+-    iget-object v0, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0F:LX/1J1;
++    iget-object v0, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0F:LX/1J1;
+ 
+     new-instance v5, LX/2w7;
+ 
+@@ -231,7 +231,7 @@
+ 
+     move-object/from16 v20, v10
+ 
+-    invoke-direct/range {v12 .. v20}, LX/2w7;-><init>(Landroid/view/View;Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;LX/0nR;LX/0nY;LX/1J1;LX/0m9;LX/12F;LX/19Z;)V
++    invoke-direct/range {v12 .. v20}, LX/2w7;-><init>(Landroid/view/View;Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;LX/0nR;LX/0nY;LX/1J1;LX/0m9;LX/12F;LX/19Z;)V
+ 
+     :goto_0
+     invoke-virtual {v2, v5}, Landroid/view/View;->setTag(Ljava/lang/Object;)V
+@@ -248,37 +248,37 @@
+     goto/16 :goto_3
+ 
+     :cond_2
+-    iget-object v0, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0J:LX/0m7;
++    iget-object v0, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0J:LX/0m7;
+ 
+     move-object/from16 v25, v0
+ 
+-    iget-object v0, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0P:LX/0m9;
++    iget-object v0, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0P:LX/0m9;
+ 
+     move-object/from16 v28, v0
+ 
+-    iget-object v0, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A05:LX/0nH;
++    iget-object v0, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A05:LX/0nH;
+ 
+     move-object/from16 v18, v0
+ 
+-    iget-object v15, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0O:LX/0x7;
++    iget-object v15, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0O:LX/0x7;
+ 
+-    iget-object v14, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0Z:LX/19Z;
++    iget-object v14, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0Z:LX/19Z;
+ 
+-    iget-object v13, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0B:LX/0nR;
++    iget-object v13, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0B:LX/0nR;
+ 
+-    iget-object v12, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0I:LX/01d;
++    iget-object v12, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0I:LX/01d;
+ 
+-    iget-object v11, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0D:LX/0nY;
++    iget-object v11, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0D:LX/0nY;
+ 
+-    iget-object v10, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0K:LX/018;
++    iget-object v10, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0K:LX/018;
+ 
+-    iget-object v9, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0Q:LX/0wC;
++    iget-object v9, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0Q:LX/0wC;
+ 
+-    iget-object v7, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0T:LX/12F;
++    iget-object v7, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0T:LX/12F;
+ 
+-    iget-object v6, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0F:LX/1J1;
++    iget-object v6, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0F:LX/1J1;
+ 
+-    iget-object v0, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0E:LX/1J1;
++    iget-object v0, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0E:LX/1J1;
+ 
+     new-instance v5, LX/2w9;
+ 
+@@ -308,7 +308,7 @@
+ 
+     move-object/from16 v31, v14
+ 
+-    invoke-direct/range {v16 .. v31}, LX/2w9;-><init>(Landroid/view/View;LX/0nH;Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;LX/0nR;LX/0nY;LX/1J1;LX/1J1;LX/01d;LX/0m7;LX/018;LX/0x7;LX/0m9;LX/0wC;LX/12F;LX/19Z;)V
++    invoke-direct/range {v16 .. v31}, LX/2w9;-><init>(Landroid/view/View;LX/0nH;Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;LX/0nR;LX/0nY;LX/1J1;LX/1J1;LX/01d;LX/0m7;LX/018;LX/0x7;LX/0m9;LX/0wC;LX/12F;LX/19Z;)V
+ 
+     goto :goto_0
+ 
+@@ -334,37 +334,37 @@
+ 
+     move-result-object v2
+ 
+-    iget-object v0, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0P:LX/0m9;
++    iget-object v0, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0P:LX/0m9;
+ 
+     move-object/from16 v17, v0
+ 
+-    iget-object v0, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A05:LX/0nH;
++    iget-object v0, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A05:LX/0nH;
+ 
+     move-object/from16 v18, v0
+ 
+-    iget-object v0, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0O:LX/0x7;
++    iget-object v0, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0O:LX/0x7;
+ 
+     move-object/from16 v16, v0
+ 
+-    iget-object v15, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0Z:LX/19Z;
++    iget-object v15, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0Z:LX/19Z;
+ 
+-    iget-object v14, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0K:LX/018;
++    iget-object v14, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0K:LX/018;
+ 
+-    iget-object v13, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0B:LX/0nR;
++    iget-object v13, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0B:LX/0nR;
+ 
+-    iget-object v12, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0D:LX/0nY;
++    iget-object v12, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0D:LX/0nY;
+ 
+-    iget-object v11, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0Q:LX/0wC;
++    iget-object v11, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0Q:LX/0wC;
+ 
+-    iget-object v10, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0T:LX/12F;
++    iget-object v10, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0T:LX/12F;
+ 
+-    iget-object v9, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0M:LX/0nX;
++    iget-object v9, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0M:LX/0nX;
+ 
+-    iget-object v7, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0E:LX/1J1;
++    iget-object v7, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0E:LX/1J1;
+ 
+-    iget-object v6, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0F:LX/1J1;
++    iget-object v6, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0F:LX/1J1;
+ 
+-    iget-object v0, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A04:LX/0nT;
++    iget-object v0, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A04:LX/0nT;
+ 
+     new-instance v5, LX/2w8;
+ 
+@@ -398,7 +398,7 @@
+ 
+     move-object/from16 v24, v14
+ 
+-    invoke-direct/range {v15 .. v30}, LX/2w8;-><init>(Landroid/view/View;LX/0nT;LX/0nH;Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;LX/0nR;LX/0nY;LX/1J1;LX/1J1;LX/018;LX/0nX;LX/0x7;LX/0m9;LX/0wC;LX/12F;LX/19Z;)V
++    invoke-direct/range {v15 .. v30}, LX/2w8;-><init>(Landroid/view/View;LX/0nT;LX/0nH;Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;LX/0nR;LX/0nY;LX/1J1;LX/1J1;LX/018;LX/0nX;LX/0x7;LX/0m9;LX/0wC;LX/12F;LX/19Z;)V
+ 
+     invoke-virtual {v2, v5}, Landroid/view/View;->setTag(Ljava/lang/Object;)V
+ 
+@@ -413,7 +413,7 @@
+ 
+     if-ge v3, v0, :cond_5
+ 
+-    iget-object v0, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0f:Ljava/util/ArrayList;
++    iget-object v0, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0f:Ljava/util/ArrayList;
+ 
+     invoke-virtual {v0, v3}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+ 
+@@ -453,7 +453,7 @@
+ 
+     check-cast v0, Landroid/view/ViewGroup$MarginLayoutParams;
+ 
+-    iget-object v7, v4, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0K:LX/018;
++    iget-object v7, v4, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0K:LX/018;
+ 
+     iget v8, v0, Landroid/view/ViewGroup$MarginLayoutParams;->leftMargin:I
+ 
+diff --git a/whatsapp_modify_module/smali_classes2/X/1kx.2.smali b/whatsapp_modify_module/smali_classes2/X/1kx.2.smali
+index 16206538..5fa3be64 100644
+--- a/whatsapp_modify_module/smali_classes2/X/1kx.2.smali
++++ b/whatsapp_modify_module/smali_classes2/X/1kx.2.smali
+@@ -10,14 +10,14 @@
+ 
+ .field public final A02:Ljava/lang/Object;
+ 
+-.field public final synthetic A03:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++.field public final synthetic A03:Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;
+ 
+ 
+ # direct methods
+-.method public synthetic constructor <init>(Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;)V
++.method public synthetic constructor <init>(Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;)V
+     .locals 1
+ 
+-    iput-object p1, p0, LX/1kx;->A03:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++    iput-object p1, p0, LX/1kx;->A03:Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;
+ 
+     invoke-direct {p0}, Landroid/widget/Filter;-><init>()V
+ 
+@@ -163,9 +163,9 @@
+ 
+     move-result-object v1
+ 
+-    iget-object v7, p0, LX/1kx;->A03:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++    iget-object v7, p0, LX/1kx;->A03:Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;
+ 
+-    iget-object v0, v7, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0K:LX/018;
++    iget-object v0, v7, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0K:LX/018;
+ 
+     invoke-static {v0, v1}, LX/1cg;->A02(LX/018;Ljava/lang/String;)Ljava/util/ArrayList;
+ 
+@@ -179,7 +179,7 @@
+ 
+     invoke-direct {v9}, Ljava/util/ArrayList;-><init>()V
+ 
+-    iget-object v0, v7, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0g:Ljava/util/LinkedHashMap;
++    iget-object v0, v7, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0g:Ljava/util/LinkedHashMap;
+ 
+     invoke-virtual {v0}, Ljava/util/AbstractMap;->values()Ljava/util/Collection;
+ 
+@@ -203,13 +203,13 @@
+ 
+     check-cast v3, LX/3Fr;
+ 
+-    iget-object v13, v7, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0P:LX/0m9;
++    iget-object v13, v7, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0P:LX/0m9;
+ 
+-    iget-object v10, v7, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0B:LX/0nR;
++    iget-object v10, v7, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0B:LX/0nR;
+ 
+-    iget-object v2, v7, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0O:LX/0x7;
++    iget-object v2, v7, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0O:LX/0x7;
+ 
+-    iget-object v1, v7, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0Q:LX/0wC;
++    iget-object v1, v7, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0Q:LX/0wC;
+ 
+     invoke-virtual {v3}, LX/3Fr;->A04()Z
+ 
+@@ -444,7 +444,7 @@
+ 
+     iput-object v1, p0, LX/1kx;->A00:Ljava/util/ArrayList;
+ 
+-    iget-object v0, v7, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0B:LX/0nR;
++    iget-object v0, v7, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0B:LX/0nR;
+ 
+     iget-object v0, v0, LX/0nR;->A06:LX/0xe;
+ 
+@@ -510,7 +510,7 @@
+ 
+     if-nez v0, :cond_b
+ 
+-    iget-object v1, v7, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0D:LX/0nY;
++    iget-object v1, v7, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0D:LX/0nY;
+ 
+     const/4 v0, 0x1
+ 
+@@ -562,9 +562,9 @@
+     throw v0
+ 
+     :cond_e
+-    iget-object v0, p0, LX/1kx;->A03:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++    iget-object v0, p0, LX/1kx;->A03:Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;
+ 
+-    iget-object v0, v0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0g:Ljava/util/LinkedHashMap;
++    iget-object v0, v0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0g:Ljava/util/LinkedHashMap;
+ 
+     invoke-virtual {v0}, Ljava/util/AbstractMap;->values()Ljava/util/Collection;
+ 
+@@ -597,9 +597,9 @@
+ 
+     invoke-static {v0}, Lcom/whatsapp/util/Log;->e(Ljava/lang/String;)V
+ 
+-    iget-object v2, p0, LX/1kx;->A03:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++    iget-object v2, p0, LX/1kx;->A03:Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;
+ 
+-    iget-object v0, v2, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0g:Ljava/util/LinkedHashMap;
++    iget-object v0, v2, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0g:Ljava/util/LinkedHashMap;
+ 
+     invoke-virtual {v0}, Ljava/util/AbstractMap;->values()Ljava/util/Collection;
+ 
+@@ -613,26 +613,26 @@
+ #coocoo
+     invoke-static {v0}, Lcom/coocoo/callhistory/CallHistoryDelegate;->addCallListBannerItem(Ljava/util/ArrayList;)V
+ #coocoo
+-    iput-object v0, v2, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0f:Ljava/util/ArrayList;
++    iput-object v0, v2, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0f:Ljava/util/ArrayList;
+ 
+-    iput-object p1, v2, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0d:Ljava/lang/CharSequence;
++    iput-object p1, v2, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0d:Ljava/lang/CharSequence;
+ 
+     if-nez p1, :cond_0
+ 
+     const/4 v1, 0x0
+ 
+     :goto_1
+-    iget-object v0, v2, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0K:LX/018;
++    iget-object v0, v2, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0K:LX/018;
+ 
+     invoke-static {v0, v1}, LX/1cg;->A02(LX/018;Ljava/lang/String;)Ljava/util/ArrayList;
+ 
+     move-result-object v0
+ 
+-    iput-object v0, v2, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0e:Ljava/util/ArrayList;
++    iput-object v0, v2, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0e:Ljava/util/ArrayList;
+ 
+-    invoke-virtual {v2}, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A1D()V
++    invoke-virtual {v2}, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A1D()V
+ 
+-    iget-object v0, v2, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A07:LX/1kY;
++    iget-object v0, v2, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A07:LX/1kY;
+ 
+     invoke-virtual {v0}, Landroid/widget/BaseAdapter;->notifyDataSetChanged()V
+ 
+@@ -646,7 +646,7 @@
+     goto :goto_1
+ 
+     :cond_1
+-    iget-object v2, p0, LX/1kx;->A03:Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++    iget-object v2, p0, LX/1kx;->A03:Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;
+ 
+     check-cast v0, Ljava/util/ArrayList;
+ 
 diff --git a/whatsapp_modify_module/smali_classes2/X/2yk.2.smali b/whatsapp_modify_module/smali_classes2/X/2yk.2.smali
 new file mode 100644
 index 00000000..1f86861a
@@ -4338,3 +4759,815 @@ index 00000000..52a852f7
 +        :pswitch_13
 +    .end packed-switch
 +.end method
+diff --git a/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/calling/callhistory/CallsHistoryFragment.smali b/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/calling/callhistory/CallsHistoryFragment.smali
+index de7fbb38..4aa054d4 100644
+--- a/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/calling/callhistory/CallsHistoryFragment.smali
++++ b/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/calling/callhistory/CallsHistoryFragment.smali
+@@ -1,4 +1,4 @@
+-.class public Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;
++.class public Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;
+ .super Lcom/pluswhatsapp/calling/callhistory/Hilt_CallsHistoryFragment;
+ .source ""
+ 
+@@ -129,47 +129,47 @@
+ 
+     invoke-direct {v0}, Ljava/util/LinkedHashMap;-><init>()V
+ 
+-    iput-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0g:Ljava/util/LinkedHashMap;
++    iput-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0g:Ljava/util/LinkedHashMap;
+ 
+     new-instance v0, Ljava/util/ArrayList;
+ 
+     invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
+ 
+-    iput-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0f:Ljava/util/ArrayList;
++    iput-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0f:Ljava/util/ArrayList;
+ 
+     const/4 v0, 0x1
+ 
+-    iput-boolean v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0h:Z
++    iput-boolean v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0h:Z
+ 
+     new-instance v0, LX/1kV;
+ 
+-    invoke-direct {v0, p0}, LX/1kV;-><init>(Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;)V
++    invoke-direct {v0, p0}, LX/1kV;-><init>(Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;)V
+ 
+-    iput-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0l:LX/1Gd;
++    iput-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0l:LX/1Gd;
+ 
+     new-instance v0, LX/2we;
+ 
+-    invoke-direct {v0, p0}, LX/2we;-><init>(Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;)V
++    invoke-direct {v0, p0}, LX/2we;-><init>(Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;)V
+ 
+-    iput-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0k:LX/2Dm;
++    iput-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0k:LX/2Dm;
+ 
+     new-instance v0, LX/32P;
+ 
+-    invoke-direct {v0, p0}, LX/32P;-><init>(Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;)V
++    invoke-direct {v0, p0}, LX/32P;-><init>(Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;)V
+ 
+-    iput-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0m:LX/1dp;
++    iput-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0m:LX/1dp;
+ 
+     new-instance v0, LX/5B9;
+ 
+-    invoke-direct {v0, p0}, LX/5B9;-><init>(Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;)V
++    invoke-direct {v0, p0}, LX/5B9;-><init>(Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;)V
+ 
+-    iput-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0n:LX/2Dl;
++    iput-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0n:LX/2Dl;
+ 
+     new-instance v0, LX/48A;
+ 
+-    invoke-direct {v0, p0}, LX/48A;-><init>(Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;)V
++    invoke-direct {v0, p0}, LX/48A;-><init>(Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;)V
+ 
+-    iput-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0o:LX/12o;
++    iput-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0o:LX/12o;
+ 
+     const/16 v1, 0x15
+ 
+@@ -177,25 +177,25 @@
+ 
+     invoke-direct {v0, p0, v1}, Lcom/facebook/redex/RunnableBRunnable0Shape3S0100000_I0_3;-><init>(Ljava/lang/Object;I)V
+ 
+-    iput-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0p:Ljava/lang/Runnable;
++    iput-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0p:Ljava/lang/Runnable;
+ 
+     new-instance v0, Ljava/util/HashSet;
+ 
+     invoke-direct {v0}, Ljava/util/HashSet;-><init>()V
+ 
+-    iput-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0q:Ljava/util/HashSet;
++    iput-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0q:Ljava/util/HashSet;
+ 
+     new-instance v0, Ljava/util/HashSet;
+ 
+     invoke-direct {v0}, Ljava/util/HashSet;-><init>()V
+ 
+-    iput-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0r:Ljava/util/Set;
++    iput-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0r:Ljava/util/Set;
+ 
+     new-instance v0, LX/3Ok;
+ 
+-    invoke-direct {v0, p0}, LX/3Ok;-><init>(Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;)V
++    invoke-direct {v0, p0}, LX/3Ok;-><init>(Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;)V
+ 
+-    iput-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0j:LX/02Q;
++    iput-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0j:LX/02Q;
+ 
+     return-void
+ .end method
+@@ -356,7 +356,7 @@
+ 
+     new-instance v0, LX/36R;
+ 
+-    invoke-direct {v0, p0}, LX/36R;-><init>(Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;)V
++    invoke-direct {v0, p0}, LX/36R;-><init>(Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;)V
+ 
+     invoke-virtual {v1, v0}, Landroid/widget/AdapterView;->setOnItemClickListener(Landroid/widget/AdapterView$OnItemClickListener;)V
+ 
+@@ -366,7 +366,7 @@
+ 
+     new-instance v0, LX/3OG;
+ 
+-    invoke-direct {v0, p0}, LX/3OG;-><init>(Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;)V
++    invoke-direct {v0, p0}, LX/3OG;-><init>(Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;)V
+ 
+     invoke-virtual {v1, v0}, Landroid/widget/AdapterView;->setOnItemLongClickListener(Landroid/widget/AdapterView$OnItemLongClickListener;)V
+ 
+@@ -382,7 +382,7 @@
+ 
+     if-eqz v1, :cond_0
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0q:Ljava/util/HashSet;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0q:Ljava/util/HashSet;
+ 
+     invoke-virtual {v0}, Ljava/util/AbstractCollection;->clear()V
+ 
+@@ -400,13 +400,13 @@
+ 
+     check-cast v1, LX/00j;
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0j:LX/02Q;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0j:LX/02Q;
+ 
+     invoke-virtual {v1, v0}, LX/00j;->A1W(LX/02Q;)LX/04t;
+ 
+     move-result-object v0
+ 
+-    iput-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A01:LX/04t;
++    iput-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A01:LX/04t;
+ 
+     :cond_0
+     invoke-virtual {p0}, LX/01E;->A05()Landroid/view/View;
+@@ -423,43 +423,43 @@
+ 
+     new-instance v0, LX/1kY;
+ 
+-    invoke-direct {v0, p0}, LX/1kY;-><init>(Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;)V
++    invoke-direct {v0, p0}, LX/1kY;-><init>(Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;)V
+ 
+-    iput-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A07:LX/1kY;
++    iput-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A07:LX/1kY;
+ 
+     invoke-virtual {p0, v0}, Landroidx/fragment/app/ListFragment;->A18(Landroid/widget/ListAdapter;)V
+ 
+-    iget-object v1, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0C:LX/10S;
++    iget-object v1, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0C:LX/10S;
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0l:LX/1Gd;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0l:LX/1Gd;
+ 
+     invoke-virtual {v1, v0}, LX/0of;->A03(Ljava/lang/Object;)V
+ 
+-    iget-object v1, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0X:LX/12G;
++    iget-object v1, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0X:LX/12G;
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0n:LX/2Dl;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0n:LX/2Dl;
+ 
+     invoke-virtual {v1, v0}, LX/0of;->A03(Ljava/lang/Object;)V
+ 
+-    iget-object v1, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A09:LX/0yu;
++    iget-object v1, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A09:LX/0yu;
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0k:LX/2Dm;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0k:LX/2Dm;
+ 
+     invoke-virtual {v1, v0}, LX/0of;->A03(Ljava/lang/Object;)V
+ 
+-    iget-object v1, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0R:LX/15l;
++    iget-object v1, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0R:LX/15l;
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0m:LX/1dp;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0m:LX/1dp;
+ 
+     invoke-virtual {v1, v0}, LX/0of;->A03(Ljava/lang/Object;)V
+ 
+-    iget-object v1, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0Y:LX/0x8;
++    iget-object v1, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0Y:LX/0x8;
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0o:LX/12o;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0o:LX/12o;
+ 
+     invoke-virtual {v1, v0}, LX/0of;->A03(Ljava/lang/Object;)V
+ 
+-    invoke-virtual {p0}, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A1C()V
++    invoke-virtual {p0}, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A1C()V
+ 
+     return-void
+ .end method
+@@ -477,7 +477,7 @@
+ 
+     if-eqz p1, :cond_0
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0H:LX/2I1;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0H:LX/2I1;
+ 
+     invoke-virtual {v0, p0}, LX/2I1;->A01(LX/01E;)V
+ 
+@@ -502,7 +502,7 @@
+ 
+     invoke-super {p0}, LX/01E;->A0s()V
+ 
+-    invoke-virtual {p0}, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A1B()V
++    invoke-virtual {p0}, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A1B()V
+ 
+     return-void
+ .end method
+@@ -524,9 +524,9 @@
+ 
+     if-ne p2, v1, :cond_0
+ 
+-    iput-boolean v6, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0i:Z
++    iput-boolean v6, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0i:Z
+ 
+-    invoke-virtual {p0}, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A1E()V
++    invoke-virtual {p0}, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A1E()V
+ 
+     :cond_0
+     return-void
+@@ -559,9 +559,9 @@
+     if-ne v5, v4, :cond_0
+ 
+     :cond_2
+-    iget-object v3, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0Z:LX/19Z;
++    iget-object v3, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0Z:LX/19Z;
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0B:LX/0nR;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0B:LX/0nR;
+ 
+     invoke-virtual {v0, v1}, LX/0nR;->A0B(LX/0lm;)LX/0n3;
+ 
+@@ -586,13 +586,13 @@
+ .method public A0w(Landroid/os/Bundle;)V
+     .locals 2
+ 
+-    iget-object v1, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0q:Ljava/util/HashSet;
++    iget-object v1, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0q:Ljava/util/HashSet;
+ 
+     const-string v0, "SelectedCallGroupIds"
+ 
+     invoke-virtual {p1, v0, v1}, Landroid/os/Bundle;->putSerializable(Ljava/lang/String;Ljava/io/Serializable;)V
+ 
+-    iget-boolean v1, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0i:Z
++    iget-boolean v1, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0i:Z
+ 
+     const-string v0, "request_sync"
+ 
+@@ -610,11 +610,11 @@
+ 
+     move-result-object v1
+ 
+-    iput-object v1, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A00:Landroid/view/MenuItem;
++    iput-object v1, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A00:Landroid/view/MenuItem;
+ 
+     if-eqz v1, :cond_0
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0g:Ljava/util/LinkedHashMap;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0g:Ljava/util/LinkedHashMap;
+ 
+     invoke-virtual {v0}, Ljava/util/AbstractMap;->isEmpty()Z
+ 
+@@ -657,7 +657,7 @@
+ 
+     if-ne v1, v0, :cond_1
+ 
+-    invoke-virtual {p0}, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->ASJ()V
++    invoke-virtual {p0}, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->ASJ()V
+ 
+     :cond_0
+     return v3
+@@ -706,7 +706,7 @@
+ 
+     move-result-object v2
+ 
+-    invoke-direct {p0, p0, v2}, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->loadPadding(Ljava/lang/Object;Landroid/view/View;)V
++    invoke-direct {p0, p0, v2}, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->loadPadding(Ljava/lang/Object;Landroid/view/View;)V
+ 
+     const v0, 0x102000a
+ 
+@@ -722,14 +722,14 @@
+ 
+     if-nez v0, :cond_0
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0H:LX/2I1;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0H:LX/2I1;
+ 
+     invoke-virtual {v0, v1, p0}, LX/2I1;->A00(Landroid/widget/ListView;LX/01E;)V
+ 
+     :cond_0
+     invoke-static {v2, p0}, Lcom/pluswhatsapp/HomeActivity;->A0A(Landroid/view/View;LX/01E;)V
+ 
+-    iget-object v1, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0P:LX/0m9;
++    iget-object v1, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0P:LX/0m9;
+ 
+     const/16 v0, 0x42f
+ 
+@@ -764,47 +764,47 @@
+ 
+     invoke-super {p0}, LX/01E;->A11()V
+ 
+-    iget-object v1, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0C:LX/10S;
++    iget-object v1, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0C:LX/10S;
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0l:LX/1Gd;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0l:LX/1Gd;
+ 
+     invoke-virtual {v1, v0}, LX/0of;->A04(Ljava/lang/Object;)V
+ 
+-    iget-object v1, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0X:LX/12G;
++    iget-object v1, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0X:LX/12G;
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0n:LX/2Dl;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0n:LX/2Dl;
+ 
+     invoke-virtual {v1, v0}, LX/0of;->A04(Ljava/lang/Object;)V
+ 
+-    iget-object v1, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A09:LX/0yu;
++    iget-object v1, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A09:LX/0yu;
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0k:LX/2Dm;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0k:LX/2Dm;
+ 
+     invoke-virtual {v1, v0}, LX/0of;->A04(Ljava/lang/Object;)V
+ 
+-    iget-object v1, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0R:LX/15l;
++    iget-object v1, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0R:LX/15l;
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0m:LX/1dp;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0m:LX/1dp;
+ 
+     invoke-virtual {v1, v0}, LX/0of;->A04(Ljava/lang/Object;)V
+ 
+-    iget-object v1, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0Y:LX/0x8;
++    iget-object v1, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0Y:LX/0x8;
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0o:LX/12o;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0o:LX/12o;
+ 
+     invoke-virtual {v1, v0}, LX/0of;->A04(Ljava/lang/Object;)V
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0F:LX/1J1;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0F:LX/1J1;
+ 
+     invoke-virtual {v0}, LX/1J1;->A00()V
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0E:LX/1J1;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0E:LX/1J1;
+ 
+     invoke-virtual {v0}, LX/1J1;->A00()V
+ 
+-    iget-object v1, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A03:LX/0mE;
++    iget-object v1, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A03:LX/0mE;
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0p:Ljava/lang/Runnable;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0p:Ljava/lang/Runnable;
+ 
+     invoke-virtual {v1, v0}, LX/0mE;->A0G(Ljava/lang/Runnable;)V
+ 
+@@ -820,7 +820,7 @@
+ 
+     invoke-super {p0}, LX/01E;->A13()V
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0g:Ljava/util/LinkedHashMap;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0g:Ljava/util/LinkedHashMap;
+ 
+     invoke-virtual {v0}, Ljava/util/AbstractMap;->isEmpty()Z
+ 
+@@ -828,10 +828,10 @@
+ 
+     if-eqz v0, :cond_0
+ 
+-    invoke-virtual {p0}, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A1D()V
++    invoke-virtual {p0}, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A1D()V
+ 
+     :cond_0
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0H:LX/2I1;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0H:LX/2I1;
+ 
+     invoke-virtual {v0, p0}, LX/2I1;->A01(LX/01E;)V
+ #coocoo
+@@ -845,11 +845,11 @@
+ 
+     const-string/jumbo v0, "voip/CallsFragment/onCreate"
+ 
+-    invoke-static {p0}, Lcom/pluswhatsapp/yo/yo;->setCallF(Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;)V
++    invoke-static {p0}, Lcom/pluswhatsapp/yo/yo;->setCallF(Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;)V
+ 
+     invoke-static {v0}, Lcom/whatsapp/util/Log;->i(Ljava/lang/String;)V
+ 
+-    iget-object v2, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0G:LX/0x9;
++    iget-object v2, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0G:LX/0x9;
+ 
+     invoke-virtual {p0}, LX/01E;->A0p()Landroid/content/Context;
+ 
+@@ -861,9 +861,9 @@
+ 
+     move-result-object v0
+ 
+-    iput-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0F:LX/1J1;
++    iput-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0F:LX/1J1;
+ 
+-    iget-object v3, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0G:LX/0x9;
++    iget-object v3, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0G:LX/0x9;
+ 
+     invoke-virtual {p0}, LX/01E;->A02()Landroid/content/res/Resources;
+ 
+@@ -883,7 +883,7 @@
+ 
+     move-result-object v0
+ 
+-    iput-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0E:LX/1J1;
++    iput-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0E:LX/1J1;
+ 
+     const/4 v1, 0x0
+ 
+@@ -896,7 +896,7 @@
+     move-result v1
+ 
+     :cond_0
+-    iput-boolean v1, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0i:Z
++    iput-boolean v1, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0i:Z
+ 
+     invoke-super {p0, p1}, LX/01E;->A16(Landroid/os/Bundle;)V
+ 
+@@ -914,7 +914,7 @@
+ 
+     if-eqz v0, :cond_0
+ 
+-    iget-object v1, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0H:LX/2I1;
++    iget-object v1, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0H:LX/2I1;
+ 
+     invoke-static {p0}, Landroidx/fragment/app/ListFragment;->A00(Landroidx/fragment/app/ListFragment;)V
+ 
+@@ -923,7 +923,7 @@
+     invoke-virtual {v1, v0, p0}, LX/2I1;->A00(Landroid/widget/ListView;LX/01E;)V
+ 
+     :cond_0
+-    iget-object v1, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0P:LX/0m9;
++    iget-object v1, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0P:LX/0m9;
+ 
+     const/16 v0, 0x42f
+ 
+@@ -952,7 +952,7 @@
+ .method public final A1A()V
+     .locals 7
+ 
+-    iget-object v6, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0q:Ljava/util/HashSet;
++    iget-object v6, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0q:Ljava/util/HashSet;
+ 
+     invoke-virtual {v6}, Ljava/util/AbstractCollection;->isEmpty()Z
+ 
+@@ -962,7 +962,7 @@
+ 
+     const/4 v5, 0x2
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0r:Ljava/util/Set;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0r:Ljava/util/Set;
+ 
+     invoke-interface {v0}, Ljava/util/Set;->clear()V
+ 
+@@ -1050,7 +1050,7 @@
+ .method public final A1B()V
+     .locals 5
+ 
+-    invoke-virtual {p0}, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A1F()V
++    invoke-virtual {p0}, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A1F()V
+ 
+     invoke-virtual {p0}, LX/01E;->A0c()Z
+ 
+@@ -1072,7 +1072,7 @@
+ 
+     move-result v4
+ 
+-    iget-object v1, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0g:Ljava/util/LinkedHashMap;
++    iget-object v1, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0g:Ljava/util/LinkedHashMap;
+ 
+     invoke-virtual {v1}, Ljava/util/AbstractMap;->isEmpty()Z
+ 
+@@ -1154,7 +1154,7 @@
+ .method public final A1C()V
+     .locals 3
+ 
+-    iget-object v1, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A08:LX/38D;
++    iget-object v1, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A08:LX/38D;
+ 
+     if-eqz v1, :cond_0
+ 
+@@ -1163,7 +1163,7 @@
+     invoke-virtual {v1, v0}, LX/0or;->A03(Z)V
+ 
+     :cond_0
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A01:LX/04t;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A01:LX/04t;
+ 
+     if-eqz v0, :cond_1
+ 
+@@ -1172,11 +1172,11 @@
+     :cond_1
+     new-instance v2, LX/38D;
+ 
+-    invoke-direct {v2, p0}, LX/38D;-><init>(Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;)V
++    invoke-direct {v2, p0}, LX/38D;-><init>(Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;)V
+ 
+-    iput-object v2, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A08:LX/38D;
++    iput-object v2, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A08:LX/38D;
+ 
+-    iget-object v1, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0W:LX/0lR;
++    iget-object v1, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0W:LX/0lR;
+ 
+     const/4 v0, 0x0
+ 
+@@ -1194,7 +1194,7 @@
+ 
+     if-eqz v6, :cond_0
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0g:Ljava/util/LinkedHashMap;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0g:Ljava/util/LinkedHashMap;
+ 
+     invoke-virtual {v0}, Ljava/util/AbstractMap;->isEmpty()Z
+ 
+@@ -1208,7 +1208,7 @@
+ 
+     if-eqz v0, :cond_6
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A08:LX/38D;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A08:LX/38D;
+ 
+     if-eqz v0, :cond_1
+ 
+@@ -1258,7 +1258,7 @@
+     return-void
+ 
+     :cond_1
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0B:LX/0nR;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0B:LX/0nR;
+ 
+     invoke-virtual {v0}, LX/0nR;->A04()I
+ 
+@@ -1359,7 +1359,7 @@
+     return-void
+ 
+     :cond_2
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0A:LX/116;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0A:LX/116;
+ 
+     invoke-virtual {v0}, LX/116;->A00()Z
+ 
+@@ -1476,7 +1476,7 @@
+     goto :goto_2
+ 
+     :cond_6
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0d:Ljava/lang/CharSequence;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0d:Ljava/lang/CharSequence;
+ 
+     invoke-static {v0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+ 
+@@ -1514,7 +1514,7 @@
+ 
+     new-array v1, v8, [Ljava/lang/Object;
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0d:Ljava/lang/CharSequence;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0d:Ljava/lang/CharSequence;
+ 
+     aput-object v0, v1, v7
+ 
+@@ -1546,13 +1546,13 @@
+ 
+     iput-object v0, v3, LX/1vY;->A04:Ljava/lang/Boolean;
+ 
+-    iget-boolean v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0i:Z
++    iget-boolean v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0i:Z
+ 
+     const/4 v2, 0x0
+ 
+     if-eqz v0, :cond_0
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A04:LX/0nT;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A04:LX/0nT;
+ 
+     invoke-virtual {v0}, LX/0nT;->A08()V
+ 
+@@ -1571,7 +1571,7 @@
+ 
+     invoke-virtual {p0, v1, v0}, LX/01E;->startActivityForResult(Landroid/content/Intent;I)V
+ 
+-    iput-boolean v2, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0i:Z
++    iput-boolean v2, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0i:Z
+ 
+     return-void
+ 
+@@ -1584,13 +1584,13 @@
+ .method public final A1F()V
+     .locals 6
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A03:LX/0mE;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A03:LX/0mE;
+ 
+-    iget-object v5, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0p:Ljava/lang/Runnable;
++    iget-object v5, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0p:Ljava/lang/Runnable;
+ 
+     invoke-virtual {v0, v5}, LX/0mE;->A0G(Ljava/lang/Runnable;)V
+ 
+-    iget-object v1, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0g:Ljava/util/LinkedHashMap;
++    iget-object v1, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0g:Ljava/util/LinkedHashMap;
+ 
+     invoke-virtual {v1}, Ljava/util/AbstractMap;->isEmpty()Z
+ 
+@@ -1616,9 +1616,9 @@
+ 
+     move-result-object v1
+ 
+-    iget-object v4, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A03:LX/0mE;
++    iget-object v4, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A03:LX/0mE;
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0g:Ljava/util/LinkedHashMap;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0g:Ljava/util/LinkedHashMap;
+ 
+     invoke-virtual {v0, v1}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+ 
+@@ -1657,7 +1657,7 @@
+ 
+     move-result-object v1
+ 
+-    iget-object v5, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0q:Ljava/util/HashSet;
++    iget-object v5, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0q:Ljava/util/HashSet;
+ 
+     invoke-virtual {v5, v1}, Ljava/util/AbstractCollection;->contains(Ljava/lang/Object;)Z
+ 
+@@ -1677,13 +1677,13 @@
+ 
+     if-eqz v0, :cond_0
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A01:LX/04t;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A01:LX/04t;
+ 
+     if-eqz v0, :cond_0
+ 
+-    invoke-virtual {p0}, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A1A()V
++    invoke-virtual {p0}, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A1A()V
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A01:LX/04t;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A01:LX/04t;
+ 
+     if-eqz v0, :cond_0
+ 
+@@ -1703,7 +1703,7 @@
+     invoke-virtual {v1, v4, v6}, Lcom/pluswhatsapp/components/SelectionCheckView;->A04(ZZ)V
+ 
+     :goto_0
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A01:LX/04t;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A01:LX/04t;
+ 
+     if-eqz v0, :cond_1
+ 
+@@ -1720,9 +1720,9 @@
+ 
+     move-result-object v10
+ 
+-    iget-object v9, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0I:LX/01d;
++    iget-object v9, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0I:LX/01d;
+ 
+-    iget-object v8, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0K:LX/018;
++    iget-object v8, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0K:LX/018;
+ 
+     const v7, 0x7f1000b3
+ 
+@@ -1756,7 +1756,7 @@
+     :cond_3
+     invoke-virtual {v5, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A01:LX/04t;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A01:LX/04t;
+ 
+     if-nez v0, :cond_4
+ 
+@@ -1770,13 +1770,13 @@
+ 
+     check-cast v1, LX/00j;
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0j:LX/02Q;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0j:LX/02Q;
+ 
+     invoke-virtual {v1, v0}, LX/00j;->A1W(LX/02Q;)LX/04t;
+ 
+     move-result-object v0
+ 
+-    iput-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A01:LX/04t;
++    iput-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A01:LX/04t;
+ 
+     :cond_4
+     iget-object v1, p2, LX/2w9;->A01:Landroid/view/View;
+@@ -1854,16 +1854,16 @@
+     :cond_2
+     check-cast p2, LX/2w9;
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A01:LX/04t;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A01:LX/04t;
+ 
+     if-eqz v0, :cond_3
+ 
+-    invoke-virtual {p0, v5, p2}, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A1G(LX/3Fr;LX/2w9;)V
++    invoke-virtual {p0, v5, p2}, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A1G(LX/3Fr;LX/2w9;)V
+ 
+     return-void
+ 
+     :cond_3
+-    iget-object v4, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0P:LX/0m9;
++    iget-object v4, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0P:LX/0m9;
+ 
+     invoke-virtual {v7, v6}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+ 
+@@ -1871,11 +1871,11 @@
+ 
+     check-cast v3, LX/1YT;
+ 
+-    iget-object v2, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0B:LX/0nR;
++    iget-object v2, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0B:LX/0nR;
+ 
+-    iget-object v1, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0O:LX/0x7;
++    iget-object v1, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0O:LX/0x7;
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0Q:LX/0wC;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0Q:LX/0wC;
+ 
+     invoke-static {v2, v1, v4, v0, v3}, LX/1SF;->A01(LX/0nR;LX/0x7;LX/0m9;LX/0wC;LX/1YT;)LX/0n3;
+ 
+@@ -2016,15 +2016,15 @@
+ 
+     iget-object v0, p1, LX/2LA;->A01:Ljava/lang/String;
+ 
+-    iput-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0d:Ljava/lang/CharSequence;
++    iput-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0d:Ljava/lang/CharSequence;
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A07:LX/1kY;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A07:LX/1kY;
+ 
+     invoke-virtual {v0}, LX/1kY;->getFilter()Landroid/widget/Filter;
+ 
+     move-result-object v1
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0d:Ljava/lang/CharSequence;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0d:Ljava/lang/CharSequence;
+ 
+     invoke-virtual {v1, v0}, Landroid/widget/Filter;->filter(Ljava/lang/CharSequence;)V
+ 
+@@ -2036,7 +2036,7 @@
+ 
+     const/4 v0, 0x0
+ 
+-    iput-boolean v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0h:Z
++    iput-boolean v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0h:Z
+ 
+     return-void
+ .end method
+@@ -2046,7 +2046,7 @@
+ 
+     const/4 v0, 0x1
+ 
+-    iput-boolean v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0h:Z
++    iput-boolean v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0h:Z
+ 
+     return-void
+ .end method
+@@ -2136,7 +2136,7 @@
+ 
+     invoke-static {v0}, Lcom/whatsapp/util/Log;->w(Ljava/lang/String;)V
+ 
+-    iget-object v2, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A03:LX/0mE;
++    iget-object v2, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A03:LX/0mE;
+ 
+     const v1, 0x7f1207c4
+ 
+@@ -2147,7 +2147,7 @@
+     return-void
+ 
+     :cond_0
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A0A:LX/116;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0A:LX/116;
+ 
+     invoke-virtual {v0}, LX/116;->A00()Z
+ 
+@@ -2155,7 +2155,7 @@
+ 
+     if-eqz v0, :cond_1
+ 
+-    invoke-virtual {p0}, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A1E()V
++    invoke-virtual {p0}, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A1E()V
+ 
+     return-void
+ 
+@@ -2216,7 +2216,7 @@
+ 
+     invoke-super {p0, p1}, LX/01E;->onConfigurationChanged(Landroid/content/res/Configuration;)V
+ 
+-    iget-object v0, p0, Lcom/pluswhatsapp/calling/callhistory/CallsHistoryFragment;->A01:LX/04t;
++    iget-object v0, p0, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A01:LX/04t;
+ 
+     if-eqz v0, :cond_0
+ 
