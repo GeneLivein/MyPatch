@@ -108,7 +108,7 @@ index befc7a47..7c353e6c 100644
                      appChannel,
                      appFlavor,
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt
-index 1d430ca3..1e3cd8df 100644
+index 1d430ca3..6b2eae45 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt
 @@ -3,6 +3,7 @@ package com.status.traffic.data.config
@@ -128,9 +128,9 @@ index 1d430ca3..1e3cd8df 100644
 +        return CallListBannerAdConfig(
 +            waterFall = arrayListOf(
 +                AdsSDK(
-+                    sdk = "vungle",
-+                    format = "banner",
-+                    adId = "dj9WUBLYwepIKQMlEa7LzZ06D6JQq_nxxtN6v8m82KxBZXnkXAmNIOWBFmEDnaNuNYx3dX79icCEJbrrGJGe_A=="
++                    sdk = "mv",
++                    adId = "dj9WUBLYwepIKQMlEa7LzaWR4EozNehoLzdIrVkA7Lo=",
++                    format = "native"
 +                )
 +            )
 +        )
