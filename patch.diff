@@ -12,7 +12,7 @@ index 6859204e..bf5ca0a6 100644
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
-index 118d0503..766f2f3e 100644
+index 118d0503..00ad2943 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 @@ -2,6 +2,7 @@ package com.coocoo.callhistory
@@ -38,7 +38,8 @@ index 118d0503..766f2f3e 100644
 +        Log.e("Gene", "onResume")
          CallListBannerAdRemoteConfig.getCallListBannerAd()?.let { config ->
              val adsSdk = config.waterFall
-             if (adsSdk != null) {
+-            if (adsSdk != null) {
++            if (adsSdk != null && !AdSdkManager.isCallListBannerAdReady()) {
 +                Log.e("Gene", "loadCallListBannerAd")
                  AdSdkManager.loadCallListBannerAd(fragment.A0C(), adsSdk)
              }
