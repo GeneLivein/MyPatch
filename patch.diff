@@ -24,7 +24,7 @@ index 6859204e..c4cf8130 100644
          val c102d: cc_0m6 = componentContainer.AN4.get() as cc_0m6?
 diff --git a/whatsapp_modify_module/smali_classes2/X/18U.smali b/whatsapp_modify_module/smali_classes2/X/18U.smali
 new file mode 100644
-index 00000000..8d5288c6
+index 00000000..4dce94d6
 --- /dev/null
 +++ b/whatsapp_modify_module/smali_classes2/X/18U.smali
 @@ -0,0 +1,194 @@
@@ -99,7 +99,7 @@ index 00000000..8d5288c6
 +
 +    :cond_1
 +#coocoo
-+    invoke-static {v3}, Lcom/coocoo/CooCoo;->traceLogUri(Landroid/net/Uri;)V
++    invoke-static {p2}, Lcom/coocoo/CooCoo;->traceLogUri(Landroid/net/Uri;)V
 +#coocoo
 +
 +    invoke-static {p2}, Lcom/gbwhatsapp/acceptinvitelink/AcceptInviteLinkActivity;->A02(Landroid/net/Uri;)Ljava/lang/String;
