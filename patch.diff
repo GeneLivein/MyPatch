@@ -105,7 +105,7 @@ index e067332e..759f03bd 100644
          loadAdJob =  scope.launch(Dispatchers.IO) {
              if (timeout == null) {
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt
-index 053c2982..4c666c7d 100644
+index 053c2982..aa31eeb1 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt
 @@ -1,5 +1,6 @@
@@ -119,7 +119,7 @@ index 053c2982..4c666c7d 100644
                          setUpView(bannerContainer, nativeHandler.adViewGroup)?.run {
                              bannerContainer.addView(this)
                          }
-+                        Log.e("Report", "nativeHandler.onResume()")
++                        Log.e("Report", "nativeHandler.onResume() parent:${bannerContainer} ad:${nativeHandler.adViewGroup}")
                          nativeHandler.onResume()
                      }
                  }
