@@ -1,3 +1,15 @@
+diff --git a/app/src/main/java/X/cc_1kY.java b/app/src/main/java/X/cc_1kY.java
+new file mode 100644
+index 00000000..f74b1255
+--- /dev/null
++++ b/app/src/main/java/X/cc_1kY.java
+@@ -0,0 +1,6 @@
++package X;
++
++import android.widget.BaseAdapter;
++
++public abstract class cc_1kY extends BaseAdapter {
++}
 diff --git a/app/src/main/java/com/coocoo/CooCoo.kt b/app/src/main/java/com/coocoo/CooCoo.kt
 index 6859204e..bf5ca0a6 100644
 --- a/app/src/main/java/com/coocoo/CooCoo.kt
@@ -12,10 +24,10 @@ index 6859204e..bf5ca0a6 100644
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
-index 118d0503..00ad2943 100644
+index 118d0503..99acb6ab 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
-@@ -2,6 +2,7 @@ package com.coocoo.callhistory
+@@ -2,19 +2,21 @@ package com.coocoo.callhistory
  
  import X.c1_01E
  import X.cc_5WG
@@ -23,14 +35,30 @@ index 118d0503..00ad2943 100644
  import android.view.Gravity
  import android.view.View
  import android.view.ViewGroup
-@@ -25,6 +26,7 @@ object CallHistoryDelegate {
-                 val vh = CallHistoryViewHolder(itemView)
+ import android.widget.RelativeLayout
+ import com.coocoo.annotation.SmaliInject
+ import com.coocoo.widget.CommonDialog
++import com.gbwhatsapp.calling.callhistory.CallsHistoryFragment
+ import com.status.traffic.ads.AdSdkManager
+ import com.status.traffic.data.config.CallListBannerAdRemoteConfig
+ 
+ object CallHistoryDelegate {
+     @JvmStatic
+     @SmaliInject
+-    fun getView(viewType: Int, view: View?, parent: ViewGroup): View? {
++    fun getView(viewType: Int, view: View?, parent: ViewGroup, fragment: CallsHistoryFragment): View? {
+         return if (viewType == CallHistoryItem.VIEW_TYPE) {
+             var itemView = view
+             if (itemView == null) {
+@@ -22,7 +24,7 @@ object CallHistoryDelegate {
+                     layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, CommonDialog.dpToPx(50f))
+                     gravity = Gravity.CENTER
+                 }
+-                val vh = CallHistoryViewHolder(itemView)
++                val vh = CallHistoryViewHolder(itemView, fragment)
                  itemView.tag = vh
              }
-+            Log.e("Gene", "getView")
              (itemView.tag as CallHistoryViewHolder).bindAd()
-             itemView
-         } else {
 @@ -47,9 +49,11 @@ object CallHistoryDelegate {
      @JvmStatic
      @SmaliInject
@@ -45,29 +73,62 @@ index 118d0503..00ad2943 100644
              }
          }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
-index 9cb1f5c3..ca110caf 100644
+index 9cb1f5c3..4cd5b625 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
-@@ -1,6 +1,7 @@
+@@ -1,17 +1,33 @@
  package com.coocoo.callhistory
  
  import X.cc_4VA
++import X.cc_5WG
 +import android.util.Log
  import android.widget.RelativeLayout
++import com.gbwhatsapp.calling.callhistory.CallsHistoryFragment
  import com.status.traffic.ads.AdSdkManager
  
-@@ -11,7 +12,9 @@ class CallHistoryViewHolder(private val targetView: RelativeLayout) : cc_4VA() {
+-class CallHistoryViewHolder(private val targetView: RelativeLayout) : cc_4VA() {
++class CallHistoryViewHolder(
++    private val targetView: RelativeLayout,
++    private val fragment: CallsHistoryFragment
++    ) : cc_4VA() {
+ 
+     init {
+         A00 = CallHistoryItem()
      }
  
      fun bindAd() {
 -        AdSdkManager.showCallListBannerAd(targetView)
 +        AdSdkManager.showCallListBannerAd(targetView) {
-+
++            val iterable = fragment.A0f.iterator()
++            while (iterable.hasNext()) {
++                val item = iterable.next() as cc_5WG
++                if (item.ADd() == CallHistoryItem.VIEW_TYPE) {
++                    iterable.remove()
++                    fragment.A07.notifyDataSetChanged()
++                    break
++                }
++            }
 +        }
          targetView.tag = this
      }
  }
 \ No newline at end of file
+diff --git a/app/src/main/java/com/gbwhatsapp/calling/callhistory/CallsHistoryFragment.java b/app/src/main/java/com/gbwhatsapp/calling/callhistory/CallsHistoryFragment.java
+new file mode 100644
+index 00000000..e07aeb76
+--- /dev/null
++++ b/app/src/main/java/com/gbwhatsapp/calling/callhistory/CallsHistoryFragment.java
+@@ -0,0 +1,10 @@
++package com.gbwhatsapp.calling.callhistory;
++
++import java.util.ArrayList;
++
++import X.cc_1kY;
++
++public class CallsHistoryFragment {
++    public cc_1kY A07;
++    public ArrayList A0f;
++}
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
 index ef63739d..01bb856b 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
@@ -137,3 +198,16 @@ index 1d430ca3..6b2eae45 100644
      }
  }
 \ No newline at end of file
+diff --git a/whatsapp_modify_module/smali_classes2/X/1kY.1.smali b/whatsapp_modify_module/smali_classes2/X/1kY.1.smali
+index 7272f8d0..2f0931c7 100644
+--- a/whatsapp_modify_module/smali_classes2/X/1kY.1.smali
++++ b/whatsapp_modify_module/smali_classes2/X/1kY.1.smali
+@@ -149,7 +149,7 @@
+ 
+     if-eq v9, v0, :cond_0
+ #coocoo
+-    invoke-static {v9, v2, v6}, Lcom/coocoo/callhistory/CallHistoryDelegate;->getView(ILandroid/view/View;Landroid/view/ViewGroup;)Landroid/view/View;
++    invoke-static {v9, v2, v6, v4}, Lcom/coocoo/callhistory/CallHistoryDelegate;->getView(ILandroid/view/View;Landroid/view/ViewGroup;Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;)Landroid/view/View;
+     move-result-object v0
+     if-eqz v0, :cond_continue
+     return-object v0
