@@ -44,6 +44,18 @@ index 6eecf980..4434153e 100644
      @JvmStatic
      @SmaliInject
      fun onResume(fragment: CallsHistoryFragment) {
+diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
+index 1b85ca04..aa3d3ecd 100644
+--- a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
++++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
+@@ -16,6 +16,7 @@ class CallHistoryViewHolder(
+     }
+ 
+     fun bindAd() {
++        if (targetView.childCount > 0) return
+         AdSdkManager.showCallListBannerAd(targetView) {
+             val iterable = fragment.A0f.iterator()
+             while (iterable.hasNext()) {
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt
 index 053c2982..4c666c7d 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt
