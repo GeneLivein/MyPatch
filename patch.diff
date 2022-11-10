@@ -12,7 +12,7 @@ index 6859204e..bf5ca0a6 100644
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
-index 6eecf980..4434153e 100644
+index 6eecf980..f2765711 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 @@ -1,6 +1,7 @@
@@ -23,17 +23,15 @@ index 6eecf980..4434153e 100644
  import android.view.Gravity
  import android.view.View
  import android.view.ViewGroup
-@@ -35,6 +36,9 @@ object CallHistoryDelegate {
+@@ -35,6 +36,7 @@ object CallHistoryDelegate {
      @JvmStatic
      @SmaliInject
      fun addCallListBannerItem(arr: ArrayList<cc_5WG>) {
-+        arr.forEach {
-+            Log.e("Gene", "view type${it.ADd()}")
-+        }
++        Log.e("Gene", "addCallListBannerItem: ${AdSdkManager.isCallListBannerAdReady()}")
          if (AdSdkManager.isCallListBannerAdReady()) {
              if (arr.size > 4) {
                  arr.add(4, CallHistoryItem())
-@@ -44,6 +48,10 @@ object CallHistoryDelegate {
+@@ -44,6 +46,10 @@ object CallHistoryDelegate {
          }
      }
  
