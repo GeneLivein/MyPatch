@@ -12,7 +12,7 @@ index 6859204e..bf5ca0a6 100644
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
-index 6eecf980..7f04f77d 100644
+index 6eecf980..041ad51e 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 @@ -1,11 +1,13 @@
@@ -33,7 +33,7 @@ index 6eecf980..7f04f77d 100644
                      gravity = Gravity.CENTER
                  }
                  val vh = CallHistoryViewHolder(itemView, fragment)
-+//                vh.bindAd()
++                vh.bindAd()
                  itemView.tag = vh
              }
 -            (itemView.tag as CallHistoryViewHolder).bindAd()
