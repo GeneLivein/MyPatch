@@ -12,7 +12,7 @@ index 6859204e..bf5ca0a6 100644
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
-index 6eecf980..041ad51e 100644
+index 6eecf980..f8564ba4 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 @@ -1,11 +1,13 @@
@@ -29,17 +29,6 @@ index 6eecf980..041ad51e 100644
  import com.coocoo.widget.CommonDialog
  import com.gbwhatsapp.calling.callhistory.CallsHistoryFragment
  import com.status.traffic.ads.AdSdkManager
-@@ -23,9 +25,9 @@ object CallHistoryDelegate {
-                     gravity = Gravity.CENTER
-                 }
-                 val vh = CallHistoryViewHolder(itemView, fragment)
-+                vh.bindAd()
-                 itemView.tag = vh
-             }
--            (itemView.tag as CallHistoryViewHolder).bindAd()
-             itemView
-         } else {
-             null
 @@ -35,6 +37,7 @@ object CallHistoryDelegate {
      @JvmStatic
      @SmaliInject
@@ -59,7 +48,7 @@ index 6eecf980..041ad51e 100644
      @JvmStatic
      @SmaliInject
      fun onResume(fragment: CallsHistoryFragment) {
-@@ -51,6 +58,7 @@ object CallHistoryDelegate {
+@@ -51,10 +58,17 @@ object CallHistoryDelegate {
              val adsSdk = config.waterFall
              if (adsSdk != null) {
                  AdSdkManager.loadCallListBannerAd(fragment.A0C(), adsSdk) {
@@ -67,6 +56,17 @@ index 6eecf980..041ad51e 100644
                      addCallListBannerItem(fragment.A0f)
                      fragment.A07.notifyDataSetChanged()
                  }
+             }
+         }
+     }
++
++    @JvmStatic
++    @SmaliInject
++    fun onPause(fragment: CallsHistoryFragment) {
++
++    }
+ }
+\ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
 index 1b85ca04..16699e4f 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
@@ -203,3 +203,18 @@ index 1d430ca3..5361c3ec 100644
      }
  }
 \ No newline at end of file
+diff --git a/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/calling/callhistory/CallsHistoryFragment.smali b/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/calling/callhistory/CallsHistoryFragment.smali
+index b2f2de20..833dcf2f 100644
+--- a/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/calling/callhistory/CallsHistoryFragment.smali
++++ b/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/calling/callhistory/CallsHistoryFragment.smali
+@@ -487,7 +487,9 @@
+ 
+ .method public A0r()V
+     .locals 1
+-
++#coocoo
++    invoke-static {p0}, Lcom/coocoo/callhistory/CallHistoryDelegate;->onPause(Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;)V
++#coocoo
+     const-string/jumbo v0, "voip/CallsFragment/onPause"
+ 
+     invoke-static {v0}, Lcom/whatsapp/util/Log;->i(Ljava/lang/String;)V
