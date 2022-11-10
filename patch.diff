@@ -12,7 +12,7 @@ index 6859204e..bf5ca0a6 100644
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
-index 6eecf980..f01d5333 100644
+index 6eecf980..7f04f77d 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 @@ -1,11 +1,13 @@
@@ -40,53 +40,35 @@ index 6eecf980..f01d5333 100644
              itemView
          } else {
              null
-@@ -35,26 +37,32 @@ object CallHistoryDelegate {
+@@ -35,6 +37,7 @@ object CallHistoryDelegate {
      @JvmStatic
      @SmaliInject
      fun addCallListBannerItem(arr: ArrayList<cc_5WG>) {
--        if (AdSdkManager.isCallListBannerAdReady()) {
 +        Log.e("Gene", "addCallListBannerItem: ${AdSdkManager.isCallListBannerAdReady()}")
-+//        if (AdSdkManager.isCallListBannerAdReady()) {
+         if (AdSdkManager.isCallListBannerAdReady()) {
              if (arr.size > 4) {
                  arr.add(4, CallHistoryItem())
-             } else {
-                 arr.add(CallHistoryItem())
-             }
--        }
-+//        }
-+    }
-+
-+    private fun ArrayList<cc_5WG>.containsCallListBanner(): Boolean {
-+        return find { it.ADd() == CallHistoryItem.VIEW_TYPE } != null
+@@ -44,6 +47,10 @@ object CallHistoryDelegate {
+         }
      }
  
++    private fun ArrayList<cc_5WG>.containsCallListBanner(): Boolean {
++        return find { it.ADd() == CallHistoryItem.VIEW_TYPE } != null
++    }
++
      @JvmStatic
      @SmaliInject
      fun onResume(fragment: CallsHistoryFragment) {
--        CallListBannerAdRemoteConfig.getCallListBannerAd()?.let { config ->
--            val adsSdk = config.waterFall
--            if (adsSdk != null) {
--                AdSdkManager.loadCallListBannerAd(fragment.A0C(), adsSdk) {
--                    addCallListBannerItem(fragment.A0f)
--                    fragment.A07.notifyDataSetChanged()
--                }
--            }
--        }
-+//        CallListBannerAdRemoteConfig.getCallListBannerAd()?.let { config ->
-+//            val adsSdk = config.waterFall
-+//            if (adsSdk != null) {
-+//                AdSdkManager.loadCallListBannerAd(fragment.A0C(), adsSdk) {
-+//                    Log.e("Gene", "onLoadAdListener: ${fragment.A0f}")
-+//                    addCallListBannerItem(fragment.A0f)
-+//                    fragment.A07.notifyDataSetChanged()
-+//                }
-+//            }
-+//        }
-     }
- }
-\ No newline at end of file
+@@ -51,6 +58,7 @@ object CallHistoryDelegate {
+             val adsSdk = config.waterFall
+             if (adsSdk != null) {
+                 AdSdkManager.loadCallListBannerAd(fragment.A0C(), adsSdk) {
++                    Log.e("Gene", "onLoadAdListener: ${fragment.A0f}")
+                     addCallListBannerItem(fragment.A0f)
+                     fragment.A07.notifyDataSetChanged()
+                 }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
-index 1b85ca04..cf65f694 100644
+index 1b85ca04..16699e4f 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
 @@ -2,9 +2,11 @@ package com.coocoo.callhistory
@@ -101,18 +83,7 @@ index 1b85ca04..cf65f694 100644
  
  class CallHistoryViewHolder(
      private val targetView: RelativeLayout,
-@@ -13,9 +15,18 @@ class CallHistoryViewHolder(
- 
-     init {
-         A00 = CallHistoryItem()
-+        CallListBannerAdRemoteConfig.getCallListBannerAd()?.let { config ->
-+            val adsSdk = config.waterFall
-+            if (adsSdk != null) {
-+                AdSdkManager.loadCallListBannerAd(fragment.A0C(), adsSdk) {
-+                    bindAd()
-+                }
-+            }
-+        }
+@@ -16,6 +18,7 @@ class CallHistoryViewHolder(
      }
  
      fun bindAd() {
@@ -120,6 +91,19 @@ index 1b85ca04..cf65f694 100644
          AdSdkManager.showCallListBannerAd(targetView) {
              val iterable = fragment.A0f.iterator()
              while (iterable.hasNext()) {
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
+index e067332e..759f03bd 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
+@@ -31,7 +31,7 @@ abstract class BaseAdController <T: BaseAdController.BaseAd?> {
+             return
+         }
+ 
+-        ad = null
++//        ad = null
+         adConfig = null
+         loadAdJob =  scope.launch(Dispatchers.IO) {
+             if (timeout == null) {
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt
 index 053c2982..4c666c7d 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt
