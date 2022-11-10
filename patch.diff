@@ -45,13 +45,22 @@ index 6eecf980..4434153e 100644
      @SmaliInject
      fun onResume(fragment: CallsHistoryFragment) {
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
-index 1b85ca04..aa3d3ecd 100644
+index 1b85ca04..13a6d256 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
-@@ -16,6 +16,7 @@ class CallHistoryViewHolder(
+@@ -2,6 +2,7 @@ package com.coocoo.callhistory
+ 
+ import X.cc_4VA
+ import X.cc_5WG
++import android.util.Log
+ import android.widget.RelativeLayout
+ import com.gbwhatsapp.calling.callhistory.CallsHistoryFragment
+ import com.status.traffic.ads.AdSdkManager
+@@ -16,6 +17,8 @@ class CallHistoryViewHolder(
      }
  
      fun bindAd() {
++        Log.e("Gene", "targetView.childCount: ${targetView.childCount}")
 +        if (targetView.childCount > 0) return
          AdSdkManager.showCallListBannerAd(targetView) {
              val iterable = fragment.A0f.iterator()
