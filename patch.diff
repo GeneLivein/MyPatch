@@ -90,6 +90,22 @@ index 053c2982..4c666c7d 100644
                          nativeHandler.onResume()
                      }
                  }
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/CallListBannerAdController.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/CallListBannerAdController.kt
+index 75289422..ac05f9dc 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/CallListBannerAdController.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/CallListBannerAdController.kt
+@@ -1,3 +1,8 @@
+ package com.status.traffic.ads.ad
+ 
+-class CallListBannerAdController: BaseBannerAdController()
+\ No newline at end of file
++class CallListBannerAdController: BaseBannerAdController() {
++    override fun release() {
++        super.release()
++        java.lang.Exception().printStackTrace()
++    }
++}
+\ No newline at end of file
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 index befc7a47..7c353e6c 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
