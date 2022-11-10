@@ -24,7 +24,7 @@ index 6859204e..bf5ca0a6 100644
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
-index 118d0503..cf4ebafb 100644
+index 118d0503..bbff30ae 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 @@ -2,19 +2,21 @@ package com.coocoo.callhistory
@@ -70,14 +70,23 @@ index 118d0503..cf4ebafb 100644
              } else {
                  arr.add(CallHistoryItem())
              }
-@@ -47,6 +49,7 @@ object CallHistoryDelegate {
+@@ -46,11 +48,14 @@ object CallHistoryDelegate {
+ 
      @JvmStatic
      @SmaliInject
-     fun onResume(fragment: c1_01E) {
-+        Log.e("Gene", "onResume")
+-    fun onResume(fragment: c1_01E) {
++    fun onResume(fragment: CallsHistoryFragment) {
          CallListBannerAdRemoteConfig.getCallListBannerAd()?.let { config ->
              val adsSdk = config.waterFall
              if (adsSdk != null) {
+-                AdSdkManager.loadCallListBannerAd(fragment.A0C(), adsSdk)
++                AdSdkManager.loadCallListBannerAd(fragment.A0C(), adsSdk) {
++                    addCallListBannerItem(fragment.A0f)
++                    fragment.A07.notifyDataSetChanged()
++                }
+             }
+         }
+     }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
 index 9cb1f5c3..4cd5b625 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
@@ -121,25 +130,48 @@ index 9cb1f5c3..4cd5b625 100644
 \ No newline at end of file
 diff --git a/app/src/main/java/com/gbwhatsapp/calling/callhistory/CallsHistoryFragment.java b/app/src/main/java/com/gbwhatsapp/calling/callhistory/CallsHistoryFragment.java
 new file mode 100644
-index 00000000..e07aeb76
+index 00000000..6fe3e0bc
 --- /dev/null
 +++ b/app/src/main/java/com/gbwhatsapp/calling/callhistory/CallsHistoryFragment.java
-@@ -0,0 +1,10 @@
+@@ -0,0 +1,12 @@
 +package com.gbwhatsapp.calling.callhistory;
 +
 +import java.util.ArrayList;
 +
++import X.c1_01E;
 +import X.cc_1kY;
++import X.cc_5WG;
 +
-+public class CallsHistoryFragment {
++public class CallsHistoryFragment extends c1_01E {
 +    public cc_1kY A07;
-+    public ArrayList A0f;
++    public ArrayList<cc_5WG> A0f;
 +}
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
-index ef63739d..9d158115 100644
+index ef63739d..cbd247e9 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
-@@ -348,10 +348,15 @@ object AdSdkManager {
+@@ -336,7 +336,7 @@ object AdSdkManager {
+         })
+     }
+ 
+-    fun loadCallListBannerAd(activity: Activity, configs: ArrayList<AdsSDK>,) {
++    fun loadCallListBannerAd(activity: Activity, configs: ArrayList<AdsSDK>, onLoadAdListener: () -> Unit) {
+         if (configs.isEmpty()) return
+         if (callListBannerAdController == null) {
+             callListBannerAdController = CallListBannerAdController()
+@@ -344,14 +344,26 @@ object AdSdkManager {
+         if (callListBannerAdController?.getAd()?.isReady() == true) {
+             return
+         }
+-        callListBannerAdController?.loadAd(activity, configs)
++        callListBannerAdController?.loadAd(activity, configs, object: OnLoadAdListener {
++            override suspend fun onLoaded() {
++                onLoadAdListener()
++            }
++
++            override suspend fun onFailedToLoad() {
++            }
++        })
      }
  
      fun showCallListBannerAd(container: RelativeLayout, onClickAd: (() -> Unit)? = null) {
@@ -226,3 +258,16 @@ index 7272f8d0..2f0931c7 100644
      move-result-object v0
      if-eqz v0, :cond_continue
      return-object v0
+diff --git a/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/calling/callhistory/CallsHistoryFragment.smali b/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/calling/callhistory/CallsHistoryFragment.smali
+index 7142465f..b2f2de20 100644
+--- a/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/calling/callhistory/CallsHistoryFragment.smali
++++ b/whatsapp_modify_module/smali_classes2/com/gbwhatsapp/calling/callhistory/CallsHistoryFragment.smali
+@@ -835,7 +835,7 @@
+ 
+     invoke-virtual {v0, p0}, LX/2I1;->A01(LX/01E;)V
+ #coocoo
+-    invoke-static {p0}, Lcom/coocoo/callhistory/CallHistoryDelegate;->onResume(LX/01E;)V
++    invoke-static {p0}, Lcom/coocoo/callhistory/CallHistoryDelegate;->onResume(Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;)V
+ #coocoo
+     return-void
+ .end method
