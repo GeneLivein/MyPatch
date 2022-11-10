@@ -12,7 +12,7 @@ index 6859204e..bf5ca0a6 100644
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
-index 6eecf980..f2765711 100644
+index 6eecf980..67f990bf 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 @@ -1,6 +1,7 @@
@@ -42,6 +42,14 @@ index 6eecf980..f2765711 100644
      @JvmStatic
      @SmaliInject
      fun onResume(fragment: CallsHistoryFragment) {
+@@ -51,6 +57,7 @@ object CallHistoryDelegate {
+             val adsSdk = config.waterFall
+             if (adsSdk != null) {
+                 AdSdkManager.loadCallListBannerAd(fragment.A0C(), adsSdk) {
++                    Log.e("Gene", "onLoadAdListener: ${fragment.A0f}")
+                     addCallListBannerItem(fragment.A0f)
+                     fragment.A07.notifyDataSetChanged()
+                 }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
 index 1b85ca04..13a6d256 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
