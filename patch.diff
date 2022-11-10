@@ -11,6 +11,30 @@ index 6859204e..bf5ca0a6 100644
          )
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
+diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
+index 6eecf980..c4495c1a 100644
+--- a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
++++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
+@@ -35,7 +35,7 @@ object CallHistoryDelegate {
+     @JvmStatic
+     @SmaliInject
+     fun addCallListBannerItem(arr: ArrayList<cc_5WG>) {
+-        if (AdSdkManager.isCallListBannerAdReady()) {
++        if (AdSdkManager.isCallListBannerAdReady() && !arr.containsCallListBanner()) {
+             if (arr.size > 4) {
+                 arr.add(4, CallHistoryItem())
+             } else {
+@@ -44,6 +44,10 @@ object CallHistoryDelegate {
+         }
+     }
+ 
++    private fun ArrayList<cc_5WG>.containsCallListBanner(): Boolean {
++        return find { it.ADd() == CallHistoryItem.VIEW_TYPE } != null
++    }
++
+     @JvmStatic
+     @SmaliInject
+     fun onResume(fragment: CallsHistoryFragment) {
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt
 index 053c2982..4c666c7d 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt
@@ -91,16 +115,3 @@ index 1d430ca3..5361c3ec 100644
      }
  }
 \ No newline at end of file
-diff --git a/whatsapp_modify_module/smali_classes2/X/1kx.2.smali b/whatsapp_modify_module/smali_classes2/X/1kx.2.smali
-index e0b3708a..7fdbff5a 100644
---- a/whatsapp_modify_module/smali_classes2/X/1kx.2.smali
-+++ b/whatsapp_modify_module/smali_classes2/X/1kx.2.smali
-@@ -611,7 +611,7 @@
- 
-     :goto_0
- #coocoo
--    invoke-static {v0}, Lcom/coocoo/callhistory/CallHistoryDelegate;->addCallListBannerItem(Ljava/util/ArrayList;)V
-+    #invoke-static {v0}, Lcom/coocoo/callhistory/CallHistoryDelegate;->addCallListBannerItem(Ljava/util/ArrayList;)V
- #coocoo
-     iput-object v0, v2, Lcom/gbwhatsapp/calling/callhistory/CallsHistoryFragment;->A0f:Ljava/util/ArrayList;
- 
