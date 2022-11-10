@@ -12,7 +12,7 @@ index 6859204e..bf5ca0a6 100644
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
-index 6eecf980..f8564ba4 100644
+index 6eecf980..8b2a9fa8 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 @@ -1,11 +1,13 @@
@@ -48,7 +48,7 @@ index 6eecf980..f8564ba4 100644
      @JvmStatic
      @SmaliInject
      fun onResume(fragment: CallsHistoryFragment) {
-@@ -51,10 +58,17 @@ object CallHistoryDelegate {
+@@ -51,10 +58,19 @@ object CallHistoryDelegate {
              val adsSdk = config.waterFall
              if (adsSdk != null) {
                  AdSdkManager.loadCallListBannerAd(fragment.A0C(), adsSdk) {
@@ -63,7 +63,9 @@ index 6eecf980..f8564ba4 100644
 +    @JvmStatic
 +    @SmaliInject
 +    fun onPause(fragment: CallsHistoryFragment) {
-+
++        if (AdSdkManager.isCallListBannerAdReady()) {
++            AdSdkManager.releaseCallListBannerAd()
++        }
 +    }
  }
 \ No newline at end of file
@@ -91,6 +93,21 @@ index 1b85ca04..16699e4f 100644
          AdSdkManager.showCallListBannerAd(targetView) {
              val iterable = fragment.A0f.iterator()
              while (iterable.hasNext()) {
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
+index 1421bdac..2dc3c081 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
+@@ -356,6 +356,10 @@ object AdSdkManager {
+ 
+     fun isCallListBannerAdReady(): Boolean = callListBannerAdController?.getAd()?.isReady() == true
+ 
++    fun releaseCallListBannerAd() {
++        callListBannerAdController?.release()
++    }
++
+     fun release() {
+         scope.coroutineContext.cancelChildren()
+         statusDestroyAd?.release()
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
 index e067332e..759f03bd 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseAdController.kt
