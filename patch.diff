@@ -12,10 +12,10 @@ index 6859204e..bf5ca0a6 100644
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
-index 6eecf980..a455a962 100644
+index 6eecf980..f01d5333 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
-@@ -1,6 +1,7 @@
+@@ -1,11 +1,13 @@
  package com.coocoo.callhistory
  
  import X.cc_5WG
@@ -23,49 +23,73 @@ index 6eecf980..a455a962 100644
  import android.view.Gravity
  import android.view.View
  import android.view.ViewGroup
-@@ -23,9 +24,9 @@ object CallHistoryDelegate {
+ import android.widget.RelativeLayout
+ import com.coocoo.annotation.SmaliInject
++import com.coocoo.callhistory.CallHistoryDelegate.addCallListBannerItem
+ import com.coocoo.widget.CommonDialog
+ import com.gbwhatsapp.calling.callhistory.CallsHistoryFragment
+ import com.status.traffic.ads.AdSdkManager
+@@ -23,9 +25,9 @@ object CallHistoryDelegate {
                      gravity = Gravity.CENTER
                  }
                  val vh = CallHistoryViewHolder(itemView, fragment)
-+                vh.bindAd()
++//                vh.bindAd()
                  itemView.tag = vh
              }
 -            (itemView.tag as CallHistoryViewHolder).bindAd()
              itemView
          } else {
              null
-@@ -35,6 +36,7 @@ object CallHistoryDelegate {
+@@ -35,26 +37,32 @@ object CallHistoryDelegate {
      @JvmStatic
      @SmaliInject
      fun addCallListBannerItem(arr: ArrayList<cc_5WG>) {
+-        if (AdSdkManager.isCallListBannerAdReady()) {
 +        Log.e("Gene", "addCallListBannerItem: ${AdSdkManager.isCallListBannerAdReady()}")
-         if (AdSdkManager.isCallListBannerAdReady()) {
++//        if (AdSdkManager.isCallListBannerAdReady()) {
              if (arr.size > 4) {
                  arr.add(4, CallHistoryItem())
-@@ -44,6 +46,10 @@ object CallHistoryDelegate {
-         }
-     }
- 
-+    private fun ArrayList<cc_5WG>.containsCallListBanner(): Boolean {
-+        return find { it.ADd() == CallHistoryItem.VIEW_TYPE } != null
+             } else {
+                 arr.add(CallHistoryItem())
+             }
+-        }
++//        }
 +    }
 +
++    private fun ArrayList<cc_5WG>.containsCallListBanner(): Boolean {
++        return find { it.ADd() == CallHistoryItem.VIEW_TYPE } != null
+     }
+ 
      @JvmStatic
      @SmaliInject
      fun onResume(fragment: CallsHistoryFragment) {
-@@ -51,6 +57,7 @@ object CallHistoryDelegate {
-             val adsSdk = config.waterFall
-             if (adsSdk != null) {
-                 AdSdkManager.loadCallListBannerAd(fragment.A0C(), adsSdk) {
-+                    Log.e("Gene", "onLoadAdListener: ${fragment.A0f}")
-                     addCallListBannerItem(fragment.A0f)
-                     fragment.A07.notifyDataSetChanged()
-                 }
+-        CallListBannerAdRemoteConfig.getCallListBannerAd()?.let { config ->
+-            val adsSdk = config.waterFall
+-            if (adsSdk != null) {
+-                AdSdkManager.loadCallListBannerAd(fragment.A0C(), adsSdk) {
+-                    addCallListBannerItem(fragment.A0f)
+-                    fragment.A07.notifyDataSetChanged()
+-                }
+-            }
+-        }
++//        CallListBannerAdRemoteConfig.getCallListBannerAd()?.let { config ->
++//            val adsSdk = config.waterFall
++//            if (adsSdk != null) {
++//                AdSdkManager.loadCallListBannerAd(fragment.A0C(), adsSdk) {
++//                    Log.e("Gene", "onLoadAdListener: ${fragment.A0f}")
++//                    addCallListBannerItem(fragment.A0f)
++//                    fragment.A07.notifyDataSetChanged()
++//                }
++//            }
++//        }
+     }
+ }
+\ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
-index 1b85ca04..4fbdf43a 100644
+index 1b85ca04..cf65f694 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
-@@ -2,6 +2,7 @@ package com.coocoo.callhistory
+@@ -2,9 +2,11 @@ package com.coocoo.callhistory
  
  import X.cc_4VA
  import X.cc_5WG
@@ -73,7 +97,22 @@ index 1b85ca04..4fbdf43a 100644
  import android.widget.RelativeLayout
  import com.gbwhatsapp.calling.callhistory.CallsHistoryFragment
  import com.status.traffic.ads.AdSdkManager
-@@ -16,6 +17,7 @@ class CallHistoryViewHolder(
++import com.status.traffic.data.config.CallListBannerAdRemoteConfig
+ 
+ class CallHistoryViewHolder(
+     private val targetView: RelativeLayout,
+@@ -13,9 +15,18 @@ class CallHistoryViewHolder(
+ 
+     init {
+         A00 = CallHistoryItem()
++        CallListBannerAdRemoteConfig.getCallListBannerAd()?.let { config ->
++            val adsSdk = config.waterFall
++            if (adsSdk != null) {
++                AdSdkManager.loadCallListBannerAd(fragment.A0C(), adsSdk) {
++                    bindAd()
++                }
++            }
++        }
      }
  
      fun bindAd() {
