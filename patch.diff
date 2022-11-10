@@ -24,7 +24,7 @@ index 6859204e..bf5ca0a6 100644
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
-index 118d0503..1bcf3675 100644
+index 118d0503..cf4ebafb 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 @@ -2,19 +2,21 @@ package com.coocoo.callhistory
@@ -70,24 +70,19 @@ index 118d0503..1bcf3675 100644
              } else {
                  arr.add(CallHistoryItem())
              }
-@@ -47,9 +49,11 @@ object CallHistoryDelegate {
+@@ -47,6 +49,7 @@ object CallHistoryDelegate {
      @JvmStatic
      @SmaliInject
      fun onResume(fragment: c1_01E) {
 +        Log.e("Gene", "onResume")
          CallListBannerAdRemoteConfig.getCallListBannerAd()?.let { config ->
              val adsSdk = config.waterFall
--            if (adsSdk != null) {
-+            if (adsSdk != null && !AdSdkManager.isCallListBannerAdReady()) {
-+                Log.e("Gene", "loadCallListBannerAd")
-                 AdSdkManager.loadCallListBannerAd(fragment.A0C(), adsSdk)
-             }
-         }
+             if (adsSdk != null) {
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
-index 9cb1f5c3..8e167d39 100644
+index 9cb1f5c3..4cd5b625 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
-@@ -1,17 +1,34 @@
+@@ -1,17 +1,33 @@
  package com.coocoo.callhistory
  
  import X.cc_4VA
@@ -116,7 +111,6 @@ index 9cb1f5c3..8e167d39 100644
 +                if (item.ADd() == CallHistoryItem.VIEW_TYPE) {
 +                    iterable.remove()
 +                    fragment.A07.notifyDataSetChanged()
-+                    AdSdkManager.releaseCallListBanner()
 +                    break
 +                }
 +            }
