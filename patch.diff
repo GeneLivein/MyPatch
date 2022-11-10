@@ -11,6 +11,25 @@ index 6859204e..bf5ca0a6 100644
          )
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt
+index 053c2982..4c666c7d 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt
+@@ -1,5 +1,6 @@
+ package com.status.traffic.ads.ad
+ 
++import android.util.Log
+ import android.view.View
+ import android.view.ViewGroup
+ import android.widget.RelativeLayout
+@@ -53,6 +54,7 @@ open class BaseBannerAd (
+                         setUpView(bannerContainer, nativeHandler.adViewGroup)?.run {
+                             bannerContainer.addView(this)
+                         }
++                        Log.e("Report", "nativeHandler.onResume()")
+                         nativeHandler.onResume()
+                     }
+                 }
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 index befc7a47..7c353e6c 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
