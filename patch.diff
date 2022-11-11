@@ -59,6 +59,26 @@ index 975bea2c..f19da96e 100644
          bannerContainer: RelativeLayout,
          onClickAd: (() -> Unit)?
      ) {
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/MvAdsSdkManager.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/MvAdsSdkManager.kt
+index 912b498b..6074bd18 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/ads/MvAdsSdkManager.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/ads/MvAdsSdkManager.kt
+@@ -2,6 +2,7 @@ package com.status.traffic.ads
+ 
+ import android.app.Activity
+ import android.content.Context
++import android.util.Log
+ import com.coocoo.utils.Util.dp2px
+ import com.coocoo.utils.Util.getScreenWidth
+ import com.mbridge.msdk.MBridgeConstans
+@@ -270,6 +271,7 @@ object MvAdsSdkManager : AdsSdkController {
+                 override fun onLogImpression(p0: MBridgeIds?) {}
+ 
+                 override fun onClick(p0: MBridgeIds?) {
++                    Log.e("Gene", "mv click")
+                     showNativeAdListener?.onClick()
+                 }
+ 
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt
 index 466cb113..6385dcf5 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt
