@@ -12,7 +12,7 @@ index 6859204e..bf5ca0a6 100644
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
-index 4ca3d9aa..137f2492 100644
+index 4ca3d9aa..9b541a12 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
 @@ -2,6 +2,7 @@ package com.coocoo.callhistory
@@ -23,11 +23,13 @@ index 4ca3d9aa..137f2492 100644
  import android.widget.RelativeLayout
  import com.gbwhatsapp.calling.callhistory.CallsHistoryFragment
  import com.status.traffic.StatusTrafficSdk
-@@ -24,6 +25,7 @@ class CallHistoryViewHolder(
+@@ -24,6 +25,9 @@ class CallHistoryViewHolder(
                  if (item.ADd() == CallHistoryItem.VIEW_TYPE) {
                      iterable.remove()
                      fragment.A07.notifyDataSetChanged()
-+                    (targetView.parent as ViewGroup).requestLayout()
++                    (targetView.parent as ViewGroup).post {
++                        (targetView.parent as ViewGroup).requestLayout()
++                    }
                      break
                  }
              }
