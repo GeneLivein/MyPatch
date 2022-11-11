@@ -12,7 +12,7 @@ index 6859204e..bf5ca0a6 100644
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
-index 4ca3d9aa..4d030851 100644
+index 4ca3d9aa..4b956f89 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
 @@ -2,6 +2,7 @@ package com.coocoo.callhistory
@@ -23,18 +23,6 @@ index 4ca3d9aa..4d030851 100644
  import android.widget.RelativeLayout
  import com.gbwhatsapp.calling.callhistory.CallsHistoryFragment
  import com.status.traffic.StatusTrafficSdk
-@@ -23,7 +24,10 @@ class CallHistoryViewHolder(
-                 val item = iterable.next() as cc_5WG
-                 if (item.ADd() == CallHistoryItem.VIEW_TYPE) {
-                     iterable.remove()
--                    fragment.A07.notifyDataSetChanged()
-+                    (targetView.parent as ViewGroup).post {
-+//                        (targetView.parent as ViewGroup).requestLayout()
-+                        fragment.A07.notifyDataSetChanged()
-+                    }
-                     break
-                 }
-             }
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
 index 3a37e5ce..4c1ffa84 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
@@ -96,6 +84,20 @@ index 7d70e43f..2df905d0 100644
          bannerContainer: RelativeLayout,
          onClickAd: (() -> Unit)?
      ) {
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt
+index 6385dcf5..ae7a8388 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt
+@@ -74,8 +74,8 @@ open class BaseBannerAd (
+                 }
+ 
+                 override fun onClick() {
+-                    release()
+                     onClickAd?.invoke()
++                    release()
+                     AdsSdkReporter.report(this@run, AdsSdkReporter.Action.CLICK_AD)
+                 }
+             }
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 index befc7a47..69841666 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
