@@ -11,6 +11,19 @@ index 6859204e..bf5ca0a6 100644
          )
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
+diff --git a/app/src/main/java/com/coocoo/manager/StatusesManager.java b/app/src/main/java/com/coocoo/manager/StatusesManager.java
+index c41ed464..964f30a4 100644
+--- a/app/src/main/java/com/coocoo/manager/StatusesManager.java
++++ b/app/src/main/java/com/coocoo/manager/StatusesManager.java
+@@ -238,7 +238,7 @@ public final class StatusesManager implements Preference.OnPreferenceChangeListe
+                 CooCoo.initStatusTrafficSdk();
+             }
+             if (!activity.isDestroyed() && !activity.isFinishing()) {
+-                statusTrafficSdk.loadSdkBannerAd(activity, AdSdkManager.BannerPlacement.STATUS_LIST, null);
++//                statusTrafficSdk.loadSdkBannerAd(activity, AdSdkManager.BannerPlacement.STATUS_LIST, null);
+             }
+         });
+     }
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
 index 8f6f736d..0c4581ff 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
