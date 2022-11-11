@@ -12,7 +12,7 @@ index 6859204e..bf5ca0a6 100644
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
-index 6eecf980..1a5442aa 100644
+index 6eecf980..dac95656 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 @@ -1,11 +1,13 @@
@@ -48,7 +48,7 @@ index 6eecf980..1a5442aa 100644
      @JvmStatic
      @SmaliInject
      fun onResume(fragment: CallsHistoryFragment) {
-@@ -51,10 +58,19 @@ object CallHistoryDelegate {
+@@ -51,10 +58,20 @@ object CallHistoryDelegate {
              val adsSdk = config.waterFall
              if (adsSdk != null) {
                  AdSdkManager.loadCallListBannerAd(fragment.A0C(), adsSdk) {
@@ -63,9 +63,10 @@ index 6eecf980..1a5442aa 100644
 +    @JvmStatic
 +    @SmaliInject
 +    fun onPause(fragment: CallsHistoryFragment) {
-+//        if (AdSdkManager.isCallListBannerAdReady()) {
-+//            AdSdkManager.releaseCallListBannerAd()
-+//        }
++        if (AdSdkManager.isCallListBannerAdReady()) {
++            Log.e("Gene", "onPause: releaseCallListBannerAd")
++            AdSdkManager.releaseCallListBannerAd()
++        }
 +    }
  }
 \ No newline at end of file
