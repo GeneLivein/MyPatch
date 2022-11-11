@@ -1,13 +1,35 @@
-diff --git a/common-module/src/main/java/com/coocoo/utils/LogUtil.java b/common-module/src/main/java/com/coocoo/utils/LogUtil.java
-index ae290c4d..837aa9bb 100644
---- a/common-module/src/main/java/com/coocoo/utils/LogUtil.java
-+++ b/common-module/src/main/java/com/coocoo/utils/LogUtil.java
-@@ -4,7 +4,7 @@ import android.os.Looper;
- import android.util.Log;
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt
+index 43a683b8..5a2139ae 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt
+@@ -3,9 +3,11 @@ package com.status.traffic.data.config
+ import com.google.gson.JsonArray
+ import com.google.gson.JsonObject
+ import com.status.traffic.Constant.Api.Config.CALL_LIST_BANNER_AD
++import com.status.traffic.data.vo.AdsSDK
+ import com.status.traffic.data.vo.SdkBannerConfig
  
- public class LogUtil {
--    private static final boolean LOG_ENABLE = BuildConfig.DEBUG;
-+    private static final boolean LOG_ENABLE = true;
-     private static final String FILTER_TAG_PREFIX = "LogUtil_";
+-object CallListBannerAdRemoteConfig : BaseAdRemoteConfig<List<SdkBannerConfig>, Void>(CALL_LIST_BANNER_AD) {
++object CallListBannerAdRemoteConfig :
++    BaseAdRemoteConfig<List<SdkBannerConfig>, Void>(CALL_LIST_BANNER_AD) {
+     override fun parserAdsInfo(json: JsonArray?): List<SdkBannerConfig>? {
+         try {
+             return getGson().fromJson(json, Array<SdkBannerConfig>::class.java).toList()
+@@ -22,6 +24,15 @@ object CallListBannerAdRemoteConfig : BaseAdRemoteConfig<List<SdkBannerConfig>,
+     }
  
-     public static boolean isLogEnable() {
+     fun getCallListBannerAd(): SdkBannerConfig? {
+-        return apiRemoteConfig?.get(0)
++//        return apiRemoteConfig?.get(0)
++        return SdkBannerConfig(
++            waterFall = arrayListOf(
++                AdsSDK(
++                    sdk = "mv",
++                    adId = "dj9WUBLYwepIKQMlEa7LzaWR4EozNehoLzdIrVkA7Lo=",
++                    format = "native"
++                )
++            )
++        )
+     }
+ }
+\ No newline at end of file
