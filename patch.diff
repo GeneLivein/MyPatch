@@ -33,6 +33,19 @@ index 4ca3d9aa..9b541a12 100644
                      break
                  }
              }
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
+index 3a37e5ce..4c1ffa84 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
+@@ -282,7 +282,7 @@ class HomeActivityDelegate @SmaliInject constructor(private val homeActivity: Ho
+                 sdk.loadSdkBannerAd(mHostActivity, AdSdkManager.BannerPlacement.HOME_LIST)
+             }
+             if (!sdk.isBannerLoaded(AdSdkManager.BannerPlacement.HOME_TOP)) {
+-                sdk.loadSdkBannerAd(mHostActivity, AdSdkManager.BannerPlacement.HOME_TOP)
++//                sdk.loadSdkBannerAd(mHostActivity, AdSdkManager.BannerPlacement.HOME_TOP)
+             } else {
+                 setHomeTopBannerAd(true)
+                 sdk.setBannerAutoRefresh(AdSdkManager.BannerPlacement.HOME_TOP, true)
 diff --git a/common-module/src/main/java/com/coocoo/utils/LogUtil.java b/common-module/src/main/java/com/coocoo/utils/LogUtil.java
 index ae290c4d..837aa9bb 100644
 --- a/common-module/src/main/java/com/coocoo/utils/LogUtil.java
