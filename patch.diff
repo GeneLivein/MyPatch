@@ -1,3 +1,16 @@
+diff --git a/app/src/main/java/com/coocoo/CooCoo.kt b/app/src/main/java/com/coocoo/CooCoo.kt
+index 6859204e..bf5ca0a6 100644
+--- a/app/src/main/java/com/coocoo/CooCoo.kt
++++ b/app/src/main/java/com/coocoo/CooCoo.kt
+@@ -137,7 +137,7 @@ object CooCoo {
+             appFlavor,
+             com.coocoo.config.BuildConfig.COOCOO_VERSION_CODE,
+             appChannel,
+-            com.coocoo.config.BuildConfig.IS_DEBUG,
++            false,
+         )
+         AdCommonManager.injectReporter(ReportStatusVideoTraffic)
+     }
 diff --git a/common-module/src/main/java/com/coocoo/utils/LogUtil.java b/common-module/src/main/java/com/coocoo/utils/LogUtil.java
 index ae290c4d..837aa9bb 100644
 --- a/common-module/src/main/java/com/coocoo/utils/LogUtil.java
@@ -11,3 +24,100 @@ index ae290c4d..837aa9bb 100644
      private static final String FILTER_TAG_PREFIX = "LogUtil_";
  
      public static boolean isLogEnable() {
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
+index 975bea2c..f19da96e 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
+@@ -150,13 +150,14 @@ object AdSdkManager {
+         val waterfall = config.waterFall ?: return
+         if (waterfall.isEmpty()) return
+ 
+-        val interval = System.currentTimeMillis() - placement.controller.lastLadingTime
+-        if (interval < 0 || interval > (config.retryIntervalSec * 1000)) {
++//        val interval = System.currentTimeMillis() - placement.controller.lastLadingTime
++//        if (interval < 0 || interval > (config.retryIntervalSec * 1000)) {
+             if (placement.controller.getAd()?.isReady() == true
+                 || placement.controller.isLoading
+             ) {
+                 return
+             }
++
+             placement.controller.loadAd(activity, waterfall, object : OnLoadAdListener{
+                 override suspend fun onLoaded() {
+                     onAdLoaded?.invoke()
+@@ -165,11 +166,11 @@ object AdSdkManager {
+                 override suspend fun onFailedToLoad() {
+                 }
+             })
+-        }
++//        }
+     }
+ 
+     fun showBannerAd(
+-        placement: BannerPlacement,
++        placement: AdSdkManager.BannerPlacement,
+         bannerContainer: RelativeLayout,
+         onClickAd: (() -> Unit)?
+     ) {
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt
+index 466cb113..6385dcf5 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt
+@@ -127,7 +127,7 @@ open class BaseBannerAd (
+                 bannerView?.get() != null
+             }
+             AdsSDKFormat.NATIVE.value -> {
+-                bannerNative?.get()?.isReady ?: false
++                bannerNative?.get() != null
+             }
+             else -> false
+         }
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
+index befc7a47..69841666 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
+@@ -169,7 +169,7 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
+ 
+                 val headers = OkHttpHelper.getRemoteConfigHeaders(
+                     isDebug,
+-                    country,
++                    "cn",
+                     appVersion,
+                     appChannel,
+                     appFlavor,
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt
+index 43a683b8..bc9f98d7 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt
+@@ -3,9 +3,11 @@ package com.status.traffic.data.config
+ import com.google.gson.JsonArray
+ import com.google.gson.JsonObject
+ import com.status.traffic.Constant.Api.Config.CALL_LIST_BANNER_AD
++import com.status.traffic.data.vo.AdsSDK
+ import com.status.traffic.data.vo.SdkBannerConfig
+ 
+-object CallListBannerAdRemoteConfig : BaseAdRemoteConfig<List<SdkBannerConfig>, Void>(CALL_LIST_BANNER_AD) {
++object CallListBannerAdRemoteConfig :
++    BaseAdRemoteConfig<List<SdkBannerConfig>, Void>(CALL_LIST_BANNER_AD) {
+     override fun parserAdsInfo(json: JsonArray?): List<SdkBannerConfig>? {
+         try {
+             return getGson().fromJson(json, Array<SdkBannerConfig>::class.java).toList()
+@@ -22,6 +24,16 @@ object CallListBannerAdRemoteConfig : BaseAdRemoteConfig<List<SdkBannerConfig>,
+     }
+ 
+     fun getCallListBannerAd(): SdkBannerConfig? {
+-        return apiRemoteConfig?.get(0)
++//        return apiRemoteConfig?.get(0)
++        return SdkBannerConfig(
++            type = "sdk",
++            waterFall = arrayListOf(
++                AdsSDK(
++                    sdk = "mv",
++                    adId = "dj9WUBLYwepIKQMlEa7LzaWR4EozNehoLzdIrVkA7Lo=",
++                    format = "native"
++                )
++            )
++        )
+     }
+ }
+\ No newline at end of file
