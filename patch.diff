@@ -70,7 +70,7 @@ index 6eecf980..1a5442aa 100644
  }
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
-index 1b85ca04..16699e4f 100644
+index 1b85ca04..bfd91131 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
 @@ -2,9 +2,11 @@ package com.coocoo.callhistory
@@ -85,11 +85,14 @@ index 1b85ca04..16699e4f 100644
  
  class CallHistoryViewHolder(
      private val targetView: RelativeLayout,
-@@ -16,6 +18,7 @@ class CallHistoryViewHolder(
+@@ -16,6 +18,10 @@ class CallHistoryViewHolder(
      }
  
      fun bindAd() {
 +        Log.e("Gene", "targetView.childCount: ${targetView.childCount}")
++        if (targetView.childCount > 0) {
++            targetView.removeViewAt(0)
++        }
          AdSdkManager.showCallListBannerAd(targetView) {
              val iterable = fragment.A0f.iterator()
              while (iterable.hasNext()) {
