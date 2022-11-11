@@ -12,7 +12,7 @@ index 6859204e..bf5ca0a6 100644
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
-index 5ab3c2d1..a48e1c4a 100644
+index 5ab3c2d1..61d30c62 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 @@ -1,6 +1,7 @@
@@ -42,7 +42,7 @@ index 5ab3c2d1..a48e1c4a 100644
              if (arr.size > 4) {
                  arr.add(4, CallHistoryItem())
              } else {
-@@ -45,9 +49,14 @@ object CallHistoryDelegate {
+@@ -45,10 +49,16 @@ object CallHistoryDelegate {
          }
      }
  
@@ -55,8 +55,10 @@ index 5ab3c2d1..a48e1c4a 100644
      fun onResume(fragment: CallsHistoryFragment) {
 +        Log.e("Gene", "CallHistoryDelegate onResume")
          StatusTrafficSdk.getInstance().loadSdkBannerAd(fragment.A0C(), AdSdkManager.BannerPlacement.CALL_LIST) {
++            Log.e("Gene", "onLoadSdkBannerAd")
              addCallListBannerItem(fragment.A0f)
              fragment.A07.notifyDataSetChanged()
+         }
 diff --git a/app/src/main/java/com/coocoo/manager/StatusesManager.java b/app/src/main/java/com/coocoo/manager/StatusesManager.java
 index c41ed464..964f30a4 100644
 --- a/app/src/main/java/com/coocoo/manager/StatusesManager.java
@@ -132,7 +134,7 @@ index befc7a47..69841666 100644
                      appChannel,
                      appFlavor,
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt
-index 43a683b8..5a2139ae 100644
+index 43a683b8..bc9f98d7 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt
 @@ -3,9 +3,11 @@ package com.status.traffic.data.config
@@ -148,13 +150,14 @@ index 43a683b8..5a2139ae 100644
      override fun parserAdsInfo(json: JsonArray?): List<SdkBannerConfig>? {
          try {
              return getGson().fromJson(json, Array<SdkBannerConfig>::class.java).toList()
-@@ -22,6 +24,15 @@ object CallListBannerAdRemoteConfig : BaseAdRemoteConfig<List<SdkBannerConfig>,
+@@ -22,6 +24,16 @@ object CallListBannerAdRemoteConfig : BaseAdRemoteConfig<List<SdkBannerConfig>,
      }
  
      fun getCallListBannerAd(): SdkBannerConfig? {
 -        return apiRemoteConfig?.get(0)
 +//        return apiRemoteConfig?.get(0)
 +        return SdkBannerConfig(
++            type = "sdk",
 +            waterFall = arrayListOf(
 +                AdsSDK(
 +                    sdk = "mv",
