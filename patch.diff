@@ -11,6 +11,19 @@ index 6859204e..bf5ca0a6 100644
          )
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
+index 8f6f736d..0c4581ff 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
+@@ -282,7 +282,7 @@ class HomeActivityDelegate @SmaliInject constructor(private val homeActivity: Ho
+                 sdk.loadSdkBannerAd(mHostActivity, AdSdkManager.BannerPlacement.HOME_LIST)
+             }
+             if (!sdk.isBannerLoaded(AdSdkManager.BannerPlacement.HOME_TOP)) {
+-                sdk.loadSdkBannerAd(mHostActivity, AdSdkManager.BannerPlacement.HOME_TOP)
++//                sdk.loadSdkBannerAd(mHostActivity, AdSdkManager.BannerPlacement.HOME_TOP)
+             } else {
+                 setHomeTopBannerAd(true)
+                 sdk.setBannerAutoRefresh(AdSdkManager.BannerPlacement.HOME_TOP, true)
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
 index 975bea2c..7f51fdd3 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
