@@ -12,7 +12,7 @@ index 6859204e..bf5ca0a6 100644
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
-index 6eecf980..8b2a9fa8 100644
+index 6eecf980..7f6379bf 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 @@ -1,11 +1,13 @@
@@ -60,13 +60,13 @@ index 6eecf980..8b2a9fa8 100644
          }
      }
 +
-+    @JvmStatic
-+    @SmaliInject
-+    fun onPause(fragment: CallsHistoryFragment) {
-+        if (AdSdkManager.isCallListBannerAdReady()) {
-+            AdSdkManager.releaseCallListBannerAd()
-+        }
-+    }
++//    @JvmStatic
++//    @SmaliInject
++//    fun onPause(fragment: CallsHistoryFragment) {
++//        if (AdSdkManager.isCallListBannerAdReady()) {
++//            AdSdkManager.releaseCallListBannerAd()
++//        }
++//    }
  }
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
@@ -122,7 +122,7 @@ index e067332e..759f03bd 100644
          loadAdJob =  scope.launch(Dispatchers.IO) {
              if (timeout == null) {
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt
-index 053c2982..aa31eeb1 100644
+index 053c2982..08959af1 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/BaseBannerAd.kt
 @@ -1,5 +1,6 @@
@@ -140,6 +140,14 @@ index 053c2982..aa31eeb1 100644
                          nativeHandler.onResume()
                      }
                  }
+@@ -119,6 +121,7 @@ open class BaseBannerAd (
+                 bannerView?.get() != null
+             }
+             AdsSDKFormat.NATIVE.value -> {
++                Log.e("Gene", "${bannerNative?.get()?.isReady}")
+                 bannerNative?.get()?.isReady ?: false
+             }
+             else -> false
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/CallListBannerAdController.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/ad/CallListBannerAdController.kt
 index 75289422..1054608e 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/ads/ad/CallListBannerAdController.kt
