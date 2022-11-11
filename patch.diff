@@ -11,8 +11,43 @@ index 6859204e..bf5ca0a6 100644
          )
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
+diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
+index 56572c35..4ff55449 100644
+--- a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
++++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
+@@ -53,6 +53,17 @@ object CallHistoryDelegate {
+     @JvmStatic
+     @SmaliInject
+     fun onResume(fragment: CallsHistoryFragment) {
++        val iterator = fragment.A0f.iterator()
++        while (iterator.hasNext()) {
++            val item = iterator.next()
++            if (item.ADd() == CallHistoryItem.VIEW_TYPE) {
++                if ((item as CallHistoryItem).isClicked) {
++                    iterator.remove()
++                    fragment.A07.notifyDataSetChanged()
++                    break
++                }
++            }
++        }
+         StatusTrafficSdk.getInstance().loadSdkBannerAd(fragment.A0C(), AdSdkManager.BannerPlacement.CALL_LIST) {
+             addCallListBannerItem(fragment.A0f)
+             fragment.A07.notifyDataSetChanged()
+diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryItem.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryItem.kt
+index 7d5fe148..0b0ca78b 100644
+--- a/app/src/main/java/com/coocoo/callhistory/CallHistoryItem.kt
++++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryItem.kt
+@@ -5,6 +5,8 @@ import com.whatsapp.jid.UserJid
+ 
+ class CallHistoryItem : cc_5WG {
+ 
++    var isClicked: Boolean = false
++
+     override fun ADd(): Int {
+         return VIEW_TYPE
+     }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
-index 4ca3d9aa..4b956f89 100644
+index 4ca3d9aa..965bc1d3 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
 @@ -2,6 +2,7 @@ package com.coocoo.callhistory
@@ -23,6 +58,18 @@ index 4ca3d9aa..4b956f89 100644
  import android.widget.RelativeLayout
  import com.gbwhatsapp.calling.callhistory.CallsHistoryFragment
  import com.status.traffic.StatusTrafficSdk
+@@ -22,8 +23,9 @@ class CallHistoryViewHolder(
+             while (iterable.hasNext()) {
+                 val item = iterable.next() as cc_5WG
+                 if (item.ADd() == CallHistoryItem.VIEW_TYPE) {
+-                    iterable.remove()
+-                    fragment.A07.notifyDataSetChanged()
++//                    iterable.remove()
++//                    fragment.A07.notifyDataSetChanged()
++                    (item as CallHistoryItem).isClicked = true
+                     break
+                 }
+             }
 diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
 index 3a37e5ce..4c1ffa84 100644
 --- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
