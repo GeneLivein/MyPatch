@@ -1,3 +1,16 @@
+diff --git a/app/src/main/java/com/coocoo/CooCoo.kt b/app/src/main/java/com/coocoo/CooCoo.kt
+index 6859204e..bf5ca0a6 100644
+--- a/app/src/main/java/com/coocoo/CooCoo.kt
++++ b/app/src/main/java/com/coocoo/CooCoo.kt
+@@ -137,7 +137,7 @@ object CooCoo {
+             appFlavor,
+             com.coocoo.config.BuildConfig.COOCOO_VERSION_CODE,
+             appChannel,
+-            com.coocoo.config.BuildConfig.IS_DEBUG,
++            false,
+         )
+         AdCommonManager.injectReporter(ReportStatusVideoTraffic)
+     }
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
 index 975bea2c..7f51fdd3 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
@@ -27,6 +40,19 @@ index 975bea2c..7f51fdd3 100644
          bannerContainer: RelativeLayout,
          onClickAd: (() -> Unit)?
      ) {
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
+index befc7a47..69841666 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
+@@ -169,7 +169,7 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
+ 
+                 val headers = OkHttpHelper.getRemoteConfigHeaders(
+                     isDebug,
+-                    country,
++                    "cn",
+                     appVersion,
+                     appChannel,
+                     appFlavor,
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt
 index 43a683b8..5a2139ae 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt
