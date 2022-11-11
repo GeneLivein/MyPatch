@@ -12,7 +12,7 @@ index 6859204e..bf5ca0a6 100644
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
-index 6eecf980..7f6379bf 100644
+index 6eecf980..1a5442aa 100644
 --- a/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 +++ b/app/src/main/java/com/coocoo/callhistory/CallHistoryDelegate.kt
 @@ -1,11 +1,13 @@
@@ -60,13 +60,13 @@ index 6eecf980..7f6379bf 100644
          }
      }
 +
-+//    @JvmStatic
-+//    @SmaliInject
-+//    fun onPause(fragment: CallsHistoryFragment) {
++    @JvmStatic
++    @SmaliInject
++    fun onPause(fragment: CallsHistoryFragment) {
 +//        if (AdSdkManager.isCallListBannerAdReady()) {
 +//            AdSdkManager.releaseCallListBannerAd()
 +//        }
-+//    }
++    }
  }
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt b/app/src/main/java/com/coocoo/callhistory/CallHistoryViewHolder.kt
