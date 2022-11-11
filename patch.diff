@@ -1,3 +1,32 @@
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
+index 975bea2c..7f51fdd3 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/ads/AdSdkManager.kt
+@@ -150,8 +150,8 @@ object AdSdkManager {
+         val waterfall = config.waterFall ?: return
+         if (waterfall.isEmpty()) return
+ 
+-        val interval = System.currentTimeMillis() - placement.controller.lastLadingTime
+-        if (interval < 0 || interval > (config.retryIntervalSec * 1000)) {
++//        val interval = System.currentTimeMillis() - placement.controller.lastLadingTime
++//        if (interval < 0 || interval > (config.retryIntervalSec * 1000)) {
+             if (placement.controller.getAd()?.isReady() == true
+                 || placement.controller.isLoading
+             ) {
+@@ -165,11 +165,11 @@ object AdSdkManager {
+                 override suspend fun onFailedToLoad() {
+                 }
+             })
+-        }
++//        }
+     }
+ 
+     fun showBannerAd(
+-        placement: BannerPlacement,
++        placement: AdSdkManager.BannerPlacement,
+         bannerContainer: RelativeLayout,
+         onClickAd: (() -> Unit)?
+     ) {
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt
 index 43a683b8..5a2139ae 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/CallListBannerAdRemoteConfig.kt
