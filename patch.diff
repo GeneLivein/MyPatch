@@ -304,10 +304,10 @@ HcmV?d00001
 
 diff --git a/app/src/main/res/layout/cc_dialog_install_max_browser.xml b/app/src/main/res/layout/cc_dialog_install_max_browser.xml
 new file mode 100644
-index 00000000..c4525a54
+index 00000000..60d1af1a
 --- /dev/null
 +++ b/app/src/main/res/layout/cc_dialog_install_max_browser.xml
-@@ -0,0 +1,69 @@
+@@ -0,0 +1,68 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<androidx.constraintlayout.widget.ConstraintLayout
 +    xmlns:android="http://schemas.android.com/apk/res/android"
@@ -327,7 +327,6 @@ index 00000000..c4525a54
 +        app:layout_constraintTop_toTopOf="parent" />
 +
 +    <ImageView
-+        android:id="@+id/imageView"
 +        android:layout_width="wrap_content"
 +        android:layout_height="wrap_content"
 +        android:src="@drawable/cc_ic_max_browser"
