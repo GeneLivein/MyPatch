@@ -31,15 +31,19 @@ index e5e0000c..1ad64537 100644
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/widget/InstallMaxBrowserDialog.kt b/app/src/main/java/com/coocoo/widget/InstallMaxBrowserDialog.kt
 new file mode 100644
-index 00000000..bbe02f22
+index 00000000..042fffa8
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/widget/InstallMaxBrowserDialog.kt
-@@ -0,0 +1,15 @@
+@@ -0,0 +1,29 @@
 +package com.coocoo.widget
 +
 +import android.content.Context
 +import android.os.Bundle
++import android.widget.Button
++import android.widget.TextView
++import com.coocoo.utils.Constants
 +import com.coocoo.utils.ResMgr
++import com.coocoo.utils.StringUtil
 +import com.coocoo.utils.dialog.BaseDialog
 +
 +class InstallMaxBrowserDialog(context: Context) : BaseDialog(context) {
@@ -48,6 +52,16 @@ index 00000000..bbe02f22
 +        super.onCreate(savedInstanceState)
 +
 +        setContentView(ResMgr.getLayoutId("cc_dialog_install_max_browser"))
++
++        findViewById<TextView>(ResMgr.getId("cc_btn_cancel")).text = StringUtil.getHtml(
++            ResMgr.getString(
++                "cc_underline_cancel"
++            )
++        )
++
++        findViewById<Button>(ResMgr.getId("cc_btn_cancel")).setOnClickListener {
++            dismiss()
++        }
 +    }
 +}
 \ No newline at end of file
@@ -304,10 +318,10 @@ HcmV?d00001
 
 diff --git a/app/src/main/res/layout/cc_dialog_install_max_browser.xml b/app/src/main/res/layout/cc_dialog_install_max_browser.xml
 new file mode 100644
-index 00000000..60d1af1a
+index 00000000..d72415cb
 --- /dev/null
 +++ b/app/src/main/res/layout/cc_dialog_install_max_browser.xml
-@@ -0,0 +1,68 @@
+@@ -0,0 +1,70 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<androidx.constraintlayout.widget.ConstraintLayout
 +    xmlns:android="http://schemas.android.com/apk/res/android"
@@ -359,10 +373,11 @@ index 00000000..60d1af1a
 +        android:layout_marginTop="36dp"
 +        android:layout_marginStart="21dp"
 +        android:layout_marginEnd="21dp"
++        android:textAllCaps="false"
 +        app:layout_constraintEnd_toEndOf="parent"
 +        app:layout_constraintStart_toStartOf="parent"
 +        app:layout_constraintTop_toBottomOf="@+id/cc_tv_content"
-+        tools:text="Use it" />
++        android:text="Use it" />
 +
 +    <Button
 +        android:id="@+id/cc_btn_cancel"
@@ -370,6 +385,7 @@ index 00000000..60d1af1a
 +        android:layout_height="wrap_content"
 +        android:background="@color/transparent"
 +        android:textColor="#4c2f2f2f"
++        android:textAllCaps="false"
 +        app:layout_constraintEnd_toEndOf="parent"
 +        app:layout_constraintStart_toStartOf="parent"
 +        app:layout_constraintTop_toBottomOf="@+id/cc_btn_install"
