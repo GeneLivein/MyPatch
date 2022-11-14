@@ -15,7 +15,7 @@ index c4cf8130..3be08511 100644
      fun getNightMode(): Boolean {
          val c102d: cc_0m6 = componentContainer.AN4.get() as cc_0m6?
 diff --git a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
-index 1ad64537..77a6c10f 100644
+index 1ad64537..7c46abce 100644
 --- a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
 +++ b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
 @@ -4,6 +4,7 @@ import X.cc_12P
@@ -26,7 +26,7 @@ index 1ad64537..77a6c10f 100644
  import com.coocoo.annotation.SmaliInject
  import com.coocoo.utils.SystemUtil
  import com.coocoo.widget.InstallMaxBrowserDialog
-@@ -32,4 +33,10 @@ object ConversationRowTextDelegate {
+@@ -32,4 +33,14 @@ object ConversationRowTextDelegate {
      private fun showDownloadBrowserDialog(context: Context) {
          InstallMaxBrowserDialog(context).show()
      }
@@ -35,6 +35,10 @@ index 1ad64537..77a6c10f 100644
 +    @SmaliInject
 +    fun onDocumentOpen(cc12P: cc_12P, context: Context, uri: Uri) {
 +        CooCoo.traceLog3("onDocumentOpen $uri")
++        val intent = context.packageManager.getLaunchIntentForPackage("com.kiwibrowser.browser") ?: return
++        intent.addCategory(Intent.CATEGORY_LAUNCHER)
++        intent.setDataAndType(uri, "application/pdf")
++        context.startActivity(intent)
 +    }
  }
 \ No newline at end of file
