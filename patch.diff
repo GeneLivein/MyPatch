@@ -1,9 +1,9 @@
 diff --git a/whatsapp_modify_module/smali_classes2/com/facebook/redex/RunnableBRunnable0Shape0S0200000_I0.smali b/whatsapp_modify_module/smali_classes2/com/facebook/redex/RunnableBRunnable0Shape0S0200000_I0.smali
 new file mode 100644
-index 00000000..c483310f
+index 00000000..3b481e44
 --- /dev/null
 +++ b/whatsapp_modify_module/smali_classes2/com/facebook/redex/RunnableBRunnable0Shape0S0200000_I0.smali
-@@ -0,0 +1,2588 @@
+@@ -0,0 +1,2589 @@
 +.class public Lcom/facebook/redex/RunnableBRunnable0Shape0S0200000_I0;
 +.super Lcom/facebook/redex/EmptyBaseRunnable0;
 +.source ""
@@ -42,6 +42,7 @@ index 00000000..c483310f
 +#coocoo
 +    const-string v4, "Gene debug 3"
 +    invoke-static {v4}, Lcom/coocoo/CooCoo;->traceLog3(Ljava/lang/String;)V
++    invoke-static {}, Lcom/coocoo/CooCoo;->printStackTrace()V
 +#coocoo
 +
 +    move-object/from16 v4, p0
