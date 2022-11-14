@@ -1,3 +1,43 @@
+diff --git a/app/src/main/java/com/coocoo/widget/InstallMaxBrowserDialog.kt b/app/src/main/java/com/coocoo/widget/InstallMaxBrowserDialog.kt
+new file mode 100644
+index 00000000..9ae2cc3e
+--- /dev/null
++++ b/app/src/main/java/com/coocoo/widget/InstallMaxBrowserDialog.kt
+@@ -0,0 +1,15 @@
++package com.coocoo.widget
++
++import android.content.Context
++import android.os.Bundle
++import com.coocoo.utils.ResMgr
++import com.coocoo.utils.dialog.BaseDialog
++
++class InstallMaxBrowserDialog(context: Context) : BaseDialog(context) {
++
++    override fun onCreate(savedInstanceState: Bundle?) {
++        super.onCreate(savedInstanceState)
++
++        setContentView(ResMgr.getLayoutId("cc_"))
++    }
++}
+\ No newline at end of file
+diff --git a/app/src/main/res/drawable-xxhdpi/cc_banner_max_browser.webp b/app/src/main/res/drawable-xxhdpi/cc_banner_max_browser.webp
+new file mode 100644
+index 00000000..a19fd1d1
+Binary files /dev/null and b/app/src/main/res/drawable-xxhdpi/cc_banner_max_browser.webp differ
+diff --git a/app/src/main/res/layout/cc_dialog_install_max_browser.xml b/app/src/main/res/layout/cc_dialog_install_max_browser.xml
+new file mode 100644
+index 00000000..c71e80bb
+--- /dev/null
++++ b/app/src/main/res/layout/cc_dialog_install_max_browser.xml
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="utf-8"?>
++<androidx.constraintlayout.widget.ConstraintLayout
++    xmlns:android="http://schemas.android.com/apk/res/android"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent">
++
++</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
 diff --git a/whatsapp_modify_module/smali_classes2/com/facebook/redex/RunnableBRunnable0Shape4S0100000_I0_4.smali b/whatsapp_modify_module/smali_classes2/com/facebook/redex/RunnableBRunnable0Shape4S0100000_I0_4.smali
 new file mode 100644
 index 00000000..52a852f7
