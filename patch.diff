@@ -1,9 +1,9 @@
 diff --git a/whatsapp_modify_module/smali_classes2/com/facebook/redex/RunnableBRunnable0Shape0S0200000_I0.smali b/whatsapp_modify_module/smali_classes2/com/facebook/redex/RunnableBRunnable0Shape0S0200000_I0.smali
 new file mode 100644
-index 00000000..81255f6c
+index 00000000..058af2a8
 --- /dev/null
 +++ b/whatsapp_modify_module/smali_classes2/com/facebook/redex/RunnableBRunnable0Shape0S0200000_I0.smali
-@@ -0,0 +1,2593 @@
+@@ -0,0 +1,2597 @@
 +.class public Lcom/facebook/redex/RunnableBRunnable0Shape0S0200000_I0;
 +.super Lcom/facebook/redex/EmptyBaseRunnable0;
 +.source ""
@@ -1717,6 +1717,10 @@ index 00000000..81255f6c
 +    return-void
 +
 +    :pswitch_23
++#coocoo
++    const-string v2, "Gene pswitch_23"
++    invoke-static {v2}, Lcom/coocoo/CooCoo;->traceLog3(Ljava/lang/String;)V
++#coocoo
 +    iget-object v2, v4, Lcom/facebook/redex/RunnableBRunnable0Shape0S0200000_I0;->A00:Ljava/lang/Object;
 +
 +    check-cast v2, LX/0zD;
@@ -1737,7 +1741,7 @@ index 00000000..81255f6c
 +
 +    :pswitch_24
 +#coocoo
-+    const-string v2, "Gene debug 5"
++    const-string v2, "Gene pswitch_24"
 +    invoke-static {v2}, Lcom/coocoo/CooCoo;->traceLog3(Ljava/lang/String;)V
 +#coocoo
 +    iget-object v2, v4, Lcom/facebook/redex/RunnableBRunnable0Shape0S0200000_I0;->A00:Ljava/lang/Object;
