@@ -1,6 +1,37 @@
+diff --git a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
+index e5e0000c..1ad64537 100644
+--- a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
++++ b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
+@@ -6,6 +6,7 @@ import android.content.Intent
+ import android.net.Uri
+ import com.coocoo.annotation.SmaliInject
+ import com.coocoo.utils.SystemUtil
++import com.coocoo.widget.InstallMaxBrowserDialog
+ 
+ object ConversationRowTextDelegate {
+ 
+@@ -21,14 +22,14 @@ object ConversationRowTextDelegate {
+                 intent.data = uri
+                 context.startActivity(intent)
+             } else {
+-                showDownloadBrowserDialog()
++                showDownloadBrowserDialog(context)
+             }
+         } else {
+             cc12P.Ab8(context, uri)
+         }
+     }
+ 
+-    private fun showDownloadBrowserDialog() {
+-
++    private fun showDownloadBrowserDialog(context: Context) {
++        InstallMaxBrowserDialog(context).show()
+     }
+ }
+\ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/widget/InstallMaxBrowserDialog.kt b/app/src/main/java/com/coocoo/widget/InstallMaxBrowserDialog.kt
 new file mode 100644
-index 00000000..9ae2cc3e
+index 00000000..bbe02f22
 --- /dev/null
 +++ b/app/src/main/java/com/coocoo/widget/InstallMaxBrowserDialog.kt
 @@ -0,0 +1,15 @@
@@ -16,7 +47,7 @@ index 00000000..9ae2cc3e
 +    override fun onCreate(savedInstanceState: Bundle?) {
 +        super.onCreate(savedInstanceState)
 +
-+        setContentView(ResMgr.getLayoutId("cc_"))
++        setContentView(ResMgr.getLayoutId("cc_dialog_install_max_browser"))
 +    }
 +}
 \ No newline at end of file
@@ -156,20 +187,211 @@ rV0n}PVu7^1jb$)e<z2FxCAP`~2LHg>VfF$M^OI{@|9*sS69D)xwUQfZ
 literal 0
 HcmV?d00001
 
+diff --git a/app/src/main/res/drawable-xxhdpi/cc_ic_max_browser.webp b/app/src/main/res/drawable-xxhdpi/cc_ic_max_browser.webp
+new file mode 100644
+index 0000000000000000000000000000000000000000..2a8d2b64809d6df2eb58e82fe0d618e14c521f37
+GIT binary patch
+literal 5450
+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
+AhyVZp
+
+literal 0
+HcmV?d00001
+
 diff --git a/app/src/main/res/layout/cc_dialog_install_max_browser.xml b/app/src/main/res/layout/cc_dialog_install_max_browser.xml
 new file mode 100644
-index 00000000..c71e80bb
+index 00000000..c4525a54
 --- /dev/null
 +++ b/app/src/main/res/layout/cc_dialog_install_max_browser.xml
-@@ -0,0 +1,7 @@
+@@ -0,0 +1,69 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<androidx.constraintlayout.widget.ConstraintLayout
 +    xmlns:android="http://schemas.android.com/apk/res/android"
-+    android:layout_width="match_parent"
-+    android:layout_height="match_parent">
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools"
++    android:layout_width="301dp"
++    android:layout_height="457dp">
++
++    <ImageView
++        android:id="@+id/cc_banner"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:src="@drawable/cc_banner_max_browser"
++        android:scaleType="centerInside"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintTop_toTopOf="parent" />
++
++    <ImageView
++        android:id="@+id/imageView"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:src="@drawable/cc_ic_max_browser"
++        app:layout_constraintBottom_toBottomOf="@+id/cc_banner"
++        app:layout_constraintEnd_toEndOf="@+id/cc_banner"
++        app:layout_constraintStart_toStartOf="@+id/cc_banner"
++        app:layout_constraintTop_toTopOf="@+id/cc_banner" />
++
++    <TextView
++        android:id="@+id/cc_tv_content"
++        android:layout_width="0dp"
++        android:layout_height="wrap_content"
++        android:gravity="center_horizontal"
++        android:textColor="#40b1dc"
++        android:textSize="16sp"
++        android:textStyle="bold"
++        android:layout_marginStart="30dp"
++        android:layout_marginEnd="30dp"
++        android:layout_marginTop="42dp"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintTop_toBottomOf="@+id/cc_banner"
++        android:text="Enable &quot;Max Browser&quot; for fast, private and secure browsing" />
++
++    <Button
++        android:id="@+id/cc_btn_install"
++        android:layout_width="0dp"
++        android:layout_height="wrap_content"
++        android:backgroundTint="#40b1dc"
++        android:layout_marginTop="36dp"
++        android:layout_marginStart="21dp"
++        android:layout_marginEnd="21dp"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintTop_toBottomOf="@+id/cc_tv_content"
++        tools:text="Use it" />
++
++    <Button
++        android:id="@+id/cc_btn_cancel"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:background="@color/transparent"
++        android:textColor="#4c2f2f2f"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintTop_toBottomOf="@+id/cc_btn_install"
++        android:text="@string/cc_underline_cancel" />
 +
 +</androidx.constraintlayout.widget.ConstraintLayout>
 \ No newline at end of file
+diff --git a/app/src/main/res/values/cc_strings.xml b/app/src/main/res/values/cc_strings.xml
+index fc7cfec9..e69725ba 100644
+--- a/app/src/main/res/values/cc_strings.xml
++++ b/app/src/main/res/values/cc_strings.xml
+@@ -208,7 +208,8 @@
+     <string name="cc_profile_pics_app_hint_dialog_cancel">Cancel</string>
+     <string name="cc_view_profile_photo_install_profile_pics_app_hint">Enable HD Profile Picture Preview</string>
+ 
+-
++    <!-- Max Browser-->
++    <string name="cc_underline_cancel"><![CDATA[This is an <u>underline</u>.]]></string>
+ 
+ 
+ 
 diff --git a/whatsapp_modify_module/smali_classes2/com/facebook/redex/RunnableBRunnable0Shape4S0100000_I0_4.smali b/whatsapp_modify_module/smali_classes2/com/facebook/redex/RunnableBRunnable0Shape4S0100000_I0_4.smali
 new file mode 100644
 index 00000000..52a852f7
