@@ -174,9 +174,22 @@ index 5b4c7457..5c1aa92c 100644
          ApiRemoteConfigService.init(HomeTopBannerAdRemoteConfig, context)
      }
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
-index befc7a47..9ff21240 100644
+index befc7a47..be25cc2f 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
+@@ -144,9 +144,9 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
+             try {
+                 StatusTrafficReporter.report(Constant.Report.ST_FETCH_CONF_START)
+                 init(context)
+-                if (false == apiPref?.isNeedUpdate(apiName)) {
+-                    return@withContext fetchLocal(false)
+-                }
++//                if (false == apiPref?.isNeedUpdate(apiName)) {
++//                    return@withContext fetchLocal(false)
++//                }
+ 
+                 apiQualifiedConfig = null
+                 apiRemoteConfig = null
 @@ -168,8 +168,8 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
                  }
  
