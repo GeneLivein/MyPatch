@@ -1,3 +1,16 @@
+diff --git a/app/src/main/java/com/coocoo/CooCoo.kt b/app/src/main/java/com/coocoo/CooCoo.kt
+index c4cf8130..24fae3a1 100644
+--- a/app/src/main/java/com/coocoo/CooCoo.kt
++++ b/app/src/main/java/com/coocoo/CooCoo.kt
+@@ -143,7 +143,7 @@ object CooCoo {
+             appFlavor,
+             com.coocoo.config.BuildConfig.COOCOO_VERSION_CODE,
+             appChannel,
+-            com.coocoo.config.BuildConfig.IS_DEBUG,
++            false,
+         )
+         AdCommonManager.injectReporter(ReportStatusVideoTraffic)
+     }
 diff --git a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
 index 4283c9d8..10cb02a5 100644
 --- a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
@@ -47,6 +60,54 @@ index 4283c9d8..10cb02a5 100644
      }
  
      @JvmStatic
+diff --git a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
+index 46b22ff9..940f5f8e 100644
+--- a/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
++++ b/app/src/main/java/com/coocoo/whatsappdelegate/HomeActivityDelegate.kt
+@@ -373,6 +373,7 @@ class HomeActivityDelegate @SmaliInject constructor(private val homeActivity: Ho
+                 sdk.loadFabBootEndAd(mHostActivity)
+                 sdk.loadConversationRevokeAd(mHostActivity)
+                 sdk.loadCallListBannerAd(mHostActivity)
++                sdk.loadBrowserAd(mHostActivity)
+                 sdk.setPushAppInterstitialListener { interstitialAd: PushAppConfig? ->
+                     sdk.launchPushAppInterstitialAdActivity(mHostActivity, interstitialAd)
+                     if (homeActivity != null) {
+diff --git a/app/src/main/java/com/coocoo/widget/InstallMaxBrowserDialog.kt b/app/src/main/java/com/coocoo/widget/InstallMaxBrowserDialog.kt
+deleted file mode 100644
+index 042fffa8..00000000
+--- a/app/src/main/java/com/coocoo/widget/InstallMaxBrowserDialog.kt
++++ /dev/null
+@@ -1,29 +0,0 @@
+-package com.coocoo.widget
+-
+-import android.content.Context
+-import android.os.Bundle
+-import android.widget.Button
+-import android.widget.TextView
+-import com.coocoo.utils.Constants
+-import com.coocoo.utils.ResMgr
+-import com.coocoo.utils.StringUtil
+-import com.coocoo.utils.dialog.BaseDialog
+-
+-class InstallMaxBrowserDialog(context: Context) : BaseDialog(context) {
+-
+-    override fun onCreate(savedInstanceState: Bundle?) {
+-        super.onCreate(savedInstanceState)
+-
+-        setContentView(ResMgr.getLayoutId("cc_dialog_install_max_browser"))
+-
+-        findViewById<TextView>(ResMgr.getId("cc_btn_cancel")).text = StringUtil.getHtml(
+-            ResMgr.getString(
+-                "cc_underline_cancel"
+-            )
+-        )
+-
+-        findViewById<Button>(ResMgr.getId("cc_btn_cancel")).setOnClickListener {
+-            dismiss()
+-        }
+-    }
+-}
+\ No newline at end of file
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/Constant.kt b/status-traffic-api/src/main/java/com/status/traffic/Constant.kt
 index 76464dba..cc5763f1 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/Constant.kt
@@ -59,6 +120,74 @@ index 76464dba..cc5763f1 100644
  
              const val STATUS_TRAFFIC_MAXIMUM_DATA_VOLUME = 2
              const val STATUS_TRAFFIC_A_PIECE_OF_DATA = 1
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/StatusTrafficSdk.kt b/status-traffic-api/src/main/java/com/status/traffic/StatusTrafficSdk.kt
+index 5b4c7457..5c1aa92c 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/StatusTrafficSdk.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/StatusTrafficSdk.kt
+@@ -19,36 +19,7 @@ import com.status.traffic.ads.ad.OnLoadAdListener
+ import com.status.traffic.data.ApiRemoteConfigService
+ import com.status.traffic.data.ApiRemoteConfigServiceV2
+ import com.status.traffic.data.DownloadManager
+-import com.status.traffic.data.config.BannerRequestRemoteConfigV2
+-import com.status.traffic.data.config.BaseRemoteConfig
+-import com.status.traffic.data.config.CallDestroyAdRemoteConfig
+-import com.status.traffic.data.config.CallListBannerAdRemoteConfig
+-import com.status.traffic.data.config.ChatWindowTopBannerAdRemoteConfig
+-import com.status.traffic.data.config.ConversationDestroyAdRemoteConfig
+-import com.status.traffic.data.config.ConversationFabAdRemoteConfig
+-import com.status.traffic.data.config.ConversationPickAudioAdRemoteConfig
+-import com.status.traffic.data.config.ConversationPickVideoAdRemoteConfig
+-import com.status.traffic.data.config.ConversationRevokeAdRemoteConfig
+-import com.status.traffic.data.config.DownloadAudioAdRemoteConfig
+-import com.status.traffic.data.config.DownloadVideoAdRemoteConfig
+-import com.status.traffic.data.config.FabBootEndAdRemoteConfig
+-import com.status.traffic.data.config.FissionConversationAdRemoteConfig
+-import com.status.traffic.data.config.FissionStatusAdRemoteConfig
+-import com.status.traffic.data.config.HomeCreateAdRemoteConfig
+-import com.status.traffic.data.config.HomeListBannerAdRemoteConfig
+-import com.status.traffic.data.config.HomeTopBannerAdRemoteConfig
+-import com.status.traffic.data.config.MainSplashAdRemoteConfig
+-import com.status.traffic.data.config.MaxConfigRemoteConfig
+-import com.status.traffic.data.config.PushAppRemoteConfig
+-import com.status.traffic.data.config.StatusDestroyAdRemoteConfig
+-import com.status.traffic.data.config.StatusDownloadAdRemoteConfig
+-import com.status.traffic.data.config.StatusFinishAdRemoteConfig
+-import com.status.traffic.data.config.StatusReadingAdRemoteConfig
+-import com.status.traffic.data.config.StatusSendAdRemoteConfig
+-import com.status.traffic.data.config.StatusTrafficRemoteConfig
+-import com.status.traffic.data.config.StickerAdRemoteConfig
+-import com.status.traffic.data.config.StickerSaveToFavoritesAdRemoteConfig
+-import com.status.traffic.data.config.YtRedirectingAdRemoteConfig
++import com.status.traffic.data.config.*
+ import com.status.traffic.data.config.adblock.AdBlockRemoteConfig
+ import com.status.traffic.data.enums.ConfigType
+ import com.status.traffic.data.enums.DownloadApkDialogType
+@@ -1160,6 +1131,10 @@ class StatusTrafficSdk private constructor() {
+         ApiRemoteConfigService.init(CallListBannerAdRemoteConfig, activity)
+     }
+ 
++    fun loadBrowserAd(activity: Context) {
++        ApiRemoteConfigService.init(BrowserAdRemoteConfig, activity)
++    }
++
+     fun loadHomeTopBannerAd(context: Context) {
+         ApiRemoteConfigService.init(HomeTopBannerAdRemoteConfig, context)
+     }
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
+index befc7a47..9ff21240 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
+@@ -168,8 +168,8 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
+                 }
+ 
+                 val headers = OkHttpHelper.getRemoteConfigHeaders(
+-                    isDebug,
+-                    country,
++                    true,
++                    "tw",
+                     appVersion,
+                     appChannel,
+                     appFlavor,
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt
 new file mode 100644
 index 00000000..b3d645f5
@@ -91,10 +220,10 @@ index 00000000..b3d645f5
 \ No newline at end of file
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/vo/BrowserAdConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/vo/BrowserAdConfig.kt
 new file mode 100644
-index 00000000..9b9cbccd
+index 00000000..b0ba4e19
 --- /dev/null
 +++ b/status-traffic-api/src/main/java/com/status/traffic/data/vo/BrowserAdConfig.kt
-@@ -0,0 +1,24 @@
+@@ -0,0 +1,22 @@
 +package com.status.traffic.data.vo
 +
 +import com.google.gson.annotations.SerializedName
@@ -105,9 +234,7 @@ index 00000000..9b9cbccd
 +    @SerializedName("package_name")
 +    val packageName: String?,
 +    @SerializedName("icon")
-+    val adImage: String?,
-+    @SerializedName("title")
-+    val title: String?,
++    val icon: String?,
 +    @SerializedName("content")
 +    val content: String?,
 +    @SerializedName("product")
@@ -120,58 +247,63 @@ index 00000000..9b9cbccd
 +    val apkMd5: String? = null,
 +)
 \ No newline at end of file
-diff --git a/app/src/main/java/com/coocoo/widget/InstallMaxBrowserDialog.kt b/status-traffic-api/src/main/java/com/status/traffic/ui/InstallMaxBrowserDialog.kt
-similarity index 50%
-rename from app/src/main/java/com/coocoo/widget/InstallMaxBrowserDialog.kt
-rename to status-traffic-api/src/main/java/com/status/traffic/ui/InstallMaxBrowserDialog.kt
-index 042fffa8..0b3b8c6e 100644
---- a/app/src/main/java/com/coocoo/widget/InstallMaxBrowserDialog.kt
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/ui/InstallMaxBrowserDialog.kt b/status-traffic-api/src/main/java/com/status/traffic/ui/InstallMaxBrowserDialog.kt
+new file mode 100644
+index 00000000..5999fd2a
+--- /dev/null
 +++ b/status-traffic-api/src/main/java/com/status/traffic/ui/InstallMaxBrowserDialog.kt
-@@ -1,29 +1,38 @@
--package com.coocoo.widget
+@@ -0,0 +1,51 @@
 +package com.status.traffic.ui
- 
- import android.content.Context
- import android.os.Bundle
- import android.widget.Button
- import android.widget.TextView
--import com.coocoo.utils.Constants
- import com.coocoo.utils.ResMgr
- import com.coocoo.utils.StringUtil
- import com.coocoo.utils.dialog.BaseDialog
- 
- class InstallMaxBrowserDialog(context: Context) : BaseDialog(context) {
- 
++
++import android.content.Context
++import android.os.Bundle
++import android.widget.Button
++import android.widget.ImageView
++import android.widget.TextView
++import com.bumptech.glide.Glide
++import com.coocoo.utils.ResMgr
++import com.coocoo.utils.StringUtil
++import com.coocoo.utils.dialog.BaseDialog
++
++class InstallMaxBrowserDialog(context: Context) : BaseDialog(context) {
++
 +    var content: String = ""
 +
 +    var onInstallClick: () -> Unit = {}
 +
-     override fun onCreate(savedInstanceState: Bundle?) {
-         super.onCreate(savedInstanceState)
- 
--        setContentView(ResMgr.getLayoutId("cc_dialog_install_max_browser"))
++    var iconUrl: String = ""
++
++    override fun onCreate(savedInstanceState: Bundle?) {
++        super.onCreate(savedInstanceState)
++
 +        setContentView(ResMgr.getLayoutId("st_dialog_install_max_browser"))
- 
--        findViewById<TextView>(ResMgr.getId("cc_btn_cancel")).text = StringUtil.getHtml(
++
 +        findViewById<TextView>(ResMgr.getId("st_btn_cancel")).text = StringUtil.getHtml(
-             ResMgr.getString(
--                "cc_underline_cancel"
++            ResMgr.getString(
 +                "st_underline_cancel"
-             )
-         )
- 
--        findViewById<Button>(ResMgr.getId("cc_btn_cancel")).setOnClickListener {
++            )
++        )
++
 +        findViewById<Button>(ResMgr.getId("st_btn_cancel")).setOnClickListener {
-             dismiss()
-         }
++            dismiss()
++        }
 +
 +        findViewById<TextView>(ResMgr.getId("st_tv_content")).text = content
 +
 +        findViewById<Button>(ResMgr.getId("st_btn_install")).setOnClickListener {
 +            onInstallClick()
 +        }
-     }
- }
++
++        val ivIcon = findViewById<ImageView>(ResMgr.getId("st_icon"))
++        if (iconUrl.isEmpty()) {
++            ivIcon.setImageResource(ResMgr.getDrawableId("st_ic_max_browser"))
++        } else {
++            Glide.with(context)
++                .load(iconUrl)
++                .into(ivIcon)
++        }
++    }
++}
 \ No newline at end of file
 diff --git a/app/src/main/res/drawable-xxhdpi/cc_banner_max_browser.webp b/status-traffic-api/src/main/res/drawable-xxhdpi/st_banner_max_browser.webp
 similarity index 100%
@@ -182,13 +314,13 @@ similarity index 100%
 rename from app/src/main/res/drawable-xxhdpi/cc_ic_max_browser.webp
 rename to status-traffic-api/src/main/res/drawable-xxhdpi/st_ic_max_browser.webp
 diff --git a/app/src/main/res/layout/cc_dialog_install_max_browser.xml b/status-traffic-api/src/main/res/layout/st_dialog_install_max_browser.xml
-similarity index 66%
+similarity index 65%
 rename from app/src/main/res/layout/cc_dialog_install_max_browser.xml
 rename to status-traffic-api/src/main/res/layout/st_dialog_install_max_browser.xml
-index a5c4f025..10160cfc 100644
+index a5c4f025..12692523 100644
 --- a/app/src/main/res/layout/cc_dialog_install_max_browser.xml
 +++ b/status-traffic-api/src/main/res/layout/st_dialog_install_max_browser.xml
-@@ -7,10 +7,10 @@
+@@ -7,26 +7,27 @@
      android:layout_height="457dp">
  
      <ImageView
@@ -201,8 +333,10 @@ index a5c4f025..10160cfc 100644
          android:scaleType="centerInside"
          app:layout_constraintEnd_toEndOf="parent"
          app:layout_constraintStart_toStartOf="parent"
-@@ -19,14 +19,14 @@
+         app:layout_constraintTop_toTopOf="parent" />
+ 
      <ImageView
++        android:id="@+id/st_icon"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
 -        android:src="@drawable/cc_ic_max_browser"
@@ -222,7 +356,7 @@ index a5c4f025..10160cfc 100644
          android:layout_width="0dp"
          android:layout_height="wrap_content"
          android:gravity="center_horizontal"
-@@ -38,11 +38,11 @@
+@@ -38,11 +39,11 @@
          android:layout_marginTop="42dp"
          app:layout_constraintEnd_toEndOf="parent"
          app:layout_constraintStart_toStartOf="parent"
@@ -237,7 +371,7 @@ index a5c4f025..10160cfc 100644
          android:layout_width="0dp"
          android:layout_height="wrap_content"
          android:backgroundTint="#40b1dc"
-@@ -53,19 +53,19 @@
+@@ -53,19 +54,19 @@
          android:textColor="#ffffff"
          app:layout_constraintEnd_toEndOf="parent"
          app:layout_constraintStart_toStartOf="parent"
