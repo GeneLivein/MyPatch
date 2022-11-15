@@ -109,14 +109,14 @@ index 042fffa8..00000000
 -}
 \ No newline at end of file
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/Constant.kt b/status-traffic-api/src/main/java/com/status/traffic/Constant.kt
-index 76464dba..cc5763f1 100644
+index 76464dba..96907449 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/Constant.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/Constant.kt
 @@ -61,6 +61,7 @@ object Constant {
              const val CHATWINDOW_TOP_BANNER_AD = "/ChatWindowTopBannerAd"
              const val CALL_LIST_BANNER_AD = "/CallListBannerAd"
              const val HOME_LIST_BANNER_AD = "/HomeListBannerAd"
-+            const val BROWSER_AD = "BrowserAd"
++            const val BROWSER_AD = "/BrowserAd"
  
              const val STATUS_TRAFFIC_MAXIMUM_DATA_VOLUME = 2
              const val STATUS_TRAFFIC_A_PIECE_OF_DATA = 1
