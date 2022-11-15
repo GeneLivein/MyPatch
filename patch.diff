@@ -121,10 +121,23 @@ index 76464dba..96907449 100644
              const val STATUS_TRAFFIC_MAXIMUM_DATA_VOLUME = 2
              const val STATUS_TRAFFIC_A_PIECE_OF_DATA = 1
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/StatusTrafficSdk.kt b/status-traffic-api/src/main/java/com/status/traffic/StatusTrafficSdk.kt
-index 5b4c7457..5c1aa92c 100644
+index 5b4c7457..932724ab 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/StatusTrafficSdk.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/StatusTrafficSdk.kt
-@@ -19,36 +19,7 @@ import com.status.traffic.ads.ad.OnLoadAdListener
+@@ -7,11 +7,7 @@ import android.content.Intent
+ import android.net.Uri
+ import android.os.Bundle
+ import android.widget.RelativeLayout
+-import com.coocoo.utils.AESCipherUtil
+-import com.coocoo.utils.ActivityUtil
+-import com.coocoo.utils.DialogUtils
+-import com.coocoo.utils.ResMgr
+-import com.coocoo.utils.SystemUtil
++import com.coocoo.utils.*
+ import com.status.traffic.Constant.Report.Param.KEY_FROM
+ import com.status.traffic.ads.AdSdkManager
+ import com.status.traffic.ads.AdSdkManager.ISdkController
+@@ -19,98 +15,22 @@ import com.status.traffic.ads.ad.OnLoadAdListener
  import com.status.traffic.data.ApiRemoteConfigService
  import com.status.traffic.data.ApiRemoteConfigServiceV2
  import com.status.traffic.data.DownloadManager
@@ -160,9 +173,76 @@ index 5b4c7457..5c1aa92c 100644
 -import com.status.traffic.data.config.YtRedirectingAdRemoteConfig
 +import com.status.traffic.data.config.*
  import com.status.traffic.data.config.adblock.AdBlockRemoteConfig
- import com.status.traffic.data.enums.ConfigType
- import com.status.traffic.data.enums.DownloadApkDialogType
-@@ -1160,6 +1131,10 @@ class StatusTrafficSdk private constructor() {
+-import com.status.traffic.data.enums.ConfigType
+-import com.status.traffic.data.enums.DownloadApkDialogType
+-import com.status.traffic.data.enums.FullScreenAdPosition
+-import com.status.traffic.data.enums.InstallTag
+-import com.status.traffic.data.enums.PushAppSolution
++import com.status.traffic.data.enums.*
+ import com.status.traffic.data.pref.StatusTrafficConfigPref
+-import com.status.traffic.data.vo.AdBlockConfig
+-import com.status.traffic.data.vo.AdsSDK
+-import com.status.traffic.data.vo.ApkData
+-import com.status.traffic.data.vo.ConversationTheme
+-import com.status.traffic.data.vo.DownloadAudioConfig
+-import com.status.traffic.data.vo.DownloadVideoConfig
+-import com.status.traffic.data.vo.FissionConversationAdConfig
+-import com.status.traffic.data.vo.FissionStatusAdConfig
+-import com.status.traffic.data.vo.FullScreenAdConfig
+-import com.status.traffic.data.vo.MainSplashAdConfig
+-import com.status.traffic.data.vo.NativeAdConfig
+-import com.status.traffic.data.vo.PushAppConfig
+-import com.status.traffic.data.vo.StatusDownloadProductAdConfig
+-import com.status.traffic.data.vo.StatusTrafficConfig
+-import com.status.traffic.data.vo.StickerAdConfig
+-import com.status.traffic.data.vo.StickerSaveToFavoritesConfig
++import com.status.traffic.data.vo.*
+ import com.status.traffic.install.InstallActivity
+ import com.status.traffic.loader.IImageLoader
+ import com.status.traffic.loader.ImageLoaderWrapper
+ import com.status.traffic.openrtb.Bid
+ import com.status.traffic.openrtb.CarouselConversationOpenRTB
+ import com.status.traffic.presenter.LaunchInstallActivityPresenter
+-import com.status.traffic.report.AdReporter
+-import com.status.traffic.report.AdsSdkReporter
+-import com.status.traffic.report.ConversationPickAudioReporter
+-import com.status.traffic.report.ConversationPickVideoReporter
+-import com.status.traffic.report.ConversationRowDownloadAudioReporter
+-import com.status.traffic.report.ConversationRowDownloadVideoReporter
+-import com.status.traffic.report.ReportStatus
+-import com.status.traffic.report.StatusAdReporter
+-import com.status.traffic.report.StatusDownloadKeeperReporter
+-import com.status.traffic.report.StatusTrafficReporter
+-import com.status.traffic.ui.AdBlockActivity
+-import com.status.traffic.ui.DeleteConversationItemDialog
+-import com.status.traffic.ui.DownloadApkMsgDialog
+-import com.status.traffic.ui.DownloadVideoAdGuidePageDialog
+-import com.status.traffic.ui.FissionChatConversationActivity
+-import com.status.traffic.ui.FissionStoryActivity
+-import com.status.traffic.ui.FullScreenAdActivity
+-import com.status.traffic.ui.Mp3JuicesInstallDialog
+-import com.status.traffic.ui.Mp3JuicesInstallDialog2
+-import com.status.traffic.ui.PushAppInterstitialAdActivity
+-import com.status.traffic.ui.StatusKeeperInstallDialog
+-import com.status.traffic.ui.StoryActivity
+-import com.status.traffic.ui.StoryVoteActivity
+-import com.status.traffic.ui.Ytmp3InstallDialog
++import com.status.traffic.report.*
++import com.status.traffic.ui.*
+ import com.status.traffic.util.OpenLinkUtil
+ import com.status.traffic.util.PackageUtil
+-import kotlinx.coroutines.CoroutineScope
+-import kotlinx.coroutines.Dispatchers
+-import kotlinx.coroutines.GlobalScope
+-import kotlinx.coroutines.Job
+-import kotlinx.coroutines.cancelChildren
+-import kotlinx.coroutines.launch
+-import kotlinx.coroutines.withContext
++import kotlinx.coroutines.*
+ 
+ class StatusTrafficSdk private constructor() {
+ 
+@@ -1160,6 +1080,10 @@ class StatusTrafficSdk private constructor() {
          ApiRemoteConfigService.init(CallListBannerAdRemoteConfig, activity)
      }
  
@@ -203,15 +283,17 @@ index befc7a47..be25cc2f 100644
                      appFlavor,
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt
 new file mode 100644
-index 00000000..b3d645f5
+index 00000000..b93284f3
 --- /dev/null
 +++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt
-@@ -0,0 +1,23 @@
+@@ -0,0 +1,39 @@
 +package com.status.traffic.data.config
 +
 +import com.google.gson.JsonArray
 +import com.google.gson.JsonObject
 +import com.status.traffic.Constant.Api.Config.BROWSER_AD
++import com.status.traffic.data.DownloadManager
++import com.status.traffic.data.enums.ConfigType
 +import com.status.traffic.data.vo.BrowserAdConfig
 +
 +object BrowserAdRemoteConfig : BaseAdRemoteConfig<List<BrowserAdConfig>, Void>(BROWSER_AD) {
@@ -228,6 +310,20 @@ index 00000000..b3d645f5
 +    }
 +
 +    override suspend fun preDownloadApk() {
++        val configs = apiRemoteConfig ?: return
++        for (config in configs) {
++            val key = config.key ?: continue
++            val apkFile = config.apkUrl ?: continue
++            val type = config.type
++            if (ConfigType.APK.value == type
++                && apkFile.isNotEmpty()) {
++                DownloadManager.startDownloadApk(key, apkFile, true)
++            }
++        }
++    }
++
++    override fun checkApkFileExists(config: List<BrowserAdConfig>?): List<BrowserAdConfig>? {
++        return super.checkApkFileExists(config)
 +    }
 +}
 \ No newline at end of file
