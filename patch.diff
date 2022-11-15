@@ -12,28 +12,37 @@ index c4cf8130..24fae3a1 100644
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
 diff --git a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
-index 4283c9d8..10cb02a5 100644
+index 4283c9d8..86adbe03 100644
 --- a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
 +++ b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
-@@ -7,12 +7,16 @@ import android.net.Uri
+@@ -7,33 +7,47 @@ import android.net.Uri
  import com.coocoo.CooCoo
  import com.coocoo.annotation.SmaliInject
  import com.coocoo.utils.SystemUtil
 -import com.coocoo.widget.InstallMaxBrowserDialog
 +import com.status.traffic.data.config.BrowserAdRemoteConfig
++import com.status.traffic.data.enums.InstallTag
 +import com.status.traffic.data.vo.BrowserAdConfig
++import com.status.traffic.install.InstallActivity
 +import com.status.traffic.ui.InstallMaxBrowserDialog
  
  object ConversationRowTextDelegate {
  
-     private const val MAX_PACKAGE_NAME = "com.kiwibrowser.browser"
- 
+-    private const val MAX_PACKAGE_NAME = "com.kiwibrowser.browser"
 +    private val config: BrowserAdConfig? = BrowserAdRemoteConfig.getRemoteConfig()?.get(0)
-+
-     private val isMaxBrowserInstalled: Boolean = SystemUtil.checkAppInstalled(MAX_PACKAGE_NAME)
+ 
+-    private val isMaxBrowserInstalled: Boolean = SystemUtil.checkAppInstalled(MAX_PACKAGE_NAME)
++    private val isBrowserInstalled: Boolean get() = SystemUtil.checkAppInstalled(config?.packageName)
  
      @JvmStatic
-@@ -25,15 +29,23 @@ object ConversationRowTextDelegate {
+     @SmaliInject
+     fun onHyperLinkClick(cc12P: cc_12P, context: Context, uri: Uri) {
+         if (uri.scheme == "http" || uri.scheme == "https") {
+-            if (isMaxBrowserInstalled) {
+-                val intent = context.packageManager.getLaunchIntentForPackage(MAX_PACKAGE_NAME) ?: return
++            if (isBrowserInstalled) {
++                val intent = context.packageManager.getLaunchIntentForPackage(config?.packageName.orEmpty()) ?: return
+                 intent.addCategory(Intent.CATEGORY_LAUNCHER)
                  intent.data = uri
                  context.startActivity(intent)
              } else {
@@ -54,7 +63,9 @@ index 4283c9d8..10cb02a5 100644
 +                cc12P.Ab8(context, uri)
 +            }
 +            onInstallClick = {
-+
++                config?.let {
++                    InstallActivity.launchInstallActivity(context, InstallTag.BROWSER_AD, it.getApkData(), null)
++                }
 +            }
 +        }.show()
      }
@@ -351,12 +362,23 @@ index 00000000..d1f260d3
 +    }
 +}
 \ No newline at end of file
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/enums/InstallTag.kt b/status-traffic-api/src/main/java/com/status/traffic/data/enums/InstallTag.kt
+index 4c76aa66..c217cef2 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/data/enums/InstallTag.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/data/enums/InstallTag.kt
+@@ -39,4 +39,6 @@ enum class InstallTag(val value: String) {
+     VIDEO_PLAYER_EXTRA_ACTION("video_player_extra_action"),
+     CONVERSATION_PICK_AUDIO("conversation_pick_audio"), // WhatsApp原生聊天頁，分享檔案選項的mp3
+     CONVERSATION_PICK_VIDEO("conversation_pick_video"), // WhatsApp原生聊天頁，分享檔案選項的video
++
++    BROWSER_AD("browser_ad")
+ }
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/vo/BrowserAdConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/vo/BrowserAdConfig.kt
 new file mode 100644
-index 00000000..b0ba4e19
+index 00000000..b8e04904
 --- /dev/null
 +++ b/status-traffic-api/src/main/java/com/status/traffic/data/vo/BrowserAdConfig.kt
-@@ -0,0 +1,22 @@
+@@ -0,0 +1,26 @@
 +package com.status.traffic.data.vo
 +
 +import com.google.gson.annotations.SerializedName
@@ -378,7 +400,11 @@ index 00000000..b0ba4e19
 +    val apkUrl: String?,
 +    @SerializedName("apk_md5")
 +    val apkMd5: String? = null,
-+)
++) {
++    fun getApkData(): ApkData {
++        return ApkData(key, packageName, apkUrl, apkMd5)
++    }
++}
 \ No newline at end of file
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ui/InstallMaxBrowserDialog.kt b/status-traffic-api/src/main/java/com/status/traffic/ui/InstallMaxBrowserDialog.kt
 new file mode 100644
