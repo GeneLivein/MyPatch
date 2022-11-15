@@ -336,7 +336,7 @@ index 00000000..a004be70
 +.end method
 diff --git a/whatsapp_modify_module/smali_classes2/X/1p1.1.smali b/whatsapp_modify_module/smali_classes2/X/1p1.1.smali
 new file mode 100644
-index 00000000..e8964b7b
+index 00000000..2863000e
 --- /dev/null
 +++ b/whatsapp_modify_module/smali_classes2/X/1p1.1.smali
 @@ -0,0 +1,84 @@
@@ -418,8 +418,8 @@ index 00000000..e8964b7b
 +
 +    invoke-virtual {v1, v0}, Landroid/content/Intent;->setFlags(I)Landroid/content/Intent;
 +#coocoo
-+    #invoke-virtual {v4, v2, v1}, LX/12P;->A06(Landroid/content/Context;Landroid/content/Intent;)V
-+    invoke-static {v4, v2, p1}, Lcom/coocoo/conversation/ConversationRowTextDelegate;->onDocumentOpen(LX/12P;Landroid/content/Context;Landroid/net/Uri;)V
++    invoke-virtual {v4, v2, v1}, LX/12P;->A06(Landroid/content/Context;Landroid/content/Intent;)V
++    #invoke-static {v4, v2, p1}, Lcom/coocoo/conversation/ConversationRowTextDelegate;->onDocumentOpen(LX/12P;Landroid/content/Context;Landroid/net/Uri;)V
 +#coocoo
 +    :cond_0
 +    return-void
