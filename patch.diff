@@ -253,6 +253,27 @@ index 5b4c7457..932724ab 100644
      fun loadHomeTopBannerAd(context: Context) {
          ApiRemoteConfigService.init(HomeTopBannerAdRemoteConfig, context)
      }
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/ApiRemoteConfigService.kt b/status-traffic-api/src/main/java/com/status/traffic/data/ApiRemoteConfigService.kt
+index a7432208..66e49ec6 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/data/ApiRemoteConfigService.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/data/ApiRemoteConfigService.kt
+@@ -1,7 +1,7 @@
+ package com.status.traffic.data
+ 
+ import android.content.Context
+-import com.coocoo.utils.LogUtil
++import android.util.Log
+ import com.status.traffic.data.config.BaseRemoteConfig
+ import com.status.traffic.extensions.isWifiConnected
+ import kotlinx.coroutines.*
+@@ -18,6 +18,7 @@ object ApiRemoteConfigService {
+                 configs.add(config)
+             }
+             val result = config.fetch(context.applicationContext)
++            Log.e("Gene", "result: $result")
+             if (result != null) {
+                 if (context.isWifiConnected()) {
+                     config.preDownloadApk()
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 index befc7a47..be25cc2f 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
@@ -283,12 +304,13 @@ index befc7a47..be25cc2f 100644
                      appFlavor,
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt
 new file mode 100644
-index 00000000..b93284f3
+index 00000000..d1f260d3
 --- /dev/null
 +++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt
-@@ -0,0 +1,39 @@
+@@ -0,0 +1,42 @@
 +package com.status.traffic.data.config
 +
++import android.util.Log
 +import com.google.gson.JsonArray
 +import com.google.gson.JsonObject
 +import com.status.traffic.Constant.Api.Config.BROWSER_AD
@@ -311,12 +333,14 @@ index 00000000..b93284f3
 +
 +    override suspend fun preDownloadApk() {
 +        val configs = apiRemoteConfig ?: return
++        Log.e("Gene", "preDownloadApk")
 +        for (config in configs) {
 +            val key = config.key ?: continue
 +            val apkFile = config.apkUrl ?: continue
 +            val type = config.type
 +            if (ConfigType.APK.value == type
 +                && apkFile.isNotEmpty()) {
++                Log.e("Gene", "startDownloadApk")
 +                DownloadManager.startDownloadApk(key, apkFile, true)
 +            }
 +        }
