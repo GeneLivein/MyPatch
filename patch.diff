@@ -12,10 +12,14 @@ index c4cf8130..24fae3a1 100644
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
 diff --git a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
-index 4283c9d8..fa31ddad 100644
+index 4283c9d8..7c313ae6 100644
 --- a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
 +++ b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
-@@ -7,33 +7,80 @@ import android.net.Uri
+@@ -4,36 +4,85 @@ import X.cc_12P
+ import android.content.Context
+ import android.content.Intent
+ import android.net.Uri
++import android.util.Log
  import com.coocoo.CooCoo
  import com.coocoo.annotation.SmaliInject
  import com.coocoo.utils.SystemUtil
@@ -71,6 +75,7 @@ index 4283c9d8..fa31ddad 100644
 +                cc12P.Ab8(context, uri)
              }
 +            onInstallClick = {
++                Log.e("Gene", "config: $config")
 +                config?.let {
 +                    if (it.type == ConfigType.APK.value) {
 +                        startInstallApk(it, context, cc12P, uri)
