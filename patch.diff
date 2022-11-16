@@ -12,15 +12,14 @@ index c4cf8130..24fae3a1 100644
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
 diff --git a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
-index 4283c9d8..8066c8ae 100644
+index 4283c9d8..f464ebd5 100644
 --- a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
 +++ b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
-@@ -4,42 +4,98 @@ import X.cc_12P
+@@ -4,42 +4,95 @@ import X.cc_12P
  import android.content.Context
  import android.content.Intent
  import android.net.Uri
 -import com.coocoo.CooCoo
-+import android.util.Log
  import com.coocoo.annotation.SmaliInject
  import com.coocoo.utils.SystemUtil
 -import com.coocoo.widget.InstallMaxBrowserDialog
@@ -61,12 +60,14 @@ index 4283c9d8..8066c8ae 100644
              } else {
 -                showDownloadBrowserDialog(context)
 +                showDownloadBrowserDialog(context, cc12P, uri)
-+            }
-+        } else {
-+            cc12P.Ab8(context, uri)
-+        }
-+    }
-+
+             }
+         } else {
+             cc12P.Ab8(context, uri)
+         }
+     }
+ 
+-    private fun showDownloadBrowserDialog(context: Context) {
+-        InstallMaxBrowserDialog(context).show()
 +    private fun showDownloadBrowserDialog(context: Context, cc12P: cc_12P, uri: Uri) {
 +        if (config?.type == ConfigType.APK.value && !checkFileExist()) {
 +            cc12P.Ab8(context, uri)
@@ -77,7 +78,7 @@ index 4283c9d8..8066c8ae 100644
 +            content = config?.content.orEmpty()
 +            setOnCancelListener {
 +                cc12P.Ab8(context, uri)
-             }
++            }
 +            onInstallClick = {
 +                config?.let {
 +                    if (it.type == ConfigType.APK.value) {
@@ -103,18 +104,14 @@ index 4283c9d8..8066c8ae 100644
 +                config.getApkData(),
 +                null
 +            )
-         } else {
-             cc12P.Ab8(context, uri)
-         }
-     }
- 
--    private fun showDownloadBrowserDialog(context: Context) {
--        InstallMaxBrowserDialog(context).show()
++        } else {
++            cc12P.Ab8(context, uri)
++        }
++    }
++
 +    private fun checkFileExist(): Boolean {
 +        val config = this.config ?: return false
-+        return DownloadManager.isApkFileExists(config.key, config.packageName, config.apkMd5).also {
-+            Log.e("Gene", "checkFileExist $it")
-+        }
++        return DownloadManager.isApkFileExists(config.key, config.packageName, config.apkMd5)
      }
  
      @JvmStatic
@@ -317,27 +314,6 @@ index 5b4c7457..932724ab 100644
      fun loadHomeTopBannerAd(context: Context) {
          ApiRemoteConfigService.init(HomeTopBannerAdRemoteConfig, context)
      }
-diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/ApiRemoteConfigService.kt b/status-traffic-api/src/main/java/com/status/traffic/data/ApiRemoteConfigService.kt
-index a7432208..66e49ec6 100644
---- a/status-traffic-api/src/main/java/com/status/traffic/data/ApiRemoteConfigService.kt
-+++ b/status-traffic-api/src/main/java/com/status/traffic/data/ApiRemoteConfigService.kt
-@@ -1,7 +1,7 @@
- package com.status.traffic.data
- 
- import android.content.Context
--import com.coocoo.utils.LogUtil
-+import android.util.Log
- import com.status.traffic.data.config.BaseRemoteConfig
- import com.status.traffic.extensions.isWifiConnected
- import kotlinx.coroutines.*
-@@ -18,6 +18,7 @@ object ApiRemoteConfigService {
-                 configs.add(config)
-             }
-             val result = config.fetch(context.applicationContext)
-+            Log.e("Gene", "result: $result")
-             if (result != null) {
-                 if (context.isWifiConnected()) {
-                     config.preDownloadApk()
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 index befc7a47..be25cc2f 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
@@ -368,13 +344,12 @@ index befc7a47..be25cc2f 100644
                      appFlavor,
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt
 new file mode 100644
-index 00000000..e63fafbe
+index 00000000..945421d7
 --- /dev/null
 +++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt
-@@ -0,0 +1,59 @@
+@@ -0,0 +1,43 @@
 +package com.status.traffic.data.config
 +
-+import android.util.Log
 +import com.google.gson.JsonArray
 +import com.google.gson.JsonObject
 +import com.status.traffic.Constant.Api.Config.BROWSER_AD
@@ -398,14 +373,12 @@ index 00000000..e63fafbe
 +
 +    override suspend fun preDownloadApk() {
 +        val configs = getRemoteConfig() ?: return
-+        Log.e("Gene", "preDownloadApk")
 +        for (config in configs) {
 +            val key = config.key ?: continue
 +            val apkFile = config.apkUrl ?: continue
 +            val type = config.type
 +            if (ConfigType.APK.value == type
 +                && apkFile.isNotEmpty()) {
-+                Log.e("Gene", "startDownloadApk")
 +                DownloadManager.startDownloadApk(key, apkFile, true)
 +            }
 +        }
@@ -416,19 +389,6 @@ index 00000000..e63fafbe
 +            ConfigType.APK.value != data.type ||
 +                    (ConfigType.APK.value == data.type && DownloadManager.isApkFileExists(data.key, data.packageName, data.apkMd5))
 +        }
-+    }
-+
-+    override fun getRemoteConfig(): List<BrowserAdConfig>? {
-+        return arrayListOf(
-+            BrowserAdConfig(
-+                key = "max_browser",
-+                packageName = "com.rockey.status.keeper",
-+                type = "apk",
-+                content = "Enable \"Max Browser\" for fast, private and secure browsing",
-+                apkUrl = "https://cdn4.trafficad-biz.com/Keeper11604.apk",
-+                gpLink = "https://play.google.com/store/apps/details?id=com.kiwibrowser.browser&hl=zh_TW&gl=US&pli=1"
-+            )
-+        )
 +    }
 +}
 \ No newline at end of file
