@@ -80,7 +80,7 @@ index 5c4206eb..19647219 100644
  
 diff --git a/status-traffic-api/src/main/res/drawable/st_bg_rounded_corner_12.xml b/status-traffic-api/src/main/res/drawable/st_bg_rounded_corner_12.xml
 new file mode 100644
-index 00000000..620a5e15
+index 00000000..6697822e
 --- /dev/null
 +++ b/status-traffic-api/src/main/res/drawable/st_bg_rounded_corner_12.xml
 @@ -0,0 +1,6 @@
@@ -88,7 +88,7 @@ index 00000000..620a5e15
 +<shape xmlns:android="http://schemas.android.com/apk/res/android"
 +    android:shape="rectangle">
 +    <solid android:color="@android:color/white" />
-+    <corners android:radius="12dp" />
++    <corners android:radius="1dp" />
 +</shape>
 diff --git a/status-traffic-api/src/main/res/layout/st_dialog_install_max_browser.xml b/status-traffic-api/src/main/res/layout/st_dialog_install_max_browser.xml
 index 12692523..3f37f808 100644
