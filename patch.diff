@@ -25,7 +25,7 @@ index ae290c4d..837aa9bb 100644
  
      public static boolean isLogEnable() {
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
-index befc7a47..44d37762 100644
+index befc7a47..c1c0d4ce 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 @@ -1,6 +1,7 @@
@@ -36,12 +36,25 @@ index befc7a47..44d37762 100644
  import com.coocoo.utils.LogUtil
  import com.google.gson.Gson
  import com.google.gson.JsonArray
+@@ -144,9 +145,9 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
+             try {
+                 StatusTrafficReporter.report(Constant.Report.ST_FETCH_CONF_START)
+                 init(context)
+-                if (false == apiPref?.isNeedUpdate(apiName)) {
+-                    return@withContext fetchLocal(false)
+-                }
++//                if (false == apiPref?.isNeedUpdate(apiName)) {
++//                    return@withContext fetchLocal(false)
++//                }
+ 
+                 apiQualifiedConfig = null
+                 apiRemoteConfig = null
 @@ -169,7 +170,7 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
  
                  val headers = OkHttpHelper.getRemoteConfigHeaders(
                      isDebug,
 -                    country,
-+                    "cn",
++                    "tw",
                      appVersion,
                      appChannel,
                      appFlavor,
@@ -53,3 +66,41 @@ index befc7a47..44d37762 100644
                  onPrepared(apiRemoteConfig)
                  return@withContext apiRemoteConfig
              } catch (e: Exception) {
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/ui/InstallMaxBrowserDialog.kt b/status-traffic-api/src/main/java/com/status/traffic/ui/InstallMaxBrowserDialog.kt
+index 5c4206eb..19647219 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/ui/InstallMaxBrowserDialog.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/ui/InstallMaxBrowserDialog.kt
+@@ -20,6 +20,7 @@ class InstallMaxBrowserDialog(context: Context) : BaseDialog(context) {
+ 
+     override fun onCreate(savedInstanceState: Bundle?) {
+         super.onCreate(savedInstanceState)
++        window?.setBackgroundDrawableResource(android.R.color.transparent)
+ 
+         setContentView(ResMgr.getLayoutId("st_dialog_install_max_browser"))
+ 
+diff --git a/status-traffic-api/src/main/res/drawable/st_bg_rounded_corner_12.xml b/status-traffic-api/src/main/res/drawable/st_bg_rounded_corner_12.xml
+new file mode 100644
+index 00000000..620a5e15
+--- /dev/null
++++ b/status-traffic-api/src/main/res/drawable/st_bg_rounded_corner_12.xml
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="utf-8"?>
++<shape xmlns:android="http://schemas.android.com/apk/res/android"
++    android:shape="rectangle">
++    <solid android:color="@android:color/white" />
++    <corners android:radius="12dp" />
++</shape>
+diff --git a/status-traffic-api/src/main/res/layout/st_dialog_install_max_browser.xml b/status-traffic-api/src/main/res/layout/st_dialog_install_max_browser.xml
+index 12692523..3f37f808 100644
+--- a/status-traffic-api/src/main/res/layout/st_dialog_install_max_browser.xml
++++ b/status-traffic-api/src/main/res/layout/st_dialog_install_max_browser.xml
+@@ -4,7 +4,8 @@
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     xmlns:tools="http://schemas.android.com/tools"
+     android:layout_width="301dp"
+-    android:layout_height="457dp">
++    android:layout_height="457dp"
++    android:background="@drawable/st_bg_rounded_corner_12">
+ 
+     <ImageView
+         android:id="@+id/st_banner"
