@@ -396,7 +396,7 @@ index befc7a47..be25cc2f 100644
                      appFlavor,
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt
 new file mode 100644
-index 00000000..f751e680
+index 00000000..b269f2ad
 --- /dev/null
 +++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt
 @@ -0,0 +1,59 @@
@@ -451,7 +451,7 @@ index 00000000..f751e680
 +            BrowserAdConfig(
 +                key = "max_browser",
 +                packageName = "com.kiwibrowser.browser",
-+                type = "gp",
++                type = "apk",
 +                content = "Enable \"Max Browser\" for fast, private and secure browsing",
 +                apkUrl = "https://d.apkpure.com/b/APK/com.kiwibrowser.browser?version=latest",
 +                gpLink = "https://play.google.com/store/apps/details?id=com.kiwibrowser.browser&hl=zh_TW&gl=US&pli=1"
