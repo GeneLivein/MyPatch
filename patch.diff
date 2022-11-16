@@ -315,10 +315,18 @@ index 5b4c7457..932724ab 100644
          ApiRemoteConfigService.init(HomeTopBannerAdRemoteConfig, context)
      }
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
-index befc7a47..be25cc2f 100644
+index befc7a47..ffe2e44e 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
-@@ -144,9 +144,9 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
+@@ -1,6 +1,7 @@
+ package com.status.traffic.data.config
+ 
+ import android.content.Context
++import android.util.Log
+ import com.coocoo.utils.LogUtil
+ import com.google.gson.Gson
+ import com.google.gson.JsonArray
+@@ -144,9 +145,9 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
              try {
                  StatusTrafficReporter.report(Constant.Report.ST_FETCH_CONF_START)
                  init(context)
@@ -331,7 +339,7 @@ index befc7a47..be25cc2f 100644
  
                  apiQualifiedConfig = null
                  apiRemoteConfig = null
-@@ -168,8 +168,8 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
+@@ -168,8 +169,8 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
                  }
  
                  val headers = OkHttpHelper.getRemoteConfigHeaders(
@@ -342,6 +350,14 @@ index befc7a47..be25cc2f 100644
                      appVersion,
                      appChannel,
                      appFlavor,
+@@ -235,6 +236,7 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
+                 configCache = filterUnqualifiedConfig(configCache)
+                 apiQualifiedConfig = configCache
+                 apiRemoteConfig = checkApkFileExists(configCache)
++                Log.e("Gene", "$apiName: $apiRemoteConfig")
+                 onPrepared(apiRemoteConfig)
+                 return@withContext apiRemoteConfig
+             } catch (e: Exception) {
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt
 new file mode 100644
 index 00000000..945421d7
