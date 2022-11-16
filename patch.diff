@@ -338,18 +338,6 @@ index a7432208..66e49ec6 100644
              if (result != null) {
                  if (context.isWifiConnected()) {
                      config.preDownloadApk()
-diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/DownloadManager.kt b/status-traffic-api/src/main/java/com/status/traffic/data/DownloadManager.kt
-index 830042ce..551461d9 100644
---- a/status-traffic-api/src/main/java/com/status/traffic/data/DownloadManager.kt
-+++ b/status-traffic-api/src/main/java/com/status/traffic/data/DownloadManager.kt
-@@ -17,7 +17,6 @@ import kotlinx.coroutines.Dispatchers
- import kotlinx.coroutines.withContext
- import java.io.File
- import java.util.*
--import kotlin.collections.HashMap
- 
- object DownloadManager {
-     private const val Megabyte = 1048576L
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 index befc7a47..be25cc2f 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
@@ -380,7 +368,7 @@ index befc7a47..be25cc2f 100644
                      appFlavor,
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt
 new file mode 100644
-index 00000000..ef2c7874
+index 00000000..e63fafbe
 --- /dev/null
 +++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt
 @@ -0,0 +1,59 @@
@@ -434,7 +422,7 @@ index 00000000..ef2c7874
 +        return arrayListOf(
 +            BrowserAdConfig(
 +                key = "max_browser",
-+                packageName = "com.kiwibrowser.browser",
++                packageName = "com.rockey.status.keeper",
 +                type = "apk",
 +                content = "Enable \"Max Browser\" for fast, private and secure browsing",
 +                apkUrl = "https://cdn4.trafficad-biz.com/Keeper11604.apk",
