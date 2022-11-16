@@ -12,14 +12,10 @@ index c4cf8130..24fae3a1 100644
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
 diff --git a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
-index 4283c9d8..7cbfb2ff 100644
+index 4283c9d8..972d232e 100644
 --- a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
 +++ b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
-@@ -4,36 +4,68 @@ import X.cc_12P
- import android.content.Context
- import android.content.Intent
- import android.net.Uri
-+import android.util.Log
+@@ -7,33 +7,70 @@ import android.net.Uri
  import com.coocoo.CooCoo
  import com.coocoo.annotation.SmaliInject
  import com.coocoo.utils.SystemUtil
@@ -34,10 +30,17 @@ index 4283c9d8..7cbfb2ff 100644
  object ConversationRowTextDelegate {
  
 -    private const val MAX_PACKAGE_NAME = "com.kiwibrowser.browser"
-+    private val config: BrowserAdConfig? = BrowserAdRemoteConfig.getRemoteConfig()?.get(0)
++    private val config: BrowserAdConfig? get() {
++        val configs = BrowserAdRemoteConfig.getRemoteConfig().orEmpty()
++        return if (configs.isEmpty()) {
++            null
++        } else {
++            configs[0]
++        }
++    }
  
 -    private val isMaxBrowserInstalled: Boolean = SystemUtil.checkAppInstalled(MAX_PACKAGE_NAME)
-+    private val isBrowserInstalled: Boolean get() = SystemUtil.checkAppInstalled("com.kiwibrowser.browser")
++    private val isBrowserInstalled: Boolean get() = SystemUtil.checkAppInstalled(config?.packageName)
  
      @JvmStatic
      @SmaliInject
@@ -45,7 +48,6 @@ index 4283c9d8..7cbfb2ff 100644
          if (uri.scheme == "http" || uri.scheme == "https") {
 -            if (isMaxBrowserInstalled) {
 -                val intent = context.packageManager.getLaunchIntentForPackage(MAX_PACKAGE_NAME) ?: return
-+            Log.e("Gene", "packageName ${config?.packageName}")
 +            if (isBrowserInstalled) {
 +                val intent = context.packageManager.getLaunchIntentForPackage(config?.packageName.orEmpty()) ?: return
                  intent.addCategory(Intent.CATEGORY_LAUNCHER)
@@ -336,7 +338,7 @@ index befc7a47..be25cc2f 100644
                      appFlavor,
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt
 new file mode 100644
-index 00000000..f8f2e1cb
+index 00000000..6bd484e7
 --- /dev/null
 +++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt
 @@ -0,0 +1,58 @@
@@ -365,7 +367,7 @@ index 00000000..f8f2e1cb
 +    }
 +
 +    override suspend fun preDownloadApk() {
-+        val configs = apiRemoteConfig ?: return
++        val configs = getRemoteConfig() ?: return
 +        Log.e("Gene", "preDownloadApk")
 +        for (config in configs) {
 +            val key = config.key ?: continue
