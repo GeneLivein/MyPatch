@@ -12,14 +12,15 @@ index c4cf8130..24fae3a1 100644
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
 diff --git a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
-index 4283c9d8..86adbe03 100644
+index 4283c9d8..9283aa28 100644
 --- a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
 +++ b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
-@@ -7,33 +7,47 @@ import android.net.Uri
+@@ -7,33 +7,63 @@ import android.net.Uri
  import com.coocoo.CooCoo
  import com.coocoo.annotation.SmaliInject
  import com.coocoo.utils.SystemUtil
 -import com.coocoo.widget.InstallMaxBrowserDialog
++import com.status.traffic.data.DownloadManager
 +import com.status.traffic.data.config.BrowserAdRemoteConfig
 +import com.status.traffic.data.enums.InstallTag
 +import com.status.traffic.data.vo.BrowserAdConfig
@@ -64,10 +65,25 @@ index 4283c9d8..86adbe03 100644
 +            }
 +            onInstallClick = {
 +                config?.let {
-+                    InstallActivity.launchInstallActivity(context, InstallTag.BROWSER_AD, it.getApkData(), null)
++                    if (checkFileExist()) {
++                        InstallActivity.launchInstallActivity(
++                            context,
++                            InstallTag.BROWSER_AD,
++                            it.getApkData(),
++                            null
++                        )
++                    } else {
++                        cc12P.Ab8(context, uri)
++                    }
 +                }
++                dismiss()
 +            }
 +        }.show()
++    }
++
++    private fun checkFileExist(): Boolean {
++        val config = this.config ?: return false
++        return DownloadManager.isApkFileExists(config.key, config.packageName, config.apkMd5)
      }
  
      @JvmStatic
@@ -315,10 +331,10 @@ index befc7a47..be25cc2f 100644
                      appFlavor,
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt
 new file mode 100644
-index 00000000..d1f260d3
+index 00000000..5e891d90
 --- /dev/null
 +++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt
-@@ -0,0 +1,42 @@
+@@ -0,0 +1,45 @@
 +package com.status.traffic.data.config
 +
 +import android.util.Log
@@ -358,7 +374,10 @@ index 00000000..d1f260d3
 +    }
 +
 +    override fun checkApkFileExists(config: List<BrowserAdConfig>?): List<BrowserAdConfig>? {
-+        return super.checkApkFileExists(config)
++        return config?.filter { data ->
++            ConfigType.APK.value != data.type ||
++                    (ConfigType.APK.value == data.type && DownloadManager.isApkFileExists(data.key, data.packageName, data.apkMd5))
++        }
 +    }
 +}
 \ No newline at end of file
