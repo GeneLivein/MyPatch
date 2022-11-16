@@ -25,7 +25,7 @@ index ae290c4d..837aa9bb 100644
  
      public static boolean isLogEnable() {
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
-index befc7a47..c1c0d4ce 100644
+index befc7a47..ffe2e44e 100644
 --- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 +++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
 @@ -1,6 +1,7 @@
@@ -49,11 +49,13 @@ index befc7a47..c1c0d4ce 100644
  
                  apiQualifiedConfig = null
                  apiRemoteConfig = null
-@@ -169,7 +170,7 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
+@@ -168,8 +169,8 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
+                 }
  
                  val headers = OkHttpHelper.getRemoteConfigHeaders(
-                     isDebug,
+-                    isDebug,
 -                    country,
++                    true,
 +                    "tw",
                      appVersion,
                      appChannel,
