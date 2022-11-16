@@ -12,10 +12,14 @@ index c4cf8130..24fae3a1 100644
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
 diff --git a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
-index 4283c9d8..9283aa28 100644
+index 4283c9d8..09f9c0ae 100644
 --- a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
 +++ b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
-@@ -7,33 +7,63 @@ import android.net.Uri
+@@ -4,36 +4,68 @@ import X.cc_12P
+ import android.content.Context
+ import android.content.Intent
+ import android.net.Uri
++import android.util.Log
  import com.coocoo.CooCoo
  import com.coocoo.annotation.SmaliInject
  import com.coocoo.utils.SystemUtil
@@ -41,6 +45,7 @@ index 4283c9d8..9283aa28 100644
          if (uri.scheme == "http" || uri.scheme == "https") {
 -            if (isMaxBrowserInstalled) {
 -                val intent = context.packageManager.getLaunchIntentForPackage(MAX_PACKAGE_NAME) ?: return
++            Log.e("Gene", "packageName ${config?.packageName}")
 +            if (isBrowserInstalled) {
 +                val intent = context.packageManager.getLaunchIntentForPackage(config?.packageName.orEmpty()) ?: return
                  intent.addCategory(Intent.CATEGORY_LAUNCHER)
@@ -331,10 +336,10 @@ index befc7a47..be25cc2f 100644
                      appFlavor,
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt
 new file mode 100644
-index 00000000..5e891d90
+index 00000000..0b06276c
 --- /dev/null
 +++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt
-@@ -0,0 +1,45 @@
+@@ -0,0 +1,54 @@
 +package com.status.traffic.data.config
 +
 +import android.util.Log
@@ -347,8 +352,17 @@ index 00000000..5e891d90
 +
 +object BrowserAdRemoteConfig : BaseAdRemoteConfig<List<BrowserAdConfig>, Void>(BROWSER_AD) {
 +    override fun parserAdsInfo(json: JsonArray?): List<BrowserAdConfig>? {
++        val jjson = """
++            [{
++                        "key": "max_browser",
++                        "package_name": "com.kiwibrowser.browser",
++                        "type": "apk",
++                        "content": "Enable \"Max Browser\" for fast, private and secure browsing",
++                        "apk_url": "https://d.apkpure.com/b/APK/com.kiwibrowser.browser?version=latest"
++            }]
++        """.trimIndent()
 +        try {
-+            return getGson().fromJson(json, Array<BrowserAdConfig>::class.java).toList()
++            return getGson().fromJson(jjson, Array<BrowserAdConfig>::class.java).toList()
 +        } catch (e: Exception) {
 +        }
 +        return null
