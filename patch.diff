@@ -12,10 +12,10 @@ index c4cf8130..24fae3a1 100644
          AdCommonManager.injectReporter(ReportStatusVideoTraffic)
      }
 diff --git a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
-index 4283c9d8..9cc3a799 100644
+index 4283c9d8..003a95d5 100644
 --- a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
 +++ b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
-@@ -4,42 +4,97 @@ import X.cc_12P
+@@ -4,42 +4,98 @@ import X.cc_12P
  import android.content.Context
  import android.content.Intent
  import android.net.Uri
@@ -68,8 +68,9 @@ index 4283c9d8..9cc3a799 100644
 +    }
 +
 +    private fun showDownloadBrowserDialog(context: Context, cc12P: cc_12P, uri: Uri) {
-+        if (config?.type == ConfigType.APK.value && checkFileExist()) {
++        if (config?.type == ConfigType.APK.value && !checkFileExist()) {
 +            cc12P.Ab8(context, uri)
++            return
 +        }
 +
 +        InstallMaxBrowserDialog(context).apply {
