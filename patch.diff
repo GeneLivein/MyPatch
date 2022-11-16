@@ -1,3 +1,16 @@
+diff --git a/app/src/main/java/com/coocoo/CooCoo.kt b/app/src/main/java/com/coocoo/CooCoo.kt
+index c4cf8130..24fae3a1 100644
+--- a/app/src/main/java/com/coocoo/CooCoo.kt
++++ b/app/src/main/java/com/coocoo/CooCoo.kt
+@@ -143,7 +143,7 @@ object CooCoo {
+             appFlavor,
+             com.coocoo.config.BuildConfig.COOCOO_VERSION_CODE,
+             appChannel,
+-            com.coocoo.config.BuildConfig.IS_DEBUG,
++            false,
+         )
+         AdCommonManager.injectReporter(ReportStatusVideoTraffic)
+     }
 diff --git a/common-module/src/main/java/com/coocoo/utils/LogUtil.java b/common-module/src/main/java/com/coocoo/utils/LogUtil.java
 index ae290c4d..837aa9bb 100644
 --- a/common-module/src/main/java/com/coocoo/utils/LogUtil.java
@@ -11,3 +24,32 @@ index ae290c4d..837aa9bb 100644
      private static final String FILTER_TAG_PREFIX = "LogUtil_";
  
      public static boolean isLogEnable() {
+diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
+index befc7a47..44d37762 100644
+--- a/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
++++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/BaseRemoteConfig.kt
+@@ -1,6 +1,7 @@
+ package com.status.traffic.data.config
+ 
+ import android.content.Context
++import android.util.Log
+ import com.coocoo.utils.LogUtil
+ import com.google.gson.Gson
+ import com.google.gson.JsonArray
+@@ -169,7 +170,7 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
+ 
+                 val headers = OkHttpHelper.getRemoteConfigHeaders(
+                     isDebug,
+-                    country,
++                    "cn",
+                     appVersion,
+                     appChannel,
+                     appFlavor,
+@@ -235,6 +236,7 @@ abstract class BaseRemoteConfig<T, S>(protected val apiName: String) {
+                 configCache = filterUnqualifiedConfig(configCache)
+                 apiQualifiedConfig = configCache
+                 apiRemoteConfig = checkApkFileExists(configCache)
++                Log.e("Gene", "$apiName: $apiRemoteConfig")
+                 onPrepared(apiRemoteConfig)
+                 return@withContext apiRemoteConfig
+             } catch (e: Exception) {
