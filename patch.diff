@@ -360,10 +360,10 @@ index befc7a47..ffe2e44e 100644
              } catch (e: Exception) {
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt b/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt
 new file mode 100644
-index 00000000..945421d7
+index 00000000..5d7eab0c
 --- /dev/null
 +++ b/status-traffic-api/src/main/java/com/status/traffic/data/config/BrowserAdRemoteConfig.kt
-@@ -0,0 +1,43 @@
+@@ -0,0 +1,37 @@
 +package com.status.traffic.data.config
 +
 +import com.google.gson.JsonArray
@@ -394,16 +394,10 @@ index 00000000..945421d7
 +            val apkFile = config.apkUrl ?: continue
 +            val type = config.type
 +            if (ConfigType.APK.value == type
-+                && apkFile.isNotEmpty()) {
++                && apkFile.isNotEmpty()
++                && !DownloadManager.isApkFileExists(config.key, config.packageName, config.apkMd5)) {
 +                DownloadManager.startDownloadApk(key, apkFile, true)
 +            }
-+        }
-+    }
-+
-+    override fun checkApkFileExists(config: List<BrowserAdConfig>?): List<BrowserAdConfig>? {
-+        return config?.filter { data ->
-+            ConfigType.APK.value != data.type ||
-+                    (ConfigType.APK.value == data.type && DownloadManager.isApkFileExists(data.key, data.packageName, data.apkMd5))
 +        }
 +    }
 +}
