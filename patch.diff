@@ -45,7 +45,7 @@ index 5826f9d3..a889c9f2 100644
  }
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
-index 250ef260..e04320a9 100644
+index 250ef260..71f6d60c 100644
 --- a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
 +++ b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
 @@ -28,19 +28,24 @@ object ConversationRowTextDelegate {
@@ -79,7 +79,7 @@ index 250ef260..e04320a9 100644
 +//            cc12P.Ab8(context, uri)
 +//        }
 +        val intent = context.packageManager.getLaunchIntentForPackage("org.mozilla.firefox") ?: return
-+        intent.addCategory(Intent.CATEGORY_LAUNCHER)
++//        intent.addCategory(Intent.CATEGORY_LAUNCHER)
 +        intent.data = uri
 +        intent.putExtra("create_new_tab", true)
 +        context.startActivity(intent)
