@@ -45,7 +45,7 @@ index 5826f9d3..a889c9f2 100644
  }
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
-index 250ef260..0fa60f8c 100644
+index 250ef260..3d4558c1 100644
 --- a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
 +++ b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
 @@ -1,6 +1,7 @@
@@ -96,7 +96,7 @@ index 250ef260..0fa60f8c 100644
 +        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 +        intent.data = uri
 +        intent.putExtra("args", "--url=${uri.path}")
-+//        intent.putExtra("create_new_tab", true)
++        intent.putExtra("create_new_tab", true)
 +        context.startActivity(intent)
      }
  
