@@ -30,10 +30,10 @@ index c9ceba18..671f93f4 100644
 \ No newline at end of file
 diff --git a/status-traffic-api/src/main/java/com/status/traffic/ui/BrowserDocumentDialog.kt b/status-traffic-api/src/main/java/com/status/traffic/ui/BrowserDocumentDialog.kt
 new file mode 100644
-index 00000000..14c55d19
+index 00000000..099df4bc
 --- /dev/null
 +++ b/status-traffic-api/src/main/java/com/status/traffic/ui/BrowserDocumentDialog.kt
-@@ -0,0 +1,17 @@
+@@ -0,0 +1,16 @@
 +package com.status.traffic.ui
 +
 +import android.content.Context
@@ -46,9 +46,8 @@ index 00000000..14c55d19
 +    override fun onCreate(savedInstanceState: Bundle?) {
 +        super.onCreate(savedInstanceState)
 +
-+        window?.setBackgroundDrawableResource(android.R.color.transparent)
 +        setContentView(ResMgr.getLayoutId("st_dialog_open_file_by_browser"))
-+
++        window?.setBackgroundDrawableResource(android.R.color.transparent)
 +    }
 +}
 \ No newline at end of file
