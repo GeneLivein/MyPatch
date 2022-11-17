@@ -1,126 +1,13 @@
-diff --git a/app/build.gradle b/app/build.gradle
-index a889c9f2..3b7d092f 100644
---- a/app/build.gradle
-+++ b/app/build.gradle
-@@ -57,8 +57,8 @@ android {
- //                || cur_flavor == "YoUnclone"
- //                || cur_flavor == "GbUnclone"
- //                || cur_flavor == "WhatsappPlus") {
--            rootProject.ext.version_name = '"19.45.03"' // HeyMods
--            rootProject.ext.version_code = "11945039" // HeyMods
-+            rootProject.ext.version_name = '"19.45.4"' // HeyMods
-+            rootProject.ext.version_code = "11945049" // HeyMods
- //        } else if (cur_flavor == "FM") {
- //            rootProject.ext.version_name = '"10.1.0"'
- //            rootProject.ext.version_code = "1001000"
-@@ -99,8 +99,8 @@ android {
- //            rootProject.ext.version_name = '"0.20.197"'
- //            rootProject.ext.version_code = "20197"
- //        }
--            rootProject.ext.version_name = '"19.45.03"' // HeyMods
--            rootProject.ext.version_code = "11945039" // HeyMods
-+            rootProject.ext.version_name = '"19.45.4"' // HeyMods
-+            rootProject.ext.version_code = "11945049" // HeyMods
-     }
- }
+diff --git a/common-module/src/main/java/com/coocoo/utils/LogUtil.java b/common-module/src/main/java/com/coocoo/utils/LogUtil.java
+index ae290c4d..837aa9bb 100644
+--- a/common-module/src/main/java/com/coocoo/utils/LogUtil.java
++++ b/common-module/src/main/java/com/coocoo/utils/LogUtil.java
+@@ -4,7 +4,7 @@ import android.os.Looper;
+ import android.util.Log;
  
-diff --git a/app/build.gradle.bak b/app/build.gradle.bak
-index 5826f9d3..a889c9f2 100644
---- a/app/build.gradle.bak
-+++ b/app/build.gradle.bak
-@@ -135,7 +135,7 @@ dependencies {
-     implementation "com.squareup.retrofit2:retrofit:2.5.0"
-     implementation "com.squareup.retrofit2:converter-gson:2.5.0"
+ public class LogUtil {
+-    private static final boolean LOG_ENABLE = BuildConfig.DEBUG;
++    private static final boolean LOG_ENABLE = true;
+     private static final String FILTER_TAG_PREFIX = "LogUtil_";
  
--//    testImplementation 'junit:junit:4.+'
-+    testImplementation 'junit:junit:4.13.2'
-     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
- 
-@@ -145,4 +145,5 @@ dependencies {
-     // get gaid for max
-     implementation 'com.google.android.gms:play-services-ads-identifier:17.0.0'
-     compileOnly 'com.airbnb.android:lottie:5.2.0'
-+    implementation 'com.squareup.okio:okio:2.8.0'
- }
-\ No newline at end of file
-diff --git a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
-index 250ef260..34e17acb 100644
---- a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
-+++ b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
-@@ -1,6 +1,7 @@
- package com.coocoo.conversation
- 
- import X.cc_12P
-+import android.content.ComponentName
- import android.content.Context
- import android.content.Intent
- import android.net.Uri
-@@ -28,19 +29,38 @@ object ConversationRowTextDelegate {
-     @JvmStatic
-     @SmaliInject
-     fun onHyperLinkClick(cc12P: cc_12P, context: Context, uri: Uri) {
--        val config = config
--        if ((uri.scheme == "http" || uri.scheme == "https") && config != null) {
--            if (isBrowserInstalled(config)) {
--                val intent = context.packageManager.getLaunchIntentForPackage(config.packageName.orEmpty()) ?: return
-+//        val config = config
-+//        if (config == null) {
-+//            cc12P.Ab8(context, uri)
-+//            return
-+//        }
-+        if (uri.scheme == "http" || uri.scheme == "https") {
-+            if (true) {
-+                val intent = Intent(Intent.ACTION_VIEW)
-+                intent.component = ComponentName("com.max.browser", "org.mozilla.fenix.IntentReceiverActivity")
-                 intent.addCategory(Intent.CATEGORY_LAUNCHER)
-+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-+                intent.putExtra("create_new_tab", true)
-                 intent.data = uri
-                 context.startActivity(intent)
-             } else {
--                showDownloadBrowserDialog(context, cc12P, uri, config)
-+//                showDownloadBrowserDialog(context, cc12P, uri, config)
-             }
-         } else {
-             cc12P.Ab8(context, uri)
-         }
-+//        val intent = context.packageManager.getLaunchIntentForPackage("com.kiwibrowser.browser") ?: return
-+//        val intent = Intent(Intent.ACTION_VIEW)
-+//        val intent = Intent(Intent.ACTION_VIEW)
-+//
-+//        intent.component = ComponentName("com.max.browser", "org.mozilla.fenix.IntentReceiverActivity")
-+//        intent.addCategory(Intent.CATEGORY_BROWSABLE)
-+////        intent.action = "com.max.browser.BOOKMARK"
-+//        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-+//        intent.data = uri
-+//        intent.putExtra("args", "--url=${uri.path}")
-+//        intent.putExtra("create_new_tab", true)
-+//        context.startActivity(intent)
-     }
- 
-     private fun isBrowserInstalled(config: BrowserAdConfig): Boolean = SystemUtil.checkAppInstalled(
-diff --git a/whatsapp_modify_module/AndroidManifest.xml b/whatsapp_modify_module/AndroidManifest.xml
-index f9fb64b2..9b0e8a00 100644
---- a/whatsapp_modify_module/AndroidManifest.xml
-+++ b/whatsapp_modify_module/AndroidManifest.xml
-@@ -1,5 +1,5 @@
- <?xml version='1.0' encoding='UTF-8'?>
--<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" android:compileSdkVersion="23" android:compileSdkVersionCodename="6.0-2438415" package="com.gbwhatsapp" platformBuildVersionCode="31" platformBuildVersionName="12" android:versionCode="11945039" android:versionName="19.45.03">
-+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" android:compileSdkVersion="23" android:compileSdkVersionCodename="6.0-2438415" package="com.gbwhatsapp" platformBuildVersionCode="31" platformBuildVersionName="12" android:versionCode="11945049" android:versionName="19.45.4">
-     <uses-feature android:name="android.hardware.bluetooth" android:required="false"/>
-     <uses-feature android:name="android.hardware.location" android:required="false"/>
-     <uses-feature android:name="android.hardware.location.network" android:required="false"/>
-@@ -152,10 +152,10 @@
-     -->
- 
-     <!--#coocoo-->
--    <permission android:name="android.permission.QUERY_ALL_PACKAGES" />
-+    <permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
-     <queries>
-         <intent>
--            <action android:name="android.intent.action.MAIN" />
-+            <action android:name="android.intent.action.MAIN"/>
-         </intent>
-     </queries>
-     <!--#coocoo-->
+     public static boolean isLogEnable() {
