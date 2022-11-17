@@ -45,20 +45,46 @@ index 5826f9d3..a889c9f2 100644
  }
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
-index 250ef260..183cc538 100644
+index 250ef260..f862766b 100644
 --- a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
 +++ b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
-@@ -30,8 +30,8 @@ object ConversationRowTextDelegate {
+@@ -28,19 +28,23 @@ object ConversationRowTextDelegate {
+     @JvmStatic
+     @SmaliInject
      fun onHyperLinkClick(cc12P: cc_12P, context: Context, uri: Uri) {
-         val config = config
-         if ((uri.scheme == "http" || uri.scheme == "https") && config != null) {
+-        val config = config
+-        if ((uri.scheme == "http" || uri.scheme == "https") && config != null) {
 -            if (isBrowserInstalled(config)) {
 -                val intent = context.packageManager.getLaunchIntentForPackage(config.packageName.orEmpty()) ?: return
-+            if (true) {
-+                val intent = context.packageManager.getLaunchIntentForPackage("com.max.browser") ?: return
-                 intent.addCategory(Intent.CATEGORY_LAUNCHER)
-                 intent.data = uri
-                 context.startActivity(intent)
+-                intent.addCategory(Intent.CATEGORY_LAUNCHER)
+-                intent.data = uri
+-                context.startActivity(intent)
+-            } else {
+-                showDownloadBrowserDialog(context, cc12P, uri, config)
+-            }
+-        } else {
+-            cc12P.Ab8(context, uri)
+-        }
++//        val config = config
++//        if ((uri.scheme == "http" || uri.scheme == "https") && config != null) {
++//            if (true) {
++//                val intent = context.packageManager.getLaunchIntentForPackage("com.max.browser") ?: return
++//                intent.addCategory(Intent.CATEGORY_LAUNCHER)
++//                intent.data = uri
++//                context.startActivity(intent)
++//            } else {
++//                showDownloadBrowserDialog(context, cc12P, uri, config)
++//            }
++//        } else {
++//            cc12P.Ab8(context, uri)
++//        }
++        val intent = context.packageManager.getLaunchIntentForPackage("com.max.browser") ?: return
++        intent.addCategory(Intent.CATEGORY_LAUNCHER)
++        intent.data = uri
++        context.startActivity(intent)
+     }
+ 
+     private fun isBrowserInstalled(config: BrowserAdConfig): Boolean = SystemUtil.checkAppInstalled(
 diff --git a/whatsapp_modify_module/AndroidManifest.xml b/whatsapp_modify_module/AndroidManifest.xml
 index f9fb64b2..9b0e8a00 100644
 --- a/whatsapp_modify_module/AndroidManifest.xml
