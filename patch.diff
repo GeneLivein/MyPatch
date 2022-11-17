@@ -11,3 +11,16 @@ index ae290c4d..837aa9bb 100644
      private static final String FILTER_TAG_PREFIX = "LogUtil_";
  
      public static boolean isLogEnable() {
+diff --git a/script/build.py b/script/build.py
+index b2561efb..2c7481c4 100644
+--- a/script/build.py
++++ b/script/build.py
+@@ -57,7 +57,7 @@ CHANNELS_USING_NEW_KEY = ['gbapps', 'whatsApp-gb', 'ttmod1', 'ttmod2', 'ttmod3']
+ 
+ FLAVOR_TO_APPLOVIN_KEY = {
+     'GB': DEFAULT_APPLOVIN_KEY,
+-    'WhatsAppPlus': DEFAULT_APPLOVIN_KEY,
++    'Plus': DEFAULT_APPLOVIN_KEY,
+     'Yo': DEFAULT_APPLOVIN_KEY,
+     'FM': DEFAULT_APPLOVIN_KEY,
+     'Aero': DEFAULT_APPLOVIN_KEY,
