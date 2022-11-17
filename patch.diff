@@ -541,3 +541,21 @@ index 00000000..2d3fc394
 +
 +</androidx.constraintlayout.widget.ConstraintLayout>
 \ No newline at end of file
+diff --git a/whatsapp_modify_module/smali_classes2/X/1p1.1.smali b/whatsapp_modify_module/smali_classes2/X/1p1.1.smali
+index 2cdf6575..e8964b7b 100644
+--- a/whatsapp_modify_module/smali_classes2/X/1p1.1.smali
++++ b/whatsapp_modify_module/smali_classes2/X/1p1.1.smali
+@@ -75,9 +75,10 @@
+     const/4 v0, 0x1
+ 
+     invoke-virtual {v1, v0}, Landroid/content/Intent;->setFlags(I)Landroid/content/Intent;
+-
+-    invoke-virtual {v4, v2, v1}, LX/12P;->A06(Landroid/content/Context;Landroid/content/Intent;)V
+-
++#coocoo
++    #invoke-virtual {v4, v2, v1}, LX/12P;->A06(Landroid/content/Context;Landroid/content/Intent;)V
++    invoke-static {v4, v2, p1}, Lcom/coocoo/conversation/ConversationRowTextDelegate;->onDocumentOpen(LX/12P;Landroid/content/Context;Landroid/net/Uri;)V
++#coocoo
+     :cond_0
+     return-void
+ .end method
