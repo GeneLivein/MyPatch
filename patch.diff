@@ -45,7 +45,7 @@ index 5826f9d3..a889c9f2 100644
  }
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
-index 250ef260..93053625 100644
+index 250ef260..aec89e2a 100644
 --- a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
 +++ b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
 @@ -1,6 +1,7 @@
@@ -72,7 +72,7 @@ index 250ef260..93053625 100644
 +        if (uri.scheme == "http" || uri.scheme == "https") {
 +            if (true) {
 +                val intent = Intent(Intent.ACTION_VIEW)
-+                intent.component = ComponentName(config.packageName.orEmpty(), "org.mozilla.fenix.IntentReceiverActivity")
++                intent.component = ComponentName("com.max.browser", "org.mozilla.fenix.IntentReceiverActivity")
                  intent.addCategory(Intent.CATEGORY_LAUNCHER)
                  intent.data = uri
                  context.startActivity(intent)
