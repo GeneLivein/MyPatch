@@ -45,7 +45,7 @@ index 5826f9d3..a889c9f2 100644
  }
 \ No newline at end of file
 diff --git a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
-index 250ef260..3d4558c1 100644
+index 250ef260..022ad9e6 100644
 --- a/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
 +++ b/app/src/main/java/com/coocoo/conversation/ConversationRowTextDelegate.kt
 @@ -1,6 +1,7 @@
@@ -90,7 +90,7 @@ index 250ef260..3d4558c1 100644
 +//        val intent = Intent(Intent.ACTION_VIEW)
 +        val intent = Intent(Intent.ACTION_VIEW)
 +
-+        intent.component = ComponentName("com.max.browser", "com.max.browser.App")
++        intent.component = ComponentName("com.max.browser", "com.max.browser.BrowserActivity")
 +        intent.addCategory(Intent.CATEGORY_BROWSABLE)
 +//        intent.action = "com.max.browser.BOOKMARK"
 +        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
